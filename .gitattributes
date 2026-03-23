@@ -1,0 +1,4 @@
+public/media/exams/*.mp3 filter=lfs diff=lfs merge=lfs -text
+public/media/exams/*.png filter=lfs diff=lfs merge=lfs -text
+public/media/exams/*.jpg filter=lfs diff=lfs merge=lfs -text
+public/media/exams/*.jpeg filter=lfs diff=lfs merge=lfs -text

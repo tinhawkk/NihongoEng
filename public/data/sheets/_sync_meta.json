@@ -1,0 +1,45 @@
+{
+  "lastSync": "2026-03-07T06:37:44.750Z",
+  "results": [
+    {
+      "level": "ENG",
+      "status": "updated",
+      "count": 600
+    },
+    {
+      "level": "N5",
+      "status": "updated",
+      "count": 731
+    },
+    {
+      "level": "N4",
+      "status": "updated",
+      "count": 969
+    },
+    {
+      "level": "N3",
+      "status": "updated",
+      "count": 827
+    },
+    {
+      "level": "N2",
+      "status": "updated",
+      "count": 1647
+    },
+    {
+      "level": "N1",
+      "status": "updated",
+      "count": 829
+    },
+    {
+      "level": "JLPT",
+      "status": "updated",
+      "count": 976
+    },
+    {
+      "level": "Grammar",
+      "status": "unchanged",
+      "count": 7
+    }
+  ]
+}

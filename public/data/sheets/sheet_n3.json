@@ -1,0 +1,7445 @@
+[
+  {
+    "id": 1,
+    "english": "男性",
+    "hiragana": "Nam tính",
+    "vietnamese": "Nam giới",
+    "hanViet": "だんせい",
+    "hint": "(N) - Danh từ",
+    "explanation": "男性 (Nam tính) - Nam giới. Hán Việt: だんせい"
+  },
+  {
+    "id": 2,
+    "english": "女性",
+    "hiragana": "Nữ tính",
+    "vietnamese": "Nữ giới",
+    "hanViet": "じょせい",
+    "hint": "(N) - Danh từ",
+    "explanation": "女性 (Nữ tính) - Nữ giới. Hán Việt: じょせい"
+  },
+  {
+    "id": 3,
+    "english": "理想",
+    "hiragana": "Lý tưởng",
+    "vietnamese": "Lý tưởng",
+    "hanViet": "りそう",
+    "hint": "(N) - Danh từ",
+    "explanation": "理想 (Lý tưởng) - Lý tưởng. Hán Việt: りそう"
+  },
+  {
+    "id": 4,
+    "english": "高齢",
+    "hiragana": "Cao linh",
+    "vietnamese": "Cao tuổi",
+    "hanViet": "こうれい",
+    "hint": "(N) - Danh từ",
+    "explanation": "高齢 (Cao linh) - Cao tuổi. Hán Việt: こうれい"
+  },
+  {
+    "id": 5,
+    "english": "年上",
+    "hiragana": "Niên thượng",
+    "vietnamese": "Hơn tuổi",
+    "hanViet": "としうえ",
+    "hint": "(N) - Danh từ",
+    "explanation": "年上 (Niên thượng) - Hơn tuổi. Hán Việt: としうえ"
+  },
+  {
+    "id": 6,
+    "english": "目上",
+    "hiragana": "Mục thượng",
+    "vietnamese": "Người trên",
+    "hanViet": "めうえ",
+    "hint": "(N) - Danh từ",
+    "explanation": "目上 (Mục thượng) - Người trên. Hán Việt: めうえ"
+  },
+  {
+    "id": 7,
+    "english": "敬語",
+    "hiragana": "Kính ngữ",
+    "vietnamese": "Kính ngữ",
+    "hanViet": "けいご",
+    "hint": "(N) - Danh từ",
+    "explanation": "敬語 (Kính ngữ) - Kính ngữ. Hán Việt: けいご"
+  },
+  {
+    "id": 8,
+    "english": "先輩",
+    "hiragana": "Tiền bối",
+    "vietnamese": "Tiền bối",
+    "hanViet": "せんぱい",
+    "hint": "(N) - Danh từ",
+    "explanation": "先輩 (Tiền bối) - Tiền bối. Hán Việt: せんぱい"
+  },
+  {
+    "id": 9,
+    "english": "後輩",
+    "hiragana": "Hậu bối",
+    "vietnamese": "Hậu bối",
+    "hanViet": "こうはい",
+    "hint": "(N) - Danh từ",
+    "explanation": "後輩 (Hậu bối) - Hậu bối. Hán Việt: こうはい"
+  },
+  {
+    "id": 10,
+    "english": "職場",
+    "hiragana": "Chức trường",
+    "vietnamese": "Nơi làm việc",
+    "hanViet": "しょくば",
+    "hint": "(N) - Danh từ",
+    "explanation": "職場 (Chức trường) - Nơi làm việc. Hán Việt: しょくば"
+  },
+  {
+    "id": 11,
+    "english": "上司",
+    "hiragana": "Thượng ty",
+    "vietnamese": "Cấp trên",
+    "hanViet": "じょうし",
+    "hint": "(N) - Danh từ",
+    "explanation": "上司 (Thượng ty) - Cấp trên. Hán Việt: じょうし"
+  },
+  {
+    "id": 12,
+    "english": "決定",
+    "hiragana": "Quyết định",
+    "vietnamese": "Quyết định",
+    "hanViet": "けってい",
+    "hint": "(N) - Danh từ",
+    "explanation": "決定 (Quyết định) - Quyết định. Hán Việt: けってい"
+  },
+  {
+    "id": 13,
+    "english": "相手",
+    "hiragana": "Tương thủ",
+    "vietnamese": "Đối tác",
+    "hanViet": "あいて",
+    "hint": "(N) - Danh từ",
+    "explanation": "相手 (Tương thủ) - Đối tác. Hán Việt: あいて"
+  },
+  {
+    "id": 15,
+    "english": "就職",
+    "hiragana": "Tựu chức",
+    "vietnamese": "Có việc làm",
+    "hanViet": "しゅうしょく",
+    "hint": "(N) - Danh từ",
+    "explanation": "就職 (Tựu chức) - Có việc làm. Hán Việt: しゅうしょく"
+  },
+  {
+    "id": 17,
+    "english": "友人",
+    "hiragana": "Hữu nhân",
+    "vietnamese": "Bạn thân",
+    "hanViet": "ゆうじん",
+    "hint": "(N) - Danh từ",
+    "explanation": "友人 (Hữu nhân) - Bạn thân. Hán Việt: ゆうじん"
+  },
+  {
+    "id": 18,
+    "english": "時代",
+    "hiragana": "Thời đại",
+    "vietnamese": "Thời đại",
+    "hanViet": "じだい",
+    "hint": "(N) - Danh từ",
+    "explanation": "時代 (Thời đại) - Thời đại. Hán Việt: じだい"
+  },
+  {
+    "id": 19,
+    "english": "仲",
+    "hiragana": "Trọng",
+    "vietnamese": "Quan hệ",
+    "hanViet": "なか",
+    "hint": "(N) - Danh từ",
+    "explanation": "仲 (Trọng) - Quan hệ. Hán Việt: なか"
+  },
+  {
+    "id": 21,
+    "english": "生年月日",
+    "hiragana": "Sinh Niên Nguyệt Nhật",
+    "vietnamese": "Ngày tháng năm sinh",
+    "hanViet": "せいねんがっぴ",
+    "hint": "(N) - Danh từ",
+    "explanation": "生年月日 (Sinh Niên Nguyệt Nhật) - Ngày tháng năm sinh. Hán Việt: せいねんがっぴ"
+  },
+  {
+    "id": 22,
+    "english": "誕生",
+    "hiragana": "Đản sinh",
+    "vietnamese": "Ra đời",
+    "hanViet": "たんじょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "誕生 (Đản sinh) - Ra đời. Hán Việt: たんじょう"
+  },
+  {
+    "id": 26,
+    "english": "出身",
+    "hiragana": "Xuất thân",
+    "vietnamese": "Xuất thân",
+    "hanViet": "しゅっしん",
+    "hint": "(N) - Danh từ",
+    "explanation": "出身 (Xuất thân) - Xuất thân. Hán Việt: しゅっしん"
+  },
+  {
+    "id": 23,
+    "english": "命",
+    "hiragana": "Mệnh",
+    "vietnamese": "Số mệnh, cuộc sống",
+    "hanViet": "いのち",
+    "hint": "(N) - Danh từ",
+    "explanation": "命 (Mệnh) - Số mệnh, cuộc sống. Hán Việt: いのち"
+  },
+  {
+    "id": 25,
+    "english": "計画",
+    "hiragana": "Kế hoạch",
+    "vietnamese": "Kế hoạch",
+    "hanViet": "けいかく",
+    "hint": "(N) - Danh từ",
+    "explanation": "計画 (Kế hoạch) - Kế hoạch. Hán Việt: けいかく"
+  },
+  {
+    "id": 27,
+    "english": "故郷",
+    "hiragana": "Cố hương",
+    "vietnamese": "Quê hương",
+    "hanViet": "こきょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "故郷 (Cố hương) - Quê hương. Hán Việt: こきょう"
+  },
+  {
+    "id": 28,
+    "english": "事業",
+    "hiragana": "Sự nghiệp",
+    "vietnamese": "Sự nghiệp",
+    "hanViet": "じぎょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "事業 (Sự nghiệp) - Sự nghiệp. Hán Việt: じぎょう"
+  },
+  {
+    "id": 29,
+    "english": "喜ぶ",
+    "hiragana": "Hỉ",
+    "vietnamese": "Hạnh phúc",
+    "hanViet": "よろこぶ",
+    "hint": "(N) - Danh từ",
+    "explanation": "喜ぶ (Hỉ) - Hạnh phúc. Hán Việt: よろこぶ"
+  },
+  {
+    "id": 20,
+    "english": "記入する",
+    "hiragana": "Kí nhập",
+    "vietnamese": "Nhập vào",
+    "hanViet": "きにゅうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "記入する (Kí nhập) - Nhập vào. Hán Việt: きにゅうする"
+  },
+  {
+    "id": 24,
+    "english": "立てる",
+    "hiragana": "Lập",
+    "vietnamese": "Lập ( kế hoạch)",
+    "hanViet": "たてる",
+    "hint": "(N) - Danh từ",
+    "explanation": "立てる (Lập) - Lập ( kế hoạch). Hán Việt: たてる"
+  },
+  {
+    "id": 16,
+    "english": "頼む",
+    "hiragana": "Lại",
+    "vietnamese": "Nhờ vả",
+    "hanViet": "たのむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "頼む (Lại) - Nhờ vả. Hán Việt: たのむ"
+  },
+  {
+    "id": 30,
+    "english": "成長する",
+    "hiragana": "Thành trường",
+    "vietnamese": "Trưởng thành",
+    "hanViet": "せいちょうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "成長する (Thành trường) - Trưởng thành. Hán Việt: せいちょうする"
+  },
+  {
+    "id": 31,
+    "english": "成人する",
+    "hiragana": "Thành nhân",
+    "vietnamese": "Người lớn",
+    "hanViet": "せいじんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "成人する (Thành nhân) - Người lớn. Hán Việt: せいじんする"
+  },
+  {
+    "id": 32,
+    "english": "合格する",
+    "hiragana": "Hợp cách",
+    "vietnamese": "Đỗ (kỳ thi)",
+    "hanViet": "ごうかくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "合格する (Hợp cách) - Đỗ (kỳ thi). Hán Việt: ごうかくする"
+  },
+  {
+    "id": 33,
+    "english": "進学する",
+    "hiragana": "Tiến học",
+    "vietnamese": "Đi học",
+    "hanViet": "しんがくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "進学する (Tiến học) - Đi học. Hán Việt: しんがくする"
+  },
+  {
+    "id": 34,
+    "english": "退学する",
+    "hiragana": "Thoái học",
+    "vietnamese": "Bỏ học",
+    "hanViet": "たいがくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "退学する (Thoái học) - Bỏ học. Hán Việt: たいがくする"
+  },
+  {
+    "id": 35,
+    "english": "就職する",
+    "hiragana": "Tựu chức",
+    "vietnamese": "Có việc làm",
+    "hanViet": "しゅうしょくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "就職する (Tựu chức) - Có việc làm. Hán Việt: しゅうしょくする"
+  },
+  {
+    "id": 36,
+    "english": "介護",
+    "hiragana": "Giới hộ",
+    "vietnamese": "Chăm sóc",
+    "hanViet": "かいご",
+    "hint": "(N) - Danh từ",
+    "explanation": "介護 (Giới hộ) - Chăm sóc. Hán Việt: かいご"
+  },
+  {
+    "id": 37,
+    "english": "決める",
+    "hiragana": "Quyết",
+    "vietnamese": "Quyết định",
+    "hanViet": "きめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "決める (Quyết) - Quyết định. Hán Việt: きめる"
+  },
+  {
+    "id": 38,
+    "english": "退職する",
+    "hiragana": "Thoái chức",
+    "vietnamese": "Nghỉ việc",
+    "hanViet": "たいしょくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "退職する (Thoái chức) - Nghỉ việc. Hán Việt: たいしょくする"
+  },
+  {
+    "id": 39,
+    "english": "倒産する",
+    "hiragana": "Đảo sản",
+    "vietnamese": "Phá sản",
+    "hanViet": "とうさんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "倒産する (Đảo sản) - Phá sản. Hán Việt: とうさんする"
+  },
+  {
+    "id": 40,
+    "english": "失業する",
+    "hiragana": "Thất nghiệp",
+    "vietnamese": "Thất nghiệp",
+    "hanViet": "しつぎょうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "失業する (Thất nghiệp) - Thất nghiệp. Hán Việt: しつぎょうする"
+  },
+  {
+    "id": 41,
+    "english": "残業する",
+    "hiragana": "Tàn nghiệp",
+    "vietnamese": "Làm thêm giờ",
+    "hanViet": "ざんぎょうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "残業する (Tàn nghiệp) - Làm thêm giờ. Hán Việt: ざんぎょうする"
+  },
+  {
+    "id": 42,
+    "english": "疲れる",
+    "hiragana": "Bì",
+    "vietnamese": "Mệt",
+    "hanViet": "つかれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "疲れる (Bì) - Mệt. Hán Việt: つかれる"
+  },
+  {
+    "id": 43,
+    "english": "生活する",
+    "hiragana": "Sinh hoạt",
+    "vietnamese": "Cuộc sống",
+    "hanViet": "せいかつする",
+    "hint": "(N) - Danh từ",
+    "explanation": "生活する (Sinh hoạt) - Cuộc sống. Hán Việt: せいかつする"
+  },
+  {
+    "id": 44,
+    "english": "通勤する",
+    "hiragana": "Thông cần",
+    "vietnamese": "Đi làm",
+    "hanViet": "つうきんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "通勤する (Thông cần) - Đi làm. Hán Việt: つうきんする"
+  },
+  {
+    "id": 45,
+    "english": "学歴",
+    "hiragana": "Học lịch",
+    "vietnamese": "Bằng cấp",
+    "hanViet": "がくれき",
+    "hint": "(N) - Danh từ",
+    "explanation": "学歴 (Học lịch) - Bằng cấp. Hán Việt: がくれき"
+  },
+  {
+    "id": 46,
+    "english": "実力",
+    "hiragana": "Thực lực",
+    "vietnamese": "Thực lực",
+    "hanViet": "じつりょく",
+    "hint": "(N) - Danh từ",
+    "explanation": "実力 (Thực lực) - Thực lực. Hán Việt: じつりょく"
+  },
+  {
+    "id": 47,
+    "english": "給料",
+    "hiragana": "Cấp liệu",
+    "vietnamese": "Lương",
+    "hanViet": "きゅうりょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "給料 (Cấp liệu) - Lương. Hán Việt: きゅうりょう"
+  },
+  {
+    "id": 48,
+    "english": "面接する",
+    "hiragana": "Diện tiếp",
+    "vietnamese": "Phỏng vấn",
+    "hanViet": "めんせつする",
+    "hint": "(N) - Danh từ",
+    "explanation": "面接する (Diện tiếp) - Phỏng vấn. Hán Việt: めんせつする"
+  },
+  {
+    "id": 49,
+    "english": "休憩する",
+    "hiragana": "Hưu khế",
+    "vietnamese": "Nghỉ giải lao",
+    "hanViet": "きゅうけいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "休憩する (Hưu khế) - Nghỉ giải lao. Hán Việt: きゅうけいする"
+  },
+  {
+    "id": 50,
+    "english": "観光する",
+    "hiragana": "Quan quang",
+    "vietnamese": "Thăm quan",
+    "hanViet": "かんこうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "観光する (Quan quang) - Thăm quan. Hán Việt: かんこうする"
+  },
+  {
+    "id": 51,
+    "english": "帰国する",
+    "hiragana": "Quy quốc",
+    "vietnamese": "Về nước",
+    "hanViet": "きこくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "帰国する (Quy quốc) - Về nước. Hán Việt: きこくする"
+  },
+  {
+    "id": 52,
+    "english": "帰省する",
+    "hiragana": "Quy tỉnh",
+    "vietnamese": "Về quê",
+    "hanViet": "きせいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "帰省する (Quy tỉnh) - Về quê. Hán Việt: きせいする"
+  },
+  {
+    "id": 53,
+    "english": "帰宅する",
+    "hiragana": "Quy trạch",
+    "vietnamese": "Về nhà",
+    "hanViet": "きたくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "帰宅する (Quy trạch) - Về nhà. Hán Việt: きたくする"
+  },
+  {
+    "id": 54,
+    "english": "参加する",
+    "hiragana": "Tham gia",
+    "vietnamese": "Tham gia",
+    "hanViet": "さんかする",
+    "hint": "(N) - Danh từ",
+    "explanation": "参加する (Tham gia) - Tham gia. Hán Việt: さんかする"
+  },
+  {
+    "id": 55,
+    "english": "活動",
+    "hiragana": "Hoạt động",
+    "vietnamese": "Hoạt động",
+    "hanViet": "かつどう",
+    "hint": "(N) - Danh từ",
+    "explanation": "活動 (Hoạt động) - Hoạt động. Hán Việt: かつどう"
+  },
+  {
+    "id": 56,
+    "english": "出席する",
+    "hiragana": "Xuất tịch",
+    "vietnamese": "Tham gia",
+    "hanViet": "しゅっせきする",
+    "hint": "(N) - Danh từ",
+    "explanation": "出席する (Xuất tịch) - Tham gia. Hán Việt: しゅっせきする"
+  },
+  {
+    "id": 57,
+    "english": "欠席する",
+    "hiragana": "Khuyết tịch",
+    "vietnamese": "Không tham gia",
+    "hanViet": "けっせきする",
+    "hint": "(N) - Danh từ",
+    "explanation": "欠席する (Khuyết tịch) - Không tham gia. Hán Việt: けっせきする"
+  },
+  {
+    "id": 58,
+    "english": "寝坊",
+    "hiragana": "Tẩm phường",
+    "vietnamese": "Ngủ quên",
+    "hanViet": "ねぼう",
+    "hint": "(N) - Danh từ",
+    "explanation": "寝坊 (Tẩm phường) - Ngủ quên. Hán Việt: ねぼう"
+  },
+  {
+    "id": 59,
+    "english": "遅刻する",
+    "hiragana": "Trì khắc",
+    "vietnamese": "Đến muộn",
+    "hanViet": "ちこくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "遅刻する (Trì khắc) - Đến muộn. Hán Việt: ちこくする"
+  },
+  {
+    "id": 60,
+    "english": "化粧する",
+    "hiragana": "Hóa trang",
+    "vietnamese": "Trang điểm",
+    "hanViet": "けしょうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "化粧する (Hóa trang) - Trang điểm. Hán Việt: けしょうする"
+  },
+  {
+    "id": 61,
+    "english": "苦手",
+    "hiragana": "Khổ thủ",
+    "vietnamese": "Kém",
+    "hanViet": "にがて",
+    "hint": "(N) - Danh từ",
+    "explanation": "苦手 (Khổ thủ) - Kém. Hán Việt: にがて"
+  },
+  {
+    "id": 62,
+    "english": "計算する",
+    "hiragana": "Kế toán",
+    "vietnamese": "Tính toán",
+    "hanViet": "けいさんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "計算する (Kế toán) - Tính toán. Hán Việt: けいさんする"
+  },
+  {
+    "id": 63,
+    "english": "計画する",
+    "hiragana": "Kế hoạch",
+    "vietnamese": "Kế hoạch",
+    "hanViet": "けいかくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "計画する (Kế hoạch) - Kế hoạch. Hán Việt: けいかくする"
+  },
+  {
+    "id": 64,
+    "english": "成功する",
+    "hiragana": "Thành công",
+    "vietnamese": "Thành công",
+    "hanViet": "せいこうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "成功する (Thành công) - Thành công. Hán Việt: せいこうする"
+  },
+  {
+    "id": 65,
+    "english": "失敗する",
+    "hiragana": "Thất bại",
+    "vietnamese": "Thất bại",
+    "hanViet": "しっぱいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "失敗する (Thất bại) - Thất bại. Hán Việt: しっぱいする"
+  },
+  {
+    "id": 66,
+    "english": "実験",
+    "hiragana": "Thực nghiệm",
+    "vietnamese": "Thực nghiệm",
+    "hanViet": "じっけん",
+    "hint": "(N) - Danh từ",
+    "explanation": "実験 (Thực nghiệm) - Thực nghiệm. Hán Việt: じっけん"
+  },
+  {
+    "id": 67,
+    "english": "準備する",
+    "hiragana": "Chuẩn bị",
+    "vietnamese": "Chuẩn bị",
+    "hanViet": "じゅんびする",
+    "hint": "(N) - Danh từ",
+    "explanation": "準備する (Chuẩn bị) - Chuẩn bị. Hán Việt: じゅんびする"
+  },
+  {
+    "id": 68,
+    "english": "整理する",
+    "hiragana": "Chỉnh lý",
+    "vietnamese": "Sắp xếp",
+    "hanViet": "せいりする",
+    "hint": "(N) - Danh từ",
+    "explanation": "整理する (Chỉnh lý) - Sắp xếp. Hán Việt: せいりする"
+  },
+  {
+    "id": 69,
+    "english": "書類",
+    "hiragana": "Thư loại",
+    "vietnamese": "Giấy tờ",
+    "hanViet": "しょるい",
+    "hint": "(N) - Danh từ",
+    "explanation": "書類 (Thư loại) - Giấy tờ. Hán Việt: しょるい"
+  },
+  {
+    "id": 70,
+    "english": "品",
+    "hiragana": "Phẩm",
+    "vietnamese": "Hàng hóa",
+    "hanViet": "しな",
+    "hint": "(N) - Danh từ",
+    "explanation": "品 (Phẩm) - Hàng hóa. Hán Việt: しな"
+  },
+  {
+    "id": 71,
+    "english": "届く",
+    "hiragana": "Giới",
+    "vietnamese": "Đến nơi",
+    "hanViet": "とどく",
+    "hint": "(N) - Danh từ",
+    "explanation": "届く (Giới) - Đến nơi. Hán Việt: とどく"
+  },
+  {
+    "id": 72,
+    "english": "注文する",
+    "hiragana": "Chú văn",
+    "vietnamese": "Đặt hàng",
+    "hanViet": "ちゅうもんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "注文する (Chú văn) - Đặt hàng. Hán Việt: ちゅうもんする"
+  },
+  {
+    "id": 73,
+    "english": "貯金する",
+    "hiragana": "Trữ kim",
+    "vietnamese": "Tiết kiệm",
+    "hanViet": "ちょきんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "貯金する (Trữ kim) - Tiết kiệm. Hán Việt: ちょきんする"
+  },
+  {
+    "id": 74,
+    "english": "増える",
+    "hiragana": "Tăng",
+    "vietnamese": "Tăng",
+    "hanViet": "ふえる",
+    "hint": "(N) - Danh từ",
+    "explanation": "増える (Tăng) - Tăng. Hán Việt: ふえる"
+  },
+  {
+    "id": 75,
+    "english": "徹夜する",
+    "hiragana": "Triệt dạ",
+    "vietnamese": "Thức xuyên đêm",
+    "hanViet": "てつやする",
+    "hint": "(N) - Danh từ",
+    "explanation": "徹夜する (Triệt dạ) - Thức xuyên đêm. Hán Việt: てつやする"
+  },
+  {
+    "id": 76,
+    "english": "身長",
+    "hiragana": "Thân trường",
+    "vietnamese": "Chiều cao",
+    "hanViet": "しんちょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "身長 (Thân trường) - Chiều cao. Hán Việt: しんちょう"
+  },
+  {
+    "id": 77,
+    "english": "体重",
+    "hiragana": "Thể trọng",
+    "vietnamese": "Cân nặng",
+    "hanViet": "たいじゅう",
+    "hint": "(N) - Danh từ",
+    "explanation": "体重 (Thể trọng) - Cân nặng. Hán Việt: たいじゅう"
+  },
+  {
+    "id": 78,
+    "english": "怪我",
+    "hiragana": "Quái ngã",
+    "vietnamese": "Bị thương",
+    "hanViet": "けが",
+    "hint": "(N) - Danh từ",
+    "explanation": "怪我 (Quái ngã) - Bị thương. Hán Việt: けが"
+  },
+  {
+    "id": 79,
+    "english": "趣味",
+    "hiragana": "Thú vị",
+    "vietnamese": "Sở thích",
+    "hanViet": "しゅみ",
+    "hint": "(N) - Danh từ",
+    "explanation": "趣味 (Thú vị) - Sở thích. Hán Việt: しゅみ"
+  },
+  {
+    "id": 80,
+    "english": "読書",
+    "hiragana": "Độc thư",
+    "vietnamese": "Đọc sách",
+    "hanViet": "どくしょ",
+    "hint": "(N) - Danh từ",
+    "explanation": "読書 (Độc thư) - Đọc sách. Hán Việt: どくしょ"
+  },
+  {
+    "id": 81,
+    "english": "興味",
+    "hiragana": "Hưng vị",
+    "vietnamese": "Hứng thú",
+    "hanViet": "きょうみ",
+    "hint": "(N) - Danh từ",
+    "explanation": "興味 (Hưng vị) - Hứng thú. Hán Việt: きょうみ"
+  },
+  {
+    "id": 82,
+    "english": "歴史",
+    "hiragana": "Lịch sử",
+    "vietnamese": "Lịch sử",
+    "hanViet": "れきし",
+    "hint": "(N) - Danh từ",
+    "explanation": "歴史 (Lịch sử) - Lịch sử. Hán Việt: れきし"
+  },
+  {
+    "id": 83,
+    "english": "思い出",
+    "hiragana": "Tư xuất",
+    "vietnamese": "Hồi ức",
+    "hanViet": "おもいで",
+    "hint": "(N) - Danh từ",
+    "explanation": "思い出 (Tư xuất) - Hồi ức. Hán Việt: おもいで"
+  },
+  {
+    "id": 84,
+    "english": "冗談",
+    "hiragana": "Nhũng đàm",
+    "vietnamese": "Đùa cợt",
+    "hanViet": "じょうだん",
+    "hint": "(N) - Danh từ",
+    "explanation": "冗談 (Nhũng đàm) - Đùa cợt. Hán Việt: じょうだん"
+  },
+  {
+    "id": 85,
+    "english": "本気",
+    "hiragana": "Bản khí",
+    "vietnamese": "Sự thật",
+    "hanViet": "ほんき",
+    "hint": "(N) - Danh từ",
+    "explanation": "本気 (Bản khí) - Sự thật. Hán Việt: ほんき"
+  },
+  {
+    "id": 86,
+    "english": "目的",
+    "hiragana": "Mục đích",
+    "vietnamese": "Mục đích",
+    "hanViet": "もくてき",
+    "hint": "(N) - Danh từ",
+    "explanation": "目的 (Mục đích) - Mục đích. Hán Việt: もくてき"
+  },
+  {
+    "id": 87,
+    "english": "約束する",
+    "hiragana": "Ước thúc",
+    "vietnamese": "Lời hứa",
+    "hanViet": "やくそくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "約束する (Ước thúc) - Lời hứa. Hán Việt: やくそくする"
+  },
+  {
+    "id": 88,
+    "english": "おしゃべりする",
+    "hiragana": "",
+    "vietnamese": "Nói chuyện",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "おしゃべりする () - Nói chuyện. Hán Việt: "
+  },
+  {
+    "id": 89,
+    "english": "怒る",
+    "hiragana": "Nộ",
+    "vietnamese": "Tức giận",
+    "hanViet": "おこる",
+    "hint": "(N) - Danh từ",
+    "explanation": "怒る (Nộ) - Tức giận. Hán Việt: おこる"
+  },
+  {
+    "id": 90,
+    "english": "遠慮する",
+    "hiragana": "Viễn lự",
+    "vietnamese": "Ngại ngần",
+    "hanViet": "えんりょ",
+    "hint": "(N) - Danh từ",
+    "explanation": "遠慮する (Viễn lự) - Ngại ngần. Hán Việt: えんりょ"
+  },
+  {
+    "id": 91,
+    "english": "我慢する",
+    "hiragana": "Ngã mạn",
+    "vietnamese": "Chịu đựng",
+    "hanViet": "がまんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "我慢する (Ngã mạn) - Chịu đựng. Hán Việt: がまんする"
+  },
+  {
+    "id": 92,
+    "english": "迷惑する",
+    "hiragana": "Mê hoặc",
+    "vietnamese": "Làm phiền",
+    "hanViet": "めいわくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "迷惑する (Mê hoặc) - Làm phiền. Hán Việt: めいわくする"
+  },
+  {
+    "id": 93,
+    "english": "捨てる",
+    "hiragana": "Vứt",
+    "vietnamese": "Vứt",
+    "hanViet": "すてる",
+    "hint": "(N) - Danh từ",
+    "explanation": "捨てる (Vứt) - Vứt. Hán Việt: すてる"
+  },
+  {
+    "id": 94,
+    "english": "希望",
+    "hiragana": "Hi vọng",
+    "vietnamese": "Hi vọng",
+    "hanViet": "きぼう",
+    "hint": "(N) - Danh từ",
+    "explanation": "希望 (Hi vọng) - Hi vọng. Hán Việt: きぼう"
+  },
+  {
+    "id": 95,
+    "english": "夢",
+    "hiragana": "Mộng",
+    "vietnamese": "Giấc mơ, ước mơ",
+    "hanViet": "ゆめ",
+    "hint": "(N) - Danh từ",
+    "explanation": "夢 (Mộng) - Giấc mơ, ước mơ. Hán Việt: ゆめ"
+  },
+  {
+    "id": 96,
+    "english": "怖い",
+    "hiragana": "Bố",
+    "vietnamese": "Đáng sợ",
+    "hanViet": "こわい",
+    "hint": "(N) - Danh từ",
+    "explanation": "怖い (Bố) - Đáng sợ. Hán Việt: こわい"
+  },
+  {
+    "id": 97,
+    "english": "賛成する",
+    "hiragana": "Tán thành",
+    "vietnamese": "Tán thành",
+    "hanViet": "さんせいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "賛成する (Tán thành) - Tán thành. Hán Việt: さんせいする"
+  },
+  {
+    "id": 98,
+    "english": "挙げる",
+    "hiragana": "Cử",
+    "vietnamese": "Giơ tay",
+    "hanViet": "あげる",
+    "hint": "(N) - Danh từ",
+    "explanation": "挙げる (Cử) - Giơ tay. Hán Việt: あげる"
+  },
+  {
+    "id": 99,
+    "english": "反対する",
+    "hiragana": "Phản đối",
+    "vietnamese": "Phản đối",
+    "hanViet": "はんたいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "反対する (Phản đối) - Phản đối. Hán Việt: はんたいする"
+  },
+  {
+    "id": 100,
+    "english": "想像する",
+    "hiragana": "Tưởng tượng",
+    "vietnamese": "Tưởng tượng",
+    "hanViet": "そうぞう",
+    "hint": "(N) - Danh từ",
+    "explanation": "想像する (Tưởng tượng) - Tưởng tượng. Hán Việt: そうぞう"
+  },
+  {
+    "id": 101,
+    "english": "現実",
+    "hiragana": "Hiện thực",
+    "vietnamese": "Hiện thực, sự thật",
+    "hanViet": "げんじつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "現実 (Hiện thực) - Hiện thực, sự thật. Hán Việt: げんじつ"
+  },
+  {
+    "id": 102,
+    "english": "努力する",
+    "hiragana": "Nỗ lực",
+    "vietnamese": "Nỗ lực",
+    "hanViet": "どりょくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "努力する (Nỗ lực) - Nỗ lực. Hán Việt: どりょくする"
+  },
+  {
+    "id": 103,
+    "english": "太陽",
+    "hiragana": "Thái dương",
+    "vietnamese": "Mặt trời",
+    "hanViet": "たいよう",
+    "hint": "(N) - Danh từ",
+    "explanation": "太陽 (Thái dương) - Mặt trời. Hán Việt: たいよう"
+  },
+  {
+    "id": 104,
+    "english": "昇る",
+    "hiragana": "Thăng",
+    "vietnamese": "Lên cao, tăng lên",
+    "hanViet": "のぼる",
+    "hint": "(N) - Danh từ",
+    "explanation": "昇る (Thăng) - Lên cao, tăng lên. Hán Việt: のぼる"
+  },
+  {
+    "id": 105,
+    "english": "地球",
+    "hiragana": "Địa cầu",
+    "vietnamese": "Trái đất",
+    "hanViet": "ちきゅう",
+    "hint": "(N) - Danh từ",
+    "explanation": "地球 (Địa cầu) - Trái đất. Hán Việt: ちきゅう"
+  },
+  {
+    "id": 106,
+    "english": "環境",
+    "hiragana": "Hoàn cảnh",
+    "vietnamese": "Môi trường",
+    "hanViet": "かんきょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "環境 (Hoàn cảnh) - Môi trường. Hán Việt: かんきょう"
+  },
+  {
+    "id": 107,
+    "english": "温度",
+    "hiragana": "Ôn độ",
+    "vietnamese": "Nhiệt độ",
+    "hanViet": "おんど",
+    "hint": "(N) - Danh từ",
+    "explanation": "温度 (Ôn độ) - Nhiệt độ. Hán Việt: おんど"
+  },
+  {
+    "id": 108,
+    "english": "湿度",
+    "hiragana": "Thấp độ",
+    "vietnamese": "Độ ẩm",
+    "hanViet": "しつど",
+    "hint": "(N) - Danh từ",
+    "explanation": "湿度 (Thấp độ) - Độ ẩm. Hán Việt: しつど"
+  },
+  {
+    "id": 109,
+    "english": "湿気",
+    "hiragana": "Thấp khí",
+    "vietnamese": "Hơi ẩm",
+    "hanViet": "しっけ",
+    "hint": "(N) - Danh từ",
+    "explanation": "湿気 (Thấp khí) - Hơi ẩm. Hán Việt: しっけ"
+  },
+  {
+    "id": 110,
+    "english": "梅雨",
+    "hiragana": "Mai vũ",
+    "vietnamese": "Mùa mưa",
+    "hanViet": "つゆ",
+    "hint": "(N) - Danh từ",
+    "explanation": "梅雨 (Mai vũ) - Mùa mưa. Hán Việt: つゆ"
+  },
+  {
+    "id": 111,
+    "english": "かび",
+    "hiragana": "",
+    "vietnamese": "Nấm mốc",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "かび () - Nấm mốc. Hán Việt: "
+  },
+  {
+    "id": 112,
+    "english": "時期",
+    "hiragana": "Thời kì",
+    "vietnamese": "Thời kì",
+    "hanViet": "じき",
+    "hint": "(N) - Danh từ",
+    "explanation": "時期 (Thời kì) - Thời kì. Hán Việt: じき"
+  },
+  {
+    "id": 113,
+    "english": "暖房",
+    "hiragana": "Noãn phòng",
+    "vietnamese": "Thiết bị làm ấm",
+    "hanViet": "だんぼう",
+    "hint": "(N) - Danh từ",
+    "explanation": "暖房 (Noãn phòng) - Thiết bị làm ấm. Hán Việt: だんぼう"
+  },
+  {
+    "id": 114,
+    "english": "皮",
+    "hiragana": "Bì",
+    "vietnamese": "Vỏ, da",
+    "hanViet": "かわ",
+    "hint": "(N) - Danh từ",
+    "explanation": "皮 (Bì) - Vỏ, da. Hán Việt: かわ"
+  },
+  {
+    "id": 115,
+    "english": "画面",
+    "hiragana": "Họa diện",
+    "vietnamese": "Màn hình",
+    "hanViet": "がめん",
+    "hint": "(N) - Danh từ",
+    "explanation": "画面 (Họa diện) - Màn hình. Hán Việt: がめん"
+  },
+  {
+    "id": 116,
+    "english": "番組",
+    "hiragana": "Phiên tổ",
+    "vietnamese": "Chương trình",
+    "hanViet": "ばんぐみ",
+    "hint": "(N) - Danh từ",
+    "explanation": "番組 (Phiên tổ) - Chương trình. Hán Việt: ばんぐみ"
+  },
+  {
+    "id": 117,
+    "english": "記事",
+    "hiragana": "Kí sự",
+    "vietnamese": "Kí sự",
+    "hanViet": "きじ",
+    "hint": "(N) - Danh từ",
+    "explanation": "記事 (Kí sự) - Kí sự. Hán Việt: きじ"
+  },
+  {
+    "id": 118,
+    "english": "近所",
+    "hiragana": "Cận sở",
+    "vietnamese": "Hàng xóm, xung quanh",
+    "hanViet": "きんじょ",
+    "hint": "(N) - Danh từ",
+    "explanation": "近所 (Cận sở) - Hàng xóm, xung quanh. Hán Việt: きんじょ"
+  },
+  {
+    "id": 119,
+    "english": "盗む",
+    "hiragana": "Đạo",
+    "vietnamese": "Ăn trộm",
+    "hanViet": "ぬすむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "盗む (Đạo) - Ăn trộm. Hán Việt: ぬすむ"
+  },
+  {
+    "id": 120,
+    "english": "警官",
+    "hiragana": "Cảnh quan",
+    "vietnamese": "Cảnh sát",
+    "hanViet": "けいかん",
+    "hint": "(N) - Danh từ",
+    "explanation": "警官 (Cảnh quan) - Cảnh sát. Hán Việt: けいかん"
+  },
+  {
+    "id": 121,
+    "english": "犯人",
+    "hiragana": "Phạm nhân",
+    "vietnamese": "Tội phạm",
+    "hanViet": "はんにん",
+    "hint": "(N) - Danh từ",
+    "explanation": "犯人 (Phạm nhân) - Tội phạm. Hán Việt: はんにん"
+  },
+  {
+    "id": 122,
+    "english": "小銭",
+    "hiragana": "Tiểu tiền",
+    "vietnamese": "Tiền lẻ",
+    "hanViet": "こぜに",
+    "hint": "(N) - Danh từ",
+    "explanation": "小銭 (Tiểu tiền) - Tiền lẻ. Hán Việt: こぜに"
+  },
+  {
+    "id": 123,
+    "english": "お祝う",
+    "hiragana": "Chúc",
+    "vietnamese": "Chúc mừng",
+    "hanViet": "おいわう",
+    "hint": "(N) - Danh từ",
+    "explanation": "お祝う (Chúc) - Chúc mừng. Hán Việt: おいわう"
+  },
+  {
+    "id": 124,
+    "english": "ごちそう",
+    "hiragana": "",
+    "vietnamese": "Chiêu đãi",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "ごちそう () - Chiêu đãi. Hán Việt: "
+  },
+  {
+    "id": 125,
+    "english": "作者",
+    "hiragana": "Tác giả",
+    "vietnamese": "Tác giả",
+    "hanViet": "さくしゃ",
+    "hint": "(N) - Danh từ",
+    "explanation": "作者 (Tác giả) - Tác giả. Hán Việt: さくしゃ"
+  },
+  {
+    "id": 126,
+    "english": "作品",
+    "hiragana": "Tác phẩm",
+    "vietnamese": "Tác phẩm",
+    "hanViet": "さくひん",
+    "hint": "(N) - Danh từ",
+    "explanation": "作品 (Tác phẩm) - Tác phẩm. Hán Việt: さくひん"
+  },
+  {
+    "id": 127,
+    "english": "展示",
+    "hiragana": "Triển thị",
+    "vietnamese": "Trưng bày",
+    "hanViet": "てんじ",
+    "hint": "(N) - Danh từ",
+    "explanation": "展示 (Triển thị) - Trưng bày. Hán Việt: てんじ"
+  },
+  {
+    "id": 128,
+    "english": "制服",
+    "hiragana": "Chế phục",
+    "vietnamese": "Đồng phục",
+    "hanViet": "せいふく",
+    "hint": "(N) - Danh từ",
+    "explanation": "制服 (Chế phục) - Đồng phục. Hán Việt: せいふく"
+  },
+  {
+    "id": 129,
+    "english": "食器",
+    "hiragana": "Thực khí",
+    "vietnamese": "Bát đĩa",
+    "hanViet": "しょっき",
+    "hint": "(N) - Danh từ",
+    "explanation": "食器 (Thực khí) - Bát đĩa. Hán Việt: しょっき"
+  },
+  {
+    "id": 130,
+    "english": "洗剤",
+    "hiragana": "Tẩy tễ",
+    "vietnamese": "Chất tẩy rửa",
+    "hanViet": "せんざい",
+    "hint": "(N) - Danh từ",
+    "explanation": "洗剤 (Tẩy tễ) - Chất tẩy rửa. Hán Việt: せんざい"
+  },
+  {
+    "id": 131,
+    "english": "底",
+    "hiragana": "Để",
+    "vietnamese": "Đáy",
+    "hanViet": "そこ",
+    "hint": "(N) - Danh từ",
+    "explanation": "底 (Để) - Đáy. Hán Việt: そこ"
+  },
+  {
+    "id": 132,
+    "english": "進む",
+    "hiragana": "Tiến",
+    "vietnamese": "Tiến lên/triển/bộ",
+    "hanViet": "すすむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "進む (Tiến) - Tiến lên/triển/bộ. Hán Việt: すすむ"
+  },
+  {
+    "id": 133,
+    "english": "開発",
+    "hiragana": "Khai phát",
+    "vietnamese": "Phát triển",
+    "hanViet": "かいはつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "開発 (Khai phát) - Phát triển. Hán Việt: かいはつ"
+  },
+  {
+    "id": 134,
+    "english": "都市",
+    "hiragana": "Đô thị",
+    "vietnamese": "Thành phố",
+    "hanViet": "とし",
+    "hint": "(N) - Danh từ",
+    "explanation": "都市 (Đô thị) - Thành phố. Hán Việt: とし"
+  },
+  {
+    "id": 135,
+    "english": "寺",
+    "hiragana": "Tự",
+    "vietnamese": "Chùa",
+    "hanViet": "てら",
+    "hint": "(N) - Danh từ",
+    "explanation": "寺 (Tự) - Chùa. Hán Việt: てら"
+  },
+  {
+    "id": 136,
+    "english": "道路",
+    "hiragana": "Đạo lộ",
+    "vietnamese": "Con đường",
+    "hanViet": "どうろ",
+    "hint": "(N) - Danh từ",
+    "explanation": "道路 (Đạo lộ) - Con đường. Hán Việt: どうろ"
+  },
+  {
+    "id": 137,
+    "english": "坂",
+    "hiragana": "Phản",
+    "vietnamese": "Dốc",
+    "hanViet": "さか",
+    "hint": "(N) - Danh từ",
+    "explanation": "坂 (Phản) - Dốc. Hán Việt: さか"
+  },
+  {
+    "id": 138,
+    "english": "煙",
+    "hiragana": "Yên",
+    "vietnamese": "Khói",
+    "hanViet": "けむり",
+    "hint": "(N) - Danh từ",
+    "explanation": "煙 (Yên) - Khói. Hán Việt: けむり"
+  },
+  {
+    "id": 139,
+    "english": "逃げる",
+    "hiragana": "Đào",
+    "vietnamese": "Bỏ chạy, tẩu thoát",
+    "hanViet": "にげる",
+    "hint": "(N) - Danh từ",
+    "explanation": "逃げる (Đào) - Bỏ chạy, tẩu thoát. Hán Việt: にげる"
+  },
+  {
+    "id": 140,
+    "english": "火事",
+    "hiragana": "Hỏa sự",
+    "vietnamese": "Hỏa hoạn",
+    "hanViet": "かじ",
+    "hint": "(N) - Danh từ",
+    "explanation": "火事 (Hỏa sự) - Hỏa hoạn. Hán Việt: かじ"
+  },
+  {
+    "id": 141,
+    "english": "灰",
+    "hiragana": "Hôi",
+    "vietnamese": "Tro tàn",
+    "hanViet": "はい",
+    "hint": "(N) - Danh từ",
+    "explanation": "灰 (Hôi) - Tro tàn. Hán Việt: はい"
+  },
+  {
+    "id": 142,
+    "english": "判",
+    "hiragana": "Phán",
+    "vietnamese": "Con dấu",
+    "hanViet": "はん",
+    "hint": "(N) - Danh từ",
+    "explanation": "判 (Phán) - Con dấu. Hán Việt: はん"
+  },
+  {
+    "id": 143,
+    "english": "名刺",
+    "hiragana": "Danh thích",
+    "vietnamese": "Danh thiếp",
+    "hanViet": "めいし",
+    "hint": "(N) - Danh từ",
+    "explanation": "名刺 (Danh thích) - Danh thiếp. Hán Việt: めいし"
+  },
+  {
+    "id": 144,
+    "english": "交換",
+    "hiragana": "Giao hoán",
+    "vietnamese": "Trao đổi",
+    "hanViet": "こうかん",
+    "hint": "(N) - Danh từ",
+    "explanation": "交換 (Giao hoán) - Trao đổi. Hán Việt: こうかん"
+  },
+  {
+    "id": 145,
+    "english": "免許",
+    "hiragana": "Miễn hứa",
+    "vietnamese": "Giấy phép",
+    "hanViet": "めんきょ",
+    "hint": "(N) - Danh từ",
+    "explanation": "免許 (Miễn hứa) - Giấy phép. Hán Việt: めんきょ"
+  },
+  {
+    "id": 146,
+    "english": "必要（な）",
+    "hiragana": "Tất yếu",
+    "vietnamese": "Cần thiết",
+    "hanViet": "ひつよう",
+    "hint": "(N) - Danh từ",
+    "explanation": "必要（な） (Tất yếu) - Cần thiết. Hán Việt: ひつよう"
+  },
+  {
+    "id": 147,
+    "english": "調理師",
+    "hiragana": "Điều lý sư",
+    "vietnamese": "Đầu bếp",
+    "hanViet": "ちょうりし",
+    "hint": "(N) - Danh từ",
+    "explanation": "調理師 (Điều lý sư) - Đầu bếp. Hán Việt: ちょうりし"
+  },
+  {
+    "id": 148,
+    "english": "多く",
+    "hiragana": "Đa",
+    "vietnamese": "Nhiều",
+    "hanViet": "おおく",
+    "hint": "(N) - Danh từ",
+    "explanation": "多く (Đa) - Nhiều. Hán Việt: おおく"
+  },
+  {
+    "id": 149,
+    "english": "前半",
+    "hiragana": "Tiền bán",
+    "vietnamese": "Phần đầu",
+    "hanViet": "ぜんはん",
+    "hint": "(N) - Danh từ",
+    "explanation": "前半 (Tiền bán) - Phần đầu. Hán Việt: ぜんはん"
+  },
+  {
+    "id": 150,
+    "english": "後半",
+    "hiragana": "Hậu bán",
+    "vietnamese": "Phần sau",
+    "hanViet": "こうはん",
+    "hint": "(N) - Danh từ",
+    "explanation": "後半 (Hậu bán) - Phần sau. Hán Việt: こうはん"
+  },
+  {
+    "id": 151,
+    "english": "退屈",
+    "hiragana": "Thoái khuất",
+    "vietnamese": "Buồn tẻ, chán ngắt",
+    "hanViet": "たいくつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "退屈 (Thoái khuất) - Buồn tẻ, chán ngắt. Hán Việt: たいくつ"
+  },
+  {
+    "id": 152,
+    "english": "最高",
+    "hiragana": "Tối cao",
+    "vietnamese": "Cao nhất",
+    "hanViet": "さいこう",
+    "hint": "(N) - Danh từ",
+    "explanation": "最高 (Tối cao) - Cao nhất. Hán Việt: さいこう"
+  },
+  {
+    "id": 153,
+    "english": "最低",
+    "hiragana": "Tối đê",
+    "vietnamese": "Thấp nhất",
+    "hanViet": "さいてい",
+    "hint": "(N) - Danh từ",
+    "explanation": "最低 (Tối đê) - Thấp nhất. Hán Việt: さいてい"
+  },
+  {
+    "id": 154,
+    "english": "最初",
+    "hiragana": "Tối sơ",
+    "vietnamese": "Đầu tiên",
+    "hanViet": "さいしょ",
+    "hint": "(N) - Danh từ",
+    "explanation": "最初 (Tối sơ) - Đầu tiên. Hán Việt: さいしょ"
+  },
+  {
+    "id": 155,
+    "english": "最��",
+    "hiragana": "Tối hậu",
+    "vietnamese": "Cuối cùng",
+    "hanViet": "さいご",
+    "hint": "(N) - Danh từ",
+    "explanation": "最�� (Tối hậu) - Cuối cùng. Hán Việt: さいご"
+  },
+  {
+    "id": 156,
+    "english": "花束",
+    "hiragana": "Hoa thúc",
+    "vietnamese": "Bó hoa",
+    "hanViet": "はなたば",
+    "hint": "(N) - Danh từ",
+    "explanation": "花束 (Hoa thúc) - Bó hoa. Hán Việt: はなたば"
+  },
+  {
+    "id": 157,
+    "english": "自動",
+    "hiragana": "Tự động",
+    "vietnamese": "Tự động",
+    "hanViet": "じどう",
+    "hint": "(N) - Danh từ",
+    "explanation": "自動 (Tự động) - Tự động. Hán Việt: じどう"
+  },
+  {
+    "id": 158,
+    "english": "種類",
+    "hiragana": "Chủng loại",
+    "vietnamese": "Chủng loại",
+    "hanViet": "しゅるい",
+    "hint": "(N) - Danh từ",
+    "explanation": "種類 (Chủng loại) - Chủng loại. Hán Việt: しゅるい"
+  },
+  {
+    "id": 159,
+    "english": "性格",
+    "hiragana": "Tính cách",
+    "vietnamese": "Tính cách",
+    "hanViet": "せいかく",
+    "hint": "(N) - Danh từ",
+    "explanation": "性格 (Tính cách) - Tính cách. Hán Việt: せいかく"
+  },
+  {
+    "id": 160,
+    "english": "性質",
+    "hiragana": "Tính chất",
+    "vietnamese": "Tính chất",
+    "hanViet": "せいしつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "性質 (Tính chất) - Tính chất. Hán Việt: せいしつ"
+  },
+  {
+    "id": 161,
+    "english": "布",
+    "hiragana": "Bố",
+    "vietnamese": "Vải",
+    "hanViet": "ぬの",
+    "hint": "(N) - Danh từ",
+    "explanation": "布 (Bố) - Vải. Hán Việt: ぬの"
+  },
+  {
+    "id": 162,
+    "english": "順番",
+    "hiragana": "Thuận phiên",
+    "vietnamese": "Thứ tự",
+    "hanViet": "じゅんばん",
+    "hint": "(N) - Danh từ",
+    "explanation": "順番 (Thuận phiên) - Thứ tự. Hán Việt: じゅんばん"
+  },
+  {
+    "id": 163,
+    "english": "発表",
+    "hiragana": "Phát biểu",
+    "vietnamese": "Phát biểu",
+    "hanViet": "はっぴょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "発表 (Phát biểu) - Phát biểu. Hán Việt: はっぴょう"
+  },
+  {
+    "id": 164,
+    "english": "商品",
+    "hiragana": "Thương phẩm",
+    "vietnamese": "Phần thưởng",
+    "hanViet": "しょうひん",
+    "hint": "(N) - Danh từ",
+    "explanation": "商品 (Thương phẩm) - Phần thưởng. Hán Việt: しょうひん"
+  },
+  {
+    "id": 165,
+    "english": "番",
+    "hiragana": "Phiên",
+    "vietnamese": "Lượt",
+    "hanViet": "ばん",
+    "hint": "(N) - Danh từ",
+    "explanation": "番 (Phiên) - Lượt. Hán Việt: ばん"
+  },
+  {
+    "id": 166,
+    "english": "方法",
+    "hiragana": "Phương pháp",
+    "vietnamese": "Phương pháp",
+    "hanViet": "ほうほう",
+    "hint": "(N) - Danh từ",
+    "explanation": "方法 (Phương pháp) - Phương pháp. Hán Việt: ほうほう"
+  },
+  {
+    "id": 167,
+    "english": "検査",
+    "hiragana": "Kiểm tra",
+    "vietnamese": "Kiểm tra",
+    "hanViet": "ちょうさ",
+    "hint": "(N) - Danh từ",
+    "explanation": "検査 (Kiểm tra) - Kiểm tra. Hán Việt: ちょうさ"
+  },
+  {
+    "id": 168,
+    "english": "完成",
+    "hiragana": "Hoàn thành",
+    "vietnamese": "Hoàn thành",
+    "hanViet": "かんせい",
+    "hint": "(N) - Danh từ",
+    "explanation": "完成 (Hoàn thành) - Hoàn thành. Hán Việt: かんせい"
+  },
+  {
+    "id": 169,
+    "english": "製品",
+    "hiragana": "Chế phẩm",
+    "vietnamese": "Sản phẩm, thành phẩm",
+    "hanViet": "せいひん",
+    "hint": "(N) - Danh từ",
+    "explanation": "製品 (Chế phẩm) - Sản phẩm, thành phẩm. Hán Việt: せいひん"
+  },
+  {
+    "id": 170,
+    "english": "値上がり",
+    "hiragana": "Trị thượng",
+    "vietnamese": "Tăng giá",
+    "hanViet": "ねあがり",
+    "hint": "(N) - Danh từ",
+    "explanation": "値上がり (Trị thượng) - Tăng giá. Hán Việt: ねあがり"
+  },
+  {
+    "id": 171,
+    "english": "生",
+    "hiragana": "Sinh",
+    "vietnamese": "Tươi, mới (chưa chế biến)",
+    "hanViet": "なま",
+    "hint": "(N) - Danh từ",
+    "explanation": "生 (Sinh) - Tươi, mới (chưa chế biến). Hán Việt: なま"
+  },
+  {
+    "id": 172,
+    "english": "渇く",
+    "hiragana": "Khát",
+    "vietnamese": "Khát",
+    "hanViet": "かわく",
+    "hint": "(N) - Danh từ",
+    "explanation": "渇く (Khát) - Khát. Hán Việt: かわく"
+  },
+  {
+    "id": 173,
+    "english": "嗅ぐ",
+    "hiragana": "Khứu",
+    "vietnamese": "Ngửi",
+    "hanViet": "かぐ",
+    "hint": "(N) - Danh từ",
+    "explanation": "嗅ぐ (Khứu) - Ngửi. Hán Việt: かぐ"
+  },
+  {
+    "id": 174,
+    "english": "叩く",
+    "hiragana": "Khấu",
+    "vietnamese": "Vỗ, đánh, gõ",
+    "hanViet": "たたく",
+    "hint": "(N) - Danh từ",
+    "explanation": "叩く (Khấu) - Vỗ, đánh, gõ. Hán Việt: たたく"
+  },
+  {
+    "id": 175,
+    "english": "お尻",
+    "hiragana": "Khào",
+    "vietnamese": "Mông",
+    "hanViet": "おしり",
+    "hint": "(N) - Danh từ",
+    "explanation": "お尻 (Khào) - Mông. Hán Việt: おしり"
+  },
+  {
+    "id": 176,
+    "english": "殴る",
+    "hiragana": "Ẩu",
+    "vietnamese": "Đánh",
+    "hanViet": "なぐる",
+    "hint": "(N) - Danh từ",
+    "explanation": "殴る (Ẩu) - Đánh. Hán Việt: なぐる"
+  },
+  {
+    "id": 177,
+    "english": "蹴る",
+    "hiragana": "Xúc",
+    "vietnamese": "Đá",
+    "hanViet": "ける",
+    "hint": "(N) - Danh từ",
+    "explanation": "蹴る (Xúc) - Đá. Hán Việt: ける"
+  },
+  {
+    "id": 178,
+    "english": "抱く",
+    "hiragana": "Bão",
+    "vietnamese": "Ôm",
+    "hanViet": "だく",
+    "hint": "(N) - Danh từ",
+    "explanation": "抱く (Bão) - Ôm. Hán Việt: だく"
+  },
+  {
+    "id": 179,
+    "english": "両手",
+    "hiragana": "Lưỡng thủ",
+    "vietnamese": "Hai tay",
+    "hanViet": "りょうて",
+    "hint": "(N) - Danh từ",
+    "explanation": "両手 (Lưỡng thủ) - Hai tay. Hán Việt: りょうて"
+  },
+  {
+    "id": 180,
+    "english": "���風",
+    "hiragana": "Đài phong",
+    "vietnamese": "Bão",
+    "hanViet": "たいふう",
+    "hint": "(N) - Danh từ",
+    "explanation": "���風 (Đài phong) - Bão. Hán Việt: たいふう"
+  },
+  {
+    "id": 181,
+    "english": "倒れる",
+    "hiragana": "Đảo",
+    "vietnamese": "Bị gãy/đổ/rơi",
+    "hanViet": "たおれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "倒れる (Đảo) - Bị gãy/đổ/rơi. Hán Việt: たおれる"
+  },
+  {
+    "id": 182,
+    "english": "倒す",
+    "hiragana": "Đảo",
+    "vietnamese": "Chặt đổ, quật ngã",
+    "hanViet": "たおす",
+    "hint": "(N) - Danh từ",
+    "explanation": "倒す (Đảo) - Chặt đổ, quật ngã. Hán Việt: たおす"
+  },
+  {
+    "id": 183,
+    "english": "起きる",
+    "hiragana": "Khởi",
+    "vietnamese": "Thức dậy",
+    "hanViet": "おきる",
+    "hint": "(N) - Danh từ",
+    "explanation": "起きる (Khởi) - Thức dậy. Hán Việt: おきる"
+  },
+  {
+    "id": 184,
+    "english": "起こす",
+    "hiragana": "Khởi",
+    "vietnamese": "Đánh thức",
+    "hanViet": "おこす",
+    "hint": "(N) - Danh từ",
+    "explanation": "起こす (Khởi) - Đánh thức. Hán Việt: おこす"
+  },
+  {
+    "id": 185,
+    "english": "尋ねる",
+    "hiragana": "Tầm",
+    "vietnamese": "Hỏi, thăm hỏi",
+    "hanViet": "たずねる",
+    "hint": "(N) - Danh từ",
+    "explanation": "尋ねる (Tầm) - Hỏi, thăm hỏi. Hán Việt: たずねる"
+  },
+  {
+    "id": 186,
+    "english": "呼ぶ",
+    "hiragana": "Hô",
+    "vietnamese": "Gọi",
+    "hanViet": "よぶ",
+    "hint": "(N) - Danh từ",
+    "explanation": "呼ぶ (Hô) - Gọi. Hán Việt: よぶ"
+  },
+  {
+    "id": 187,
+    "english": "叫ぶ",
+    "hiragana": "Khiếu",
+    "vietnamese": "Gào, hét, rú lên",
+    "hanViet": "さけぶ",
+    "hint": "(N) - Danh từ",
+    "explanation": "叫ぶ (Khiếu) - Gào, hét, rú lên. Hán Việt: さけぶ"
+  },
+  {
+    "id": 188,
+    "english": "黙る",
+    "hiragana": "Mặc",
+    "vietnamese": "Im lặng",
+    "hanViet": "だまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "黙る (Mặc) - Im lặng. Hán Việt: だまる"
+  },
+  {
+    "id": 189,
+    "english": "飼う",
+    "hiragana": "Tự",
+    "vietnamese": "Nuôi",
+    "hanViet": "かう",
+    "hint": "(N) - Danh từ",
+    "explanation": "飼う (Tự) - Nuôi. Hán Việt: かう"
+  },
+  {
+    "id": 190,
+    "english": "数える",
+    "hiragana": "Số",
+    "vietnamese": "Đếm",
+    "hanViet": "かぞえる",
+    "hint": "(N) - Danh từ",
+    "explanation": "数える (Số) - Đếm. Hán Việt: かぞえる"
+  },
+  {
+    "id": 191,
+    "english": "数",
+    "hiragana": "Số",
+    "vietnamese": "Số",
+    "hanViet": "かず",
+    "hint": "(N) - Danh từ",
+    "explanation": "数 (Số) - Số. Hán Việt: かず"
+  },
+  {
+    "id": 192,
+    "english": "乾く",
+    "hiragana": "Can",
+    "vietnamese": "Khô",
+    "hanViet": "かわく",
+    "hint": "(N) - Danh từ",
+    "explanation": "乾く (Can) - Khô. Hán Việt: かわく"
+  },
+  {
+    "id": 193,
+    "english": "乾かす",
+    "hiragana": "Can",
+    "vietnamese": "Làm khô",
+    "hanViet": "かわかす",
+    "hint": "(N) - Danh từ",
+    "explanation": "乾かす (Can) - Làm khô. Hán Việt: かわかす"
+  },
+  {
+    "id": 194,
+    "english": "濡れる",
+    "hiragana": "Nhu",
+    "vietnamese": "Ướt",
+    "hanViet": "ぬれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "濡れる (Nhu) - Ướt. Hán Việt: ぬれる"
+  },
+  {
+    "id": 195,
+    "english": "畳む",
+    "hiragana": "Điệp",
+    "vietnamese": "Gấp, gập, xếp",
+    "hanViet": "たたむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "畳む (Điệp) - Gấp, gập, xếp. Hán Việt: たたむ"
+  },
+  {
+    "id": 196,
+    "english": "畳",
+    "hiragana": "Điệp",
+    "vietnamese": "Cái chiếu",
+    "hanViet": "じょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "畳 (Điệp) - Cái chiếu. Hán Việt: じょう"
+  },
+  {
+    "id": 197,
+    "english": "誘う",
+    "hiragana": "Dụ",
+    "vietnamese": "Mời , rủ",
+    "hanViet": "さそう",
+    "hint": "(N) - Danh từ",
+    "explanation": "誘う (Dụ) - Mời , rủ. Hán Việt: さそう"
+  },
+  {
+    "id": 198,
+    "english": "奢る",
+    "hiragana": "Xa",
+    "vietnamese": "Chiêu đãi, khao",
+    "hanViet": "おごる",
+    "hint": "(N) - Danh từ",
+    "explanation": "奢る (Xa) - Chiêu đãi, khao. Hán Việt: おごる"
+  },
+  {
+    "id": 199,
+    "english": "預かる",
+    "hiragana": "Dự",
+    "vietnamese": "Chăm sóc, trông nom",
+    "hanViet": "あずかる",
+    "hint": "(N) - Danh từ",
+    "explanation": "預かる (Dự) - Chăm sóc, trông nom. Hán Việt: あずかる"
+  },
+  {
+    "id": 200,
+    "english": "預ける",
+    "hiragana": "Dự",
+    "vietnamese": "Giao cho, gửi",
+    "hanViet": "あずける",
+    "hint": "(N) - Danh từ",
+    "explanation": "預ける (Dự) - Giao cho, gửi. Hán Việt: あずける"
+  },
+  {
+    "id": 201,
+    "english": "決まる",
+    "hiragana": "Quyết",
+    "vietnamese": "Bị quyết định",
+    "hanViet": "きまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "決まる (Quyết) - Bị quyết định. Hán Việt: きまる"
+  },
+  {
+    "id": 202,
+    "english": "決める",
+    "hiragana": "Quyết",
+    "vietnamese": "Quyết định",
+    "hanViet": "きめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "決める (Quyết) - Quyết định. Hán Việt: きめる"
+  },
+  {
+    "id": 203,
+    "english": "が　写る",
+    "hiragana": "Tả",
+    "vietnamese": "Được chụp",
+    "hanViet": "うつる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　写る (Tả) - Được chụp. Hán Việt: うつる"
+  },
+  {
+    "id": 204,
+    "english": "写す",
+    "hiragana": "Tả",
+    "vietnamese": "Chụp lại",
+    "hanViet": "うつす",
+    "hint": "(N) - Danh từ",
+    "explanation": "写す (Tả) - Chụp lại. Hán Việt: うつす"
+  },
+  {
+    "id": 205,
+    "english": "思い出す",
+    "hiragana": "Tư xuất",
+    "vietnamese": "Nhớ nhung",
+    "hanViet": "おもいだす",
+    "hint": "(N) - Danh từ",
+    "explanation": "思い出す (Tư xuất) - Nhớ nhung. Hán Việt: おもいだす"
+  },
+  {
+    "id": 206,
+    "english": "教わる",
+    "hiragana": "Giáo",
+    "vietnamese": "Được dạy",
+    "hanViet": "おそわる",
+    "hint": "(N) - Danh từ",
+    "explanation": "教わる (Giáo) - Được dạy. Hán Việt: おそわる"
+  },
+  {
+    "id": 207,
+    "english": "申し込む",
+    "hiragana": "Thân nhập",
+    "vietnamese": "Đăng kí",
+    "hanViet": "もうしこむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "申し込む (Thân nhập) - Đăng kí. Hán Việt: もうしこむ"
+  },
+  {
+    "id": 208,
+    "english": "断る",
+    "hiragana": "Đoạn",
+    "vietnamese": "Từ chối",
+    "hanViet": "ことわる",
+    "hint": "(N) - Danh từ",
+    "explanation": "断る (Đoạn) - Từ chối. Hán Việt: ことわる"
+  },
+  {
+    "id": 209,
+    "english": "指輪",
+    "hiragana": "Chỉ luân",
+    "vietnamese": "Nhẫn",
+    "hanViet": "ゆびわ",
+    "hint": "(N) - Danh từ",
+    "explanation": "指輪 (Chỉ luân) - Nhẫn. Hán Việt: ゆびわ"
+  },
+  {
+    "id": 210,
+    "english": "見つかる",
+    "hiragana": "Kiến",
+    "vietnamese": "Được tìm thấy",
+    "hanViet": "みつかる",
+    "hint": "(N) - Danh từ",
+    "explanation": "見つかる (Kiến) - Được tìm thấy. Hán Việt: みつかる"
+  },
+  {
+    "id": 211,
+    "english": "見つける",
+    "hiragana": "Kiến",
+    "vietnamese": "Tìm thấy",
+    "hanViet": "みつける",
+    "hint": "(N) - Danh từ",
+    "explanation": "見つける (Kiến) - Tìm thấy. Hán Việt: みつける"
+  },
+  {
+    "id": 212,
+    "english": "捕まる",
+    "hiragana": "Bộ",
+    "vietnamese": "Bị bắt, bị tóm",
+    "hanViet": "つかまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "捕まる (Bộ) - Bị bắt, bị tóm. Hán Việt: つかまる"
+  },
+  {
+    "id": 213,
+    "english": "捕まえる",
+    "hiragana": "Bộ",
+    "vietnamese": "Đi bắt",
+    "hanViet": "つかまえる",
+    "hint": "(N) - Danh từ",
+    "explanation": "捕まえる (Bộ) - Đi bắt. Hán Việt: つかまえる"
+  },
+  {
+    "id": 214,
+    "english": "乗る",
+    "hiragana": "Thừa",
+    "vietnamese": "Lên",
+    "hanViet": "のる",
+    "hint": "(N) - Danh từ",
+    "explanation": "乗る (Thừa) - Lên. Hán Việt: のる"
+  },
+  {
+    "id": 215,
+    "english": "乗せる",
+    "hiragana": "Thừa",
+    "vietnamese": "Cho lên, xếp lên",
+    "hanViet": "のせる",
+    "hint": "(N) - Danh từ",
+    "explanation": "乗せる (Thừa) - Cho lên, xếp lên. Hán Việt: のせる"
+  },
+  {
+    "id": 216,
+    "english": "下りる/降りる",
+    "hiragana": "Hạ/ Giáng",
+    "vietnamese": "Xuống",
+    "hanViet": "おりる",
+    "hint": "(N) - Danh từ",
+    "explanation": "下りる/降りる (Hạ/ Giáng) - Xuống. Hán Việt: おりる"
+  },
+  {
+    "id": 217,
+    "english": "下ろす、降ろす",
+    "hiragana": "Hạ/ Giáng",
+    "vietnamese": "Cho xuống",
+    "hanViet": "おろす",
+    "hint": "(N) - Danh từ",
+    "explanation": "下ろす、降ろす (Hạ/ Giáng) - Cho xuống. Hán Việt: おろす"
+  },
+  {
+    "id": 218,
+    "english": "直る",
+    "hiragana": "Trực",
+    "vietnamese": "Được sửa, sửa chữa",
+    "hanViet": "なおる",
+    "hint": "(N) - Danh từ",
+    "explanation": "直る (Trực) - Được sửa, sửa chữa. Hán Việt: なおる"
+  },
+  {
+    "id": 219,
+    "english": "直す",
+    "hiragana": "Trực",
+    "vietnamese": "Sửa xong",
+    "hanViet": "なおす",
+    "hint": "(N) - Danh từ",
+    "explanation": "直す (Trực) - Sửa xong. Hán Việt: なおす"
+  },
+  {
+    "id": 220,
+    "english": "治る",
+    "hiragana": "Trị",
+    "vietnamese": "Khôi phục",
+    "hanViet": "なおる",
+    "hint": "(N) - Danh từ",
+    "explanation": "治る (Trị) - Khôi phục. Hán Việt: なおる"
+  },
+  {
+    "id": 221,
+    "english": "治す",
+    "hiragana": "Trị",
+    "vietnamese": "Chữa trị",
+    "hanViet": "なおす",
+    "hint": "(N) - Danh từ",
+    "explanation": "治す (Trị) - Chữa trị. Hán Việt: なおす"
+  },
+  {
+    "id": 222,
+    "english": "亡くなる",
+    "hiragana": "Vong",
+    "vietnamese": "Chết",
+    "hanViet": "なくなる",
+    "hint": "(N) - Danh từ",
+    "explanation": "亡くなる (Vong) - Chết. Hán Việt: なくなる"
+  },
+  {
+    "id": 223,
+    "english": "亡くす",
+    "hiragana": "Vong",
+    "vietnamese": "Mất",
+    "hanViet": "なくす",
+    "hint": "(N) - Danh từ",
+    "explanation": "亡くす (Vong) - Mất. Hán Việt: なくす"
+  },
+  {
+    "id": 224,
+    "english": "父親",
+    "hiragana": "Phụ thân",
+    "vietnamese": "Cha mẹ",
+    "hanViet": "ちちおや",
+    "hint": "(N) - Danh từ",
+    "explanation": "父親 (Phụ thân) - Cha mẹ. Hán Việt: ちちおや"
+  },
+  {
+    "id": 225,
+    "english": "生まれる",
+    "hiragana": "Sinh",
+    "vietnamese": "Được sinh ra",
+    "hanViet": "うまれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "生まれる (Sinh) - Được sinh ra. Hán Việt: うまれる"
+  },
+  {
+    "id": 226,
+    "english": "産む",
+    "hiragana": "Sản",
+    "vietnamese": "Sinh, đẻ",
+    "hanViet": "うむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "産む (Sản) - Sinh, đẻ. Hán Việt: うむ"
+  },
+  {
+    "id": 227,
+    "english": "先日",
+    "hiragana": "Tiên nhật",
+    "vietnamese": "Mấy ngày trước",
+    "hanViet": "せんじつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "先日 (Tiên nhật) - Mấy ngày trước. Hán Việt: せんじつ"
+  },
+  {
+    "id": 228,
+    "english": "出会う",
+    "hiragana": "Xuất hội",
+    "vietnamese": "Gặp gỡ ngẫu nhiên",
+    "hanViet": "であう",
+    "hint": "(N) - Danh từ",
+    "explanation": "出会う (Xuất hội) - Gặp gỡ ngẫu nhiên. Hán Việt: であう"
+  },
+  {
+    "id": 229,
+    "english": "��ねる",
+    "hiragana": "Phỏng",
+    "vietnamese": "Thăm, ghé thăm",
+    "hanViet": "たずねる",
+    "hint": "(N) - Danh từ",
+    "explanation": "��ねる (Phỏng) - Thăm, ghé thăm. Hán Việt: たずねる"
+  },
+  {
+    "id": 230,
+    "english": "付き合う",
+    "hiragana": "Phó hợp",
+    "vietnamese": "Hẹn hò",
+    "hanViet": "つきあう",
+    "hint": "(N) - Danh từ",
+    "explanation": "付き合う (Phó hợp) - Hẹn hò. Hán Việt: つきあう"
+  },
+  {
+    "id": 231,
+    "english": "効く",
+    "hiragana": "Hiệu",
+    "vietnamese": "Hiệu quả",
+    "hanViet": "きく",
+    "hint": "(N) - Danh từ",
+    "explanation": "効く (Hiệu) - Hiệu quả. Hán Việt: きく"
+  },
+  {
+    "id": 232,
+    "english": "頭痛",
+    "hiragana": "Đầu thống",
+    "vietnamese": "Đau đầu",
+    "hanViet": "ずつう",
+    "hint": "(N) - Danh từ",
+    "explanation": "頭痛 (Đầu thống) - Đau đầu. Hán Việt: ずつう"
+  },
+  {
+    "id": 233,
+    "english": "流行する",
+    "hiragana": "Lưu hành",
+    "vietnamese": "Lưu hành",
+    "hanViet": "りゅうこうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "流行する (Lưu hành) - Lưu hành. Hán Việt: りゅうこうする"
+  },
+  {
+    "id": 234,
+    "english": "経つ",
+    "hiragana": "Kinh",
+    "vietnamese": "Trải qua",
+    "hanViet": "たつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "経つ (Kinh) - Trải qua. Hán Việt: たつ"
+  },
+  {
+    "id": 235,
+    "english": "間に合う",
+    "hiragana": "Gian hợp",
+    "vietnamese": "Kịp giờ",
+    "hanViet": "まにあう",
+    "hint": "(N) - Danh từ",
+    "explanation": "間に合う (Gian hợp) - Kịp giờ. Hán Việt: まにあう"
+  },
+  {
+    "id": 236,
+    "english": "間に合わせる",
+    "hiragana": "Gian hợp",
+    "vietnamese": "Đúng giờ",
+    "hanViet": "まにあわせる",
+    "hint": "(N) - Danh từ",
+    "explanation": "間に合わせる (Gian hợp) - Đúng giờ. Hán Việt: まにあわせる"
+  },
+  {
+    "id": 237,
+    "english": "通う",
+    "hiragana": "Thống",
+    "vietnamese": "Đi đi về về",
+    "hanViet": "かよう",
+    "hint": "(N) - Danh từ",
+    "explanation": "通う (Thống) - Đi đi về về. Hán Việt: かよう"
+  },
+  {
+    "id": 238,
+    "english": "込む",
+    "hiragana": "Nhập",
+    "vietnamese": "Đông, tắc",
+    "hanViet": "こむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "込む (Nhập) - Đông, tắc. Hán Việt: こむ"
+  },
+  {
+    "id": 239,
+    "english": "すれ違う",
+    "hiragana": "Vi",
+    "vietnamese": "Vượt qua, lướt qua",
+    "hanViet": "すれちがう",
+    "hint": "(N) - Danh từ",
+    "explanation": "すれ違う (Vi) - Vượt qua, lướt qua. Hán Việt: すれちがう"
+  },
+  {
+    "id": 240,
+    "english": "動く",
+    "hiragana": "Động",
+    "vietnamese": "Bị chuyển động",
+    "hanViet": "うごく",
+    "hint": "(N) - Danh từ",
+    "explanation": "動く (Động) - Bị chuyển động. Hán Việt: うごく"
+  },
+  {
+    "id": 241,
+    "english": "動かす",
+    "hiragana": "Động",
+    "vietnamese": "Di chuyển",
+    "hanViet": "うごかす",
+    "hint": "(N) - Danh từ",
+    "explanation": "動かす (Động) - Di chuyển. Hán Việt: うごかす"
+  },
+  {
+    "id": 242,
+    "english": "離れる",
+    "hiragana": "Ly",
+    "vietnamese": "Tách rời",
+    "hanViet": "はなれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "離れる (Ly) - Tách rời. Hán Việt: はなれる"
+  },
+  {
+    "id": 243,
+    "english": "離す",
+    "hiragana": "Ly",
+    "vietnamese": "Để xa ra, làm tránh ra",
+    "hanViet": "はなす",
+    "hint": "(N) - Danh từ",
+    "explanation": "離す (Ly) - Để xa ra, làm tránh ra. Hán Việt: はなす"
+  },
+  {
+    "id": 244,
+    "english": "ぶつかる",
+    "hiragana": "",
+    "vietnamese": "Bị đâm",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "ぶつかる () - Bị đâm. Hán Việt: "
+  },
+  {
+    "id": 245,
+    "english": "ぶつける",
+    "hiragana": "",
+    "vietnamese": "Đâm vào",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "ぶつける () - Đâm vào. Hán Việt: "
+  },
+  {
+    "id": 246,
+    "english": "涙",
+    "hiragana": "Lệ",
+    "vietnamese": "Nước mắt",
+    "hanViet": "なみだ",
+    "hint": "(N) - Danh từ",
+    "explanation": "涙 (Lệ) - Nước mắt. Hán Việt: なみだ"
+  },
+  {
+    "id": 247,
+    "english": "溢れる",
+    "hiragana": "Dật",
+    "vietnamese": "Tràn ra",
+    "hanViet": "こぼれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "溢れる (Dật) - Tràn ra. Hán Việt: こぼれる"
+  },
+  {
+    "id": 248,
+    "english": "溢す",
+    "hiragana": "Dật",
+    "vietnamese": "Làm tràn ra",
+    "hanViet": "こぼす",
+    "hint": "(N) - Danh từ",
+    "explanation": "溢す (Dật) - Làm tràn ra. Hán Việt: こぼす"
+  },
+  {
+    "id": 249,
+    "english": "拭く",
+    "hiragana": "Thức",
+    "vietnamese": "Lau, chùi, gạt",
+    "hanViet": "ふく",
+    "hint": "(N) - Danh từ",
+    "explanation": "拭く (Thức) - Lau, chùi, gạt. Hán Việt: ふく"
+  },
+  {
+    "id": 250,
+    "english": "片付く",
+    "hiragana": "Phiến phó",
+    "vietnamese": "Ngăn nắp",
+    "hanViet": "かたづく",
+    "hint": "(N) - Danh từ",
+    "explanation": "片付く (Phiến phó) - Ngăn nắp. Hán Việt: かたづく"
+  },
+  {
+    "id": 251,
+    "english": "片付ける",
+    "hiragana": "Phiến phó",
+    "vietnamese": "Dọn dẹp",
+    "hanViet": "かたづける",
+    "hint": "(N) - Danh từ",
+    "explanation": "片付ける (Phiến phó) - Dọn dẹp. Hán Việt: かたづける"
+  },
+  {
+    "id": 252,
+    "english": "包む",
+    "hiragana": "Bao",
+    "vietnamese": "Bọc",
+    "hanViet": "つつむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "包む (Bao) - Bọc. Hán Việt: つつむ"
+  },
+  {
+    "id": 253,
+    "english": "貼る",
+    "hiragana": "Thi���p",
+    "vietnamese": "Dán",
+    "hanViet": "はる",
+    "hint": "(N) - Danh từ",
+    "explanation": "貼る (Thi���p) - Dán. Hán Việt: はる"
+  },
+  {
+    "id": 254,
+    "english": "無くなる",
+    "hiragana": "Vô",
+    "vietnamese": "Bị mất",
+    "hanViet": "なくなる",
+    "hint": "(N) - Danh từ",
+    "explanation": "無くなる (Vô) - Bị mất. Hán Việt: なくなる"
+  },
+  {
+    "id": 255,
+    "english": "無くす",
+    "hiragana": "Vô",
+    "vietnamese": "Làm mất",
+    "hanViet": "なくす",
+    "hint": "(N) - Danh từ",
+    "explanation": "無くす (Vô) - Làm mất. Hán Việt: なくす"
+  },
+  {
+    "id": 256,
+    "english": "足りる",
+    "hiragana": "Túc",
+    "vietnamese": "Đủ",
+    "hanViet": "たりる",
+    "hint": "(N) - Danh từ",
+    "explanation": "足りる (Túc) - Đủ. Hán Việt: たりる"
+  },
+  {
+    "id": 257,
+    "english": "収入",
+    "hiragana": "Thu nhập",
+    "vietnamese": "Thu nhập",
+    "hanViet": "しゅうにゅう",
+    "hint": "(N) - Danh từ",
+    "explanation": "収入 (Thu nhập) - Thu nhập. Hán Việt: しゅうにゅう"
+  },
+  {
+    "id": 258,
+    "english": "残る",
+    "hiragana": "Tàn",
+    "vietnamese": "Còn lại, sót lại",
+    "hanViet": "のこる",
+    "hint": "(N) - Danh từ",
+    "explanation": "残る (Tàn) - Còn lại, sót lại. Hán Việt: のこる"
+  },
+  {
+    "id": 259,
+    "english": "残す",
+    "hiragana": "Tàn",
+    "vietnamese": "Thừa lại, sót lại",
+    "hanViet": "のこす",
+    "hint": "(N) - Danh từ",
+    "explanation": "残す (Tàn) - Thừa lại, sót lại. Hán Việt: のこす"
+  },
+  {
+    "id": 260,
+    "english": "腐る",
+    "hiragana": "Hủ",
+    "vietnamese": "Ôi, thiu",
+    "hanViet": "くさる",
+    "hint": "(N) - Danh từ",
+    "explanation": "腐る (Hủ) - Ôi, thiu. Hán Việt: くさる"
+  },
+  {
+    "id": 261,
+    "english": "剥ける",
+    "hiragana": "Bác",
+    "vietnamese": "Bóc, gọt",
+    "hanViet": "むける",
+    "hint": "(N) - Danh từ",
+    "explanation": "剥ける (Bác) - Bóc, gọt. Hán Việt: むける"
+  },
+  {
+    "id": 262,
+    "english": "剥く",
+    "hiragana": "Bác",
+    "vietnamese": "Bóc, gọt",
+    "hanViet": "むく",
+    "hint": "(N) - Danh từ",
+    "explanation": "剥く (Bác) - Bóc, gọt. Hán Việt: むく"
+  },
+  {
+    "id": 263,
+    "english": "滑る",
+    "hiragana": "Hoạt",
+    "vietnamese": "Trượt",
+    "hanViet": "すべる",
+    "hint": "(N) - Danh từ",
+    "explanation": "滑る (Hoạt) - Trượt. Hán Việt: すべる"
+  },
+  {
+    "id": 264,
+    "english": "雪",
+    "hiragana": "Tuyết",
+    "vietnamese": "Tuyết",
+    "hanViet": "ゆき",
+    "hint": "(N) - Danh từ",
+    "explanation": "雪 (Tuyết) - Tuyết. Hán Việt: ゆき"
+  },
+  {
+    "id": 265,
+    "english": "積もる",
+    "hiragana": "Tích",
+    "vietnamese": "Chất đống",
+    "hanViet": "つもる",
+    "hint": "(N) - Danh từ",
+    "explanation": "積もる (Tích) - Chất đống. Hán Việt: つもる"
+  },
+  {
+    "id": 266,
+    "english": "積む",
+    "hiragana": "Tích",
+    "vietnamese": "Để lên, chất lên",
+    "hanViet": "つむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "積む (Tích) - Để lên, chất lên. Hán Việt: つむ"
+  },
+  {
+    "id": 267,
+    "english": "空く",
+    "hiragana": "Không",
+    "vietnamese": "Trống rỗng, vắng vẻ",
+    "hanViet": "あく",
+    "hint": "(N) - Danh từ",
+    "explanation": "空く (Không) - Trống rỗng, vắng vẻ. Hán Việt: あく"
+  },
+  {
+    "id": 268,
+    "english": "空ける",
+    "hiragana": "Không",
+    "vietnamese": "Giữ chỗ",
+    "hanViet": "あける",
+    "hint": "(N) - Danh từ",
+    "explanation": "空ける (Không) - Giữ chỗ. Hán Việt: あける"
+  },
+  {
+    "id": 269,
+    "english": "下がる",
+    "hiragana": "Hạ",
+    "vietnamese": "Giảm",
+    "hanViet": "さがる",
+    "hint": "(N) - Danh từ",
+    "explanation": "下がる (Hạ) - Giảm. Hán Việt: さがる"
+  },
+  {
+    "id": 270,
+    "english": "下げる",
+    "hiragana": "Hạ",
+    "vietnamese": "Hạ xuống",
+    "hanViet": "さげる",
+    "hint": "(N) - Danh từ",
+    "explanation": "下げる (Hạ) - Hạ xuống. Hán Việt: さげる"
+  },
+  {
+    "id": 271,
+    "english": "冷える",
+    "hiragana": "Lãnh",
+    "vietnamese": "Lạnh, cóng",
+    "hanViet": "ひえる",
+    "hint": "(N) - Danh từ",
+    "explanation": "冷える (Lãnh) - Lạnh, cóng. Hán Việt: ひえる"
+  },
+  {
+    "id": 272,
+    "english": "冷やす",
+    "hiragana": "Lãnh",
+    "vietnamese": "Làm lạnh",
+    "hanViet": "ひやす",
+    "hint": "(N) - Danh từ",
+    "explanation": "冷やす (Lãnh) - Làm lạnh. Hán Việt: ひやす"
+  },
+  {
+    "id": 273,
+    "english": "冷める",
+    "hiragana": "Lãnh",
+    "vietnamese": "Nguội",
+    "hanViet": "さめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "冷める (Lãnh) - Nguội. Hán Việt: さめる"
+  },
+  {
+    "id": 274,
+    "english": "冷ます",
+    "hiragana": "Lãnh",
+    "vietnamese": "Làm nguội",
+    "hanViet": "さます",
+    "hint": "(N) - Danh từ",
+    "explanation": "冷ます (Lãnh) - Làm nguội. Hán Việt: さます"
+  },
+  {
+    "id": 275,
+    "english": "燃える",
+    "hiragana": "Nhiên",
+    "vietnamese": "Cháy",
+    "hanViet": "もえる",
+    "hint": "(N) - Danh từ",
+    "explanation": "燃える (Nhiên) - Cháy. Hán Việt: もえる"
+  },
+  {
+    "id": 276,
+    "english": "燃やす",
+    "hiragana": "Nhiên",
+    "vietnamese": "Đốt cháy",
+    "hanViet": "もやす",
+    "hint": "(N) - Danh từ",
+    "explanation": "燃やす (Nhiên) - Đốt cháy. Hán Việt: もやす"
+  },
+  {
+    "id": 277,
+    "english": "沸く",
+    "hiragana": "Phất",
+    "vietnamese": "Nước sôi",
+    "hanViet": "わく",
+    "hint": "(N) - Danh từ",
+    "explanation": "沸く (Phất) - Nước sôi. Hán Việt: わく"
+  },
+  {
+    "id": 278,
+    "english": "沸かす",
+    "hiragana": "Phất",
+    "vietnamese": "Đun sôi",
+    "hanViet": "わかす",
+    "hint": "(N) - Danh từ",
+    "explanation": "沸かす (Phất) - Đun sôi. Hán Việt: わかす"
+  },
+  {
+    "id": 279,
+    "english": "お湯",
+    "hiragana": "Thang",
+    "vietnamese": "Nước nóng/sôi",
+    "hanViet": "おゆ",
+    "hint": "(N) - Danh từ",
+    "explanation": "お湯 (Thang) - Nước nóng/sôi. Hán Việt: おゆ"
+  },
+  {
+    "id": 280,
+    "english": "鳴る",
+    "hiragana": "Minh",
+    "vietnamese": "Kêu",
+    "hanViet": "なる",
+    "hint": "(N) - Danh từ",
+    "explanation": "鳴る (Minh) - Kêu. Hán Việt: なる"
+  },
+  {
+    "id": 281,
+    "english": "鳴らす",
+    "hiragana": "Minh",
+    "vietnamese": "Làm cho kêu",
+    "hanViet": "ならす",
+    "hint": "(N) - Danh từ",
+    "explanation": "鳴らす (Minh) - Làm cho kêu. Hán Việt: ならす"
+  },
+  {
+    "id": 282,
+    "english": "役に立つ",
+    "hiragana": "Dịch lập",
+    "vietnamese": "Có tác dụng",
+    "hanViet": "やくにたつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "役に立つ (Dịch lập) - Có tác dụng. Hán Việt: やくにたつ"
+  },
+  {
+    "id": 283,
+    "english": "役に立てる",
+    "hiragana": "Dịch lập",
+    "vietnamese": "Có tác dụng, có ích",
+    "hanViet": "やくにたてる",
+    "hint": "(N) - Danh từ",
+    "explanation": "役に立てる (Dịch lập) - Có tác dụng, có ích. Hán Việt: やくにたてる"
+  },
+  {
+    "id": 284,
+    "english": "飾る",
+    "hiragana": "Sức",
+    "vietnamese": "Trang trí",
+    "hanViet": "かざる",
+    "hint": "(N) - Danh từ",
+    "explanation": "飾る (Sức) - Trang trí. Hán Việt: かざる"
+  },
+  {
+    "id": 285,
+    "english": "遊ぶ",
+    "hiragana": "Du",
+    "vietnamese": "Chơi",
+    "hanViet": "あそぶ",
+    "hint": "(N) - Danh từ",
+    "explanation": "遊ぶ (Du) - Chơi. Hán Việt: あそぶ"
+  },
+  {
+    "id": 286,
+    "english": "集まる",
+    "hiragana": "Tập",
+    "vietnamese": "Sưu tập",
+    "hanViet": "あつまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "集まる (Tập) - Sưu tập. Hán Việt: あつまる"
+  },
+  {
+    "id": 287,
+    "english": "踊る",
+    "hiragana": "Dũng",
+    "vietnamese": "Nhảy",
+    "hanViet": "おどる",
+    "hint": "(N) - Danh từ",
+    "explanation": "踊る (Dũng) - Nhảy. Hán Việt: おどる"
+  },
+  {
+    "id": 288,
+    "english": "思う",
+    "hiragana": "Tư",
+    "vietnamese": "Suy nghĩ",
+    "hanViet": "おもう",
+    "hint": "(N) - Danh từ",
+    "explanation": "思う (Tư) - Suy nghĩ. Hán Việt: おもう"
+  },
+  {
+    "id": 289,
+    "english": "考える",
+    "hiragana": "Khảo",
+    "vietnamese": "Nghĩ",
+    "hanViet": "かんがえる",
+    "hint": "(N) - Danh từ",
+    "explanation": "考える (Khảo) - Nghĩ. Hán Việt: かんがえる"
+  },
+  {
+    "id": 290,
+    "english": "手伝う",
+    "hiragana": "Thủ truyền",
+    "vietnamese": "Giúp đỡ",
+    "hanViet": "てつだう",
+    "hint": "(N) - Danh từ",
+    "explanation": "手伝う (Thủ truyền) - Giúp đỡ. Hán Việt: てつだう"
+  },
+  {
+    "id": 291,
+    "english": "働く",
+    "hiragana": "Động",
+    "vietnamese": "Hoạt động",
+    "hanViet": "はたらく",
+    "hint": "(N) - Danh từ",
+    "explanation": "働く (Động) - Hoạt động. Hán Việt: はたらく"
+  },
+  {
+    "id": 292,
+    "english": "決まる",
+    "hiragana": "Quyết",
+    "vietnamese": "Luật lệ, quy định",
+    "hanViet": "きまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "決まる (Quyết) - Luật lệ, quy định. Hán Việt: きまる"
+  },
+  {
+    "id": 293,
+    "english": "騒ぐ",
+    "hiragana": "Tao",
+    "vietnamese": "Làm ồn/rùng beng",
+    "hanViet": "さわぐ",
+    "hint": "(N) - Danh từ",
+    "explanation": "騒ぐ (Tao) - Làm ồn/rùng beng. Hán Việt: さわぐ"
+  },
+  {
+    "id": 294,
+    "english": "知らせる",
+    "hiragana": "Tri",
+    "vietnamese": "Thông báo",
+    "hanViet": "しらせる",
+    "hint": "(N) - Danh từ",
+    "explanation": "知らせる (Tri) - Thông báo. Hán Việt: しらせる"
+  },
+  {
+    "id": 295,
+    "english": "頼む",
+    "hiragana": "Lại",
+    "vietnamese": "Nhờ vả",
+    "hanViet": "たのむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "頼む (Lại) - Nhờ vả. Hán Việt: たのむ"
+  },
+  {
+    "id": 296,
+    "english": "疲れる",
+    "hiragana": "Bì",
+    "vietnamese": "Mệt",
+    "hanViet": "つかれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "疲れる (Bì) - Mệt. Hán Việt: つかれる"
+  },
+  {
+    "id": 297,
+    "english": "違う",
+    "hiragana": "Vi",
+    "vietnamese": "Khác",
+    "hanViet": "ちがう",
+    "hint": "(N) - Danh từ",
+    "explanation": "違う (Vi) - Khác. Hán Việt: ちがう"
+  },
+  {
+    "id": 298,
+    "english": "始める",
+    "hiragana": "Thủy",
+    "vietnamese": "Bắt đầu",
+    "hanViet": "はじめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "始める (Thủy) - Bắt đầu. Hán Việt: はじめる"
+  },
+  {
+    "id": 299,
+    "english": "続く",
+    "hiragana": "Tục",
+    "vietnamese": "Tiếp tục",
+    "hanViet": "つづく",
+    "hint": "(N) - Danh từ",
+    "explanation": "続く (Tục) - Tiếp tục. Hán Việt: つづく"
+  },
+  {
+    "id": 300,
+    "english": "暮れる",
+    "hiragana": "Mộ",
+    "vietnamese": "Lặn(mặt trời), hết(ngày)",
+    "hanViet": "くれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "暮れる (Mộ) - Lặn(mặt trời), hết(ngày). Hán Việt: くれる"
+  },
+  {
+    "id": 301,
+    "english": "別れる",
+    "hiragana": "Biệt",
+    "vietnamese": "Chia tay, ly biệt",
+    "hanViet": "わかれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "別れる (Biệt) - Chia tay, ly biệt. Hán Việt: わかれる"
+  },
+  {
+    "id": 302,
+    "english": "喜ぶ",
+    "hiragana": "Hỉ",
+    "vietnamese": "Hạnh phúc",
+    "hanViet": "よろこぶ",
+    "hint": "(N) - Danh từ",
+    "explanation": "喜ぶ (Hỉ) - Hạnh phúc. Hán Việt: よろこぶ"
+  },
+  {
+    "id": 303,
+    "english": "優勝する",
+    "hiragana": "Ưu thắng",
+    "vietnamese": "Vô địch",
+    "hanViet": "ゆうしょうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "優勝する (Ưu thắng) - Vô địch. Hán Việt: ゆうしょうする"
+  },
+  {
+    "id": 304,
+    "english": "笑う",
+    "hiragana": "Ti��u",
+    "vietnamese": "Cười",
+    "hanViet": "わらう",
+    "hint": "(N) - Danh từ",
+    "explanation": "笑う (Ti��u) - Cười. Hán Việt: わらう"
+  },
+  {
+    "id": 305,
+    "english": "驚く",
+    "hiragana": "Kinh",
+    "vietnamese": "Kinh ngạc",
+    "hanViet": "おどろく",
+    "hint": "(N) - Danh từ",
+    "explanation": "驚く (Kinh) - Kinh ngạc. Hán Việt: おどろく"
+  },
+  {
+    "id": 306,
+    "english": "怒る",
+    "hiragana": "Nộ",
+    "vietnamese": "Nổi giận",
+    "hanViet": "いかる",
+    "hint": "(N) - Danh từ",
+    "explanation": "怒る (Nộ) - Nổi giận. Hán Việt: いかる"
+  },
+  {
+    "id": 307,
+    "english": "殺人",
+    "hiragana": "Sát nhân",
+    "vietnamese": "Sát nhân",
+    "hanViet": "さつじん",
+    "hint": "(N) - Danh từ",
+    "explanation": "殺人 (Sát nhân) - Sát nhân. Hán Việt: さつじん"
+  },
+  {
+    "id": 308,
+    "english": "幸せ（な）",
+    "hiragana": "Hạnh",
+    "vietnamese": "Hạnh phúc",
+    "hanViet": "しあわせ",
+    "hint": "(N) - Danh từ",
+    "explanation": "幸せ（な） (Hạnh) - Hạnh phúc. Hán Việt: しあわせ"
+  },
+  {
+    "id": 309,
+    "english": "得意（な）",
+    "hiragana": "Đắc ý",
+    "vietnamese": "Giỏi",
+    "hanViet": "とくい",
+    "hint": "(N) - Danh từ",
+    "explanation": "得意（な） (Đắc ý) - Giỏi. Hán Việt: とくい"
+  },
+  {
+    "id": 310,
+    "english": "苦手（な）",
+    "hiragana": "Khổ thủ",
+    "vietnamese": "Kém",
+    "hanViet": "にがて",
+    "hint": "(N) - Danh từ",
+    "explanation": "苦手（な） (Khổ thủ) - Kém. Hán Việt: にがて"
+  },
+  {
+    "id": 311,
+    "english": "熱心（な）",
+    "hiragana": "Nhiệt tâm",
+    "vietnamese": "Nhiệt tình",
+    "hanViet": "ねっしん",
+    "hint": "(N) - Danh từ",
+    "explanation": "熱心（な） (Nhiệt tâm) - Nhiệt tình. Hán Việt: ねっしん"
+  },
+  {
+    "id": 312,
+    "english": "認め",
+    "hiragana": "Nhận",
+    "vietnamese": "Thừa nhận",
+    "hanViet": "みとめ",
+    "hint": "(N) - Danh từ",
+    "explanation": "認め (Nhận) - Thừa nhận. Hán Việt: みとめ"
+  },
+  {
+    "id": 313,
+    "english": "昇進",
+    "hiragana": "Thăng tiến",
+    "vietnamese": "Thăng tiến",
+    "hanViet": "しょうしん",
+    "hint": "(N) - Danh từ",
+    "explanation": "昇進 (Thăng tiến) - Thăng tiến. Hán Việt: しょうしん"
+  },
+  {
+    "id": 314,
+    "english": "夢中（な）",
+    "hiragana": "Mộng trung",
+    "vietnamese": "Say mê",
+    "hanViet": "むちゅう",
+    "hint": "(N) - Danh từ",
+    "explanation": "夢中（な） (Mộng trung) - Say mê. Hán Việt: むちゅう"
+  },
+  {
+    "id": 315,
+    "english": "観客",
+    "hiragana": "Quan khách",
+    "vietnamese": "Khánh hàng",
+    "hanViet": "かんきゃく",
+    "hint": "(N) - Danh từ",
+    "explanation": "観客 (Quan khách) - Khánh hàng. Hán Việt: かんきゃく"
+  },
+  {
+    "id": 316,
+    "english": "退屈（な）",
+    "hiragana": "Thoái khuất",
+    "vietnamese": "Chán, tẻ nhạt",
+    "hanViet": "たいくつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "退屈（な） (Thoái khuất) - Chán, tẻ nhạt. Hán Việt: たいくつ"
+  },
+  {
+    "id": 317,
+    "english": "健康（な）",
+    "hiragana": "Kiện khang",
+    "vietnamese": "Khỏe khoắn",
+    "hanViet": "けんこう",
+    "hint": "(N) - Danh từ",
+    "explanation": "健康（な） (Kiện khang) - Khỏe khoắn. Hán Việt: けんこう"
+  },
+  {
+    "id": 318,
+    "english": "育てる",
+    "hiragana": "Dục",
+    "vietnamese": "Nuôi dạy",
+    "hanViet": "そだてる",
+    "hint": "(N) - Danh từ",
+    "explanation": "育てる (Dục) - Nuôi dạy. Hán Việt: そだてる"
+  },
+  {
+    "id": 319,
+    "english": "苦しい",
+    "hiragana": "Khổ",
+    "vietnamese": "Cực khổ",
+    "hanViet": "くるしい",
+    "hint": "(N) - Danh từ",
+    "explanation": "苦しい (Khổ) - Cực khổ. Hán Việt: くるしい"
+  },
+  {
+    "id": 320,
+    "english": "悪口",
+    "hiragana": "Ác khẩu",
+    "vietnamese": "Nói xấu",
+    "hanViet": "わるぐち",
+    "hint": "(N) - Danh từ",
+    "explanation": "悪口 (Ác khẩu) - Nói xấu. Hán Việt: わるぐち"
+  },
+  {
+    "id": 321,
+    "english": "平気（な）",
+    "hiragana": "Bình khí",
+    "vietnamese": "Bình thản",
+    "hanViet": "へいき",
+    "hint": "(N) - Danh từ",
+    "explanation": "平気（な） (Bình khí) - Bình thản. Hán Việt: へいき"
+  },
+  {
+    "id": 322,
+    "english": "悔しい",
+    "hiragana": "Hối",
+    "vietnamese": "Đáng tiếc, đáng ân hận",
+    "hanViet": "くやしい",
+    "hint": "(N) - Danh từ",
+    "explanation": "悔しい (Hối) - Đáng tiếc, đáng ân hận. Hán Việt: くやしい"
+  },
+  {
+    "id": 323,
+    "english": "羨ましい",
+    "hiragana": "Tiện",
+    "vietnamese": "Ghen tị",
+    "hanViet": "うらやましい",
+    "hint": "(N) - Danh từ",
+    "explanation": "羨ましい (Tiện) - Ghen tị. Hán Việt: うらやましい"
+  },
+  {
+    "id": 324,
+    "english": "才能",
+    "hiragana": "Tài năng",
+    "vietnamese": "Tài năng",
+    "hanViet": "さいのう",
+    "hint": "(N) - Danh từ",
+    "explanation": "才能 (Tài năng) - Tài năng. Hán Việt: さいのう"
+  },
+  {
+    "id": 325,
+    "english": "豊か",
+    "hiragana": "Phong",
+    "vietnamese": "Phong phú",
+    "hanViet": "ゆたか",
+    "hint": "(N) - Danh từ",
+    "explanation": "豊か (Phong) - Phong phú. Hán Việt: ゆたか"
+  },
+  {
+    "id": 326,
+    "english": "蚊",
+    "hiragana": "Văn",
+    "vietnamese": "Muỗi",
+    "hanViet": "か",
+    "hint": "(N) - Danh từ",
+    "explanation": "蚊 (Văn) - Muỗi. Hán Việt: か"
+  },
+  {
+    "id": 327,
+    "english": "首",
+    "hiragana": "Thủ",
+    "vietnamese": "Cái cổ",
+    "hanViet": "くび",
+    "hint": "(N) - Danh từ",
+    "explanation": "首 (Thủ) - Cái cổ. Hán Việt: くび"
+  },
+  {
+    "id": 328,
+    "english": "痒い",
+    "hiragana": "Dưỡng",
+    "vietnamese": "Ngứa",
+    "hanViet": "かゆい",
+    "hint": "(N) - Danh từ",
+    "explanation": "痒い (Dưỡng) - Ngứa. Hán Việt: かゆい"
+  },
+  {
+    "id": 329,
+    "english": "大人しい",
+    "hiragana": "Đại nhân",
+    "vietnamese": "Hiền lành",
+    "hanViet": "おとなしい",
+    "hint": "(N) - Danh từ",
+    "explanation": "大人しい (Đại nhân) - Hiền lành. Hán Việt: おとなしい"
+  },
+  {
+    "id": 330,
+    "english": "我慢強い",
+    "hiragana": "Ngã mạn cường",
+    "vietnamese": "Chịu đựng giỏi",
+    "hanViet": "がまんづよい",
+    "hint": "(N) - Danh từ",
+    "explanation": "我慢強い (Ngã mạn cường) - Chịu đựng giỏi. Hán Việt: がまんづよい"
+  },
+  {
+    "id": 331,
+    "english": "正直（な）",
+    "hiragana": "Chính trực",
+    "vietnamese": "Trung thực",
+    "hanViet": "しょうじき",
+    "hint": "(N) - Danh từ",
+    "explanation": "正直（な） (Chính trực) - Trung thực. Hán Việt: しょうじき"
+  },
+  {
+    "id": 332,
+    "english": "けち（な）",
+    "hiragana": "",
+    "vietnamese": "Kiệt xỉ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "けち（な） () - Kiệt xỉ. Hán Việt: "
+  },
+  {
+    "id": 333,
+    "english": "我儘（な）",
+    "hiragana": "Ngã tận",
+    "vietnamese": "Ích kỉ",
+    "hanViet": "わがまま",
+    "hint": "(N) - Danh từ",
+    "explanation": "我儘（な） (Ngã tận) - Ích kỉ. Hán Việt: わがまま"
+  },
+  {
+    "id": 334,
+    "english": "積極的（な）",
+    "hiragana": "Tích cực tính",
+    "vietnamese": "Tính tích cực",
+    "hanViet": "せっきょくてき",
+    "hint": "(N) - Danh từ",
+    "explanation": "積極的（な） (Tích cực tính) - Tính tích cực. Hán Việt: せっきょくてき"
+  },
+  {
+    "id": 335,
+    "english": "消極的（な）",
+    "hiragana": "Tiêu cực tính",
+    "vietnamese": "Tính tiêu cực",
+    "hanViet": "しょうきょくてき",
+    "hint": "(N) - Danh từ",
+    "explanation": "消極的（な） (Tiêu cực tính) - Tính tiêu cực. Hán Việt: しょうきょくてき"
+  },
+  {
+    "id": 336,
+    "english": "満足（な）",
+    "hiragana": "Mãn túc",
+    "vietnamese": "Mãn nguyện",
+    "hanViet": "まんぞく",
+    "hint": "(N) - Danh từ",
+    "explanation": "満足（な） (Mãn túc) - Mãn nguyện. Hán Việt: まんぞく"
+  },
+  {
+    "id": 337,
+    "english": "不満（な）",
+    "hiragana": "Bất mãn",
+    "vietnamese": "Bất mãn",
+    "hanViet": "ふまん",
+    "hint": "(N) - Danh từ",
+    "explanation": "不満（な） (Bất mãn) - Bất mãn. Hán Việt: ふまん"
+  },
+  {
+    "id": 338,
+    "english": "不安（な）",
+    "hiragana": "Bất an",
+    "vietnamese": "Bất an",
+    "hanViet": "ふあん",
+    "hint": "(N) - Danh từ",
+    "explanation": "不安（な） (Bất an) - Bất an. Hán Việt: ふあん"
+  },
+  {
+    "id": 339,
+    "english": "大変（な）",
+    "hiragana": "Đại biến",
+    "vietnamese": "Vất vả",
+    "hanViet": "たいへん",
+    "hint": "(N) - Danh từ",
+    "explanation": "大変（な） (Đại biến) - Vất vả. Hán Việt: たいへん"
+  },
+  {
+    "id": 340,
+    "english": "無理（な）",
+    "hiragana": "Vô lý",
+    "vietnamese": "Vô lý",
+    "hanViet": "むり",
+    "hint": "(N) - Danh từ",
+    "explanation": "無理（な） (Vô lý) - Vô lý. Hán Việt: むり"
+  },
+  {
+    "id": 341,
+    "english": "不注意（な）",
+    "hiragana": "Bất chú ý",
+    "vietnamese": "Không chú ý",
+    "hanViet": "ふちゅうい",
+    "hint": "(N) - Danh từ",
+    "explanation": "不注意（な） (Bất chú ý) - Không chú ý. Hán Việt: ふちゅうい"
+  },
+  {
+    "id": 342,
+    "english": "楽（な）",
+    "hiragana": "Lạc",
+    "vietnamese": "Thoải mái, nhàn hạ",
+    "hanViet": "らく",
+    "hint": "(N) - Danh từ",
+    "explanation": "楽（な） (Lạc) - Thoải mái, nhàn hạ. Hán Việt: らく"
+  },
+  {
+    "id": 343,
+    "english": "面倒（な）",
+    "hiragana": "Diện đảo",
+    "vietnamese": "Phiền hà, quấy rầy",
+    "hanViet": "めんどう",
+    "hint": "(N) - Danh từ",
+    "explanation": "面倒（な） (Diện đảo) - Phiền hà, quấy rầy. Hán Việt: めんどう"
+  },
+  {
+    "id": 344,
+    "english": "手続き",
+    "hiragana": "Thủ tục",
+    "vietnamese": "Thủ tục",
+    "hanViet": "てつづき",
+    "hint": "(N) - Danh từ",
+    "explanation": "手続き (Thủ tục) - Thủ tục. Hán Việt: てつづき"
+  },
+  {
+    "id": 345,
+    "english": "失礼（な）",
+    "hiragana": "Thất lễ",
+    "vietnamese": "Mất lịch sự",
+    "hanViet": "しつれい",
+    "hint": "(N) - Danh từ",
+    "explanation": "失礼（な） (Thất lễ) - Mất lịch sự. Hán Việt: しつれい"
+  },
+  {
+    "id": 346,
+    "english": "当然（な）",
+    "hiragana": "Đương nhiên",
+    "vietnamese": "Đương nhiên",
+    "hanViet": "とうぜん",
+    "hint": "(N) - Danh từ",
+    "explanation": "当然（な） (Đương nhiên) - Đương nhiên. Hán Việt: とうぜん"
+  },
+  {
+    "id": 347,
+    "english": "意外（な）",
+    "hiragana": "Ý ngoại",
+    "vietnamese": "Ngoài ý muốn",
+    "hanViet": "いがい",
+    "hint": "(N) - Danh từ",
+    "explanation": "意外（な） (Ý ngoại) - Ngoài ý muốn. Hán Việt: いがい"
+  },
+  {
+    "id": 348,
+    "english": "調査",
+    "hiragana": "Điều tra",
+    "vietnamese": "Điều tra",
+    "hanViet": "ちょうさ",
+    "hint": "(N) - Danh từ",
+    "explanation": "調査 (Điều tra) - Điều tra. Hán Việt: ちょうさ"
+  },
+  {
+    "id": 349,
+    "english": "事故",
+    "hiragana": "Sự cố",
+    "vietnamese": "Tai nạn, sự cố",
+    "hanViet": "じこ",
+    "hint": "(N) - Danh từ",
+    "explanation": "事故 (Sự cố) - Tai nạn, sự cố. Hán Việt: じこ"
+  },
+  {
+    "id": 350,
+    "english": "結構（な）",
+    "hiragana": "Kết cấu",
+    "vietnamese": "Tốt, cũng được",
+    "hanViet": "けっこう",
+    "hint": "(N) - Danh từ",
+    "explanation": "結構（な） (Kết cấu) - Tốt, cũng được. Hán Việt: けっこう"
+  },
+  {
+    "id": 351,
+    "english": "派手（な）",
+    "hiragana": "Phái thủ",
+    "vietnamese": "Lòe loẹt, màu mè",
+    "hanViet": "はで",
+    "hint": "(N) - Danh từ",
+    "explanation": "派手（な） (Phái thủ) - Lòe loẹt, màu mè. Hán Việt: はで"
+  },
+  {
+    "id": 352,
+    "english": "地味（な）",
+    "hiragana": "Địa vị",
+    "vietnamese": "Giản dị, đơn giản",
+    "hanViet": "じみ",
+    "hint": "(N) - Danh từ",
+    "explanation": "地味（な） (Địa vị) - Giản dị, đơn giản. Hán Việt: じみ"
+  },
+  {
+    "id": 353,
+    "english": "お洒落（な）",
+    "hiragana": "Sái lạc",
+    "vietnamese": "Thời trang thịnh hành",
+    "hanViet": "おしゃれ",
+    "hint": "(N) - Danh từ",
+    "explanation": "お洒落（な） (Sái lạc) - Thời trang thịnh hành. Hán Việt: おしゃれ"
+  },
+  {
+    "id": 354,
+    "english": "変（な）",
+    "hiragana": "Biến",
+    "vietnamese": "Lạ, kỳ quặc",
+    "hanViet": "へん",
+    "hint": "(N) - Danh từ",
+    "explanation": "変（な） (Biến) - Lạ, kỳ quặc. Hán Việt: へん"
+  },
+  {
+    "id": 355,
+    "english": "不思議（な）",
+    "hiragana": "Bất tư nghĩa",
+    "vietnamese": "Bí hiểm, kỳ quái",
+    "hanViet": "ふしぎ",
+    "hint": "(N) - Danh từ",
+    "explanation": "不思議（な） (Bất tư nghĩa) - Bí hiểm, kỳ quái. Hán Việt: ふしぎ"
+  },
+  {
+    "id": 356,
+    "english": "増し（な）",
+    "hiragana": "Tăng",
+    "vietnamese": "Tốt lên",
+    "hanViet": "まし",
+    "hint": "(N) - Danh từ",
+    "explanation": "増し（な） (Tăng) - Tốt lên. Hán Việt: まし"
+  },
+  {
+    "id": 357,
+    "english": "無駄（な）",
+    "hiragana": "Vô đả",
+    "vietnamese": "Lãng phí",
+    "hanViet": "むだ",
+    "hint": "(N) - Danh từ",
+    "explanation": "無駄（な） (Vô đả) - Lãng phí. Hán Việt: むだ"
+  },
+  {
+    "id": 358,
+    "english": "自由（な）",
+    "hiragana": "Tự do",
+    "vietnamese": "Tự do",
+    "hanViet": "じゆう",
+    "hint": "(N) - Danh từ",
+    "explanation": "自由（な） (Tự do) - Tự do. Hán Việt: じゆう"
+  },
+  {
+    "id": 359,
+    "english": "不自由（な）",
+    "hiragana": "Bất tự do",
+    "vietnamese": "Không tự do, tàn phế",
+    "hanViet": "ふじゆう",
+    "hint": "(N) - Danh từ",
+    "explanation": "不自由（な） (Bất tự do) - Không tự do, tàn phế. Hán Việt: ふじゆう"
+  },
+  {
+    "id": 360,
+    "english": "暖まる",
+    "hiragana": "Noãn",
+    "vietnamese": "Ấm lên",
+    "hanViet": "あたたまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "暖まる (Noãn) - Ấm lên. Hán Việt: あたたまる"
+  },
+  {
+    "id": 361,
+    "english": "暖める",
+    "hiragana": "Noãn",
+    "vietnamese": "Làm ấm",
+    "hanViet": "あたためる",
+    "hint": "(N) - Danh từ",
+    "explanation": "暖める (Noãn) - Làm ấm. Hán Việt: あたためる"
+  },
+  {
+    "id": 362,
+    "english": "高まる",
+    "hiragana": "Cao",
+    "vietnamese": "Bốc lên, nâng lên",
+    "hanViet": "たかまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "高まる (Cao) - Bốc lên, nâng lên. Hán Việt: たかまる"
+  },
+  {
+    "id": 363,
+    "english": "高める",
+    "hiragana": "Cao",
+    "vietnamese": "Làm cho lên, dựng lên",
+    "hanViet": "たかめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "高める (Cao) - Làm cho lên, dựng lên. Hán Việt: たかめる"
+  },
+  {
+    "id": 364,
+    "english": "強まる",
+    "hiragana": "Cường",
+    "vietnamese": "Khỏe,mạnh lên",
+    "hanViet": "つよまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "強まる (Cường) - Khỏe,mạnh lên. Hán Việt: つよまる"
+  },
+  {
+    "id": 365,
+    "english": "強める",
+    "hiragana": "Cường",
+    "vietnamese": "Làm khỏe lên",
+    "hanViet": "つよめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "強める (Cường) - Làm khỏe lên. Hán Việt: つよめる"
+  },
+  {
+    "id": 366,
+    "english": "弱まる",
+    "hiragana": "Nhược",
+    "vietnamese": "Yếu đi",
+    "hanViet": "よわまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "弱まる (Nhược) - Yếu đi. Hán Việt: よわまる"
+  },
+  {
+    "id": 367,
+    "english": "���める",
+    "hiragana": "Nhược",
+    "vietnamese": "Làm yếu đi",
+    "hanViet": "よわめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "���める (Nhược) - Làm yếu đi. Hán Việt: よわめる"
+  },
+  {
+    "id": 368,
+    "english": "広まる",
+    "hiragana": "Quảng",
+    "vietnamese": "Được lan truyền",
+    "hanViet": "ひろまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "広まる (Quảng) - Được lan truyền. Hán Việt: ひろまる"
+  },
+  {
+    "id": 369,
+    "english": "広める",
+    "hiragana": "Quảng",
+    "vietnamese": "Loan tin, tuyên truyền",
+    "hanViet": "ひろめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "広める (Quảng) - Loan tin, tuyên truyền. Hán Việt: ひろめる"
+  },
+  {
+    "id": 370,
+    "english": "深まる",
+    "hiragana": "Thâm",
+    "vietnamese": "Sâu sắc thêm",
+    "hanViet": "ふかまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "深まる (Thâm) - Sâu sắc thêm. Hán Việt: ふかまる"
+  },
+  {
+    "id": 371,
+    "english": "深める",
+    "hiragana": "Thâm",
+    "vietnamese": "Làm sâu sắc thêm",
+    "hanViet": "ふかめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "深める (Thâm) - Làm sâu sắc thêm. Hán Việt: ふかめる"
+  },
+  {
+    "id": 372,
+    "english": "世話",
+    "hiragana": "Thế thoại",
+    "vietnamese": "Giúp đỡ",
+    "hanViet": "せわ",
+    "hint": "(N) - Danh từ",
+    "explanation": "世話 (Thế thoại) - Giúp đỡ. Hán Việt: せわ"
+  },
+  {
+    "id": 373,
+    "english": "家庭",
+    "hiragana": "Gia đình",
+    "vietnamese": "Gia đình",
+    "hanViet": "かてい",
+    "hint": "(N) - Danh từ",
+    "explanation": "家庭 (Gia đình) - Gia đình. Hán Việt: かてい"
+  },
+  {
+    "id": 374,
+    "english": "厳しい",
+    "hiragana": "Nghiêm",
+    "vietnamese": "Nghiêm khắc",
+    "hanViet": "きびしい",
+    "hint": "(N) - Danh từ",
+    "explanation": "厳しい (Nghiêm) - Nghiêm khắc. Hán Việt: きびしい"
+  },
+  {
+    "id": 375,
+    "english": "易しい",
+    "hiragana": "Dị",
+    "vietnamese": "Dễ",
+    "hanViet": "やさしい",
+    "hint": "(N) - Danh từ",
+    "explanation": "易しい (Dị) - Dễ. Hán Việt: やさしい"
+  },
+  {
+    "id": 376,
+    "english": "協力する",
+    "hiragana": "Hiệp lực",
+    "vietnamese": "Hiệp lực",
+    "hanViet": "きょうりょくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "協力する (Hiệp lực) - Hiệp lực. Hán Việt: きょうりょくする"
+  },
+  {
+    "id": 377,
+    "english": "介護",
+    "hiragana": "Giới hộ",
+    "vietnamese": "Chăm sóc",
+    "hanViet": "かいご",
+    "hint": "(N) - Danh từ",
+    "explanation": "介護 (Giới hộ) - Chăm sóc. Hán Việt: かいご"
+  },
+  {
+    "id": 378,
+    "english": "感謝する",
+    "hiragana": "Cảm tạ",
+    "vietnamese": "Cảm ơn, biết ơn",
+    "hanViet": "かんしゃする",
+    "hint": "(N) - Danh từ",
+    "explanation": "感謝する (Cảm tạ) - Cảm ơn, biết ơn. Hán Việt: かんしゃする"
+  },
+  {
+    "id": 379,
+    "english": "お詫び",
+    "hiragana": "Sá",
+    "vietnamese": "Xin lỗi",
+    "hanViet": "おわび",
+    "hint": "(N) - Danh từ",
+    "explanation": "お詫び (Sá) - Xin lỗi. Hán Việt: おわび"
+  },
+  {
+    "id": 380,
+    "english": "迷惑をかける",
+    "hiragana": "Mê hoặc",
+    "vietnamese": "Làm phiền",
+    "hanViet": "めいわくをかける",
+    "hint": "(N) - Danh từ",
+    "explanation": "迷惑をかける (Mê hoặc) - Làm phiền. Hán Việt: めいわくをかける"
+  },
+  {
+    "id": 381,
+    "english": "お辞儀",
+    "hiragana": "Từ nghi",
+    "vietnamese": "Cúi chào",
+    "hanViet": "おじぎ",
+    "hint": "(N) - Danh từ",
+    "explanation": "お辞儀 (Từ nghi) - Cúi chào. Hán Việt: おじぎ"
+  },
+  {
+    "id": 382,
+    "english": "丁寧（な）",
+    "hiragana": "Đinh ninh",
+    "vietnamese": "Lịch sự",
+    "hanViet": "ていねい",
+    "hint": "(N) - Danh từ",
+    "explanation": "丁寧（な） (Đinh ninh) - Lịch sự. Hán Việt: ていねい"
+  },
+  {
+    "id": 383,
+    "english": "握手",
+    "hiragana": "Ác thủ",
+    "vietnamese": "Bắt tay",
+    "hanViet": "あくしゅ",
+    "hint": "(N) - Danh từ",
+    "explanation": "握手 (Ác thủ) - Bắt tay. Hán Việt: あくしゅ"
+  },
+  {
+    "id": 384,
+    "english": "意地悪する",
+    "hiragana": "Ý địa ác",
+    "vietnamese": "Tâm địa xấu, xấu bụng",
+    "hanViet": "いじわるする",
+    "hint": "(N) - Danh từ",
+    "explanation": "意地悪する (Ý địa ác) - Tâm địa xấu, xấu bụng. Hán Việt: いじわるする"
+  },
+  {
+    "id": 385,
+    "english": "悪戯する",
+    "hiragana": "Ác hí",
+    "vietnamese": "Nghịch ngợm",
+    "hanViet": "いたずらする",
+    "hint": "(N) - Danh từ",
+    "explanation": "悪戯する (Ác hí) - Nghịch ngợm. Hán Việt: いたずらする"
+  },
+  {
+    "id": 386,
+    "english": "節約する",
+    "hiragana": "Tiết ước",
+    "vietnamese": "Tiết kiệm, dành dụm",
+    "hanViet": "せつやくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "節約する (Tiết ước) - Tiết kiệm, dành dụm. Hán Việt: せつやくする"
+  },
+  {
+    "id": 387,
+    "english": "生活費",
+    "hiragana": "Sinh hoạt ph��",
+    "vietnamese": "Phí sinh hoạt",
+    "hanViet": "せいかつひ",
+    "hint": "(N) - Danh từ",
+    "explanation": "生活費 (Sinh hoạt ph��) - Phí sinh hoạt. Hán Việt: せいかつひ"
+  },
+  {
+    "id": 388,
+    "english": "経営する",
+    "hiragana": "Kinh doanh",
+    "vietnamese": "Quản lý kinh doanh",
+    "hanViet": "けいえいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "経営する (Kinh doanh) - Quản lý kinh doanh. Hán Việt: けいえいする"
+  },
+  {
+    "id": 389,
+    "english": "反省する",
+    "hiragana": "Phản tỉnh",
+    "vietnamese": "Kiểm điểm",
+    "hanViet": "はんせいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "反省する (Phản tỉnh) - Kiểm điểm. Hán Việt: はんせいする"
+  },
+  {
+    "id": 390,
+    "english": "実行する",
+    "hiragana": "Thực hành",
+    "vietnamese": "Thực hành",
+    "hanViet": "じっこうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "実行する (Thực hành) - Thực hành. Hán Việt: じっこうする"
+  },
+  {
+    "id": 391,
+    "english": "進歩する",
+    "hiragana": "Tiến bộ",
+    "vietnamese": "Tiến bộ",
+    "hanViet": "しんぽする",
+    "hint": "(N) - Danh từ",
+    "explanation": "進歩する (Tiến bộ) - Tiến bộ. Hán Việt: しんぽする"
+  },
+  {
+    "id": 392,
+    "english": "変化する",
+    "hiragana": "Biến hóa",
+    "vietnamese": "Thay đổi",
+    "hanViet": "へんかする",
+    "hint": "(N) - Danh từ",
+    "explanation": "変化する (Biến hóa) - Thay đổi. Hán Việt: へんかする"
+  },
+  {
+    "id": 393,
+    "english": "発達する",
+    "hiragana": "Phát đạt",
+    "vietnamese": "Phát triển, phát đạt",
+    "hanViet": "はったつする",
+    "hint": "(N) - Danh từ",
+    "explanation": "発達する (Phát đạt) - Phát triển, phát đạt. Hán Việt: はったつする"
+  },
+  {
+    "id": 394,
+    "english": "体力",
+    "hiragana": "Thể lực",
+    "vietnamese": "Thể lực",
+    "hanViet": "たいりょく",
+    "hint": "(N) - Danh từ",
+    "explanation": "体力 (Thể lực) - Thể lực. Hán Việt: たいりょく"
+  },
+  {
+    "id": 395,
+    "english": "低下",
+    "hiragana": "Đê hạ",
+    "vietnamese": "Suy giảm",
+    "hanViet": "ていか",
+    "hint": "(N) - Danh từ",
+    "explanation": "低下 (Đê hạ) - Suy giảm. Hán Việt: ていか"
+  },
+  {
+    "id": 396,
+    "english": "若者",
+    "hiragana": "Nhã giả",
+    "vietnamese": "Giới trẻ",
+    "hanViet": "わかもの",
+    "hint": "(N) - Danh từ",
+    "explanation": "若者 (Nhã giả) - Giới trẻ. Hán Việt: わかもの"
+  },
+  {
+    "id": 397,
+    "english": "出場する",
+    "hiragana": "Xuất trường",
+    "vietnamese": "Ra mặt, ra mắt(trình diễn)",
+    "hanViet": "しゅつじょうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "出場する (Xuất trường) - Ra mặt, ra mắt(trình diễn). Hán Việt: しゅつじょうする"
+  },
+  {
+    "id": 398,
+    "english": "活躍する",
+    "hiragana": "Hoạt dược",
+    "vietnamese": "Hoạt động",
+    "hanViet": "かつやくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "活躍する (Hoạt dược) - Hoạt động. Hán Việt: かつやくする"
+  },
+  {
+    "id": 399,
+    "english": "競争する",
+    "hiragana": "Cạnh tranh",
+    "vietnamese": "Cạnh tranh",
+    "hanViet": "きょうそうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "競争する (Cạnh tranh) - Cạnh tranh. Hán Việt: きょうそうする"
+  },
+  {
+    "id": 400,
+    "english": "成績",
+    "hiragana": "Thành tích",
+    "vietnamese": "Thành tích",
+    "hanViet": "せいせき",
+    "hint": "(N) - Danh từ",
+    "explanation": "成績 (Thành tích) - Thành tích. Hán Việt: せいせき"
+  },
+  {
+    "id": 401,
+    "english": "応援する",
+    "hiragana": "Ứng viên",
+    "vietnamese": "Cổ vũ, hỗ trợ",
+    "hanViet": "おうえんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "応援する (Ứng viên) - Cổ vũ, hỗ trợ. Hán Việt: おうえんする"
+  },
+  {
+    "id": 402,
+    "english": "拍手する",
+    "hiragana": "Phách thủ",
+    "vietnamese": "Vỗ tay",
+    "hanViet": "はくしゅする",
+    "hint": "(N) - Danh từ",
+    "explanation": "拍手する (Phách thủ) - Vỗ tay. Hán Việt: はくしゅする"
+  },
+  {
+    "id": 403,
+    "english": "噂する",
+    "hiragana": "Đồn",
+    "vietnamese": "Lời đồn, bàn tán",
+    "hanViet": "うわさする",
+    "hint": "(N) - Danh từ",
+    "explanation": "噂する (Đồn) - Lời đồn, bàn tán. Hán Việt: うわさする"
+  },
+  {
+    "id": 404,
+    "english": "情報",
+    "hiragana": "Tình báo",
+    "vietnamese": "Thông tin",
+    "hanViet": "じょうほう",
+    "hint": "(N) - Danh từ",
+    "explanation": "情報 (Tình báo) - Thông tin. Hán Việt: じょうほう"
+  },
+  {
+    "id": 405,
+    "english": "流行する",
+    "hiragana": "Lưu hành",
+    "vietnamese": "Lưu hành",
+    "hanViet": "りゅうこうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "流行する (Lưu hành) - Lưu hành. Hán Việt: りゅうこうする"
+  },
+  {
+    "id": 406,
+    "english": "交換する",
+    "hiragana": "Giao hoán",
+    "vietnamese": "Trao đổi",
+    "hanViet": "こうかんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "交換する (Giao hoán) - Trao đổi. Hán Việt: こうかんする"
+  },
+  {
+    "id": 407,
+    "english": "宣伝する",
+    "hiragana": "Tuyên truyền",
+    "vietnamese": "Tuyền truyền",
+    "hanViet": "せんでんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "宣伝する (Tuyên truyền) - Tuyền truyền. Hán Việt: せんでんする"
+  },
+  {
+    "id": 408,
+    "english": "広告",
+    "hiragana": "Quảng cáo",
+    "vietnamese": "Quảng cáo",
+    "hanViet": "こうこく",
+    "hint": "(N) - Danh từ",
+    "explanation": "広告 (Quảng cáo) - Quảng cáo. Hán Việt: こうこく"
+  },
+  {
+    "id": 409,
+    "english": "注目する",
+    "hiragana": "Chú mục",
+    "vietnamese": "Tập trung sự chú ý",
+    "hanViet": "ちゅうもくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "注目する (Chú mục) - Tập trung sự chú ý. Hán Việt: ちゅうもくする"
+  },
+  {
+    "id": 410,
+    "english": "通訳する",
+    "hiragana": "Thông dịch",
+    "vietnamese": "Thông dịch",
+    "hanViet": "つうやくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "通訳する (Thông dịch) - Thông dịch. Hán Việt: つうやくする"
+  },
+  {
+    "id": 411,
+    "english": "翻訳する",
+    "hiragana": "Phiên dịch",
+    "vietnamese": "Phiên dịch",
+    "hanViet": "ほんやくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "翻訳する (Phiên dịch) - Phiên dịch. Hán Việt: ほんやくする"
+  },
+  {
+    "id": 412,
+    "english": "伝言する",
+    "hiragana": "Truyền ngôn",
+    "vietnamese": "Nhắn tin",
+    "hanViet": "でんごんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "伝言する (Truyền ngôn) - Nhắn tin. Hán Việt: でんごんする"
+  },
+  {
+    "id": 413,
+    "english": "報告する",
+    "hiragana": "Báo cáo",
+    "vietnamese": "Báo cáo",
+    "hanViet": "ほうこくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "報告する (Báo cáo) - Báo cáo. Hán Việt: ほうこくする"
+  },
+  {
+    "id": 414,
+    "english": "録画",
+    "hiragana": "Lục họa",
+    "vietnamese": "Ghi hình",
+    "hanViet": "ろくが",
+    "hint": "(N) - Danh từ",
+    "explanation": "録画 (Lục họa) - Ghi hình. Hán Việt: ろくが"
+  },
+  {
+    "id": 415,
+    "english": "混雑する",
+    "hiragana": "Hỗn tạp",
+    "vietnamese": "Hỗn tạp, đông đúc",
+    "hanViet": "こんざつする",
+    "hint": "(N) - Danh từ",
+    "explanation": "混雑する (Hỗn tạp) - Hỗn tạp, đông đúc. Hán Việt: こんざつする"
+  },
+  {
+    "id": 416,
+    "english": "渋滞する",
+    "hiragana": "Sáp trệ",
+    "vietnamese": "Tắc đường, tắc nghẽn",
+    "hanViet": "じゅうたいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "渋滞する (Sáp trệ) - Tắc đường, tắc nghẽn. Hán Việt: じゅうたいする"
+  },
+  {
+    "id": 417,
+    "english": "衝突する",
+    "hiragana": "Xung đột",
+    "vietnamese": "Xung đột, va chạm",
+    "hanViet": "しょうとつする",
+    "hint": "(N) - Danh từ",
+    "explanation": "衝突する (Xung đột) - Xung đột, va chạm. Hán Việt: しょうとつする"
+  },
+  {
+    "id": 418,
+    "english": "場面",
+    "hiragana": "Trường diện",
+    "vietnamese": "Hiện trường",
+    "hanViet": "ばめん",
+    "hint": "(N) - Danh từ",
+    "explanation": "場面 (Trường diện) - Hiện trường. Hán Việt: ばめん"
+  },
+  {
+    "id": 419,
+    "english": "被害",
+    "hiragana": "Bị hại",
+    "vietnamese": "Thiệt hại",
+    "hanViet": "ひがい",
+    "hint": "(N) - Danh từ",
+    "explanation": "被害 (Bị hại) - Thiệt hại. Hán Việt: ひがい"
+  },
+  {
+    "id": 420,
+    "english": "事故",
+    "hiragana": "Sự cố",
+    "vietnamese": "Tại nạn, sự cố",
+    "hanViet": "じこ",
+    "hint": "(N) - Danh từ",
+    "explanation": "事故 (Sự cố) - Tại nạn, sự cố. Hán Việt: じこ"
+  },
+  {
+    "id": 421,
+    "english": "事件",
+    "hiragana": "Sự kiện",
+    "vietnamese": "Sự kiện",
+    "hanViet": "じけん",
+    "hint": "(N) - Danh từ",
+    "explanation": "事件 (Sự kiện) - Sự kiện. Hán Việt: じけん"
+  },
+  {
+    "id": 422,
+    "english": "故障する",
+    "hiragana": "Cố chướng",
+    "vietnamese": "Hỏng hóc, trục trặc",
+    "hanViet": "こしょうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "故障する (Cố chướng) - Hỏng hóc, trục trặc. Hán Việt: こしょうする"
+  },
+  {
+    "id": 423,
+    "english": "修理する",
+    "hiragana": "Tu lý",
+    "vietnamese": "Sửa chữa",
+    "hanViet": "しゅうりする",
+    "hint": "(N) - Danh từ",
+    "explanation": "修理する (Tu lý) - Sửa chữa. Hán Việt: しゅうりする"
+  },
+  {
+    "id": 424,
+    "english": "停電",
+    "hiragana": "Đình điện",
+    "vietnamese": "Mất điện",
+    "hanViet": "て���でん",
+    "hint": "(N) - Danh từ",
+    "explanation": "停電 (Đình điện) - Mất điện. Hán Việt: て���でん"
+  },
+  {
+    "id": 425,
+    "english": "雷",
+    "hiragana": "Lôi",
+    "vietnamese": "Sấm sét",
+    "hanViet": "かみなり",
+    "hint": "(N) - Danh từ",
+    "explanation": "雷 (Lôi) - Sấm sét. Hán Việt: かみなり"
+  },
+  {
+    "id": 426,
+    "english": "調子",
+    "hiragana": "Điều tử",
+    "vietnamese": "Tình trạng",
+    "hanViet": "ちょうし",
+    "hint": "(N) - Danh từ",
+    "explanation": "調子 (Điều tử) - Tình trạng. Hán Việt: ちょうし"
+  },
+  {
+    "id": 428,
+    "english": "自信",
+    "hiragana": "Tự tín",
+    "vietnamese": "Tự tin",
+    "hanViet": "じしん",
+    "hint": "(N) - Danh từ",
+    "explanation": "自信 (Tự tín) - Tự tin. Hán Việt: じしん"
+  },
+  {
+    "id": 429,
+    "english": "自慢",
+    "hiragana": "Tự mãn",
+    "vietnamese": "Tự mãn",
+    "hanViet": "じまん",
+    "hint": "(N) - Danh từ",
+    "explanation": "自慢 (Tự mãn) - Tự mãn. Hán Việt: じまん"
+  },
+  {
+    "id": 430,
+    "english": "関心",
+    "hiragana": "Quan tâm",
+    "vietnamese": "Quan tâm",
+    "hanViet": "かんしん",
+    "hint": "(N) - Danh từ",
+    "explanation": "関心 (Quan tâm) - Quan tâm. Hán Việt: かんしん"
+  },
+  {
+    "id": 431,
+    "english": "感動する",
+    "hiragana": "Cảm động",
+    "vietnamese": "Cảm động",
+    "hanViet": "かんどうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "感動する (Cảm động) - Cảm động. Hán Việt: かんどうする"
+  },
+  {
+    "id": 432,
+    "english": "興奮する",
+    "hiragana": "Hưng phấn",
+    "vietnamese": "Hưng phấn",
+    "hanViet": "こうふんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "興奮する (Hưng phấn) - Hưng phấn. Hán Việt: こうふんする"
+  },
+  {
+    "id": 433,
+    "english": "感想",
+    "hiragana": "Cảm tưởng",
+    "vietnamese": "Cảm tưởng",
+    "hanViet": "かんそう",
+    "hint": "(N) - Danh từ",
+    "explanation": "感想 (Cảm tưởng) - Cảm tưởng. Hán Việt: かんそう"
+  },
+  {
+    "id": 434,
+    "english": "予想する",
+    "hiragana": "Dự tưởng",
+    "vietnamese": "Đoán trước, trù liệu",
+    "hanViet": "よそうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "予想する (Dự tưởng) - Đoán trước, trù liệu. Hán Việt: よそうする"
+  },
+  {
+    "id": 435,
+    "english": "専門",
+    "hiragana": "Chuyên môn",
+    "vietnamese": "Chuyên môn",
+    "hanViet": "せんもん",
+    "hint": "(N) - Danh từ",
+    "explanation": "専門 (Chuyên môn) - Chuyên môn. Hán Việt: せんもん"
+  },
+  {
+    "id": 436,
+    "english": "研究する",
+    "hiragana": "Nghiên cứu",
+    "vietnamese": "Nghiên cứu",
+    "hanViet": "けんきゅうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "研究する (Nghiên cứu) - Nghiên cứu. Hán Việt: けんきゅうする"
+  },
+  {
+    "id": 437,
+    "english": "調査する",
+    "hiragana": "Điều tra",
+    "vietnamese": "Điều tra",
+    "hanViet": "ちょうさする",
+    "hint": "(N) - Danh từ",
+    "explanation": "調査する (Điều tra) - Điều tra. Hán Việt: ちょうさする"
+  },
+  {
+    "id": 438,
+    "english": "原因",
+    "hiragana": "Nguyên nhân",
+    "vietnamese": "Nguyên nhân",
+    "hanViet": "げんいん",
+    "hint": "(N) - Danh từ",
+    "explanation": "原因 (Nguyên nhân) - Nguyên nhân. Hán Việt: げんいん"
+  },
+  {
+    "id": 439,
+    "english": "結果",
+    "hiragana": "Kết quả",
+    "vietnamese": "Kết quả",
+    "hanViet": "けっか",
+    "hint": "(N) - Danh từ",
+    "explanation": "結果 (Kết quả) - Kết quả. Hán Việt: けっか"
+  },
+  {
+    "id": 440,
+    "english": "解決",
+    "hiragana": "Giải quyết",
+    "vietnamese": "Quải quyết",
+    "hanViet": "かいけつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "解決 (Giải quyết) - Quải quyết. Hán Việt: かいけつ"
+  },
+  {
+    "id": 441,
+    "english": "確かめる",
+    "hiragana": "Xác",
+    "vietnamese": "Xác nhận, kiểm tra",
+    "hanViet": "たしかめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "確かめる (Xác) - Xác nhận, kiểm tra. Hán Việt: たしかめる"
+  },
+  {
+    "id": 442,
+    "english": "間違う",
+    "hiragana": "Gian vi",
+    "vietnamese": "Sai",
+    "hanViet": "まちがう",
+    "hint": "(N) - Danh từ",
+    "explanation": "間違う (Gian vi) - Sai. Hán Việt: まちがう"
+  },
+  {
+    "id": 443,
+    "english": "利用する",
+    "hiragana": "Lợi dụng",
+    "vietnamese": "Sử dụng",
+    "hanViet": "りようする",
+    "hint": "(N) - Danh từ",
+    "explanation": "利用する (Lợi dụng) - Sử dụng. Hán Việt: りようする"
+  },
+  {
+    "id": 444,
+    "english": "減る",
+    "hiragana": "Giảm",
+    "vietnamese": "Giảm",
+    "hanViet": "へる",
+    "hint": "(N) - Danh từ",
+    "explanation": "減る (Giảm) - Giảm. Hán Việt: へる"
+  },
+  {
+    "id": 445,
+    "english": "理解する",
+    "hiragana": "Lý giải",
+    "vietnamese": "Lý giải",
+    "hanViet": "りかいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "理解する (Lý giải) - Lý giải. Hán Việt: りかいする"
+  },
+  {
+    "id": 446,
+    "english": "発見する",
+    "hiragana": "Phát kiến",
+    "vietnamese": "Phát hiện",
+    "hanViet": "はっけんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "発見する (Phát kiến) - Phát hiện. Hán Việt: はっけんする"
+  },
+  {
+    "id": 447,
+    "english": "発明する",
+    "hiragana": "Phát minh",
+    "vietnamese": "Phát minh",
+    "hanViet": "はつめいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "発明する (Phát minh) - Phát minh. Hán Việt: はつめいする"
+  },
+  {
+    "id": 448,
+    "english": "関係する",
+    "hiragana": "Quan hệ",
+    "vietnamese": "Quan hệ",
+    "hanViet": "かんけいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "関係する (Quan hệ) - Quan hệ. Hán Việt: かんけいする"
+  },
+  {
+    "id": 449,
+    "english": "団体",
+    "hiragana": "Đoàn thể",
+    "vietnamese": "Đoàn thể, nhóm",
+    "hanViet": "だんたい",
+    "hint": "(N) - Danh từ",
+    "explanation": "団体 (Đoàn thể) - Đoàn thể, nhóm. Hán Việt: だんたい"
+  },
+  {
+    "id": 450,
+    "english": "博物館",
+    "hiragana": "Bác học quán",
+    "vietnamese": "Viện bảo tàng",
+    "hanViet": "はくぶつかん",
+    "hint": "(N) - Danh từ",
+    "explanation": "博物館 (Bác học quán) - Viện bảo tàng. Hán Việt: はくぶつかん"
+  },
+  {
+    "id": 451,
+    "english": "選挙",
+    "hiragana": "Tuyển cử",
+    "vietnamese": "Bầu cử",
+    "hanViet": "せんきょ",
+    "hint": "(N) - Danh từ",
+    "explanation": "選挙 (Tuyển cử) - Bầu cử. Hán Việt: せんきょ"
+  },
+  {
+    "id": 452,
+    "english": "行う",
+    "hiragana": "Hành",
+    "vietnamese": "Tổ chức",
+    "hanViet": "おこなう",
+    "hint": "(N) - Danh từ",
+    "explanation": "行う (Hành) - Tổ chức. Hán Việt: おこなう"
+  },
+  {
+    "id": 453,
+    "english": "税金",
+    "hiragana": "Thuế kim",
+    "vietnamese": "Tiền thuế",
+    "hanViet": "ぜいきん",
+    "hint": "(N) - Danh từ",
+    "explanation": "税金 (Thuế kim) - Tiền thuế. Hán Việt: ぜいきん"
+  },
+  {
+    "id": 454,
+    "english": "責任",
+    "hiragana": "Trách nhiệm",
+    "vietnamese": "Trách nhiệm",
+    "hanViet": "せきにん",
+    "hint": "(N) - Danh từ",
+    "explanation": "責任 (Trách nhiệm) - Trách nhiệm. Hán Việt: せきにん"
+  },
+  {
+    "id": 455,
+    "english": "書類",
+    "hiragana": "Thư loại",
+    "vietnamese": "Giấy tờ",
+    "hanViet": "しょるい",
+    "hint": "(N) - Danh từ",
+    "explanation": "書類 (Thư loại) - Giấy tờ. Hán Việt: しょるい"
+  },
+  {
+    "id": 456,
+    "english": "題名",
+    "hiragana": "Đề danh",
+    "vietnamese": "Nhan đề",
+    "hanViet": "だいめい",
+    "hint": "(N) - Danh từ",
+    "explanation": "題名 (Đề danh) - Nhan đề. Hán Việt: だいめい"
+  },
+  {
+    "id": 457,
+    "english": "条件",
+    "hiragana": "Điều kiện",
+    "vietnamese": "Điều kiện",
+    "hanViet": "じょうけん",
+    "hint": "(N) - Danh từ",
+    "explanation": "条件 (Điều kiện) - Điều kiện. Hán Việt: じょうけん"
+  },
+  {
+    "id": 458,
+    "english": "採用",
+    "hiragana": "Thải dụng",
+    "vietnamese": "Tuyển dụng",
+    "hanViet": "さいよう",
+    "hint": "(N) - Danh từ",
+    "explanation": "採用 (Thải dụng) - Tuyển dụng. Hán Việt: さいよう"
+  },
+  {
+    "id": 459,
+    "english": "締め切り",
+    "hiragana": "Đế thiết",
+    "vietnamese": "Hạn cuối",
+    "hanViet": "しめきり",
+    "hint": "(N) - Danh từ",
+    "explanation": "締め切り (Đế thiết) - Hạn cuối. Hán Việt: しめきり"
+  },
+  {
+    "id": 460,
+    "english": "期間",
+    "hiragana": "Kì gian",
+    "vietnamese": "期間",
+    "hanViet": "きかん",
+    "hint": "(N) - Danh từ",
+    "explanation": "期間 (Kì gian) - 期間. Hán Việt: きかん"
+  },
+  {
+    "id": 461,
+    "english": "倍",
+    "hiragana": "Bối",
+    "vietnamese": "Gấp đôi",
+    "hanViet": "ばい",
+    "hint": "(N) - Danh từ",
+    "explanation": "倍 (Bối) - Gấp đôi. Hán Việt: ばい"
+  },
+  {
+    "id": 462,
+    "english": "近道",
+    "hiragana": "Cận đạo",
+    "vietnamese": "Đường tắt",
+    "hanViet": "ちかみち",
+    "hint": "(N) - Danh từ",
+    "explanation": "近道 (Cận đạo) - Đường tắt. Hán Việt: ちかみち"
+  },
+  {
+    "id": 463,
+    "english": "中心",
+    "hiragana": "Trung tâm",
+    "vietnamese": "Trung tâm",
+    "hanViet": "ちゅうしん",
+    "hint": "(N) - Danh từ",
+    "explanation": "中心 (Trung tâm) - Trung tâm. Hán Việt: ちゅうしん"
+  },
+  {
+    "id": 464,
+    "english": "辺り",
+    "hiragana": "Biên",
+    "vietnamese": "Xung quanh",
+    "hanViet": "あたり",
+    "hint": "(N) - Danh từ",
+    "explanation": "辺り (Biên) - Xung quanh. Hán Việt: あたり"
+  },
+  {
+    "id": 465,
+    "english": "周り",
+    "hiragana": "Chu",
+    "vietnamese": "Xung quanh",
+    "hanViet": "まわり",
+    "hint": "(N) - Danh từ",
+    "explanation": "周り (Chu) - Xung quanh. Hán Việt: まわり"
+  },
+  {
+    "id": 466,
+    "english": "穴",
+    "hiragana": "Huyệt",
+    "vietnamese": "Lỗ",
+    "hanViet": "あな",
+    "hint": "(N) - Danh từ",
+    "explanation": "穴 (Huyệt) - Lỗ. Hán Việt: あな"
+  },
+  {
+    "id": 467,
+    "english": "地面",
+    "hiragana": "Địa diện",
+    "vietnamese": "Mặt đất",
+    "hanViet": "じめん",
+    "hint": "(N) - Danh từ",
+    "explanation": "地面 (Địa diện) - Mặt đất. Hán Việt: じめん"
+  },
+  {
+    "id": 468,
+    "english": "掘る",
+    "hiragana": "Quật",
+    "vietnamese": "Đào",
+    "hanViet": "ほる",
+    "hint": "(N) - Danh từ",
+    "explanation": "掘る (Quật) - Đào. Hán Việt: ほる"
+  },
+  {
+    "id": 469,
+    "english": "列",
+    "hiragana": "Liệt",
+    "vietnamese": "Hàng ( xếp hàng)",
+    "hanViet": "れつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "列 (Liệt) - Hàng ( xếp hàng). Hán Việt: れつ"
+  },
+  {
+    "id": 470,
+    "english": "幅",
+    "hiragana": "Phúc",
+    "vietnamese": "Chiều rộng",
+    "hanViet": "はば",
+    "hint": "(N) - Danh từ",
+    "explanation": "幅 (Phúc) - Chiều rộng. Hán Việt: はば"
+  },
+  {
+    "id": 471,
+    "english": "範囲",
+    "hiragana": "Phạm vi",
+    "vietnamese": "Phạm vi",
+    "hanViet": "はんい",
+    "hint": "(N) - Danh từ",
+    "explanation": "範囲 (Phạm vi) - Phạm vi. Hán Việt: はんい"
+  },
+  {
+    "id": 472,
+    "english": "内容",
+    "hiragana": "Nội dung",
+    "vietnamese": "Nội dung",
+    "hanViet": "ないよう",
+    "hint": "(N) - Danh từ",
+    "explanation": "内容 (Nội dung) - Nội dung. Hán Việt: ないよう"
+  },
+  {
+    "id": 473,
+    "english": "中身",
+    "hiragana": "Trung thân",
+    "vietnamese": "Nội dung bên trong",
+    "hanViet": "なかみ",
+    "hint": "(N) - Danh từ",
+    "explanation": "中身 (Trung thân) - Nội dung bên trong. Hán Việt: なかみ"
+  },
+  {
+    "id": 474,
+    "english": "特徴",
+    "hiragana": "Đặc trưng",
+    "vietnamese": "Đặc trưng",
+    "hanViet": "とくちょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "特徴 (Đặc trưng) - Đặc trưng. Hán Việt: とくちょう"
+  },
+  {
+    "id": 475,
+    "english": "普通",
+    "hiragana": "Phổ thông",
+    "vietnamese": "Phổ thông, thông thường",
+    "hanViet": "ふつう",
+    "hint": "(N) - Danh từ",
+    "explanation": "普通 (Phổ thông) - Phổ thông, thông thường. Hán Việt: ふつう"
+  },
+  {
+    "id": 476,
+    "english": "当たり前",
+    "hiragana": "Đương tiền",
+    "vietnamese": "Dĩ nhiên",
+    "hanViet": "あたりまえ",
+    "hint": "(N) - Danh từ",
+    "explanation": "当たり前 (Đương tiền) - Dĩ nhiên. Hán Việt: あたりまえ"
+  },
+  {
+    "id": 477,
+    "english": "偽",
+    "hiragana": "Ngụy",
+    "vietnamese": "Giả (giả dối)",
+    "hanViet": "にせ",
+    "hint": "(N) - Danh từ",
+    "explanation": "偽 (Ngụy) - Giả (giả dối). Hán Việt: にせ"
+  },
+  {
+    "id": 478,
+    "english": "別れる",
+    "hiragana": "Biệt",
+    "vietnamese": "Chia tay, ly biệt",
+    "hanViet": "わかれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "別れる (Biệt) - Chia tay, ly biệt. Hán Việt: わかれる"
+  },
+  {
+    "id": 479,
+    "english": "国籍",
+    "hiragana": "Quốc tịch",
+    "vietnamese": "Quốc tịch",
+    "hanViet": "こくせき",
+    "hint": "(N) - Danh từ",
+    "explanation": "国籍 (Quốc tịch) - Quốc tịch. Hán Việt: こくせき"
+  },
+  {
+    "id": 480,
+    "english": "東洋",
+    "hiragana": "Đông dương",
+    "vietnamese": "Phương Đông",
+    "hanViet": "とうよう",
+    "hint": "(N) - Danh từ",
+    "explanation": "東洋 (Đông dương) - Phương Đông. Hán Việt: とうよう"
+  },
+  {
+    "id": 481,
+    "english": "西洋",
+    "hiragana": "Tây dương",
+    "vietnamese": "Phương Tây",
+    "hanViet": "せいよう",
+    "hint": "(N) - Danh từ",
+    "explanation": "西洋 (Tây dương) - Phương Tây. Hán Việt: せいよう"
+  },
+  {
+    "id": 482,
+    "english": "比べる",
+    "hiragana": "Tỷ",
+    "vietnamese": "So sánh",
+    "hanViet": "くらべる",
+    "hint": "(N) - Danh từ",
+    "explanation": "比べる (Tỷ) - So sánh. Hán Việt: くらべる"
+  },
+  {
+    "id": 483,
+    "english": "文化",
+    "hiragana": "Văn hóa",
+    "vietnamese": "Văn hóa",
+    "hanViet": "ぶんか",
+    "hint": "(N) - Danh từ",
+    "explanation": "文化 (Văn hóa) - Văn hóa. Hán Việt: ぶんか"
+  },
+  {
+    "id": 484,
+    "english": "国際",
+    "hiragana": "Quốc tế",
+    "vietnamese": "Quốc tế",
+    "hanViet": "こくさい",
+    "hint": "(N) - Danh từ",
+    "explanation": "国際 (Quốc tế) - Quốc tế. Hán Việt: こくさい"
+  },
+  {
+    "id": 485,
+    "english": "支社",
+    "hiragana": "Chi xã",
+    "vietnamese": "Chi nhánh",
+    "hanViet": "ししゃ",
+    "hint": "(N) - Danh từ",
+    "explanation": "支社 (Chi xã) - Chi nhánh. Hán Việt: ししゃ"
+  },
+  {
+    "id": 486,
+    "english": "企業",
+    "hiragana": "Xí nghiệp",
+    "vietnamese": "Công ty, xí nghiệp",
+    "hanViet": "きぎょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "企業 (Xí nghiệp) - Công ty, xí nghiệp. Hán Việt: きぎょう"
+  },
+  {
+    "id": 487,
+    "english": "発展",
+    "hiragana": "Phát triển",
+    "vietnamese": "Phát triển",
+    "hanViet": "はってん",
+    "hint": "(N) - Danh từ",
+    "explanation": "発展 (Phát triển) - Phát triển. Hán Việt: はってん"
+  },
+  {
+    "id": 488,
+    "english": "自然",
+    "hiragana": "Tự nhiên",
+    "vietnamese": "Tự nhiên",
+    "hanViet": "しぜん",
+    "hint": "(N) - Danh từ",
+    "explanation": "自然 (Tự nhiên) - Tự nhiên. Hán Việt: しぜん"
+  },
+  {
+    "id": 489,
+    "english": "景色",
+    "hiragana": "Cảnh sắc",
+    "vietnamese": "Phong cảnh",
+    "hanViet": "けしき",
+    "hint": "(N) - Danh từ",
+    "explanation": "景色 (Cảnh sắc) - Phong cảnh. Hán Việt: けしき"
+  },
+  {
+    "id": 490,
+    "english": "宗教",
+    "hiragana": "Tôn giáo",
+    "vietnamese": "Tôn giáo",
+    "hanViet": "しゅうきょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "宗教 (Tôn giáo) - Tôn giáo. Hán Việt: しゅうきょう"
+  },
+  {
+    "id": 491,
+    "english": "愛",
+    "hiragana": "Ái",
+    "vietnamese": "Yêu",
+    "hanViet": "あい",
+    "hint": "(N) - Danh từ",
+    "explanation": "愛 (Ái) - Yêu. Hán Việt: あい"
+  },
+  {
+    "id": 492,
+    "english": "が　届く",
+    "hiragana": "Giới",
+    "vietnamese": "Được gửi đến",
+    "hanViet": "とどく",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　届く (Giới) - Được gửi đến. Hán Việt: とどく"
+  },
+  {
+    "id": 493,
+    "english": "届ける",
+    "hiragana": "Giới",
+    "vietnamese": "Chuyển đến",
+    "hanViet": "とどける",
+    "hint": "(N) - Danh từ",
+    "explanation": "届ける (Giới) - Chuyển đến. Hán Việt: とどける"
+  },
+  {
+    "id": 494,
+    "english": "掻く",
+    "hiragana": "Tao",
+    "vietnamese": "Gãi, cào, bới",
+    "hanViet": "かく",
+    "hint": "(N) - Danh từ",
+    "explanation": "掻く (Tao) - Gãi, cào, bới. Hán Việt: かく"
+  },
+  {
+    "id": 495,
+    "english": "掴む",
+    "hiragana": "Quặc",
+    "vietnamese": "Tóm, chộp",
+    "hanViet": "つかむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "掴む (Quặc) - Tóm, chộp. Hán Việt: つかむ"
+  },
+  {
+    "id": 496,
+    "english": "びっくりする",
+    "hiragana": "",
+    "vietnamese": "Ngạc nhiên, giật mình",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "びっくりする () - Ngạc nhiên, giật mình. Hán Việt: "
+  },
+  {
+    "id": 497,
+    "english": "握る",
+    "hiragana": "Ác",
+    "vietnamese": "Bắt, bíu, nắm",
+    "hanViet": "にぎる",
+    "hint": "(N) - Danh từ",
+    "explanation": "握る (Ác) - Bắt, bíu, nắm. Hán Việt: にぎる"
+  },
+  {
+    "id": 498,
+    "english": "押さえる",
+    "hiragana": "Áp",
+    "vietnamese": "Giữ, ôm(bụng)",
+    "hanViet": "おさえる",
+    "hint": "(N) - Danh từ",
+    "explanation": "押さえる (Áp) - Giữ, ôm(bụng). Hán Việt: おさえる"
+  },
+  {
+    "id": 499,
+    "english": "が　近づく",
+    "hiragana": "Cận",
+    "vietnamese": "Đến gần, tới gần",
+    "hanViet": "ちかづく",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　近づく (Cận) - Đến gần, tới gần. Hán Việt: ちかづく"
+  },
+  {
+    "id": 500,
+    "english": "近づける",
+    "hiragana": "Cận",
+    "vietnamese": "Kết thân, mang lại gần",
+    "hanViet": "ちかづける",
+    "hint": "(N) - Danh từ",
+    "explanation": "近づける (Cận) - Kết thân, mang lại gần. Hán Việt: ちかづける"
+  },
+  {
+    "id": 501,
+    "english": "が　合う",
+    "hiragana": "Hợp",
+    "vietnamese": "Chạm mặt",
+    "hanViet": "あう",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　合う (Hợp) - Chạm mặt. Hán Việt: あう"
+  },
+  {
+    "id": 502,
+    "english": "不図",
+    "hiragana": "Bất đồ",
+    "vietnamese": "Đột nhiên",
+    "hanViet": "ふと",
+    "hint": "(N) - Danh từ",
+    "explanation": "不図 (Bất đồ) - Đột nhiên. Hán Việt: ふと"
+  },
+  {
+    "id": 503,
+    "english": "合わせる",
+    "hiragana": "Hợp",
+    "vietnamese": "Hiệp sức",
+    "hanViet": "あわせる",
+    "hint": "(N) - Danh từ",
+    "explanation": "合わせる (Hợp) - Hiệp sức. Hán Việt: あわせる"
+  },
+  {
+    "id": 504,
+    "english": "が　当たる",
+    "hiragana": "Đương",
+    "vietnamese": "Bị đánh",
+    "hanViet": "あたる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　当たる (Đương) - Bị đánh. Hán Việt: あたる"
+  },
+  {
+    "id": 505,
+    "english": "当てる",
+    "hiragana": "Đương",
+    "vietnamese": "Đánh trúng",
+    "hanViet": "あてる",
+    "hint": "(N) - Danh từ",
+    "explanation": "当てる (Đương) - Đánh trúng. Hán Việt: あてる"
+  },
+  {
+    "id": 506,
+    "english": "比べる",
+    "hiragana": "Tỷ",
+    "vietnamese": "So sánh",
+    "hanViet": "くらべる",
+    "hint": "(N) - Danh từ",
+    "explanation": "比べる (Tỷ) - So sánh. Hán Việt: くらべる"
+  },
+  {
+    "id": 507,
+    "english": "似合う",
+    "hiragana": "Tự hợp",
+    "vietnamese": "Hợp",
+    "hanViet": "にあう",
+    "hint": "(N) - Danh từ",
+    "explanation": "似合う (Tự hợp) - Hợp. Hán Việt: にあう"
+  },
+  {
+    "id": 508,
+    "english": "似る",
+    "hiragana": "Tự",
+    "vietnamese": "Giống",
+    "hanViet": "にる",
+    "hint": "(N) - Danh từ",
+    "explanation": "似る (Tự) - Giống. Hán Việt: にる"
+  },
+  {
+    "id": 509,
+    "english": "似せる",
+    "hiragana": "Tự",
+    "vietnamese": "Bắt chước",
+    "hanViet": "にせる",
+    "hint": "(N) - Danh từ",
+    "explanation": "似せる (Tự) - Bắt chước. Hán Việt: にせる"
+  },
+  {
+    "id": 510,
+    "english": "が　分かれる",
+    "hiragana": "Phân",
+    "vietnamese": "Phân chia",
+    "hanViet": "わかれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　分かれる (Phân) - Phân chia. Hán Việt: わかれる"
+  },
+  {
+    "id": 511,
+    "english": "分ける",
+    "hiragana": "Phân",
+    "vietnamese": "Chia",
+    "hanViet": "わける",
+    "hint": "(N) - Danh từ",
+    "explanation": "分ける (Phân) - Chia. Hán Việt: わける"
+  },
+  {
+    "id": 512,
+    "english": "財産",
+    "hiragana": "Tài sản",
+    "vietnamese": "Tài sản",
+    "hanViet": "ざいさん",
+    "hint": "(N) - Danh từ",
+    "explanation": "財産 (Tài sản) - Tài sản. Hán Việt: ざいさん"
+  },
+  {
+    "id": 513,
+    "english": "足す",
+    "hiragana": "Túc",
+    "vietnamese": "Cộng vào, thêm vào",
+    "hanViet": "たす",
+    "hint": "(N) - Danh từ",
+    "explanation": "足す (Túc) - Cộng vào, thêm vào. Hán Việt: たす"
+  },
+  {
+    "id": 514,
+    "english": "薄い",
+    "hiragana": "Bạc",
+    "vietnamese": "Nhạt, mỏng",
+    "hanViet": "うすい",
+    "hint": "(N) - Danh từ",
+    "explanation": "薄い (Bạc) - Nhạt, mỏng. Hán Việt: うすい"
+  },
+  {
+    "id": 515,
+    "english": "塩",
+    "hiragana": "Diêm",
+    "vietnamese": "Muối",
+    "hanViet": "しお",
+    "hint": "(N) - Danh từ",
+    "explanation": "塩 (Diêm) - Muối. Hán Việt: しお"
+  },
+  {
+    "id": 516,
+    "english": "引く",
+    "hiragana": "Dẫn",
+    "vietnamese": "Trừ",
+    "hanViet": "ひく",
+    "hint": "(N) - Danh từ",
+    "explanation": "引く (Dẫn) - Trừ. Hán Việt: ひく"
+  },
+  {
+    "id": 517,
+    "english": "が　増える",
+    "hiragana": "Tăng",
+    "vietnamese": "Tăng lên",
+    "hanViet": "ふえる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　増える (Tăng) - Tăng lên. Hán Việt: ふえる"
+  },
+  {
+    "id": 518,
+    "english": "増や��",
+    "hiragana": "Tăng",
+    "vietnamese": "Làm tăng lên",
+    "hanViet": "ふやす",
+    "hint": "(N) - Danh từ",
+    "explanation": "増や�� (Tăng) - Làm tăng lên. Hán Việt: ふやす"
+  },
+  {
+    "id": 519,
+    "english": "が　減る",
+    "hiragana": "Giảm",
+    "vietnamese": "Giảm",
+    "hanViet": "へる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　減る (Giảm) - Giảm. Hán Việt: へる"
+  },
+  {
+    "id": 520,
+    "english": "減らす",
+    "hiragana": "Giảm",
+    "vietnamese": "Làm giảm",
+    "hanViet": "へらす",
+    "hint": "(N) - Danh từ",
+    "explanation": "減らす (Giảm) - Làm giảm. Hán Việt: へらす"
+  },
+  {
+    "id": 521,
+    "english": "店長",
+    "hiragana": "Điếm trường",
+    "vietnamese": "Chủ tiệm",
+    "hanViet": "てんちょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "店長 (Điếm trường) - Chủ tiệm. Hán Việt: てんちょう"
+  },
+  {
+    "id": 522,
+    "english": "が　返る",
+    "hiragana": "Phản",
+    "vietnamese": "Được trả lại",
+    "hanViet": "かえる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　返る (Phản) - Được trả lại. Hán Việt: かえる"
+  },
+  {
+    "id": 523,
+    "english": "返す",
+    "hiragana": "Phản",
+    "vietnamese": "Trả lại",
+    "hanViet": "かえす",
+    "hint": "(N) - Danh từ",
+    "explanation": "返す (Phản) - Trả lại. Hán Việt: かえす"
+  },
+  {
+    "id": 524,
+    "english": "譲る",
+    "hiragana": "Nhượng",
+    "vietnamese": "Nhường nhin, nhượng bộ",
+    "hanViet": "ゆずる",
+    "hint": "(N) - Danh từ",
+    "explanation": "譲る (Nhượng) - Nhường nhin, nhượng bộ. Hán Việt: ゆずる"
+  },
+  {
+    "id": 525,
+    "english": "が　助かる",
+    "hiragana": "Trợ",
+    "vietnamese": "Được giúp",
+    "hanViet": "たすかる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　助かる (Trợ) - Được giúp. Hán Việt: たすかる"
+  },
+  {
+    "id": 526,
+    "english": "助ける",
+    "hiragana": "Trợ",
+    "vietnamese": "Giúp đỡ",
+    "hanViet": "たすける",
+    "hint": "(N) - Danh từ",
+    "explanation": "助ける (Trợ) - Giúp đỡ. Hán Việt: たすける"
+  },
+  {
+    "id": 527,
+    "english": "虐める",
+    "hiragana": "Ngược",
+    "vietnamese": "Bị bắt nạt",
+    "hanViet": "いじめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "虐める (Ngược) - Bị bắt nạt. Hán Việt: いじめる"
+  },
+  {
+    "id": 528,
+    "english": "騙す",
+    "hiragana": "Phiến",
+    "vietnamese": "Lừa đảo, lạm dụng",
+    "hanViet": "だます",
+    "hint": "(N) - Danh từ",
+    "explanation": "騙す (Phiến) - Lừa đảo, lạm dụng. Hán Việt: だます"
+  },
+  {
+    "id": 529,
+    "english": "独身",
+    "hiragana": "Độc thân",
+    "vietnamese": "Độc thân",
+    "hanViet": "どくしん",
+    "hint": "(N) - Danh từ",
+    "explanation": "独身 (Độc thân) - Độc thân. Hán Việt: どくしん"
+  },
+  {
+    "id": 530,
+    "english": "女性",
+    "hiragana": "Nữ giới",
+    "vietnamese": "Nữ giới",
+    "hanViet": "じょせい",
+    "hint": "(N) - Danh từ",
+    "explanation": "女性 (Nữ giới) - Nữ giới. Hán Việt: じょせい"
+  },
+  {
+    "id": 531,
+    "english": "付き合う",
+    "hiragana": "Phó hợp",
+    "vietnamese": "Hẹn hò",
+    "hanViet": "つきあう",
+    "hint": "(N) - Danh từ",
+    "explanation": "付き合う (Phó hợp) - Hẹn hò. Hán Việt: つきあう"
+  },
+  {
+    "id": 532,
+    "english": "盗む",
+    "hiragana": "Đạo",
+    "vietnamese": "Ăn trộm",
+    "hanViet": "ぬすむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "盗む (Đạo) - Ăn trộm. Hán Việt: ぬすむ"
+  },
+  {
+    "id": 533,
+    "english": "留守中",
+    "hiragana": "Lưu thủ trung",
+    "vietnamese": "Trong khi vắng nhà",
+    "hanViet": "るすちゅう",
+    "hint": "(N) - Danh từ",
+    "explanation": "留守中 (Lưu thủ trung) - Trong khi vắng nhà. Hán Việt: るすちゅう"
+  },
+  {
+    "id": 534,
+    "english": "が　刺さる",
+    "hiragana": "Thích",
+    "vietnamese": "Mắc, hóc",
+    "hanViet": "ささる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　刺さる (Thích) - Mắc, hóc. Hán Việt: ささる"
+  },
+  {
+    "id": 535,
+    "english": "刺す",
+    "hiragana": "Thích",
+    "vietnamese": "Đâm, chọc",
+    "hanViet": "さす",
+    "hint": "(N) - Danh từ",
+    "explanation": "刺す (Thích) - Đâm, chọc. Hán Việt: さす"
+  },
+  {
+    "id": 536,
+    "english": "殺す",
+    "hiragana": "Sát",
+    "vietnamese": "Giết",
+    "hanViet": "ころす",
+    "hint": "(N) - Danh từ",
+    "explanation": "殺す (Sát) - Giết. Hán Việt: ころす"
+  },
+  {
+    "id": 537,
+    "english": "が　隠れる",
+    "hiragana": "Ẩn",
+    "vietnamese": "Ẩn nấp, núp",
+    "hanViet": "かくれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　隠れる (Ẩn) - Ẩn nấp, núp. Hán Việt: かくれる"
+  },
+  {
+    "id": 538,
+    "english": "隠す",
+    "hiragana": "Ẩn",
+    "vietnamese": "Che giấu",
+    "hanViet": "かくす",
+    "hint": "(N) - Danh từ",
+    "explanation": "隠す (Ẩn) - Che giấu. Hán Việt: かくす"
+  },
+  {
+    "id": 539,
+    "english": "が　埋まる",
+    "hiragana": "Mai",
+    "vietnamese": "Bị lấp/chôn",
+    "hanViet": "うまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　埋まる (Mai) - Bị lấp/chôn. Hán Việt: うまる"
+  },
+  {
+    "id": 540,
+    "english": "埋める",
+    "hiragana": "Mai",
+    "vietnamese": "Chôn lấp",
+    "hanViet": "うめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "埋める (Mai) - Chôn lấp. Hán Việt: うめる"
+  },
+  {
+    "id": 541,
+    "english": "囲む",
+    "hiragana": "Vi",
+    "vietnamese": "Bao quanh, vây hãm",
+    "hanViet": "か��む",
+    "hint": "(N) - Danh từ",
+    "explanation": "囲む (Vi) - Bao quanh, vây hãm. Hán Việt: か��む"
+  },
+  {
+    "id": 542,
+    "english": "が　詰まる",
+    "hiragana": "Cật",
+    "vietnamese": "Chặt, đầy",
+    "hanViet": "つまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　詰まる (Cật) - Chặt, đầy. Hán Việt: つまる"
+  },
+  {
+    "id": 543,
+    "english": "詰める",
+    "hiragana": "Cật",
+    "vietnamese": "Nhét vào, tống vào",
+    "hanViet": "つめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "詰める (Cật) - Nhét vào, tống vào. Hán Việt: つめる"
+  },
+  {
+    "id": 544,
+    "english": "開く",
+    "hiragana": "Khai",
+    "vietnamese": "Mở",
+    "hanViet": "ひらく",
+    "hint": "(N) - Danh từ",
+    "explanation": "開く (Khai) - Mở. Hán Việt: ひらく"
+  },
+  {
+    "id": 545,
+    "english": "閉じる",
+    "hiragana": "Bế",
+    "vietnamese": "Đóng",
+    "hanViet": "とじる",
+    "hint": "(N) - Danh từ",
+    "explanation": "閉じる (Bế) - Đóng. Hán Việt: とじる"
+  },
+  {
+    "id": 546,
+    "english": "が　飛ぶ",
+    "hiragana": "Phi",
+    "vietnamese": "Bay",
+    "hanViet": "とぶ",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　飛ぶ (Phi) - Bay. Hán Việt: とぶ"
+  },
+  {
+    "id": 547,
+    "english": "飛ばす",
+    "hiragana": "Phi",
+    "vietnamese": "Làm cho bay",
+    "hanViet": "とばす",
+    "hint": "(N) - Danh từ",
+    "explanation": "飛ばす (Phi) - Làm cho bay. Hán Việt: とばす"
+  },
+  {
+    "id": 548,
+    "english": "振る",
+    "hiragana": "Chấn",
+    "vietnamese": "Vẫy (tay)",
+    "hanViet": "ふる",
+    "hint": "(N) - Danh từ",
+    "explanation": "振る (Chấn) - Vẫy (tay). Hán Việt: ふる"
+  },
+  {
+    "id": 549,
+    "english": "捲る",
+    "hiragana": "Quyển",
+    "vietnamese": "Xắn, quấn",
+    "hanViet": "めくる",
+    "hint": "(N) - Danh từ",
+    "explanation": "捲る (Quyển) - Xắn, quấn. Hán Việt: めくる"
+  },
+  {
+    "id": 550,
+    "english": "見かける",
+    "hiragana": "Kiến",
+    "vietnamese": "Tình cờ gặp",
+    "hanViet": "みかける",
+    "hint": "(N) - Danh từ",
+    "explanation": "見かける (Kiến) - Tình cờ gặp. Hán Việt: みかける"
+  },
+  {
+    "id": 551,
+    "english": "確かめる",
+    "hiragana": "Xác",
+    "vietnamese": "Xác nhận, kiểm tra",
+    "hanViet": "たしかめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "確かめる (Xác) - Xác nhận, kiểm tra. Hán Việt: たしかめる"
+  },
+  {
+    "id": 552,
+    "english": "試す",
+    "hiragana": "Thí",
+    "vietnamese": "Mặc thử",
+    "hanViet": "ためす",
+    "hint": "(N) - Danh từ",
+    "explanation": "試す (Thí) - Mặc thử. Hán Việt: ためす"
+  },
+  {
+    "id": 554,
+    "english": "洋服",
+    "hiragana": "Dương phục",
+    "vietnamese": "Quần áo kiểu Tây Âu",
+    "hanViet": "ようふく",
+    "hint": "(N) - Danh từ",
+    "explanation": "洋服 (Dương phục) - Quần áo kiểu Tây Âu. Hán Việt: ようふく"
+  },
+  {
+    "id": 555,
+    "english": "繰り返す",
+    "hiragana": "Sào phản",
+    "vietnamese": "Lặp lại",
+    "hanViet": "くりかえす",
+    "hint": "(N) - Danh từ",
+    "explanation": "繰り返す (Sào phản) - Lặp lại. Hán Việt: くりかえす"
+  },
+  {
+    "id": 556,
+    "english": "体操する",
+    "hiragana": "Thể thao",
+    "vietnamese": "Tập thể dục",
+    "hanViet": "たいそうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "体操する (Thể thao) - Tập thể dục. Hán Việt: たいそうする"
+  },
+  {
+    "id": 557,
+    "english": "訳す",
+    "hiragana": "Dịch",
+    "vietnamese": "Dịch",
+    "hanViet": "やくす",
+    "hint": "(N) - Danh từ",
+    "explanation": "訳す (Dịch) - Dịch. Hán Việt: やくす"
+  },
+  {
+    "id": 558,
+    "english": "行う",
+    "hiragana": "Hành",
+    "vietnamese": "Tổ chức",
+    "hanViet": "おこなう",
+    "hint": "(N) - Danh từ",
+    "explanation": "行う (Hành) - Tổ chức. Hán Việt: おこなう"
+  },
+  {
+    "id": 559,
+    "english": "が　間違う",
+    "hiragana": "Gian vi",
+    "vietnamese": "Bị sai",
+    "hanViet": "まちがう",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　間違う (Gian vi) - Bị sai. Hán Việt: まちがう"
+  },
+  {
+    "id": 560,
+    "english": "間違える",
+    "hiragana": "Gian vi",
+    "vietnamese": "Làm sai",
+    "hanViet": "まちがえる",
+    "hint": "(N) - Danh từ",
+    "explanation": "間違える (Gian vi) - Làm sai. Hán Việt: まちがえる"
+  },
+  {
+    "id": 561,
+    "english": "許す",
+    "hiragana": "Hứa",
+    "vietnamese": "Tha thứ, tha lỗi",
+    "hanViet": "ゆるす",
+    "hint": "(N) - Danh từ",
+    "explanation": "許す (Hứa) - Tha thứ, tha lỗi. Hán Việt: ゆるす"
+  },
+  {
+    "id": 562,
+    "english": "謝る",
+    "hiragana": "Tạ",
+    "vietnamese": "Xin lỗi",
+    "hanViet": "あやまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "謝る (Tạ) - Xin lỗi. Hán Việt: あやまる"
+  },
+  {
+    "id": 563,
+    "english": "が　慣れる",
+    "hiragana": "Quán",
+    "vietnamese": "Quen",
+    "hanViet": "なれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　慣れる (Quán) - Quen. Hán Việt: なれる"
+  },
+  {
+    "id": 564,
+    "english": "慣らす",
+    "hiragana": "Quán",
+    "vietnamese": "Làm quen, khởi động",
+    "hanViet": "ならす",
+    "hint": "(N) - Danh từ",
+    "explanation": "慣らす (Quán) - Làm quen, khởi động. Hán Việt: ならす"
+  },
+  {
+    "id": 565,
+    "english": "が　立つ",
+    "hiragana": "Lập",
+    "vietnamese": "Bị đứng",
+    "hanViet": "たつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　立つ (Lập) - Bị đứng. Hán Việt: たつ"
+  },
+  {
+    "id": 566,
+    "english": "立てる",
+    "hiragana": "Lập",
+    "vietnamese": "Đứng lên",
+    "hanViet": "たてる",
+    "hint": "(N) - Danh từ",
+    "explanation": "立てる (Lập) - Đứng lên. Hán Việt: たてる"
+  },
+  {
+    "id": 567,
+    "english": "が　建つ",
+    "hiragana": "Kiến",
+    "vietnamese": "Được xây",
+    "hanViet": "たつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　建つ (Kiến) - Được xây. Hán Việt: たつ"
+  },
+  {
+    "id": 568,
+    "english": "建てる",
+    "hiragana": "Kiến",
+    "vietnamese": "Xây lên",
+    "hanViet": "たてる",
+    "hint": "(N) - Danh từ",
+    "explanation": "建てる (Kiến) - Xây lên. Hán Việt: たてる"
+  },
+  {
+    "id": 569,
+    "english": "が　育つ",
+    "hiragana": "Dục",
+    "vietnamese": "Lớn lên, khôn lớn",
+    "hanViet": "そだつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　育つ (Dục) - Lớn lên, khôn lớn. Hán Việt: そだつ"
+  },
+  {
+    "id": 570,
+    "english": "育てる",
+    "hiragana": "Dục",
+    "vietnamese": "Nuôi, dạy",
+    "hanViet": "そだてる",
+    "hint": "(N) - Danh từ",
+    "explanation": "育てる (Dục) - Nuôi, dạy. Hán Việt: そだてる"
+  },
+  {
+    "id": 571,
+    "english": "が　生える",
+    "hiragana": "Sinh",
+    "vietnamese": "Mọc, phát triển",
+    "hanViet": "はえる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　生える (Sinh) - Mọc, phát triển. Hán Việt: はえる"
+  },
+  {
+    "id": 572,
+    "english": "生やす",
+    "hiragana": "Sinh",
+    "vietnamese": "Để dài (râu)",
+    "hanViet": "はやす",
+    "hint": "(N) - Danh từ",
+    "explanation": "生やす (Sinh) - Để dài (râu). Hán Việt: はやす"
+  },
+  {
+    "id": 573,
+    "english": "が　汚れる",
+    "hiragana": "Ô",
+    "vietnamese": "Bị bẩn",
+    "hanViet": "よごれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　汚れる (Ô) - Bị bẩn. Hán Việt: よごれる"
+  },
+  {
+    "id": 574,
+    "english": "汚す",
+    "hiragana": "Ô",
+    "vietnamese": "Làm bẩn",
+    "hanViet": "よごす",
+    "hint": "(N) - Danh từ",
+    "explanation": "汚す (Ô) - Làm bẩn. Hán Việt: よごす"
+  },
+  {
+    "id": 575,
+    "english": "が　壊れる",
+    "hiragana": "Hoại",
+    "vietnamese": "Bị hỏng",
+    "hanViet": "こわれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　壊れる (Hoại) - Bị hỏng. Hán Việt: こわれる"
+  },
+  {
+    "id": 576,
+    "english": "壊す",
+    "hiragana": "Hoại",
+    "vietnamese": "Làm hỏng",
+    "hanViet": "こわす",
+    "hint": "(N) - Danh từ",
+    "explanation": "壊す (Hoại) - Làm hỏng. Hán Việt: こわす"
+  },
+  {
+    "id": 577,
+    "english": "が　割れる",
+    "hiragana": "Cát",
+    "vietnamese": "Bị vỡ",
+    "hanViet": "われる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　割れる (Cát) - Bị vỡ. Hán Việt: われる"
+  },
+  {
+    "id": 578,
+    "english": "割る",
+    "hiragana": "Cát",
+    "vietnamese": "Làm vỡ",
+    "hanViet": "わる",
+    "hint": "(N) - Danh từ",
+    "explanation": "割る (Cát) - Làm vỡ. Hán Việt: わる"
+  },
+  {
+    "id": 579,
+    "english": "が　折れる",
+    "hiragana": "Triết",
+    "vietnamese": "Gãy",
+    "hanViet": "おれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　折れる (Triết) - Gãy. Hán Việt: おれる"
+  },
+  {
+    "id": 580,
+    "english": "折る",
+    "hiragana": "Triết",
+    "vietnamese": "Làm gãy",
+    "hanViet": "おる",
+    "hint": "(N) - Danh từ",
+    "explanation": "折る (Triết) - Làm gãy. Hán Việt: おる"
+  },
+  {
+    "id": 581,
+    "english": "が　破れる",
+    "hiragana": "Phá",
+    "vietnamese": "Rách",
+    "hanViet": "やぶれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　破れる (Phá) - Rách. Hán Việt: やぶれる"
+  },
+  {
+    "id": 582,
+    "english": "破る",
+    "hiragana": "Phá",
+    "vietnamese": "Xé rách",
+    "hanViet": "やぶる",
+    "hint": "(N) - Danh từ",
+    "explanation": "破る (Phá) - Xé rách. Hán Việt: やぶる"
+  },
+  {
+    "id": 583,
+    "english": "が　曲がる",
+    "hiragana": "Khúc",
+    "vietnamese": "Bị gập, cong",
+    "hanViet": "まがる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　曲がる (Khúc) - Bị gập, cong. Hán Việt: まがる"
+  },
+  {
+    "id": 584,
+    "english": "曲げる",
+    "hiragana": "Khúc",
+    "vietnamese": "Gập, bẻ cong",
+    "hanViet": "まげる",
+    "hint": "(N) - Danh từ",
+    "explanation": "曲げる (Khúc) - Gập, bẻ cong. Hán Việt: まげる"
+  },
+  {
+    "id": 585,
+    "english": "が　外れる",
+    "hiragana": "Ngoại",
+    "vietnamese": "Rời ra, tách ra",
+    "hanViet": "はずれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　外れる (Ngoại) - Rời ra, tách ra. Hán Việt: はずれる"
+  },
+  {
+    "id": 586,
+    "english": "外す",
+    "hiragana": "Ngoại",
+    "vietnamese": "Làm rời ra, tách ra",
+    "hanViet": "はずす",
+    "hint": "(N) - Danh từ",
+    "explanation": "外す (Ngoại) - Làm rời ra, tách ra. Hán Việt: はずす"
+  },
+  {
+    "id": 587,
+    "english": "が　揺れる",
+    "hiragana": "Dao",
+    "vietnamese": "Bi rung",
+    "hanViet": "ゆれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　揺れる (Dao) - Bi rung. Hán Việt: ゆれる"
+  },
+  {
+    "id": 588,
+    "english": "揺らす",
+    "hiragana": "Dao",
+    "vietnamese": "Rung, đung đưa",
+    "hanViet": "ゆらす",
+    "hint": "(N) - Danh từ",
+    "explanation": "揺らす (Dao) - Rung, đung đưa. Hán Việt: ゆらす"
+  },
+  {
+    "id": 589,
+    "english": "が　流れる",
+    "hiragana": "Lưu",
+    "vietnamese": "Chảy, trôi đi",
+    "hanViet": "ながれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　流れる (Lưu) - Chảy, trôi đi. Hán Việt: ながれる"
+  },
+  {
+    "id": 590,
+    "english": "流す",
+    "hiragana": "Lưu",
+    "vietnamese": "Cho chảy",
+    "hanViet": "ながす",
+    "hint": "(N) - Danh từ",
+    "explanation": "流す (Lưu) - Cho chảy. Hán Việt: ながす"
+  },
+  {
+    "id": 591,
+    "english": "都心",
+    "hiragana": "Đô tâm",
+    "vietnamese": "Trung tâm",
+    "hanViet": "としん",
+    "hint": "(N) - Danh từ",
+    "explanation": "都心 (Đô tâm) - Trung tâm. Hán Việt: としん"
+  },
+  {
+    "id": 592,
+    "english": "が　濡れる",
+    "hiragana": "Nhu",
+    "vietnamese": "Bị ướt",
+    "hanViet": "ぬれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　濡れる (Nhu) - Bị ướt. Hán Việt: ぬれる"
+  },
+  {
+    "id": 593,
+    "english": "濡らす",
+    "hiragana": "Nhu",
+    "vietnamese": "Làm ướt",
+    "hanViet": "ぬらす",
+    "hint": "(N) - Danh từ",
+    "explanation": "濡らす (Nhu) - Làm ướt. Hán Việt: ぬらす"
+  },
+  {
+    "id": 594,
+    "english": "が　迷う",
+    "hiragana": "Mê",
+    "vietnamese": "Lạc đường",
+    "hanViet": "まよう",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　迷う (Mê) - Lạc đường. Hán Việt: まよう"
+  },
+  {
+    "id": 595,
+    "english": "悩む",
+    "hiragana": "Não",
+    "vietnamese": "Phiền muội, lo lắng",
+    "hanViet": "なやむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "悩む (Não) - Phiền muội, lo lắng. Hán Việt: なやむ"
+  },
+  {
+    "id": 596,
+    "english": "が　慌てる",
+    "hiragana": "Hoảng",
+    "vietnamese": "Luống cuống, vội vàng",
+    "hanViet": "あわてる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　慌てる (Hoảng) - Luống cuống, vội vàng. Hán Việt: あわてる"
+  },
+  {
+    "id": 597,
+    "english": "が　覚める",
+    "hiragana": "Giác",
+    "vietnamese": "Tỉnh giấc, tỉnh dậy",
+    "hanViet": "さめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　覚める (Giác) - Tỉnh giấc, tỉnh dậy. Hán Việt: さめる"
+  },
+  {
+    "id": 598,
+    "english": "覚ます",
+    "hiragana": "Giác",
+    "vietnamese": "Làm cho tỉnh lại",
+    "hanViet": "さます",
+    "hint": "(N) - Danh từ",
+    "explanation": "覚ます (Giác) - Làm cho tỉnh lại. Hán Việt: さます"
+  },
+  {
+    "id": 599,
+    "english": "夜中",
+    "hiragana": "Dạ trung",
+    "vietnamese": "Giữa đêm",
+    "hanViet": "よなか",
+    "hint": "(N) - Danh từ",
+    "explanation": "夜中 (Dạ trung) - Giữa đêm. Hán Việt: よなか"
+  },
+  {
+    "id": 600,
+    "english": "が　眠る",
+    "hiragana": "Miên",
+    "vietnamese": "Ngủ",
+    "hanViet": "ねむる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　眠る (Miên) - Ngủ. Hán Việt: ねむる"
+  },
+  {
+    "id": 601,
+    "english": "緊張する",
+    "hiragana": "Khẩn trương",
+    "vietnamese": "Căng thẳng, lo lắng",
+    "hanViet": "きんちょうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "緊張する (Khẩn trương) - Căng thẳng, lo lắng. Hán Việt: きんちょうする"
+  },
+  {
+    "id": 602,
+    "english": "祈る",
+    "hiragana": "Kì",
+    "vietnamese": "Cầu nguyện",
+    "hanViet": "いのる",
+    "hint": "(N) - Danh từ",
+    "explanation": "祈る (Kì) - Cầu nguyện. Hán Việt: いのる"
+  },
+  {
+    "id": 603,
+    "english": "祝う",
+    "hiragana": "Chúc",
+    "vietnamese": "Chúc mừng",
+    "hanViet": "いわう",
+    "hint": "(N) - Danh từ",
+    "explanation": "祝う (Chúc) - Chúc mừng. Hán Việt: いわう"
+  },
+  {
+    "id": 604,
+    "english": "感じる",
+    "hiragana": "Cảm",
+    "vietnamese": "Cảm thấy",
+    "hanViet": "かんじる",
+    "hint": "(N) - Danh từ",
+    "explanation": "感じる (Cảm) - Cảm thấy. Hán Việt: かんじる"
+  },
+  {
+    "id": 605,
+    "english": "濃い",
+    "hiragana": "Nùng",
+    "vietnamese": "Nồng, đậm",
+    "hanViet": "こい",
+    "hint": "(N) - Danh từ",
+    "explanation": "濃い (Nùng) - Nồng, đậm. Hán Việt: こい"
+  },
+  {
+    "id": 606,
+    "english": "薄い",
+    "hiragana": "Bạc",
+    "vietnamese": "Nhạt",
+    "hanViet": "うすい",
+    "hint": "(N) - Danh từ",
+    "explanation": "薄い (Bạc) - Nhạt. Hán Việt: うすい"
+  },
+  {
+    "id": 607,
+    "english": "酸っぱい",
+    "hiragana": "Toan",
+    "vietnamese": "Chua",
+    "hanViet": "すっぱい",
+    "hint": "(N) - Danh từ",
+    "explanation": "酸っぱい (Toan) - Chua. Hán Việt: すっぱい"
+  },
+  {
+    "id": 608,
+    "english": "臭い",
+    "hiragana": "Xú",
+    "vietnamese": "Thối, tanh",
+    "hanViet": "くさい",
+    "hint": "(N) - Danh từ",
+    "explanation": "臭い (Xú) - Thối, tanh. Hán Việt: くさい"
+  },
+  {
+    "id": 609,
+    "english": "可笑しい",
+    "hiragana": "Khả tiếu",
+    "vietnamese": "Buồn cười",
+    "hanViet": "かわいい",
+    "hint": "(N) - Danh từ",
+    "explanation": "可笑しい (Khả tiếu) - Buồn cười. Hán Việt: かわいい"
+  },
+  {
+    "id": 610,
+    "english": "格好いい",
+    "hiragana": "Cách hảo",
+    "vietnamese": "Đẹp trai, bảnh bao",
+    "hanViet": "かっこいい",
+    "hint": "(N) - Danh từ",
+    "explanation": "格好いい (Cách hảo) - Đẹp trai, bảnh bao. Hán Việt: かっこいい"
+  },
+  {
+    "id": 611,
+    "english": "うまい",
+    "hiragana": "",
+    "vietnamese": "Ngon",
+    "hanViet": "うまい",
+    "hint": "(N) - Danh từ",
+    "explanation": "うまい () - Ngon. Hán Việt: うまい"
+  },
+  {
+    "id": 612,
+    "english": "親しい",
+    "hiragana": "Thân",
+    "vietnamese": "Thân thiện, gần gũi",
+    "hanViet": "したしい",
+    "hint": "(N) - Danh từ",
+    "explanation": "親しい (Thân) - Thân thiện, gần gũi. Hán Việt: したしい"
+  },
+  {
+    "id": 613,
+    "english": "詳しい",
+    "hiragana": "Tường",
+    "vietnamese": "Tường tận, tỉ mỉ",
+    "hanViet": "��わしい",
+    "hint": "(N) - Danh từ",
+    "explanation": "詳しい (Tường) - Tường tận, tỉ mỉ. Hán Việt: ��わしい"
+  },
+  {
+    "id": 614,
+    "english": "細かい",
+    "hiragana": "Tế",
+    "vietnamese": "Chi tiết, chi li",
+    "hanViet": "こまかい",
+    "hint": "(N) - Danh từ",
+    "explanation": "細かい (Tế) - Chi tiết, chi li. Hán Việt: こまかい"
+  },
+  {
+    "id": 615,
+    "english": "浅い",
+    "hiragana": "Thiển",
+    "vietnamese": "Nông, cạn",
+    "hanViet": "あさい",
+    "hint": "(N) - Danh từ",
+    "explanation": "浅い (Thiển) - Nông, cạn. Hán Việt: あさい"
+  },
+  {
+    "id": 616,
+    "english": "硬い/固い",
+    "hiragana": "Ngạch/Cố",
+    "vietnamese": "Cứng, dai",
+    "hanViet": "かたい",
+    "hint": "(N) - Danh từ",
+    "explanation": "硬い/固い (Ngạch/Cố) - Cứng, dai. Hán Việt: かたい"
+  },
+  {
+    "id": 617,
+    "english": "温い",
+    "hiragana": "Ôn",
+    "vietnamese": "Nguội",
+    "hanViet": "ぬるい",
+    "hint": "(N) - Danh từ",
+    "explanation": "温い (Ôn) - Nguội. Hán Việt: ぬるい"
+  },
+  {
+    "id": 618,
+    "english": "眩しい",
+    "hiragana": "Huyễn",
+    "vietnamese": "Chói mắt, sáng chói",
+    "hanViet": "まぶしい",
+    "hint": "(N) - Danh từ",
+    "explanation": "眩しい (Huyễn) - Chói mắt, sáng chói. Hán Việt: まぶしい"
+  },
+  {
+    "id": 619,
+    "english": "蒸し暑い",
+    "hiragana": "Chưng thử",
+    "vietnamese": "Nóng ẩm",
+    "hanViet": "むしあつい",
+    "hint": "(N) - Danh từ",
+    "explanation": "蒸し暑い (Chưng thử) - Nóng ẩm. Hán Việt: むしあつい"
+  },
+  {
+    "id": 620,
+    "english": "清潔（な）",
+    "hiragana": "Thanh khiết",
+    "vietnamese": "Thanh khiết, sạch sẽ",
+    "hanViet": "せいけつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "清潔（な） (Thanh khiết) - Thanh khiết, sạch sẽ. Hán Việt: せいけつ"
+  },
+  {
+    "id": 621,
+    "english": "新鮮（な）",
+    "hiragana": "Tân tiến",
+    "vietnamese": "Tươi, mới",
+    "hanViet": "しんせん",
+    "hint": "(N) - Danh từ",
+    "explanation": "新鮮（な） (Tân tiến) - Tươi, mới. Hán Việt: しんせん"
+  },
+  {
+    "id": 622,
+    "english": "豊か（な）",
+    "hiragana": "Phong",
+    "vietnamese": "Giàu có",
+    "hanViet": "ゆたか",
+    "hint": "(N) - Danh từ",
+    "explanation": "豊か（な） (Phong) - Giàu có. Hán Việt: ゆたか"
+  },
+  {
+    "id": 623,
+    "english": "立派（な）",
+    "hiragana": "Lập phái",
+    "vietnamese": "Siêu",
+    "hanViet": "りっぱい",
+    "hint": "(N) - Danh từ",
+    "explanation": "立派（な） (Lập phái) - Siêu. Hán Việt: りっぱい"
+  },
+  {
+    "id": 624,
+    "english": "正確（な）",
+    "hiragana": "Chính xác",
+    "vietnamese": "Chính xác",
+    "hanViet": "せいかく",
+    "hint": "(N) - Danh từ",
+    "explanation": "正確（な） (Chính xác) - Chính xác. Hán Việt: せいかく"
+  },
+  {
+    "id": 625,
+    "english": "確か（な）",
+    "hiragana": "Xác",
+    "vietnamese": "Xác thực",
+    "hanViet": "たしか",
+    "hint": "(N) - Danh từ",
+    "explanation": "確か（な） (Xác) - Xác thực. Hán Việt: たしか"
+  },
+  {
+    "id": 626,
+    "english": "重要（な）",
+    "hiragana": "Trọng yếu",
+    "vietnamese": "Trọng yếu",
+    "hanViet": "じゅうよう",
+    "hint": "(N) - Danh từ",
+    "explanation": "重要（な） (Trọng yếu) - Trọng yếu. Hán Việt: じゅうよう"
+  },
+  {
+    "id": 627,
+    "english": "必要（な）",
+    "hiragana": "Tất yếu",
+    "vietnamese": "Cần thiết",
+    "hanViet": "ひつよう",
+    "hint": "(N) - Danh từ",
+    "explanation": "必要（な） (Tất yếu) - Cần thiết. Hán Việt: ひつよう"
+  },
+  {
+    "id": 628,
+    "english": "勿体無い（な）",
+    "hiragana": "Vật thể vô",
+    "vietnamese": "Lãng phí, hoang phí",
+    "hanViet": "もったいない",
+    "hint": "(N) - Danh từ",
+    "explanation": "勿体無い（な） (Vật thể vô) - Lãng phí, hoang phí. Hán Việt: もったいない"
+  },
+  {
+    "id": 629,
+    "english": "凄い",
+    "hiragana": "Thê",
+    "vietnamese": "Giỏi, xuất sắc",
+    "hanViet": "すごい",
+    "hint": "(N) - Danh từ",
+    "explanation": "凄い (Thê) - Giỏi, xuất sắc. Hán Việt: すごい"
+  },
+  {
+    "id": 630,
+    "english": "酷い",
+    "hiragana": "Khốc",
+    "vietnamese": "Kinh khủng, khủng khiếp",
+    "hanViet": "ひどい",
+    "hint": "(N) - Danh từ",
+    "explanation": "酷い (Khốc) - Kinh khủng, khủng khiếp. Hán Việt: ひどい"
+  },
+  {
+    "id": 631,
+    "english": "激しい",
+    "hiragana": "Kích",
+    "vietnamese": "Mãnh liệt",
+    "hanViet": "はげしい",
+    "hint": "(N) - Danh từ",
+    "explanation": "激しい (Kích) - Mãnh liệt. Hán Việt: はげしい"
+  },
+  {
+    "id": 632,
+    "english": "そっくり（な）",
+    "hiragana": "",
+    "vietnamese": "Giống",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "そっくり（な） () - Giống. Hán Việt: "
+  },
+  {
+    "id": 633,
+    "english": "急（な）",
+    "hiragana": "",
+    "vietnamese": "Gấp",
+    "hanViet": "きゅう",
+    "hint": "(N) - Danh từ",
+    "explanation": "急（な） () - Gấp. Hán Việt: きゅう"
+  },
+  {
+    "id": 634,
+    "english": "適当（な）",
+    "hiragana": "Thích đương",
+    "vietnamese": "Thích hợp, vừa phải",
+    "hanViet": "てきとう",
+    "hint": "(N) - Danh từ",
+    "explanation": "適当（な） (Thích đương) - Thích hợp, vừa phải. Hán Việt: てきとう"
+  },
+  {
+    "id": 635,
+    "english": "特別（な）",
+    "hiragana": "Đặc biệt",
+    "vietnamese": "Đặc biệt",
+    "hanViet": "とくべつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "特別（な） (Đặc biệt) - Đặc biệt. Hán Việt: とくべつ"
+  },
+  {
+    "id": 636,
+    "english": "完全（な）",
+    "hiragana": "Hoàn toàn",
+    "vietnamese": "Hoàn toàn",
+    "hanViet": "かんぜん",
+    "hint": "(N) - Danh từ",
+    "explanation": "完全（な） (Hoàn toàn) - Hoàn toàn. Hán Việt: かんぜん"
+  },
+  {
+    "id": 637,
+    "english": "盛ん（な）",
+    "hiragana": "Thịnh",
+    "vietnamese": "Thịnh vượng",
+    "hanViet": "さかん",
+    "hint": "(N) - Danh từ",
+    "explanation": "盛ん（な） (Thịnh) - Thịnh vượng. Hán Việt: さかん"
+  },
+  {
+    "id": 638,
+    "english": "様々（な）",
+    "hiragana": "Dạng",
+    "vietnamese": "Nhiều loại",
+    "hanViet": "さまざま",
+    "hint": "(N) - Danh từ",
+    "explanation": "様々（な） (Dạng) - Nhiều loại. Hán Việt: さまざま"
+  },
+  {
+    "id": 639,
+    "english": "可能（な）",
+    "hiragana": "Khả năng",
+    "vietnamese": "Khả năng",
+    "hanViet": "かのう",
+    "hint": "(N) - Danh từ",
+    "explanation": "可能（な） (Khả năng) - Khả năng. Hán Việt: かのう"
+  },
+  {
+    "id": 640,
+    "english": "不可能（な）",
+    "hiragana": "Bất khả năng",
+    "vietnamese": "Không khả thi",
+    "hanViet": "ふかのう",
+    "hint": "(N) - Danh từ",
+    "explanation": "不可能（な） (Bất khả năng) - Không khả thi. Hán Việt: ふかのう"
+  },
+  {
+    "id": 641,
+    "english": "基本的（な）",
+    "hiragana": "Cơ bản đích",
+    "vietnamese": "Tính cơ bản",
+    "hanViet": "きほんてき",
+    "hint": "(N) - Danh từ",
+    "explanation": "基本的（な） (Cơ bản đích) - Tính cơ bản. Hán Việt: きほんてき"
+  },
+  {
+    "id": 642,
+    "english": "国際的（な）",
+    "hiragana": "Quốc tế đích",
+    "vietnamese": "Tính quốc tế",
+    "hanViet": "こくさいてき",
+    "hint": "(N) - Danh từ",
+    "explanation": "国際的（な） (Quốc tế đích) - Tính quốc tế. Hán Việt: こくさいてき"
+  },
+  {
+    "id": 643,
+    "english": "ばらばら（な）",
+    "hiragana": "",
+    "vietnamese": "Bừa bộn, lung tung",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "ばらばら（な） () - Bừa bộn, lung tung. Hán Việt: "
+  },
+  {
+    "id": 644,
+    "english": "ぼろぼろ（な）",
+    "hiragana": "",
+    "vietnamese": "Rách nát",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "ぼろぼろ（な） () - Rách nát. Hán Việt: "
+  },
+  {
+    "id": 645,
+    "english": "読書する",
+    "hiragana": "Độc thư",
+    "vietnamese": "Đọc sách",
+    "hanViet": "どくしょ",
+    "hint": "(N) - Danh từ",
+    "explanation": "読書する (Độc thư) - Đọc sách. Hán Việt: どくしょ"
+  },
+  {
+    "id": 646,
+    "english": "演奏",
+    "hiragana": "Diễn tẫu",
+    "vietnamese": "Trình diễn, biểu diễn",
+    "hanViet": "えんそう",
+    "hint": "(N) - Danh từ",
+    "explanation": "演奏 (Diễn tẫu) - Trình diễn, biểu diễn. Hán Việt: えんそう"
+  },
+  {
+    "id": 647,
+    "english": "芸術",
+    "hiragana": "Nghệ thuật",
+    "vietnamese": "Nghệ thuật",
+    "hanViet": "げいじゅつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "芸術 (Nghệ thuật) - Nghệ thuật. Hán Việt: げいじゅつ"
+  },
+  {
+    "id": 648,
+    "english": "検査する",
+    "hiragana": "Kiểm tra",
+    "vietnamese": "Kiểm tra",
+    "hanViet": "ちょうさする",
+    "hint": "(N) - Danh từ",
+    "explanation": "検査する (Kiểm tra) - Kiểm tra. Hán Việt: ちょうさする"
+  },
+  {
+    "id": 649,
+    "english": "胃",
+    "hiragana": "Vị",
+    "vietnamese": "Dạ dày",
+    "hanViet": "い",
+    "hint": "(N) - Danh từ",
+    "explanation": "胃 (Vị) - Dạ dày. Hán Việt: い"
+  },
+  {
+    "id": 650,
+    "english": "血液",
+    "hiragana": "Huyết dịch",
+    "vietnamese": "Máu",
+    "hanViet": "けつえき",
+    "hint": "(N) - Danh từ",
+    "explanation": "血液 (Huyết dịch) - Máu. Hán Việt: けつえき"
+  },
+  {
+    "id": 651,
+    "english": "流れる",
+    "hiragana": "Lưu",
+    "vietnamese": "Chảy, trôi đi",
+    "hanViet": "ながれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "流れる (Lưu) - Chảy, trôi đi. Hán Việt: ながれる"
+  },
+  {
+    "id": 652,
+    "english": "治療する",
+    "hiragana": "Trị liệu",
+    "vietnamese": "Trị liệu",
+    "hanViet": "ちりょうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "治療する (Trị liệu) - Trị liệu. Hán Việt: ちりょうする"
+  },
+  {
+    "id": 653,
+    "english": "症状",
+    "hiragana": "Chứng trạng",
+    "vietnamese": "Triệu chứng",
+    "hanViet": "しょうじょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "症状 (Chứng trạng) - Triệu chứng. Hán Việt: しょうじょう"
+  },
+  {
+    "id": 654,
+    "english": "鼻水",
+    "hiragana": "Tị thủy",
+    "vietnamese": "Nước mũi",
+    "hanViet": "はなみず",
+    "hint": "(N) - Danh từ",
+    "explanation": "鼻水 (Tị thủy) - Nước mũi. Hán Việt: はなみず"
+  },
+  {
+    "id": 655,
+    "english": "予防する",
+    "hiragana": "Dự phòng",
+    "vietnamese": "Dự phòng",
+    "hanViet": "よぼうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "予防する (Dự phòng) - Dự phòng. Hán Việt: よぼうする"
+  },
+  {
+    "id": 656,
+    "english": "栄養",
+    "hiragana": "Vinh dưỡng",
+    "vietnamese": "Dinh dưỡng",
+    "hanViet": "えいよう",
+    "hint": "(N) - Danh từ",
+    "explanation": "栄養 (Vinh dưỡng) - Dinh dưỡng. Hán Việt: えいよう"
+  },
+  {
+    "id": 657,
+    "english": "手術",
+    "hiragana": "Thủ thuật",
+    "vietnamese": "Phẫu thuật",
+    "hanViet": "しゅじゅつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "手術 (Thủ thuật) - Phẫu thuật. Hán Việt: しゅじゅつ"
+  },
+  {
+    "id": 658,
+    "english": "死亡する",
+    "hiragana": "Tử vong",
+    "vietnamese": "Tử vong",
+    "hanViet": "しぼうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "死亡する (Tử vong) - Tử vong. Hán Việt: しぼうする"
+  },
+  {
+    "id": 659,
+    "english": "命",
+    "hiragana": "Mệnh",
+    "vietnamese": "Cuộc sống",
+    "hanViet": "いのち",
+    "hint": "(N) - Danh từ",
+    "explanation": "命 (Mệnh) - Cuộc sống. Hán Việt: いのち"
+  },
+  {
+    "id": 660,
+    "english": "一生",
+    "hiragana": "Sinh",
+    "vietnamese": "Cuộc đời, suốt đời",
+    "hanViet": "いっしょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "一生 (Sinh) - Cuộc đời, suốt đời. Hán Việt: いっしょう"
+  },
+  {
+    "id": 661,
+    "english": "誤解する",
+    "hiragana": "Ngộ giải",
+    "vietnamese": "Hiểu nhầm",
+    "hanViet": "ごかいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "誤解する (Ngộ giải) - Hiểu nhầm. Hán Việt: ごかいする"
+  },
+  {
+    "id": 662,
+    "english": "後悔",
+    "hiragana": "Hậu hối",
+    "vietnamese": "Hối hận",
+    "hanViet": "こうかい",
+    "hint": "(N) - Danh từ",
+    "explanation": "後悔 (Hậu hối) - Hối hận. Hán Việt: こうかい"
+  },
+  {
+    "id": 663,
+    "english": "訳",
+    "hiragana": "Dịch",
+    "vietnamese": "Lý do",
+    "hanViet": "わけ",
+    "hint": "(N) - Danh từ",
+    "explanation": "訳 (Dịch) - Lý do. Hán Việt: わけ"
+  },
+  {
+    "id": 664,
+    "english": "態度",
+    "hiragana": "Thái độ",
+    "vietnamese": "Thái độ",
+    "hanViet": "たいど",
+    "hint": "(N) - Danh từ",
+    "explanation": "態度 (Thái độ) - Thái độ. Hán Việt: たいど"
+  },
+  {
+    "id": 665,
+    "english": "癖",
+    "hiragana": "Phích",
+    "vietnamese": "Thói quen",
+    "hanViet": "くせ",
+    "hint": "(N) - Danh từ",
+    "explanation": "癖 (Phích) - Thói quen. Hán Việt: くせ"
+  },
+  {
+    "id": 666,
+    "english": "礼儀",
+    "hiragana": "Lễ nghi",
+    "vietnamese": "Lễ nghi",
+    "hanViet": "れいぎ",
+    "hint": "(N) - Danh từ",
+    "explanation": "礼儀 (Lễ nghi) - Lễ nghi. Hán Việt: れいぎ"
+  },
+  {
+    "id": 667,
+    "english": "文句",
+    "hiragana": "Văn cú",
+    "vietnamese": "Kêu ca, phàn nàn",
+    "hanViet": "もんく",
+    "hint": "(N) - Danh từ",
+    "explanation": "文句 (Văn cú) - Kêu ca, phàn nàn. Hán Việt: もんく"
+  },
+  {
+    "id": 668,
+    "english": "表情",
+    "hiragana": "Biểu tình",
+    "vietnamese": "Biểu tình",
+    "hanViet": "ひょうじょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "表情 (Biểu tình) - Biểu tình. Hán Việt: ひょうじょう"
+  },
+  {
+    "id": 669,
+    "english": "表面",
+    "hiragana": "Biểu diện",
+    "vietnamese": "Bề ngoài, bề mặt",
+    "hanViet": "ひょうめん",
+    "hint": "(N) - Danh từ",
+    "explanation": "表面 (Biểu diện) - Bề ngoài, bề mặt. Hán Việt: ひょうめん"
+  },
+  {
+    "id": 670,
+    "english": "禁煙する",
+    "hiragana": "Cấm yên",
+    "vietnamese": "Cấm hút thuốc",
+    "hanViet": "きんえんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "禁煙する (Cấm yên) - Cấm hút thuốc. Hán Việt: きんえんする"
+  },
+  {
+    "id": 671,
+    "english": "禁止する",
+    "hiragana": "Cấm chỉ",
+    "vietnamese": "Cấm",
+    "hanViet": "きんしする",
+    "hint": "(N) - Danh từ",
+    "explanation": "禁止する (Cấm chỉ) - Cấm. Hán Việt: きんしする"
+  },
+  {
+    "id": 672,
+    "english": "完成する",
+    "hiragana": "Hoàn thành",
+    "vietnamese": "Hoàn thành",
+    "hanViet": "かんせいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "完成する (Hoàn thành) - Hoàn thành. Hán Việt: かんせいする"
+  },
+  {
+    "id": 673,
+    "english": "課題",
+    "hiragana": "Khóa đề",
+    "vietnamese": "Chủ đề",
+    "hanViet": "かだい",
+    "hint": "(N) - Danh từ",
+    "explanation": "課題 (Khóa đề) - Chủ đề. Hán Việt: かだい"
+  },
+  {
+    "id": 674,
+    "english": "例外",
+    "hiragana": "Lệ ngoại",
+    "vietnamese": "Ngoại lệ",
+    "hanViet": "れいがい",
+    "hint": "(N) - Danh từ",
+    "explanation": "例外 (Lệ ngoại) - Ngoại lệ. Hán Việt: れいがい"
+  },
+  {
+    "id": 675,
+    "english": "基本",
+    "hiragana": "Cơ bản",
+    "vietnamese": "Cơ bản",
+    "hanViet": "きほん",
+    "hint": "(N) - Danh từ",
+    "explanation": "基本 (Cơ bản) - Cơ bản. Hán Việt: きほん"
+  },
+  {
+    "id": 676,
+    "english": "記録す��",
+    "hiragana": "Kí lục",
+    "vietnamese": "Ghi chép, ghi lại",
+    "hanViet": "きろくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "記録す�� (Kí lục) - Ghi chép, ghi lại. Hán Việt: きろくする"
+  },
+  {
+    "id": 677,
+    "english": "状態",
+    "hiragana": "Trạng thái",
+    "vietnamese": "Trạng thái",
+    "hanViet": "じょうたい",
+    "hint": "(N) - Danh từ",
+    "explanation": "状態 (Trạng thái) - Trạng thái. Hán Việt: じょうたい"
+  },
+  {
+    "id": 678,
+    "english": "出来事",
+    "hiragana": "Xuất lai sự",
+    "vietnamese": "Việc đã xảy ra",
+    "hanViet": "できごと",
+    "hint": "(N) - Danh từ",
+    "explanation": "出来事 (Xuất lai sự) - Việc đã xảy ra. Hán Việt: できごと"
+  },
+  {
+    "id": 679,
+    "english": "場面",
+    "hiragana": "Trường diện",
+    "vietnamese": "Hiện trường, bối cảnh",
+    "hanViet": "ばめん",
+    "hint": "(N) - Danh từ",
+    "explanation": "場面 (Trường diện) - Hiện trường, bối cảnh. Hán Việt: ばめん"
+  },
+  {
+    "id": 680,
+    "english": "機会",
+    "hiragana": "Cơ hội",
+    "vietnamese": "Cơ hội",
+    "hanViet": "きかい",
+    "hint": "(N) - Danh từ",
+    "explanation": "機会 (Cơ hội) - Cơ hội. Hán Việt: きかい"
+  },
+  {
+    "id": 681,
+    "english": "距離",
+    "hiragana": "Cự ly",
+    "vietnamese": "Cư ly",
+    "hanViet": "きょり",
+    "hint": "(N) - Danh từ",
+    "explanation": "距離 (Cự ly) - Cư ly. Hán Việt: きょり"
+  },
+  {
+    "id": 682,
+    "english": "提案する",
+    "hiragana": "Đề án",
+    "vietnamese": "Đề xuất",
+    "hanViet": "ていあんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "提案する (Đề án) - Đề xuất. Hán Việt: ていあんする"
+  },
+  {
+    "id": 683,
+    "english": "やり取りする",
+    "hiragana": "Thủ",
+    "vietnamese": "Trao đổi",
+    "hanViet": "やりとりする",
+    "hint": "(N) - Danh từ",
+    "explanation": "やり取りする (Thủ) - Trao đổi. Hán Việt: やりとりする"
+  },
+  {
+    "id": 684,
+    "english": "知識",
+    "hiragana": "Tri thức",
+    "vietnamese": "Tri thức",
+    "hanViet": "ちしき",
+    "hint": "(N) - Danh từ",
+    "explanation": "知識 (Tri thức) - Tri thức. Hán Việt: ちしき"
+  },
+  {
+    "id": 685,
+    "english": "実力",
+    "hiragana": "Thực lực",
+    "vietnamese": "Thực lực",
+    "hanViet": "じつりょく",
+    "hint": "(N) - Danh từ",
+    "explanation": "実力 (Thực lực) - Thực lực. Hán Việt: じつりょく"
+  },
+  {
+    "id": 686,
+    "english": "手段",
+    "hiragana": "Thủ đoạn",
+    "vietnamese": "Phương pháp, thủ đoạn",
+    "hanViet": "しゅだん",
+    "hint": "(N) - Danh từ",
+    "explanation": "手段 (Thủ đoạn) - Phương pháp, thủ đoạn. Hán Việt: しゅだん"
+  },
+  {
+    "id": 687,
+    "english": "代表する",
+    "hiragana": "Đại biểu",
+    "vietnamese": "Đại biểu",
+    "hanViet": "だいひょうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "代表する (Đại biểu) - Đại biểu. Hán Việt: だいひょうする"
+  },
+  {
+    "id": 688,
+    "english": "影響する",
+    "hiragana": "Ảnh hưởng",
+    "vietnamese": "Ảnh hưởng",
+    "hanViet": "えいきょうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "影響する (Ảnh hưởng) - Ảnh hưởng. Hán Việt: えいきょうする"
+  },
+  {
+    "id": 689,
+    "english": "効果",
+    "hiragana": "Hiệu quả",
+    "vietnamese": "Hiệu quả",
+    "hanViet": "こうか",
+    "hint": "(N) - Danh từ",
+    "explanation": "効果 (Hiệu quả) - Hiệu quả. Hán Việt: こうか"
+  },
+  {
+    "id": 690,
+    "english": "印象",
+    "hiragana": "Ấn tượng",
+    "vietnamese": "Ấn tượng",
+    "hanViet": "いんしょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "印象 (Ấn tượng) - Ấn tượng. Hán Việt: いんしょう"
+  },
+  {
+    "id": 691,
+    "english": "印",
+    "hiragana": "Ấn",
+    "vietnamese": "Dấu hiệu",
+    "hanViet": "しるし",
+    "hint": "(N) - Danh từ",
+    "explanation": "印 (Ấn) - Dấu hiệu. Hán Việt: しるし"
+  },
+  {
+    "id": 692,
+    "english": "合図",
+    "hiragana": "Hợp đồ",
+    "vietnamese": "Dấu hiệu",
+    "hanViet": "あいず",
+    "hint": "(N) - Danh từ",
+    "explanation": "合図 (Hợp đồ) - Dấu hiệu. Hán Việt: あいず"
+  },
+  {
+    "id": 693,
+    "english": "共通する",
+    "hiragana": "Cộng thông",
+    "vietnamese": "Điểm chung",
+    "hanViet": "きょうつうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "共通する (Cộng thông) - Điểm chung. Hán Việt: きょうつうする"
+  },
+  {
+    "id": 694,
+    "english": "強調する",
+    "hiragana": "Cường điều",
+    "vietnamese": "Nhấn mạnh",
+    "hanViet": "きょうちょうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "強調する (Cường điều) - Nhấn mạnh. Hán Việt: きょうちょうする"
+  },
+  {
+    "id": 695,
+    "english": "大事",
+    "hiragana": "Đại sự",
+    "vietnamese": "Quan trọng",
+    "hanViet": "だいじ",
+    "hint": "(N) - Danh từ",
+    "explanation": "大事 (Đại sự) - Quan trọng. Hán Việt: だいじ"
+  },
+  {
+    "id": 696,
+    "english": "説明する",
+    "hiragana": "Thuyết minh",
+    "vietnamese": "Thuyết minh",
+    "hanViet": "せつめいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "説明する (Thuyết minh) - Thuyết minh. Hán Việt: せつめいする"
+  },
+  {
+    "id": 697,
+    "english": "省略する",
+    "hiragana": "Tỉnh lược",
+    "vietnamese": "Lược bỏ",
+    "hanViet": "しょうりゃくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "省略する (Tỉnh lược) - Lược bỏ. Hán Việt: しょうりゃくする"
+  },
+  {
+    "id": 698,
+    "english": "詳しい",
+    "hiragana": "Tường",
+    "vietnamese": "Tường tận, cụ thể",
+    "hanViet": "くわしい",
+    "hint": "(N) - Danh từ",
+    "explanation": "詳しい (Tường) - Tường tận, cụ thể. Hán Việt: くわしい"
+  },
+  {
+    "id": 699,
+    "english": "挑戦する",
+    "hiragana": "Thiêu chiến",
+    "vietnamese": "Khiêu chiến, thách thức",
+    "hanViet": "ちょうせんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "挑戦する (Thiêu chiến) - Khiêu chiến, thách thức. Hán Việt: ちょうせんする"
+  },
+  {
+    "id": 700,
+    "english": "やる気",
+    "hiragana": "Khí",
+    "vietnamese": "Có hứng thú làm",
+    "hanViet": "やるき",
+    "hint": "(N) - Danh từ",
+    "explanation": "やる気 (Khí) - Có hứng thú làm. Hán Việt: やるき"
+  },
+  {
+    "id": 701,
+    "english": "勇気",
+    "hiragana": "Dũng khí",
+    "vietnamese": "Dũng khí",
+    "hanViet": "ゆうき",
+    "hint": "(N) - Danh từ",
+    "explanation": "勇気 (Dũng khí) - Dũng khí. Hán Việt: ゆうき"
+  },
+  {
+    "id": 702,
+    "english": "資格",
+    "hiragana": "Tư cách",
+    "vietnamese": "Tư cách",
+    "hanViet": "しかく",
+    "hint": "(N) - Danh từ",
+    "explanation": "資格 (Tư cách) - Tư cách. Hán Việt: しかく"
+  },
+  {
+    "id": 703,
+    "english": "弁護士",
+    "hiragana": "Biện hộ sĩ",
+    "vietnamese": "Luật sư",
+    "hanViet": "べんごし",
+    "hint": "(N) - Danh từ",
+    "explanation": "弁護士 (Biện hộ sĩ) - Luật sư. Hán Việt: べんごし"
+  },
+  {
+    "id": 704,
+    "english": "申請する",
+    "hiragana": "Thân thỉnh",
+    "vietnamese": "Yêu cầu, thỉnh cầu",
+    "hanViet": "しんせいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "申請する (Thân thỉnh) - Yêu cầu, thỉnh cầu. Hán Việt: しんせいする"
+  },
+  {
+    "id": 705,
+    "english": "通帳",
+    "hiragana": "Thông trướng",
+    "vietnamese": "Sổ tiết kiệm",
+    "hanViet": "つうちょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "通帳 (Thông trướng) - Sổ tiết kiệm. Hán Việt: つうちょう"
+  },
+  {
+    "id": 706,
+    "english": "貯金する",
+    "hiragana": "Trữ kim",
+    "vietnamese": "Tiết kiệm, dành dụm",
+    "hanViet": "ちょきんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "貯金する (Trữ kim) - Tiết kiệm, dành dụm. Hán Việt: ちょきんする"
+  },
+  {
+    "id": 707,
+    "english": "本人",
+    "hiragana": "Bản nhân",
+    "vietnamese": "Người chính",
+    "hanViet": "ほんにん",
+    "hint": "(N) - Danh từ",
+    "explanation": "本人 (Bản nhân) - Người chính. Hán Việt: ほんにん"
+  },
+  {
+    "id": 708,
+    "english": "契約する",
+    "hiragana": "Khế ước",
+    "vietnamese": "Hợp đồng",
+    "hanViet": "けいやくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "契約する (Khế ước) - Hợp đồng. Hán Việt: けいやくする"
+  },
+  {
+    "id": 709,
+    "english": "証明する",
+    "hiragana": "Chứng minh",
+    "vietnamese": "Chứng minh",
+    "hanViet": "しょうめいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "証明する (Chứng minh) - Chứng minh. Hán Việt: しょうめいする"
+  },
+  {
+    "id": 710,
+    "english": "変更する",
+    "hiragana": "Biến canh",
+    "vietnamese": "Sửa đổi",
+    "hanViet": "へんこうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "変更する (Biến canh) - Sửa đổi. Hán Việt: へんこうする"
+  },
+  {
+    "id": 711,
+    "english": "保存する",
+    "hiragana": "Bảo tồn",
+    "vietnamese": "Bảo tồn",
+    "hanViet": "ほぞんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "保存する (Bảo tồn) - Bảo tồn. Hán Việt: ほぞんする"
+  },
+  {
+    "id": 712,
+    "english": "保護する",
+    "hiragana": "Bảo hộ",
+    "vietnamese": "Bảo hộ",
+    "hanViet": "ほごする",
+    "hint": "(N) - Danh từ",
+    "explanation": "保護する (Bảo hộ) - Bảo hộ. Hán Việt: ほごする"
+  },
+  {
+    "id": 714,
+    "english": "郊外",
+    "hiragana": "Giao ngoại",
+    "vietnamese": "Ngoại ô",
+    "hanViet": "こうがい",
+    "hint": "(N) - Danh từ",
+    "explanation": "郊外 (Giao ngoại) - Ngoại ô. Hán Việt: こうがい"
+  },
+  {
+    "id": 715,
+    "english": "都心",
+    "hiragana": "Đô tâm",
+    "vietnamese": "Trung tâm",
+    "hanViet": "としん",
+    "hint": "(N) - Danh từ",
+    "explanation": "都心 (Đô tâm) - Trung tâm. Hán Việt: としん"
+  },
+  {
+    "id": 716,
+    "english": "資源",
+    "hiragana": "Tư nguyên",
+    "vietnamese": "Tài nguyên",
+    "hanViet": "しげん",
+    "hint": "(N) - Danh từ",
+    "explanation": "資源 (Tư nguyên) - Tài nguyên. Hán Việt: しげん"
+  },
+  {
+    "id": 717,
+    "english": "有効",
+    "hiragana": "Hữu hiệu",
+    "vietnamese": "Hữu hiệu",
+    "hanViet": "ゆうこう",
+    "hint": "(N) - Danh từ",
+    "explanation": "有効 (Hữu hiệu) - Hữu hiệu. Hán Việt: ゆうこう"
+  },
+  {
+    "id": 718,
+    "english": "不足する",
+    "hiragana": "Bất túc",
+    "vietnamese": "Không đủ",
+    "hanViet": "ふそくする",
+    "hint": "(N) - Danh từ",
+    "explanation": "不足する (Bất túc) - Không đủ. Hán Việt: ふそくする"
+  },
+  {
+    "id": 719,
+    "english": "平均する",
+    "hiragana": "Bình quân",
+    "vietnamese": "Trung bình",
+    "hanViet": "へいきんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "平均する (Bình quân) - Trung bình. Hán Việt: へいきんする"
+  },
+  {
+    "id": 720,
+    "english": "割合",
+    "hiragana": "Cát hợp",
+    "vietnamese": "Tỉ lệ",
+    "hanViet": "わりあい",
+    "hint": "(N) - Danh từ",
+    "explanation": "割合 (Cát hợp) - Tỉ lệ. Hán Việt: わりあい"
+  },
+  {
+    "id": 721,
+    "english": "商売する",
+    "hiragana": "Thương mại",
+    "vietnamese": "Thương mại",
+    "hanViet": "しょうばいする",
+    "hint": "(N) - Danh từ",
+    "explanation": "商売する (Thương mại) - Thương mại. Hán Việt: しょうばいする"
+  },
+  {
+    "id": 722,
+    "english": "商品",
+    "hiragana": "Thương phẩm",
+    "vietnamese": "Sản phẩm",
+    "hanViet": "しょうひん",
+    "hint": "(N) - Danh từ",
+    "explanation": "商品 (Thương phẩm) - Sản phẩm. Hán Việt: しょうひん"
+  },
+  {
+    "id": 723,
+    "english": "質",
+    "hiragana": "Chất",
+    "vietnamese": "Chất",
+    "hanViet": "しつ",
+    "hint": "(N) - Danh từ",
+    "explanation": "質 (Chất) - Chất. Hán Việt: しつ"
+  },
+  {
+    "id": 724,
+    "english": "型",
+    "hiragana": "Hình",
+    "vietnamese": "Mẫu, khuôn",
+    "hanViet": "かた",
+    "hint": "(N) - Danh từ",
+    "explanation": "型 (Hình) - Mẫu, khuôn. Hán Việt: かた"
+  },
+  {
+    "id": 725,
+    "english": "生産する",
+    "hiragana": "Sinh sản",
+    "vietnamese": "Sản xuất",
+    "hanViet": "せいさんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "生産する (Sinh sản) - Sản xuất. Hán Việt: せいさんする"
+  },
+  {
+    "id": 726,
+    "english": "農業",
+    "hiragana": "Nông nghiệp",
+    "vietnamese": "Nông nghiệp",
+    "hanViet": "のうぎょう",
+    "hint": "(N) - Danh từ",
+    "explanation": "農業 (Nông nghiệp) - Nông nghiệp. Hán Việt: のうぎょう"
+  },
+  {
+    "id": 727,
+    "english": "消費する",
+    "hiragana": "Tiêu phí",
+    "vietnamese": "Tiêu phí",
+    "hanViet": "しょうひする",
+    "hint": "(N) - Danh từ",
+    "explanation": "消費する (Tiêu phí) - Tiêu phí. Hán Việt: しょうひする"
+  },
+  {
+    "id": 728,
+    "english": "物価",
+    "hiragana": "Vật giá",
+    "vietnamese": "Giá cả",
+    "hanViet": "ぶっか",
+    "hint": "(N) - Danh từ",
+    "explanation": "物価 (Vật giá) - Giá cả. Hán Việt: ぶっか"
+  },
+  {
+    "id": 729,
+    "english": "倒産する",
+    "hiragana": "Đảo sản",
+    "vietnamese": "Phá sản",
+    "hanViet": "とうさんする",
+    "hint": "(N) - Danh từ",
+    "explanation": "倒産する (Đảo sản) - Phá sản. Hán Việt: とうさんする"
+  },
+  {
+    "id": 730,
+    "english": "携帯",
+    "hiragana": "Huề đới",
+    "vietnamese": "Cầm tay",
+    "hanViet": "けいたい",
+    "hint": "(N) - Danh từ",
+    "explanation": "携帯 (Huề đới) - Cầm tay. Hán Việt: けいたい"
+  },
+  {
+    "id": 731,
+    "english": "現代",
+    "hiragana": "Hiện đại",
+    "vietnamese": "Hiện đại",
+    "hanViet": "げんだい",
+    "hint": "(N) - Danh từ",
+    "explanation": "現代 (Hiện đại) - Hiện đại. Hán Việt: げんだい"
+  },
+  {
+    "id": 732,
+    "english": "情報",
+    "hiragana": "Tình báo",
+    "vietnamese": "Thông tin",
+    "hanViet": "じょうほう",
+    "hint": "(N) - Danh từ",
+    "explanation": "情報 (Tình báo) - Thông tin. Hán Việt: じょうほう"
+  },
+  {
+    "id": 733,
+    "english": "世紀",
+    "hiragana": "Thế kỉ",
+    "vietnamese": "Thế kỉ",
+    "hanViet": "せいき",
+    "hint": "(N) - Danh từ",
+    "explanation": "世紀 (Thế kỉ) - Thế kỉ. Hán Việt: せいき"
+  },
+  {
+    "id": 734,
+    "english": "文化",
+    "hiragana": "Văn hóa",
+    "vietnamese": "Văn hóa",
+    "hanViet": "ぶんか",
+    "hint": "(N) - Danh từ",
+    "explanation": "文化 (Văn hóa) - Văn hóa. Hán Việt: ぶんか"
+  },
+  {
+    "id": 735,
+    "english": "都市",
+    "hiragana": "Đô thị",
+    "vietnamese": "Thành phố",
+    "hanViet": "とし",
+    "hint": "(N) - Danh từ",
+    "explanation": "都市 (Đô thị) - Thành phố. Hán Việt: とし"
+  },
+  {
+    "id": 736,
+    "english": "地方",
+    "hiragana": "Địa phương",
+    "vietnamese": "Địa phương",
+    "hanViet": "ちほう",
+    "hint": "(N) - Danh từ",
+    "explanation": "地方 (Địa phương) - Địa phương. Hán Việt: ちほう"
+  },
+  {
+    "id": 737,
+    "english": "戦争する",
+    "hiragana": "Chiến tranh",
+    "vietnamese": "Chiến tranh",
+    "hanViet": "せんそうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "戦争する (Chiến tranh) - Chiến tranh. Hán Việt: せんそうする"
+  },
+  {
+    "id": 738,
+    "english": "平和",
+    "hiragana": "Bình hòa",
+    "vietnamese": "Hòa bình",
+    "hanViet": "へいわ",
+    "hint": "(N) - Danh từ",
+    "explanation": "平和 (Bình hòa) - Hòa bình. Hán Việt: へいわ"
+  },
+  {
+    "id": 739,
+    "english": "が　上る",
+    "hiragana": "Thượng",
+    "vietnamese": "Leo lên",
+    "hanViet": "のぼる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　上る (Thượng) - Leo lên. Hán Việt: のぼる"
+  },
+  {
+    "id": 740,
+    "english": "階段",
+    "hiragana": "Giai đoạn",
+    "vietnamese": "Cầu thang",
+    "hanViet": "かいだん",
+    "hint": "(N) - Danh từ",
+    "explanation": "階段 (Giai đoạn) - Cầu thang. Hán Việt: かいだん"
+  },
+  {
+    "id": 741,
+    "english": "坂",
+    "hiragana": "Phản",
+    "vietnamese": "Dốc",
+    "hanViet": "さか",
+    "hint": "(N) - Danh từ",
+    "explanation": "坂 (Phản) - Dốc. Hán Việt: さか"
+  },
+  {
+    "id": 742,
+    "english": "下る",
+    "hiragana": "Hạ",
+    "vietnamese": "Đi xuống",
+    "hanViet": "くだる",
+    "hint": "(N) - Danh từ",
+    "explanation": "下る (Hạ) - Đi xuống. Hán Việt: くだる"
+  },
+  {
+    "id": 743,
+    "english": "が　進む",
+    "hiragana": "Tiến",
+    "vietnamese": "Tiến lên",
+    "hanViet": "すすむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　進む (Tiến) - Tiến lên. Hán Việt: すすむ"
+  },
+  {
+    "id": 744,
+    "english": "進める",
+    "hiragana": "",
+    "vietnamese": "Đi tiến lên",
+    "hanViet": "すすめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "進める () - Đi tiến lên. Hán Việt: すすめる"
+  },
+  {
+    "id": 745,
+    "english": "が　通る",
+    "hiragana": "Thông",
+    "vietnamese": "Đi qua",
+    "hanViet": "とおる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　通る (Thông) - Đi qua. Hán Việt: とおる"
+  },
+  {
+    "id": 746,
+    "english": "通す",
+    "hiragana": "",
+    "vietnamese": "Xuyên qua",
+    "hanViet": "とおす",
+    "hint": "(N) - Danh từ",
+    "explanation": "通す () - Xuyên qua. Hán Việt: とおす"
+  },
+  {
+    "id": 747,
+    "english": "光",
+    "hiragana": "Quang",
+    "vietnamese": "Ánh sáng",
+    "hanViet": "ひかり",
+    "hint": "(N) - Danh từ",
+    "explanation": "光 (Quang) - Ánh sáng. Hán Việt: ひかり"
+  },
+  {
+    "id": 748,
+    "english": "布",
+    "hiragana": "Bố",
+    "vietnamese": "Vải",
+    "hanViet": "ぬの",
+    "hint": "(N) - Danh từ",
+    "explanation": "布 (Bố) - Vải. Hán Việt: ぬの"
+  },
+  {
+    "id": 749,
+    "english": "空気",
+    "hiragana": "Không khí",
+    "vietnamese": "Không khí",
+    "hanViet": "くうき",
+    "hint": "(N) - Danh từ",
+    "explanation": "空気 (Không khí) - Không khí. Hán Việt: くうき"
+  },
+  {
+    "id": 750,
+    "english": "が　越える/超える",
+    "hiragana": "Việt/Triệu",
+    "vietnamese": "Vượt qua",
+    "hanViet": "こえる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　越える/超える (Việt/Triệu) - Vượt qua. Hán Việt: こえる"
+  },
+  {
+    "id": 751,
+    "english": "が　過ぎる",
+    "hiragana": "Quá",
+    "vietnamese": "Quá",
+    "hanViet": "すぎる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　過ぎる (Quá) - Quá. Hán Việt: すぎる"
+  },
+  {
+    "id": 752,
+    "english": "過ごす",
+    "hiragana": "Quá",
+    "vietnamese": "Trải qua",
+    "hanViet": "すごす",
+    "hint": "(N) - Danh từ",
+    "explanation": "過ごす (Quá) - Trải qua. Hán Việt: すごす"
+  },
+  {
+    "id": 753,
+    "english": "が　移る",
+    "hiragana": "Di",
+    "vietnamese": "Di chuyển",
+    "hanViet": "うつる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　移る (Di) - Di chuyển. Hán Việt: うつる"
+  },
+  {
+    "id": 754,
+    "english": "移す",
+    "hiragana": "Di",
+    "vietnamese": "Chuyển",
+    "hanViet": "うつす",
+    "hint": "(N) - Danh từ",
+    "explanation": "移す (Di) - Chuyển. Hán Việt: うつす"
+  },
+  {
+    "id": 755,
+    "english": "本社",
+    "hiragana": "Bản xã",
+    "vietnamese": "Trụ sở chính",
+    "hanViet": "ほんしゃ",
+    "hint": "(N) - Danh từ",
+    "explanation": "本社 (Bản xã) - Trụ sở chính. Hán Việt: ほんしゃ"
+  },
+  {
+    "id": 756,
+    "english": "連れる",
+    "hiragana": "Liên",
+    "vietnamese": "Dẫn, dắt",
+    "hanViet": "つれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "連れる (Liên) - Dẫn, dắt. Hán Việt: つれる"
+  },
+  {
+    "id": 757,
+    "english": "が　寄る",
+    "hiragana": "Kỳ",
+    "vietnamese": "Ghé thăm",
+    "hanViet": "よる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　寄る (Kỳ) - Ghé thăm. Hán Việt: よる"
+  },
+  {
+    "id": 758,
+    "english": "寄せる",
+    "hiragana": "Kỳ",
+    "vietnamese": "Ghé vào",
+    "hanViet": "よせる",
+    "hint": "(N) - Danh từ",
+    "explanation": "寄せる (Kỳ) - Ghé vào. Hán Việt: よせる"
+  },
+  {
+    "id": 759,
+    "english": "奨学金",
+    "hiragana": "Tưởng học kim",
+    "vietnamese": "Học bổng",
+    "hanViet": "しょうがくきん",
+    "hint": "(N) - Danh từ",
+    "explanation": "奨学金 (Tưởng học kim) - Học bổng. Hán Việt: しょうがくきん"
+  },
+  {
+    "id": 760,
+    "english": "成績",
+    "hiragana": "Thành tích",
+    "vietnamese": "Thành tích",
+    "hanViet": "せいせき",
+    "hint": "(N) - Danh từ",
+    "explanation": "成績 (Thành tích) - Thành tích. Hán Việt: せいせき"
+  },
+  {
+    "id": 761,
+    "english": "与える",
+    "hiragana": "Dữ",
+    "vietnamese": "Cung cấp, đưa",
+    "hanViet": "あたえる",
+    "hint": "(N) - Danh từ",
+    "explanation": "与える (Dữ) - Cung cấp, đưa. Hán Việt: あたえる"
+  },
+  {
+    "id": 762,
+    "english": "得る",
+    "hiragana": "Đắc",
+    "vietnamese": "Đạt được",
+    "hanViet": "える",
+    "hint": "(N) - Danh từ",
+    "explanation": "得る (Đắc) - Đạt được. Hán Việt: える"
+  },
+  {
+    "id": 763,
+    "english": "が　向く",
+    "hiragana": "Hướng",
+    "vietnamese": "Đối diện",
+    "hanViet": "むく",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　向く (Hướng) - Đối diện. Hán Việt: むく"
+  },
+  {
+    "id": 764,
+    "english": "向ける",
+    "hiragana": "Hướng",
+    "vietnamese": "Quay, hư��ng đến",
+    "hanViet": "むける",
+    "hint": "(N) - Danh từ",
+    "explanation": "向ける (Hướng) - Quay, hư��ng đến. Hán Việt: むける"
+  },
+  {
+    "id": 765,
+    "english": "勧める",
+    "hiragana": "Khuyến",
+    "vietnamese": "Mời, rủ, gợi ý",
+    "hanViet": "すすめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "勧める (Khuyến) - Mời, rủ, gợi ý. Hán Việt: すすめる"
+  },
+  {
+    "id": 766,
+    "english": "薦める",
+    "hiragana": "Tiến",
+    "vietnamese": "Gợi ý, giới thiệu",
+    "hanViet": "すすめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "薦める (Tiến) - Gợi ý, giới thiệu. Hán Việt: すすめる"
+  },
+  {
+    "id": 768,
+    "english": "任せる",
+    "hiragana": "Nhiệm",
+    "vietnamese": "Để cho ai làm gì",
+    "hanViet": "まかせる",
+    "hint": "(N) - Danh từ",
+    "explanation": "任せる (Nhiệm) - Để cho ai làm gì. Hán Việt: まかせる"
+  },
+  {
+    "id": 769,
+    "english": "守る",
+    "hiragana": "Thủ",
+    "vietnamese": "Giữ, tuân thủ",
+    "hanViet": "まもる",
+    "hint": "(N) - Danh từ",
+    "explanation": "守る (Thủ) - Giữ, tuân thủ. Hán Việt: まもる"
+  },
+  {
+    "id": 770,
+    "english": "争う",
+    "hiragana": "Tranh",
+    "vietnamese": "Gây gổ, tranh nhau",
+    "hanViet": "あらそう",
+    "hint": "(N) - Danh từ",
+    "explanation": "争う (Tranh) - Gây gổ, tranh nhau. Hán Việt: あらそう"
+  },
+  {
+    "id": 771,
+    "english": "望む",
+    "hiragana": "Vọng",
+    "vietnamese": "Ước",
+    "hanViet": "のぞむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "望む (Vọng) - Ước. Hán Việt: のぞむ"
+  },
+  {
+    "id": 772,
+    "english": "信じる",
+    "hiragana": "Tín",
+    "vietnamese": "Tin tưởng",
+    "hanViet": "しんじる",
+    "hint": "(N) - Danh từ",
+    "explanation": "信じる (Tín) - Tin tưởng. Hán Việt: しんじる"
+  },
+  {
+    "id": 773,
+    "english": "が　通じる",
+    "hiragana": "Thông",
+    "vietnamese": "Thông qua",
+    "hanViet": "つ��じる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　通じる (Thông) - Thông qua. Hán Việt: つ��じる"
+  },
+  {
+    "id": 774,
+    "english": "飽く",
+    "hiragana": "Bão",
+    "vietnamese": "Chán",
+    "hanViet": "あく",
+    "hint": "(N) - Danh từ",
+    "explanation": "飽く (Bão) - Chán. Hán Việt: あく"
+  },
+  {
+    "id": 775,
+    "english": "思いつく",
+    "hiragana": "Tư",
+    "vietnamese": "Nghĩ",
+    "hanViet": "おもいつく",
+    "hint": "(N) - Danh từ",
+    "explanation": "思いつく (Tư) - Nghĩ. Hán Việt: おもいつく"
+  },
+  {
+    "id": 776,
+    "english": "思いやる",
+    "hiragana": "Tư",
+    "vietnamese": "Quan tâm, thông cảm",
+    "hanViet": "おもいやる",
+    "hint": "(N) - Danh từ",
+    "explanation": "思いやる (Tư) - Quan tâm, thông cảm. Hán Việt: おもいやる"
+  },
+  {
+    "id": 777,
+    "english": "熱中する",
+    "hiragana": "Nhiệt trung",
+    "vietnamese": "Nghiện (karaoke)",
+    "hanViet": "ねっちゅうする",
+    "hint": "(N) - Danh từ",
+    "explanation": "熱中する (Nhiệt trung) - Nghiện (karaoke). Hán Việt: ねっちゅうする"
+  },
+  {
+    "id": 778,
+    "english": "暮らす",
+    "hiragana": "Mộ",
+    "vietnamese": "Sinh sống",
+    "hanViet": "くらす",
+    "hint": "(N) - Danh từ",
+    "explanation": "暮らす (Mộ) - Sinh sống. Hán Việt: くらす"
+  },
+  {
+    "id": 779,
+    "english": "巻く",
+    "hiragana": "Quyển",
+    "vietnamese": "Quấn",
+    "hanViet": "まく",
+    "hint": "(N) - Danh từ",
+    "explanation": "巻く (Quyển) - Quấn. Hán Việt: まく"
+  },
+  {
+    "id": 780,
+    "english": "結ぶ",
+    "hiragana": "Kết",
+    "vietnamese": "Buộc",
+    "hanViet": "むすぶ",
+    "hint": "(N) - Danh từ",
+    "explanation": "結ぶ (Kết) - Buộc. Hán Việt: むすぶ"
+  },
+  {
+    "id": 781,
+    "english": "紐",
+    "hiragana": "Nữu",
+    "vietnamese": "Dây",
+    "hanViet": "ひも",
+    "hint": "(N) - Danh từ",
+    "explanation": "紐 (Nữu) - Dây. Hán Việt: ひも"
+  },
+  {
+    "id": 782,
+    "english": "が　済む",
+    "hiragana": "Tế",
+    "vietnamese": "Kết thúc",
+    "hanViet": "すむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　済む (Tế) - Kết thúc. Hán Việt: すむ"
+  },
+  {
+    "id": 783,
+    "english": "済ます",
+    "hiragana": "Tế",
+    "vietnamese": "Kết thúc",
+    "hanViet": "すます",
+    "hint": "(N) - Danh từ",
+    "explanation": "済ます (Tế) - Kết thúc. Hán Việt: すます"
+  },
+  {
+    "id": 784,
+    "english": "出来る",
+    "hiragana": "Xuất lai",
+    "vietnamese": "Hoàn thành, có thể",
+    "hanViet": "できる",
+    "hint": "(N) - Danh từ",
+    "explanation": "出来る (Xuất lai) - Hoàn thành, có thể. Hán Việt: できる"
+  },
+  {
+    "id": 785,
+    "english": "切れる",
+    "hiragana": "Thiết",
+    "vietnamese": "Cắt, hết",
+    "hanViet": "きれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "切れる (Thiết) - Cắt, hết. Hán Việt: きれる"
+  },
+  {
+    "id": 786,
+    "english": "切らす",
+    "hiragana": "Thiết",
+    "vietnamese": "Hết mất tiêu",
+    "hanViet": "きらす",
+    "hint": "(N) - Danh từ",
+    "explanation": "切らす (Thiết) - Hết mất tiêu. Hán Việt: きらす"
+  },
+  {
+    "id": 787,
+    "english": "が　伝わる",
+    "hiragana": "Truyền",
+    "vietnamese": "Truyền đi",
+    "hanViet": "つたわる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　伝わる (Truyền) - Truyền đi. Hán Việt: つたわる"
+  },
+  {
+    "id": 788,
+    "english": "伝える",
+    "hiragana": "Truyền",
+    "vietnamese": "Truyền đi",
+    "hanViet": "つたえる",
+    "hint": "(N) - Danh từ",
+    "explanation": "伝える (Truyền) - Truyền đi. Hán Việt: つたえる"
+  },
+  {
+    "id": 789,
+    "english": "が　続く",
+    "hiragana": "Tục",
+    "vietnamese": "Tiếp tục",
+    "hanViet": "つづく",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　続く (Tục) - Tiếp tục. Hán Việt: つづく"
+  },
+  {
+    "id": 790,
+    "english": "続ける",
+    "hiragana": "Tục",
+    "vietnamese": "Tiếp tục",
+    "hanViet": "つづける",
+    "hint": "(N) - Danh từ",
+    "explanation": "続ける (Tục) - Tiếp tục. Hán Việt: つづける"
+  },
+  {
+    "id": 791,
+    "english": "が　繋がる",
+    "hiragana": "Hệ",
+    "vietnamese": "Kết nối",
+    "hanViet": "つながる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　繋がる (Hệ) - Kết nối. Hán Việt: つながる"
+  },
+  {
+    "id": 792,
+    "english": "繋ぐ",
+    "hiragana": "Hệ",
+    "vietnamese": "Kết nối",
+    "hanViet": "つなぐ",
+    "hint": "(N) - Danh từ",
+    "explanation": "繋ぐ (Hệ) - Kết nối. Hán Việt: つなぐ"
+  },
+  {
+    "id": 793,
+    "english": "繋げる",
+    "hiragana": "Hệ",
+    "vietnamese": "Làm chặt thêm",
+    "hanViet": "つなげる",
+    "hint": "(N) - Danh từ",
+    "explanation": "繋げる (Hệ) - Làm chặt thêm. Hán Việt: つなげる"
+  },
+  {
+    "id": 794,
+    "english": "伸びる",
+    "hiragana": "Thân",
+    "vietnamese": "Cao lên, phát triển lên",
+    "hanViet": "のびる",
+    "hint": "(N) - Danh từ",
+    "explanation": "伸びる (Thân) - Cao lên, phát triển lên. Hán Việt: のびる"
+  },
+  {
+    "id": 795,
+    "english": "伸ばす",
+    "hiragana": "Thân",
+    "vietnamese": "Làm cao/phát triển lên",
+    "hanViet": "のばす",
+    "hint": "(N) - Danh từ",
+    "explanation": "伸ばす (Thân) - Làm cao/phát triển lên. Hán Việt: のばす"
+  },
+  {
+    "id": 796,
+    "english": "延びる",
+    "hiragana": "Duyên",
+    "vietnamese": "Trì hoãn",
+    "hanViet": "のびる",
+    "hint": "(N) - Danh từ",
+    "explanation": "延びる (Duyên) - Trì hoãn. Hán Việt: のびる"
+  },
+  {
+    "id": 797,
+    "english": "延ばす",
+    "hiragana": "Duyên",
+    "vietnamese": "Hoãn",
+    "hanViet": "の��す",
+    "hint": "(N) - Danh từ",
+    "explanation": "延ばす (Duyên) - Hoãn. Hán Việt: の��す"
+  },
+  {
+    "id": 799,
+    "english": "が　重なる",
+    "hiragana": "Trọng",
+    "vietnamese": "Chồng lên",
+    "hanViet": "かさなる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　重なる (Trọng) - Chồng lên. Hán Việt: かさなる"
+  },
+  {
+    "id": 800,
+    "english": "重ねる",
+    "hiragana": "Trọng",
+    "vietnamese": "Chồng",
+    "hanViet": "かさねる",
+    "hint": "(N) - Danh từ",
+    "explanation": "重ねる (Trọng) - Chồng. Hán Việt: かさねる"
+  },
+  {
+    "id": 801,
+    "english": "が　広がる",
+    "hiragana": "Quảng",
+    "vietnamese": "Rộng",
+    "hanViet": "ひろがる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　広がる (Quảng) - Rộng. Hán Việt: ひろがる"
+  },
+  {
+    "id": 802,
+    "english": "広げる",
+    "hiragana": "Quảng",
+    "vietnamese": "Mở rộng",
+    "hanViet": "ひろげる",
+    "hint": "(N) - Danh từ",
+    "explanation": "広げる (Quảng) - Mở rộng. Hán Việt: ひろげる"
+  },
+  {
+    "id": 803,
+    "english": "が　載る",
+    "hiragana": "Tải",
+    "vietnamese": "Lên, vừa",
+    "hanViet": "のる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　載る (Tải) - Lên, vừa. Hán Việt: のる"
+  },
+  {
+    "id": 804,
+    "english": "載せる",
+    "hiragana": "Tải",
+    "vietnamese": "Cho lên, cho vào",
+    "hanViet": "のせる",
+    "hint": "(N) - Danh từ",
+    "explanation": "載せる (Tải) - Cho lên, cho vào. Hán Việt: のせる"
+  },
+  {
+    "id": 805,
+    "english": "が　揃う",
+    "hiragana": "Tiễn",
+    "vietnamese": "Thu thập",
+    "hanViet": "そろう",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　揃う (Tiễn) - Thu thập. Hán Việt: そろう"
+  },
+  {
+    "id": 806,
+    "english": "揃える",
+    "hiragana": "Tiễn",
+    "vietnamese": "Tập hợp",
+    "hanViet": "そろえる",
+    "hint": "(N) - Danh từ",
+    "explanation": "揃える (Tiễn) - Tập hợp. Hán Việt: そろえる"
+  },
+  {
+    "id": 807,
+    "english": "が　纏まる",
+    "hiragana": "Triền",
+    "vietnamese": "Tập hợp, thống nhất",
+    "hanViet": "まとまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　纏まる (Triền) - Tập hợp, thống nhất. Hán Việt: まとまる"
+  },
+  {
+    "id": 808,
+    "english": "纏める",
+    "hiragana": "Triền",
+    "vietnamese": "Tập hợp",
+    "hanViet": "まとめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "纏める (Triền) - Tập hợp. Hán Việt: まとめる"
+  },
+  {
+    "id": 809,
+    "english": "が　付く",
+    "hiragana": "Phó",
+    "vietnamese": "Dính, gắn, có",
+    "hanViet": "つく",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　付く (Phó) - Dính, gắn, có. Hán Việt: つく"
+  },
+  {
+    "id": 810,
+    "english": "付ける",
+    "hiragana": "Phó",
+    "vietnamese": "Gắn, thêm vào",
+    "hanViet": "つける",
+    "hint": "(N) - Danh từ",
+    "explanation": "付ける (Phó) - Gắn, thêm vào. Hán Việt: つける"
+  },
+  {
+    "id": 811,
+    "english": "が　貯まる",
+    "hiragana": "Trữ",
+    "vietnamese": "Tiết kiệm",
+    "hanViet": "たまる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　貯まる (Trữ) - Tiết kiệm. Hán Việt: たまる"
+  },
+  {
+    "id": 812,
+    "english": "貯める",
+    "hiragana": "Trữ",
+    "vietnamese": "Tiết kiệm",
+    "hanViet": "ためる",
+    "hint": "(N) - Danh từ",
+    "explanation": "貯める (Trữ) - Tiết kiệm. Hán Việt: ためる"
+  },
+  {
+    "id": 813,
+    "english": "が　交じる/混じる",
+    "hiragana": "Giao/Hỗn",
+    "vietnamese": "Giao vào, lẫn vào",
+    "hanViet": "まじる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　交じる/混じる (Giao/Hỗn) - Giao vào, lẫn vào. Hán Việt: まじる"
+  },
+  {
+    "id": 814,
+    "english": "が　交ざる/混ざる",
+    "hiragana": "Giao/Hỗn",
+    "vietnamese": "Lẫn vào",
+    "hanViet": "まざる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　交ざる/混ざる (Giao/Hỗn) - Lẫn vào. Hán Việt: まざる"
+  },
+  {
+    "id": 815,
+    "english": "交ぜる/混ぜる",
+    "hiragana": "Giao/Hỗn",
+    "vietnamese": "Trộn vào",
+    "hanViet": "まぜる",
+    "hint": "(N) - Danh từ",
+    "explanation": "交ぜる/混ぜる (Giao/Hỗn) - Trộn vào. Hán Việt: まぜる"
+  },
+  {
+    "id": 816,
+    "english": "が　溶ける/解ける",
+    "hiragana": "Dong/Giải",
+    "vietnamese": "Giải quyết, giải đông",
+    "hanViet": "とける",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　溶ける/解ける (Dong/Giải) - Giải quyết, giải đông. Hán Việt: とける"
+  },
+  {
+    "id": 817,
+    "english": "解く/溶く/溶かす",
+    "hiragana": "Dong/Giải",
+    "vietnamese": "Giải quyết, giải đông",
+    "hanViet": "とく/とかす",
+    "hint": "(N) - Danh từ",
+    "explanation": "解く/溶く/溶かす (Dong/Giải) - Giải quyết, giải đông. Hán Việt: とく/とかす"
+  },
+  {
+    "id": 818,
+    "english": "含む",
+    "hiragana": "Hàm",
+    "vietnamese": "Bao gồm",
+    "hanViet": "ふくむ",
+    "hint": "(N) - Danh từ",
+    "explanation": "含む (Hàm) - Bao gồm. Hán Việt: ふくむ"
+  },
+  {
+    "id": 819,
+    "english": "含める",
+    "hiragana": "Hàm",
+    "vietnamese": "Bao gồm",
+    "hanViet": "ふくめる",
+    "hint": "(N) - Danh từ",
+    "explanation": "含める (Hàm) - Bao gồm. Hán Việt: ふくめる"
+  },
+  {
+    "id": 820,
+    "english": "が　抜ける",
+    "hiragana": "Bạt",
+    "vietnamese": "Tháo, tuột",
+    "hanViet": "ぬける",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　抜ける (Bạt) - Tháo, tuột. Hán Việt: ぬける"
+  },
+  {
+    "id": 821,
+    "english": "抜く",
+    "hiragana": "Bạt",
+    "vietnamese": "Lấy ra",
+    "hanViet": "ぬく",
+    "hint": "(N) - Danh từ",
+    "explanation": "抜く (Bạt) - Lấy ra. Hán Việt: ぬく"
+  },
+  {
+    "id": 822,
+    "english": "が　現れる",
+    "hiragana": "Hiện",
+    "vietnamese": "Xuất hiện, hiện ra",
+    "hanViet": "あらわれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　現れる (Hiện) - Xuất hiện, hiện ra. Hán Việt: あらわれる"
+  },
+  {
+    "id": 823,
+    "english": "現す",
+    "hiragana": "Hiện",
+    "vietnamese": "Đã xuất hiện",
+    "hanViet": "あらわす",
+    "hint": "(N) - Danh từ",
+    "explanation": "現す (Hiện) - Đã xuất hiện. Hán Việt: あらわす"
+  },
+  {
+    "id": 824,
+    "english": "が　表れる",
+    "hiragana": "Biểu",
+    "vietnamese": "Hiện ra",
+    "hanViet": "あらわれる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　表れる (Biểu) - Hiện ra. Hán Việt: あらわれる"
+  },
+  {
+    "id": 825,
+    "english": "表す",
+    "hiragana": "Biểu",
+    "vietnamese": "Biểu thị, biểu lộ",
+    "hanViet": "あらわす",
+    "hint": "(N) - Danh từ",
+    "explanation": "表す (Biểu) - Biểu thị, biểu lộ. Hán Việt: あらわす"
+  },
+  {
+    "id": 826,
+    "english": "が　散る",
+    "hiragana": "Tàn",
+    "vietnamese": "Tàn",
+    "hanViet": "ちる",
+    "hint": "(N) - Danh từ",
+    "explanation": "が　散る (Tàn) - Tàn. Hán Việt: ちる"
+  },
+  {
+    "id": 827,
+    "english": "散らす",
+    "hiragana": "Tàn",
+    "vietnamese": "Tàn",
+    "hanViet": "ちらす",
+    "hint": "(N) - Danh từ",
+    "explanation": "散らす (Tàn) - Tàn. Hán Việt: ちらす"
+  },
+  {
+    "id": 828,
+    "english": "差す",
+    "hiragana": "Sai",
+    "vietnamese": "Giương, giơ",
+    "hanViet": "さす",
+    "hint": "(N) - Danh từ",
+    "explanation": "差す (Sai) - Giương, giơ. Hán Việt: さす"
+  },
+  {
+    "id": 829,
+    "english": "ごろごろ",
+    "hiragana": "",
+    "vietnamese": "lăn, ở nhà rãnh rỗi, âm thanh hòn đá lăn",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "ごろごろ () - lăn, ở nhà rãnh rỗi, âm thanh hòn đá lăn. Hán Việt: "
+  },
+  {
+    "id": 830,
+    "english": "に向いている",
+    "hiragana": "",
+    "vietnamese": "phù hợp với",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "に向いている () - phù hợp với. Hán Việt: "
+  },
+  {
+    "id": 831,
+    "english": "～巡り",
+    "hiragana": "",
+    "vietnamese": "Đi thăm quan cái gì",
+    "hanViet": "めぐり",
+    "hint": "(N) - Danh từ",
+    "explanation": "～巡り () - Đi thăm quan cái gì. Hán Việt: めぐり"
+  },
+  {
+    "id": 832,
+    "english": "アマチュア",
+    "hiragana": "",
+    "vietnamese": "nghiệp dư",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "アマチュア () - nghiệp dư. Hán Việt: "
+  },
+  {
+    "id": 833,
+    "english": "おすすめ～",
+    "hiragana": "",
+    "vietnamese": "khuyên",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "おすすめ～ () - khuyên. Hán Việt: "
+  }
+]

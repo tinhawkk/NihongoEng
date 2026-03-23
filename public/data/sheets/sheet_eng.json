@@ -1,0 +1,5402 @@
+[
+  {
+    "id": 1,
+    "english": "abide by",
+    "hiragana": "",
+    "vietnamese": "tuân thủ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Two parties agreed to _____ the judge's decision."
+  },
+  {
+    "id": 2,
+    "english": "agreement",
+    "hiragana": "",
+    "vietnamese": "hợp đồng, sự thống nhất chung",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "According to the _____, the caterer will also supply the flowers for the event."
+  },
+  {
+    "id": 3,
+    "english": "assurance",
+    "hiragana": "",
+    "vietnamese": "sự đảm bảo",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The sales associate gave his _____ that the missing keyboard would be replaced the next day."
+  },
+  {
+    "id": 4,
+    "english": "cancel",
+    "hiragana": "",
+    "vietnamese": "huỷ bỏ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The man _____ed his magazine subscription and got his money back."
+  },
+  {
+    "id": 5,
+    "english": "determine",
+    "hiragana": "",
+    "vietnamese": "quyết định",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "After reading the contract, I was still unable to _____ if our company was liable for back wages."
+  },
+  {
+    "id": 6,
+    "english": "engage",
+    "hiragana": "",
+    "vietnamese": "thuê, mướn",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "We _____ed a salsa band to play at the reception."
+  },
+  {
+    "id": 7,
+    "english": "establish",
+    "hiragana": "",
+    "vietnamese": "gây dựng nên, thành lập, taọ nên",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The merger of the two companies _____ed a powerful new corporation."
+  },
+  {
+    "id": 8,
+    "english": "obligate",
+    "hiragana": "",
+    "vietnamese": "bắt tuân thủ, bắt phải tuân theo",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The contractor was _____ed by the contract to work 40 hours a week."
+  },
+  {
+    "id": 9,
+    "english": "party",
+    "hiragana": "",
+    "vietnamese": "đảng phái, bên, phía (đối tác)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ies agreed to settlement in their contract dispute."
+  },
+  {
+    "id": 10,
+    "english": "provision",
+    "hiragana": "",
+    "vietnamese": "điều khoản (hợp đồng)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The contract contains a _____ to deal with how payments are made if John loses his job."
+  },
+  {
+    "id": 11,
+    "english": "resolve",
+    "hiragana": "",
+    "vietnamese": "giải quyết (vấn đề)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The mediator was able to _____ the problem to everyone's satisfaction."
+  },
+  {
+    "id": 12,
+    "english": "specify",
+    "hiragana": "",
+    "vietnamese": "chỉ rõ, định rõ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The letter does not _____ which attorney is handing our case."
+  },
+  {
+    "id": 13,
+    "english": "attract",
+    "hiragana": "",
+    "vietnamese": "thu hút",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The new advertising _____s the wrong kind of customer into the store."
+  },
+  {
+    "id": 14,
+    "english": "compare",
+    "hiragana": "",
+    "vietnamese": "so sánh",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The price for this brand is high _____ed to the other brands on the market."
+  },
+  {
+    "id": 15,
+    "english": "compete",
+    "hiragana": "",
+    "vietnamese": "đấu tranh, cạnh tranh",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "We _____ed against three other agencies to get this contract."
+  },
+  {
+    "id": 16,
+    "english": "consume",
+    "hiragana": "",
+    "vietnamese": "tiêu thụ, tiêu dùng",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Chen _____s more than his share of computer time."
+  },
+  {
+    "id": 17,
+    "english": "convince",
+    "hiragana": "",
+    "vietnamese": "thuyết phục (= persuade)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The salesman _____ed his customer to buy his entire inventory of pens."
+  },
+  {
+    "id": 18,
+    "english": "current",
+    "hiragana": "",
+    "vietnamese": "đang tồn tại, đang thịnh hành",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "It is important to read _____ magazines to see how competitors market their products."
+  },
+  {
+    "id": 19,
+    "english": "fad",
+    "hiragana": "",
+    "vietnamese": "mốt nhất thời",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The mini dress was a _____ once thought to be finished, but now it is making a comeback."
+  },
+  {
+    "id": 20,
+    "english": "inspire",
+    "hiragana": "",
+    "vietnamese": "truyền cảm hứng",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "His painting style was _____ed by the works of the Old Masters."
+  },
+  {
+    "id": 21,
+    "english": "market",
+    "hiragana": "",
+    "vietnamese": "tiếp thị",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "When Omar first began making his chutneys, he _____ed them door-to-door to gourmet shops."
+  },
+  {
+    "id": 22,
+    "english": "persuade",
+    "hiragana": "",
+    "vietnamese": "thuyết phục (= convince)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "No amount of marketing could _____ Doris to give up her old, but reliable, laundry soap."
+  },
+  {
+    "id": 23,
+    "english": "productive",
+    "hiragana": "",
+    "vietnamese": "năng suất, sản lượng cao",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Alonzo is excited about his _____ sales territory."
+  },
+  {
+    "id": 24,
+    "english": "satisfy",
+    "hiragana": "",
+    "vietnamese": "làm hài lòng",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "If you don't know what kind of gift will _____ your friend, think about giving a gift certificate instead."
+  },
+  {
+    "id": 25,
+    "english": "characteristic",
+    "hiragana": "",
+    "vietnamese": "đặc tính, đặc điểm",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The cooking pot has features _____ of the band, such as stay cool handles."
+  },
+  {
+    "id": 26,
+    "english": "consequence",
+    "hiragana": "",
+    "vietnamese": "hậu quả, kết quả",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "As a _____ of not having seen a dentist for several years, Lydia had several cavities."
+  },
+  {
+    "id": 27,
+    "english": "consider",
+    "hiragana": "",
+    "vietnamese": "cân nhắc, xem xét",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "After ____ing all the options, Della decided to buy a used car."
+  },
+  {
+    "id": 28,
+    "english": "cover",
+    "hiragana": "",
+    "vietnamese": "bao bọc, bao gồm, bảo vệ, che đậy",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Will my medical insurance _____ this surgery?"
+  },
+  {
+    "id": 29,
+    "english": "expire",
+    "hiragana": "",
+    "vietnamese": "hết hạn",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The warranty protection on this product will _____ on year after the date of purchase."
+  },
+  {
+    "id": 30,
+    "english": "frequently",
+    "hiragana": "",
+    "vietnamese": "thường xuyên",
+    "hanViet": "",
+    "hint": "(ADV) - Trạng từ",
+    "explanation": "Applicances _____ come with a one-year warranty."
+  },
+  {
+    "id": 31,
+    "english": "imply",
+    "hiragana": "",
+    "vietnamese": "ám chỉ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The travel agent _____ed that our hotel was not in the safest part of the city, but, when pressed for details, he said the location was fine."
+  },
+  {
+    "id": 32,
+    "english": "promise",
+    "hiragana": "",
+    "vietnamese": "hứa hẹn, đảm bảo",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The sales associate _____ed that our new mattress would arrive by noon on Sunday."
+  },
+  {
+    "id": 33,
+    "english": "protect",
+    "hiragana": "",
+    "vietnamese": "bảo vệ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Consumer laws are designed to _____the public against unscrupulous vendors."
+  },
+  {
+    "id": 34,
+    "english": "reputation",
+    "hiragana": "",
+    "vietnamese": "danh tiếng, thương hiệu",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The company knew that the _____ of its products was the most important asset it had."
+  },
+  {
+    "id": 35,
+    "english": "require",
+    "hiragana": "",
+    "vietnamese": "yêu cầu, đòi hỏi",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The law requires that each item clearly display the warranty information."
+  },
+  {
+    "id": 36,
+    "english": "vary",
+    "hiragana": "",
+    "vietnamese": "thay đổi, biến đổi",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The amount of protection offered by different policies will _____."
+  },
+  {
+    "id": 37,
+    "english": "address",
+    "hiragana": "",
+    "vietnamese": "hướng tới, nhắm đến",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Marco's business plan _____es the needs of small business owners."
+  },
+  {
+    "id": 38,
+    "english": "avoid",
+    "hiragana": "",
+    "vietnamese": "tránh",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "To _____ going out of business, owners should prepare a proper business plan."
+  },
+  {
+    "id": 39,
+    "english": "demonstrate",
+    "hiragana": "",
+    "vietnamese": "chứng minh, làm sáng tỏ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The professor _____ed through a case study that a business plan can impress a lender."
+  },
+  {
+    "id": 40,
+    "english": "develop",
+    "hiragana": "",
+    "vietnamese": "mở rộng, phát triển, cải tiến",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The restaurant Wanda opened ten years ago has _____ed into a national chain."
+  },
+  {
+    "id": 41,
+    "english": "evaluate",
+    "hiragana": "",
+    "vietnamese": "đánh giá",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "It's important to _____ our competition when making business plan."
+  },
+  {
+    "id": 42,
+    "english": "gather",
+    "hiragana": "",
+    "vietnamese": "thu thập, tập hợp",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "We _____ed information for our plan from many sources."
+  },
+  {
+    "id": 43,
+    "english": "offer",
+    "hiragana": "",
+    "vietnamese": "đưa ra",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "We _____ed the job of writing the business plan to Devon."
+  },
+  {
+    "id": 44,
+    "english": "primary",
+    "hiragana": "",
+    "vietnamese": "chính, chủ yếu, ưu tiên",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The _____ reason for writing a business plan is to avoid common errors."
+  },
+  {
+    "id": 45,
+    "english": "risk",
+    "hiragana": "",
+    "vietnamese": "nguy cơ, mối nguy hiểm",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Expanding into a new market is a big _____."
+  },
+  {
+    "id": 46,
+    "english": "strategy",
+    "hiragana": "",
+    "vietnamese": "chiến lược",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "A business plan is a ____ for running a business and avoiding problems."
+  },
+  {
+    "id": 47,
+    "english": "strong",
+    "hiragana": "",
+    "vietnamese": "mạnh mẽ, kiên cố, vững chắc",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Even in a _____ economic climate, many businesses fail, so do your planning carefully."
+  },
+  {
+    "id": 48,
+    "english": "substitute",
+    "hiragana": "",
+    "vietnamese": "thay thế, thế chỗ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Don't try to _____ intuition for good planning."
+  },
+  {
+    "id": 49,
+    "english": "accommodate",
+    "hiragana": "",
+    "vietnamese": "dàn xếp, đáp ứng, làm thích nghi",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The meeting room was large enough to _____ the various needs of the groups using it."
+  },
+  {
+    "id": 50,
+    "english": "arrangement",
+    "hiragana": "",
+    "vietnamese": "sự sắp xếp, kế hoạch",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The travel _____ were taken care of by Sara, Mr. Billings's capable assistant."
+  },
+  {
+    "id": 51,
+    "english": "association",
+    "hiragana": "",
+    "vietnamese": "tổ chức, hiệp hội",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Local telephone companies formed an _____ to serve common goals, meet their common needs, and improve efficiency."
+  },
+  {
+    "id": 52,
+    "english": "attend",
+    "hiragana": "",
+    "vietnamese": "tham gia, hướng tới",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The hotel manager _____ed to all our needs promptly."
+  },
+  {
+    "id": 53,
+    "english": "get in touch",
+    "hiragana": "",
+    "vietnamese": "liên lạc, liên hệ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "As soon as we arrive at the hotel, we will _____ with the manager about the unexpected guests."
+  },
+  {
+    "id": 54,
+    "english": "hold",
+    "hiragana": "",
+    "vietnamese": "tổ chức, tiến hành",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "She _____s an annual seminar that is very popular."
+  },
+  {
+    "id": 55,
+    "english": "location",
+    "hiragana": "",
+    "vietnamese": "địa điểm, vị trí",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ of the meeting was changed from the Red room to the Green room."
+  },
+  {
+    "id": 56,
+    "english": "overcrowded",
+    "hiragana": "",
+    "vietnamese": "quá đông",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "To avoid being _____, we limited the number of guests that members could bring."
+  },
+  {
+    "id": 57,
+    "english": "register",
+    "hiragana": "",
+    "vietnamese": "đăng ký, ghi danh",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Hotels ask all guests to _____ and give a home address."
+  },
+  {
+    "id": 58,
+    "english": "select",
+    "hiragana": "",
+    "vietnamese": "chọn",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The winners were _____ed from the conference registrants."
+  },
+  {
+    "id": 59,
+    "english": "session",
+    "hiragana": "",
+    "vietnamese": "kỳ họp, phiên họp",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The morning _____s tend to fill up first, so sign in early."
+  },
+  {
+    "id": 60,
+    "english": "take part in",
+    "hiragana": "",
+    "vietnamese": "tham gia, tham dự",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "We could not get enough people to _____ the meeting, so we canceled it."
+  },
+  {
+    "id": 61,
+    "english": "access",
+    "hiragana": "",
+    "vietnamese": "truy c���p",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "You need a password to _____ your account."
+  },
+  {
+    "id": 62,
+    "english": "allocate",
+    "hiragana": "",
+    "vietnamese": "phân bổ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The office manager did not _____ enough money to purchase software."
+  },
+  {
+    "id": 63,
+    "english": "compatible",
+    "hiragana": "",
+    "vietnamese": "tương thích",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "This operating system is not _____ with this model computer."
+  },
+  {
+    "id": 64,
+    "english": "delete",
+    "hiragana": "",
+    "vietnamese": "xóa bỏ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The technicians _____ed all the data on the disk accidentally."
+  },
+  {
+    "id": 65,
+    "english": "display",
+    "hiragana": "",
+    "vietnamese": "màn hình, hiển thị",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The light on the LCD _____ is to weak."
+  },
+  {
+    "id": 66,
+    "english": "duplicate",
+    "hiragana": "",
+    "vietnamese": "tạo bản sao",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Before you leave, please _____ that file by making a copy on a floppy disk."
+  },
+  {
+    "id": 67,
+    "english": "fail",
+    "hiragana": "",
+    "vietnamese": "thất bại, hỏng, làm sai",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The new printer _____ed to function properly."
+  },
+  {
+    "id": 68,
+    "english": "figure out",
+    "hiragana": "",
+    "vietnamese": "giải quyết, hiểu ra",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "We _____ ed _____ that it would take us at least ten minutes to download the file."
+  },
+  {
+    "id": 69,
+    "english": "ignore",
+    "hiragana": "",
+    "vietnamese": "bỏ qua, lờ đi",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Don't _____ the technician's advice when connecting cables."
+  },
+  {
+    "id": 70,
+    "english": "search",
+    "hiragana": "",
+    "vietnamese": "tìm kiếm",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The computer _____ed for all names that began with W."
+  },
+  {
+    "id": 71,
+    "english": "shut down",
+    "hiragana": "",
+    "vietnamese": "tắt",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Please _____ the computer before you leave."
+  },
+  {
+    "id": 72,
+    "english": "warn",
+    "hiragana": "",
+    "vietnamese": "cảnh báo",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The flashing light ____s the computer user if the battery is low."
+  },
+  {
+    "id": 73,
+    "english": "affordable",
+    "hiragana": "",
+    "vietnamese": "giá cả phải chăng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The company's first priority was to find an _____ phone system."
+  },
+  {
+    "id": 74,
+    "english": "as need",
+    "hiragana": "",
+    "vietnamese": "khi cần",
+    "hanViet": "",
+    "hint": "(ADV) - Trạng từ",
+    "explanation": "The courier service did not come everyday, only _____."
+  },
+  {
+    "id": 75,
+    "english": "be in charge of",
+    "hiragana": "",
+    "vietnamese": "chịu sự điều khiển , có trách nhiệm",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "He appointed someone to _____ maitaining a supply of paper in the fax machine."
+  },
+  {
+    "id": 76,
+    "english": "capacity",
+    "hiragana": "",
+    "vietnamese": "sức chứa",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The new conference room is much larger and has a _____ of one hundred people."
+  },
+  {
+    "id": 77,
+    "english": "durable",
+    "hiragana": "",
+    "vietnamese": "bền",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "These chair were more expensive, in the long run, but also more _____."
+  },
+  {
+    "id": 78,
+    "english": "initiative",
+    "hiragana": "",
+    "vietnamese": "bước đầu, sự sáng tạo; vai trò tích cực",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Employees are encouraged to take the _____ and share their ideas with management."
+  },
+  {
+    "id": 79,
+    "english": "physical",
+    "hiragana": "",
+    "vietnamese": "thuộc thể chất, thuộc vật chất",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The _____ presence of a computer expert is better than telephone support."
+  },
+  {
+    "id": 80,
+    "english": "provider",
+    "hiragana": "",
+    "vietnamese": "nhà cung cấp",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The department was extremely pleased with the service they received from the phone _____."
+  },
+  {
+    "id": 81,
+    "english": "recur",
+    "hiragana": "",
+    "vietnamese": "quay lại, lặp lại",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The managers did not want that particular error to _____."
+  },
+  {
+    "id": 82,
+    "english": "reduction",
+    "hiragana": "",
+    "vietnamese": "sự giảm bớt, sự thu nhỏ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ in office staff has made it necessary to automate more job functions."
+  },
+  {
+    "id": 83,
+    "english": "stay on top of",
+    "hiragana": "",
+    "vietnamese": "cập nhật/ nắm bắt thông tin mới nhất",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "In this industry, you must _____ current developments."
+  },
+  {
+    "id": 84,
+    "english": "stock",
+    "hiragana": "",
+    "vietnamese": "nguồn hàng, nguồn cung cấp; (v) tích trữ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The office's _____ of toner for the fax machine was quickly running out."
+  },
+  {
+    "id": 85,
+    "english": "appreciate",
+    "hiragana": "",
+    "vietnamese": "hiểu, nhận thức rõ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "He didn't _____ the complexity of the operation until he had to do it by himself."
+  },
+  {
+    "id": 86,
+    "english": "be exposed to",
+    "hiragana": "",
+    "vietnamese": "đúc kết kinh nghiệm",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Mergers require that employees _____ to difference business practices."
+  },
+  {
+    "id": 87,
+    "english": "bring in",
+    "hiragana": "",
+    "vietnamese": "thuê mướn, dẫn tới",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The company president wanted to _____ an efficiency consultant."
+  },
+  {
+    "id": 88,
+    "english": "casual",
+    "hiragana": "",
+    "vietnamese": "thông thường",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Fridays are a _____ dress day in the office."
+  },
+  {
+    "id": 89,
+    "english": "code",
+    "hiragana": "",
+    "vietnamese": "lề thói, tập quán",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Even the most traditional companies are changing their dress ____ to something less formal."
+  },
+  {
+    "id": 90,
+    "english": "glimpse",
+    "hiragana": "",
+    "vietnamese": "cái nhìn thoáng qua",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The secretary caught a _____ of her new boss as she was leaving the office."
+  },
+  {
+    "id": 91,
+    "english": "made of",
+    "hiragana": "",
+    "vietnamese": "làm từ, gồm có",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "This job will really test what you are _____."
+  },
+  {
+    "id": 92,
+    "english": "out of",
+    "hiragana": "",
+    "vietnamese": "hết",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Orders should be placed before you run _____ the supplies."
+  },
+  {
+    "id": 93,
+    "english": "outdated",
+    "hiragana": "",
+    "vietnamese": "lỗi thời",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Before you do a mailing, make sure that none of the addresses are _____."
+  },
+  {
+    "id": 94,
+    "english": "practice",
+    "hiragana": "",
+    "vietnamese": "bài luyện, phương pháp làm",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Office _____s may very greatly from one company to another."
+  },
+  {
+    "id": 95,
+    "english": "reinforce",
+    "hiragana": "",
+    "vietnamese": "tăng cường, củng cố",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The employees were expected to _____ what they had learnt at the workshop by trying it out in the workplace."
+  },
+  {
+    "id": 96,
+    "english": "verbal",
+    "hiragana": "",
+    "vietnamese": "bằng lời",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Excellent _____ skills are expected in the marketing department."
+  },
+  {
+    "id": 97,
+    "english": "disk",
+    "hiragana": "",
+    "vietnamese": "đĩa, ổ đĩa",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "It is important to make a backup _____ of all documents on your computer."
+  },
+  {
+    "id": 98,
+    "english": "facilitate",
+    "hiragana": "",
+    "vietnamese": "làm cho thuận tiện",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The new computer program _____ed the scheduling of appointments."
+  },
+  {
+    "id": 99,
+    "english": "network",
+    "hiragana": "",
+    "vietnamese": "mạng lưới, hệ thống",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "There is a _____ of women professionals that meets once a month for drinks."
+  },
+  {
+    "id": 100,
+    "english": "popularity",
+    "hiragana": "",
+    "vietnamese": "tính phổ biến, sự ưa chuộng của quần chúng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "After the new commercials began running, the _____ of the batteries increased significantly."
+  },
+  {
+    "id": 101,
+    "english": "process",
+    "hiragana": "",
+    "vietnamese": "quá trình; (v) xử lý theo tiến trình",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "There is a _____ for determining why your computer if malfunctioning."
+  },
+  {
+    "id": 102,
+    "english": "replace",
+    "hiragana": "",
+    "vietnamese": "thay thế",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I've _____ed the hard drive that was malfunctioning."
+  },
+  {
+    "id": 103,
+    "english": "revolution",
+    "hiragana": "",
+    "vietnamese": "cuộc cách mạng, sự xoay vòng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "My CD player is broken; the disk cannot make a complete _____ around the magnet."
+  },
+  {
+    "id": 104,
+    "english": "sharp",
+    "hiragana": "",
+    "vietnamese": "nhọn, sắc, đột ngột, (người) thông minh",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The new employee is extremely _____, being able to learn the new program in a few days"
+  },
+  {
+    "id": 105,
+    "english": "skills",
+    "hiragana": "",
+    "vietnamese": "sự khéo léo, sự tinh xảo, tay nghệ cao",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The software developer has excellent technical _____, and would be an asset to our software programming team."
+  },
+  {
+    "id": 106,
+    "english": "software",
+    "hiragana": "",
+    "vietnamese": "phầm mềm, chương trình chạy trên máy tính",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The new _____ allows me to intergrate tables and spreadsheets into my reports."
+  },
+  {
+    "id": 107,
+    "english": "storage",
+    "hiragana": "",
+    "vietnamese": "nơi lưu trữ, kho",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The double-sided disk has _____ storage room for up to 500 megabytes of data."
+  },
+  {
+    "id": 108,
+    "english": "technical",
+    "hiragana": "",
+    "vietnamese": "chuyên môn, kỹ thuật",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The computer can only be repaired by someone with _____ knowledge."
+  },
+  {
+    "id": 109,
+    "english": "assemble",
+    "hiragana": "",
+    "vietnamese": "thu thập, tụ tập",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Her assistant copied and _____ed the documents."
+  },
+  {
+    "id": 110,
+    "english": "beforehand",
+    "hiragana": "",
+    "vietnamese": "sẵn sàng trước",
+    "hanViet": "",
+    "hint": "(ADV) - Trạng từ",
+    "explanation": "To speed up the mailing, we should prepare the label _____."
+  },
+  {
+    "id": 111,
+    "english": "complicated",
+    "hiragana": "",
+    "vietnamese": "phức tạp, khó hiểu",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "This explanation is too _____; try to make it simple."
+  },
+  {
+    "id": 112,
+    "english": "courier",
+    "hiragana": "",
+    "vietnamese": "người đưa thư",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "We hired a _____ to deliver the parkage."
+  },
+  {
+    "id": 113,
+    "english": "express",
+    "hiragana": "",
+    "vietnamese": "nhanh, hoả tốc (thư); rõ ràng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "_____ mail costs more than regular mail service, but it is more efficient."
+  },
+  {
+    "id": 114,
+    "english": "fold",
+    "hiragana": "",
+    "vietnamese": "gấp giấy (thư)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "_____ the letter into three parts before stuffing it into the envelope."
+  },
+  {
+    "id": 115,
+    "english": "layout",
+    "hiragana": "",
+    "vietnamese": "định dạng trang giấy (bản in)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "We had to change the _____ when we changed the size of the paper."
+  },
+  {
+    "id": 116,
+    "english": "mention",
+    "hiragana": "",
+    "vietnamese": "đề cập tới; (n) sự nói đến, sự nhắc tới",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "There was no _____ of the cost in the proposal."
+  },
+  {
+    "id": 117,
+    "english": "petition",
+    "hiragana": "",
+    "vietnamese": "đơn yêu cầu, kiến nghị",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ was photocopied for the workers who will take the copies to collect the necessary signatures."
+  },
+  {
+    "id": 118,
+    "english": "proof",
+    "hiragana": "",
+    "vietnamese": "tìm lỗi",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "This letter was not _____ed very carefully, it is full of typing mistakes."
+  },
+  {
+    "id": 119,
+    "english": "registered",
+    "hiragana": "",
+    "vietnamese": "đã đăng ký, bảo đảm (thư)",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Send this parkage by _____ mail and insure it for $500."
+  },
+  {
+    "id": 120,
+    "english": "revise",
+    "hiragana": "",
+    "vietnamese": "duyệt lại, sửa đổi",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The brochure was _____ed several times before it was sent to printer."
+  },
+  {
+    "id": 121,
+    "english": "abundant",
+    "hiragana": "",
+    "vietnamese": "nhiều, phong phú, thừa thãi",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The recruiter was surprised at the (n)_ of qualified applicants."
+  },
+  {
+    "id": 122,
+    "english": "accomplishment",
+    "hiragana": "",
+    "vietnamese": "thành tựu, sự hoàn thành",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "In honor of her _____s, the manager was promoted."
+  },
+  {
+    "id": 123,
+    "english": "bring together",
+    "hiragana": "",
+    "vietnamese": "tập hợp, thu thập",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Every year, the firm _____ its top lawyers and its newest recruits for a trainning session."
+  },
+  {
+    "id": 124,
+    "english": "candidate",
+    "hiragana": "",
+    "vietnamese": "ứng cử viên, người dự tuyển",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The recruiter will interview all _____s for the position."
+  },
+  {
+    "id": 125,
+    "english": "come up with",
+    "hiragana": "",
+    "vietnamese": "phát minh, tạo ra",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "In order for that small business to succeed, it needs to _____ a new strategy."
+  },
+  {
+    "id": 126,
+    "english": "commensurate",
+    "hiragana": "",
+    "vietnamese": "đúng với, xứng với, tương ứng với",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Generally the first year's salary is _____ with experience and education level."
+  },
+  {
+    "id": 127,
+    "english": "match",
+    "hiragana": "",
+    "vietnamese": "sự phù hợp, người ngang sức",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Finding a good _____ is never easy."
+  },
+  {
+    "id": 128,
+    "english": "profile",
+    "hiragana": "",
+    "vietnamese": "sơ lược tiểu sử",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The recruiter told him that, unfortunately, he did not fit the job _____."
+  },
+  {
+    "id": 129,
+    "english": "qualification",
+    "hiragana": "",
+    "vietnamese": "trình độ chuyên môn; (sn) các giấy tờ chứng nhận khả năng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The applicant had so many _____s, the company created a new position for her."
+  },
+  {
+    "id": 130,
+    "english": "recruit",
+    "hiragana": "",
+    "vietnamese": "tuyển mộ (thêm nhân viên)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The company's policy is to _____ new employees once a year."
+  },
+  {
+    "id": 131,
+    "english": "submit",
+    "hiragana": "",
+    "vietnamese": "nộp, trình",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "_____ your resume to the human resouces department."
+  },
+  {
+    "id": 132,
+    "english": "time-consuming",
+    "hiragana": "",
+    "vietnamese": "dài dòng, tốn thời gian",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Even though it was _____, all of the participants felt that the open house was very worthwhile."
+  },
+  {
+    "id": 133,
+    "english": "ability",
+    "hiragana": "",
+    "vietnamese": "năng lực, khả năng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ to work with others is a key requirement."
+  },
+  {
+    "id": 134,
+    "english": "apply",
+    "hiragana": "",
+    "vietnamese": "nộp hồ sơ ứng tuyển",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The college graduate _____ed for three jobs and received three offers."
+  },
+  {
+    "id": 135,
+    "english": "background",
+    "hiragana": "",
+    "vietnamese": "quá trình học tập",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Your _____ in the publishing industry is a definite asset for this job."
+  },
+  {
+    "id": 136,
+    "english": "be ready for",
+    "hiragana": "",
+    "vietnamese": "sẵn sàng cho, đã chuẩn bị cho",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The employer wasn't ____ for the applicant's questions."
+  },
+  {
+    "id": 137,
+    "english": "call in",
+    "hiragana": "",
+    "vietnamese": "yêu cầu, gọi tới",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The human resources manager _____all the qualified applicants for a second interview."
+  },
+  {
+    "id": 138,
+    "english": "confidence",
+    "hiragana": "",
+    "vietnamese": "sự tự tin",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Good applicants show _____ during an interview."
+  },
+  {
+    "id": 139,
+    "english": "constantly",
+    "hiragana": "",
+    "vietnamese": "liên tục",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The company is _____ looking for highly trained employees."
+  },
+  {
+    "id": 140,
+    "english": "expert",
+    "hiragana": "",
+    "vietnamese": "chuyên gia, chuyên viên",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The candidate demonstrated at the interview that he was an _____ in marketing."
+  },
+  {
+    "id": 141,
+    "english": "follow up",
+    "hiragana": "",
+    "vietnamese": "bước tiếp, tiếp tục",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Always _____ an interview with a thank-you note."
+  },
+  {
+    "id": 142,
+    "english": "hesitate",
+    "hiragana": "",
+    "vietnamese": "ngập ngừng, do dự, không nhất quyết,",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Don't _____ to call if you have any questions connecting the job."
+  },
+  {
+    "id": 143,
+    "english": "present",
+    "hiragana": "",
+    "vietnamese": "giới thiệu, trình bày, thể hiện",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The candidate _____ed her qualifications so well that the employer offered her a job on the spot."
+  },
+  {
+    "id": 144,
+    "english": "weakness",
+    "hiragana": "",
+    "vietnamese": "nhược điểm",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The candidate's only _____ seems to be her lack of experience in fund-raising."
+  },
+  {
+    "id": 145,
+    "english": "conduct",
+    "hiragana": "",
+    "vietnamese": "tiến hành, thể hiện, cư xử; (n) cách cư xử",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Interviews were _____ed over a period of three weeks."
+  },
+  {
+    "id": 146,
+    "english": "generate",
+    "hiragana": "",
+    "vietnamese": "tạo ra, sản xuất ra",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The new training program _____ed a lot of interest among employees."
+  },
+  {
+    "id": 147,
+    "english": "hire",
+    "hiragana": "",
+    "vietnamese": "thuê, tuyển dụng; (n) người làm thuê",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "She was _____ed after her third interview."
+  },
+  {
+    "id": 148,
+    "english": "keep up with",
+    "hiragana": "",
+    "vietnamese": "giữ liên lạc với, bắt kịp với",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Employees are encouraged to take courses in order to _____ new developments."
+  },
+  {
+    "id": 149,
+    "english": "look up to",
+    "hiragana": "",
+    "vietnamese": "ngưỡng mộ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Staff members _____ the director because he had earned their respect over the year."
+  },
+  {
+    "id": 150,
+    "english": "mentor",
+    "hiragana": "",
+    "vietnamese": "người cố vấn",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ helped her make some decisions about combining career and family."
+  },
+  {
+    "id": 151,
+    "english": "on track",
+    "hiragana": "",
+    "vietnamese": "đúng kế hoạch, đúng lịch, tập trung",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "If we stay _____, the meeting should be finished at 9:30."
+  },
+  {
+    "id": 152,
+    "english": "reject",
+    "hiragana": "",
+    "vietnamese": "từ chối, bác bỏ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Even though Mr. Lukin _____ed their offer, they remain in contact."
+  },
+  {
+    "id": 153,
+    "english": "set up",
+    "hiragana": "",
+    "vietnamese": "sắp xếp, xếp đặt",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "_____ a time and place for the meeting and then inform everyone who is involved."
+  },
+  {
+    "id": 154,
+    "english": "success",
+    "hiragana": "",
+    "vietnamese": "sự thành công, thắng lợi",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "When the manager won an award, he attributed his _____ to his colleagues."
+  },
+  {
+    "id": 155,
+    "english": "training",
+    "hiragana": "",
+    "vietnamese": "sự đào tạo",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The new hire received such good _____ that, within a week, she was as productive as the other workers."
+  },
+  {
+    "id": 156,
+    "english": "update",
+    "hiragana": "",
+    "vietnamese": "cập nhật; (n) thông tin mới nhất",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Our latest _____ shows that business is down 15 percent."
+  },
+  {
+    "id": 157,
+    "english": "basis",
+    "hiragana": "",
+    "vietnamese": "nền tảng, cơ sở, căn cứ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The manager didn't have any _____for firing the employee."
+  },
+  {
+    "id": 158,
+    "english": "be aware of",
+    "hiragana": "",
+    "vietnamese": "nhận thức được, ý thức được",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The new staff member wasn't _____ the company's position on working a second job."
+  },
+  {
+    "id": 159,
+    "english": "benefit",
+    "hiragana": "",
+    "vietnamese": "lợi ích; (v) được lợi",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "We all ______ from company's policy of semiannual reviews."
+  },
+  {
+    "id": 160,
+    "english": "compensate",
+    "hiragana": "",
+    "vietnamese": "đền bù, bồi thường, trả cho",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The company will _____ employees for any travel expenses."
+  },
+  {
+    "id": 161,
+    "english": "delicate",
+    "hiragana": "",
+    "vietnamese": "tinh tế, tế nhị",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The manager _____ly asked about the health of his client."
+  },
+  {
+    "id": 162,
+    "english": "eligible",
+    "hiragana": "",
+    "vietnamese": "đủ tư cách, thích hợp",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Some employees may be _____ for the tuition reimbursement plan."
+  },
+  {
+    "id": 163,
+    "english": "flexible",
+    "hiragana": "",
+    "vietnamese": "linh hoạt, mềm dẻo",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Younger workers tend to be more _____ with their work schedules."
+  },
+  {
+    "id": 164,
+    "english": "negotiate",
+    "hiragana": "",
+    "vietnamese": "đàm phán",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "You must know what you want and what you can accept when you _____ a salary."
+  },
+  {
+    "id": 165,
+    "english": "raise",
+    "hiragana": "",
+    "vietnamese": "sự nâng, sự tăng (lương)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "With his _____, Mr. Nam was able to afford to buy a new car."
+  },
+  {
+    "id": 166,
+    "english": "retire",
+    "hiragana": "",
+    "vietnamese": "về hưu",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Many people would like to win the lottery and _____."
+  },
+  {
+    "id": 167,
+    "english": "vested",
+    "hiragana": "",
+    "vietnamese": "được trao cho, được quyền",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The day that Ms. Weng becomes fully _____ in the retirement plan, she gave her two weeks' notice."
+  },
+  {
+    "id": 168,
+    "english": "wage",
+    "hiragana": "",
+    "vietnamese": "tiền công; lương (trả theo giờ làm việc)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Hourly _____ have increased by 20 percent over the last two years."
+  },
+  {
+    "id": 169,
+    "english": "achieve",
+    "hiragana": "",
+    "vietnamese": "thành công, đạt mục tiêu",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I hope to _____ as much as you have in short time with the company."
+  },
+  {
+    "id": 170,
+    "english": "contribute",
+    "hiragana": "",
+    "vietnamese": "đóng góp, góp phần",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Make sure your boss is aware of the work you _____ed to the project."
+  },
+  {
+    "id": 171,
+    "english": "dedication",
+    "hiragana": "",
+    "vietnamese": "sự cống hiến",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The director's _____ to a high-quality product has motivated many of his employees."
+  },
+  {
+    "id": 172,
+    "english": "look forward to",
+    "hiragana": "",
+    "vietnamese": "háo hức, chờ đợi, mong ngóng",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "We _____ seeing you at the next meeting."
+  },
+  {
+    "id": 173,
+    "english": "looked to",
+    "hiragana": "",
+    "vietnamese": "phụ thuộc vào, dựa vào",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The workers always ______ him to settle their disagreements."
+  },
+  {
+    "id": 174,
+    "english": "loyal",
+    "hiragana": "",
+    "vietnamese": "trung thành, đáng tin cậy",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Even though your assistant is _____, you have to question his job performance."
+  },
+  {
+    "id": 175,
+    "english": "merit",
+    "hiragana": "",
+    "vietnamese": "sự tuyệt vời, giá trị cao",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Your work has improved tremendously and is of great _____."
+  },
+  {
+    "id": 176,
+    "english": "obvious",
+    "hiragana": "",
+    "vietnamese": "rõ ràng, hiển nhiên",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "In many countries, it is very _____ who will be promoted."
+  },
+  {
+    "id": 177,
+    "english": "productive",
+    "hiragana": "",
+    "vietnamese": "năng suất, hiệu quả",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The managers had a very _____ meeting and we able to solve many of the problems."
+  },
+  {
+    "id": 178,
+    "english": "promote",
+    "hiragana": "",
+    "vietnamese": "thăng chức, đề bạt; đưa ra",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Even though the sales associate had a good year, it wasn't possible to _____ him."
+  },
+  {
+    "id": 179,
+    "english": "recognition",
+    "hiragana": "",
+    "vietnamese": "sự công nhận, sự thừa nhận",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The president's personal assistant was finally given the _____ that she has deserved for many years."
+  },
+  {
+    "id": 180,
+    "english": "value",
+    "hiragana": "",
+    "vietnamese": "giá trị, ý nghĩa",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "It is difficult to put a ____ on the work that an employee does."
+  },
+  {
+    "id": 181,
+    "english": "bargain",
+    "hiragana": "",
+    "vietnamese": "sự mặc cả, món hời",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "We were thrilled with the _____s we found at the clothing sale."
+  },
+  {
+    "id": 182,
+    "english": "bear",
+    "hiragana": "",
+    "vietnamese": "chịu, chịu đựng",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Moya doesn't like crowds so she cannot _____ to shop during the holiday rush."
+  },
+  {
+    "id": 183,
+    "english": "behavior",
+    "hiragana": "",
+    "vietnamese": "cách cư xử",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Annu is conducting a survey on whether consumer _____differs between men and women."
+  },
+  {
+    "id": 184,
+    "english": "checkout",
+    "hiragana": "",
+    "vietnamese": "sự thanh toán tiền (khách sạn, ...), nơi thanh toán tiền, hành động thanh toán tiền...",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The line at this _____ is too long, so let's look for another."
+  },
+  {
+    "id": 185,
+    "english": "comfort",
+    "hiragana": "",
+    "vietnamese": "sự hài lòng, sự thuận tiện; (sn) tiện nghi",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "I like to dress for comfort if i'm spending the day shopping."
+  },
+  {
+    "id": 186,
+    "english": "expand",
+    "hiragana": "",
+    "vietnamese": "mở rộng (phạm vị)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The new manager has significantly _____ed the store's inventory."
+  },
+  {
+    "id": 187,
+    "english": "explore",
+    "hiragana": "",
+    "vietnamese": "khảo sát tỉ mỉ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The colector likes to _____ antique shops looking for bargains."
+  },
+  {
+    "id": 188,
+    "english": "item",
+    "hiragana": "",
+    "vietnamese": "khoản, mục, món (đồ), đơn vị",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Do you think i can get all these items into one bag?"
+  },
+  {
+    "id": 189,
+    "english": "mandatory",
+    "hiragana": "",
+    "vietnamese": "tính bắt buộc",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The jewerly store has a _____ policy of showing customers only once item at a time."
+  },
+  {
+    "id": 190,
+    "english": "merchandise",
+    "hiragana": "",
+    "vietnamese": "hàng hoá",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "I am very impressed with the selection of _____ at this store."
+  },
+  {
+    "id": 191,
+    "english": "strict",
+    "hiragana": "",
+    "vietnamese": "chính xác, nghiêm ngặt",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "There is a _____ limit of four item per person that can be taken into the changing room."
+  },
+  {
+    "id": 192,
+    "english": "trend",
+    "hiragana": "",
+    "vietnamese": "xu hướng, mốt, cái đang thịnh hành",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The clothing store tries to stay on top of all the new _____s"
+  },
+  {
+    "id": 193,
+    "english": "diverse",
+    "hiragana": "",
+    "vietnamese": "đa dạng, gồm nhiều loại khác nhau",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The Office Supply Warehouse offers a _____ range of office supplies."
+  },
+  {
+    "id": 194,
+    "english": "enterprise",
+    "hiragana": "",
+    "vietnamese": "hãnh kinh doanh",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "This _____ has become unmanageable and is beginning to lose money."
+  },
+  {
+    "id": 195,
+    "english": "essential",
+    "hiragana": "",
+    "vietnamese": "cần thiết, không thể thiếu được",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Having Ann on this team is _____ if we are to win the contract."
+  },
+  {
+    "id": 196,
+    "english": "everyday",
+    "hiragana": "",
+    "vietnamese": "hàng ngày, thông thường",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "This _____ routine of having to check inventrory is boring."
+  },
+  {
+    "id": 197,
+    "english": "function",
+    "hiragana": "",
+    "vietnamese": "hoạt động, thực hiện chức năng",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "She _____ed as the director while Mr. Gibbs was away."
+  },
+  {
+    "id": 198,
+    "english": "maintain",
+    "hiragana": "",
+    "vietnamese": "tiếp tục, duy trì, giữ vững",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Trying to _____ two different stockrooms is to much work."
+  },
+  {
+    "id": 199,
+    "english": "obtain",
+    "hiragana": "",
+    "vietnamese": "đạt được, giành được",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I've been trying to _____ a list of supplies from the administrators for three weeks now."
+  },
+  {
+    "id": 200,
+    "english": "prerequisite",
+    "hiragana": "",
+    "vietnamese": "điều cần có trước hết, điều kiện tiên quyết",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "One of the _____s for this job is competence in book-keeping."
+  },
+  {
+    "id": 201,
+    "english": "quality",
+    "hiragana": "",
+    "vietnamese": "phẩm chất, đặc tính",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The most important _____es we look for in a supplier are reliability and quick response."
+  },
+  {
+    "id": 202,
+    "english": "smooth",
+    "hiragana": "",
+    "vietnamese": "trôi chảy, êm thấm, hoà nhã",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Her _____ manner won her the appreciation of the manager but not her colleagues"
+  },
+  {
+    "id": 203,
+    "english": "source",
+    "hiragana": "",
+    "vietnamese": "nguồn, nguồn gốc",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "I can't tell you the ____ of this information."
+  },
+  {
+    "id": 204,
+    "english": "stationery",
+    "hiragana": "",
+    "vietnamese": "đồ dùng văn phòng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "We do not have enough _____, so please order some more."
+  },
+  {
+    "id": 205,
+    "english": "accurate",
+    "hiragana": "",
+    "vietnamese": "chính xác",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "He counted the boxes three times to ensure his that figure was _____."
+  },
+  {
+    "id": 206,
+    "english": "carrier",
+    "hiragana": "",
+    "vietnamese": "người chuyển hàng, người đưa thư",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Lou, our favorite _____, takes extra care of our boxes marked fragile."
+  },
+  {
+    "id": 207,
+    "english": "catalog",
+    "hiragana": "",
+    "vietnamese": "bảng liệt kê mục lục; (v) ghi vào mục lục, chia từng loại",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Ellen _____ed the complaints according to severity."
+  },
+  {
+    "id": 208,
+    "english": "fulfil",
+    "hiragana": "",
+    "vietnamese": "thực hiện, hoàn thành",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The engineers _____ed a client's request for larger display screens."
+  },
+  {
+    "id": 209,
+    "english": "integral",
+    "hiragana": "",
+    "vietnamese": "cần cho tính toàn bộ, tính trọn vẹn",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Good customer relation is an _____ component of any business."
+  },
+  {
+    "id": 210,
+    "english": "inventory",
+    "hiragana": "",
+    "vietnamese": "hàng hoá tồn kho, bảng kê hàng hoá, danh mục hàng hoá",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Their _____ had not changed much over the years, which made the customers feel bored."
+  },
+  {
+    "id": 211,
+    "english": "minimize",
+    "hiragana": "",
+    "vietnamese": "giảm tới mức tối thiểu, đánh giá thấp",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The shipping staff _____ ed customer complaints by working overtime to deliver the packages quickly."
+  },
+  {
+    "id": 212,
+    "english": "on hand",
+    "hiragana": "",
+    "vietnamese": "có sẵn để dùng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The new employee will be _____ if we need more help with shipping orders."
+  },
+  {
+    "id": 213,
+    "english": "remember",
+    "hiragana": "",
+    "vietnamese": "nhớ, ghi nhớ, nhớ lại",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I will _____ the combination to the safe without writing it down."
+  },
+  {
+    "id": 214,
+    "english": "ship",
+    "hiragana": "",
+    "vietnamese": "chuyển đi, gửi đi",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Very few customers think about how their parkages will be _____ed, and are seldom home when the parkages arrive."
+  },
+  {
+    "id": 215,
+    "english": "sufficient",
+    "hiragana": "",
+    "vietnamese": "đủ",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The postage on that box is not _____ to get it to its destination."
+  },
+  {
+    "id": 216,
+    "english": "supply",
+    "hiragana": "",
+    "vietnamese": "cung cấp, đáp ứng nhu cầu; (n) kho dự trữ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "By making better use of our _____ es, we can avoid ordering until next month."
+  },
+  {
+    "id": 217,
+    "english": "charge",
+    "hiragana": "",
+    "vietnamese": "tính giá; (n) tiền phải trả",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The extra _____ for gift wrapping your purchase will appear in your invoice."
+  },
+  {
+    "id": 218,
+    "english": "compile",
+    "hiragana": "",
+    "vietnamese": "thu thập tài liệu",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I have _____ed a list of the most popular items in our sale catalog."
+  },
+  {
+    "id": 219,
+    "english": "customer",
+    "hiragana": "",
+    "vietnamese": "khách hàng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Let's make sure all invoices sent to _____s and are kept in alphabetical order."
+  },
+  {
+    "id": 220,
+    "english": "discount",
+    "hiragana": "",
+    "vietnamese": "giảm giá, triết khấu; (n) sự giảm giá",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "We are offering a 10 percent _____ to all new customers."
+  },
+  {
+    "id": 221,
+    "english": "efficient",
+    "hiragana": "",
+    "vietnamese": "hiệu quả",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Electronic invoicing has helped us to be _____."
+  },
+  {
+    "id": 222,
+    "english": "estimate",
+    "hiragana": "",
+    "vietnamese": "đánh giá, ước lượng; (n) sự đánh giá",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "We _____ed our looses this year at about five thousand dollars."
+  },
+  {
+    "id": 223,
+    "english": "impose",
+    "hiragana": "",
+    "vietnamese": "bắt chịu, (+ on, upon) gây tác động mạnh tới",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The company will _____ a surcharge for any items returned."
+  },
+  {
+    "id": 224,
+    "english": "mistake",
+    "hiragana": "",
+    "vietnamese": "lỗi",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "I made a _____ in adding up your bill and we overcharged you twenty dollars."
+  },
+  {
+    "id": 225,
+    "english": "order",
+    "hiragana": "",
+    "vietnamese": "đơn đặt hàng; (v) đặt hàng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The customer placed an _____ for ten new chairs."
+  },
+  {
+    "id": 226,
+    "english": "prompt",
+    "hiragana": "",
+    "vietnamese": "nhanh chóng, ngay tức thì; (n) kỳ hạn trả nợ",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "I want a _____ reply to my letter of complaint."
+  },
+  {
+    "id": 227,
+    "english": "rectify",
+    "hiragana": "",
+    "vietnamese": "sửa lại cho đúng",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "He _____ed the problem by giving the customer credit for the unused items that she returned."
+  },
+  {
+    "id": 228,
+    "english": "terms",
+    "hiragana": "",
+    "vietnamese": "điều kiện, điều khoản",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ of payment were clearly listed at the bottom of the invoice."
+  },
+  {
+    "id": 229,
+    "english": "adjust",
+    "hiragana": "",
+    "vietnamese": "điều chỉnh, dàn xếp, làm cho thích hợp",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The stockroom clerk _____ed the cooking pots on the shelf so they would be easier to count during inventory."
+  },
+  {
+    "id": 230,
+    "english": "automatic",
+    "hiragana": "",
+    "vietnamese": "tự động",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The _____ foot massager was so popular, we couldn't keep it in stock."
+  },
+  {
+    "id": 231,
+    "english": "crucial",
+    "hiragana": "",
+    "vietnamese": "quan trọng, nổi bật",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Inventory is a _____ process and must be taken seriously by all staffs."
+  },
+  {
+    "id": 232,
+    "english": "discrepancy",
+    "hiragana": "",
+    "vietnamese": "sự khác nhau, sự không thống nhất, sự bất đồng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ between the two counts was easily explained."
+  },
+  {
+    "id": 233,
+    "english": "disturb",
+    "hiragana": "",
+    "vietnamese": "gây trở ngại, làm phiềm, quấy rầy",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I hope I'm not _____ing you , but I need to ask you to move so I can record the products behind you."
+  },
+  {
+    "id": 234,
+    "english": "liability",
+    "hiragana": "",
+    "vietnamese": "nghĩa vụ, bổn phận, trách nhiệm pháp lý",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The store's insured _____ protects against theft and damaged inventory."
+  },
+  {
+    "id": 235,
+    "english": "reflect",
+    "hiragana": "",
+    "vietnamese": "phản chiếu, phản ánh",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "An inaccurate inventory count _____s poorly on the store."
+  },
+  {
+    "id": 236,
+    "english": "run",
+    "hiragana": "",
+    "vietnamese": "hoạt động",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "As long as the computer is _____ing, you can keep adding new data."
+  },
+  {
+    "id": 237,
+    "english": "scan",
+    "hiragana": "",
+    "vietnamese": "nhìn lướt, quét",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Jasmine quickly _____ed the list to see if any information was missing."
+  },
+  {
+    "id": 238,
+    "english": "subtract",
+    "hiragana": "",
+    "vietnamese": "lấy đi, trừ đi",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Once you ring up an item, the computer automatically _____s it from the inventory log."
+  },
+  {
+    "id": 239,
+    "english": "tedious",
+    "hiragana": "",
+    "vietnamese": "tẻ nhạt, thiếu hấp dẫn",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Counting merchandise all weekend is the most _____ job I can imagine."
+  },
+  {
+    "id": 240,
+    "english": "verify",
+    "hiragana": "",
+    "vietnamese": "xác minh, thẩm tra, kiểm lại",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I can't _____ the accuracy of these numbers, since I was not present for inventory weekend."
+  },
+  {
+    "id": 241,
+    "english": "accept",
+    "hiragana": "",
+    "vietnamese": "chấp nhận, thừa nhận",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Without hesitating, she _____ed the job of teller."
+  },
+  {
+    "id": 242,
+    "english": "balance",
+    "hiragana": "",
+    "vietnamese": "số dư tài khoản; bản quyết toán thu chi; (v) quyết toán, cân đối tài khoản",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "It took him over an hour to _____ his checkbook."
+  },
+  {
+    "id": 243,
+    "english": "borrow",
+    "hiragana": "",
+    "vietnamese": "vay, mượn",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The couple _____ed money from the bank to buy a home."
+  },
+  {
+    "id": 244,
+    "english": "cautious",
+    "hiragana": "",
+    "vietnamese": "thận trọng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The bank manager was _____ when giving out information to people she dit not know."
+  },
+  {
+    "id": 245,
+    "english": "deduct",
+    "hiragana": "",
+    "vietnamese": "lấy đi, trừ đi",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Before computing his taxes, Christophe remembered to _____ allowable home improvement expenses."
+  },
+  {
+    "id": 246,
+    "english": "dividend",
+    "hiragana": "",
+    "vietnamese": "tiền lãi cổ phần",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ was calculated and distributed to the group."
+  },
+  {
+    "id": 247,
+    "english": "down payment",
+    "hiragana": "",
+    "vietnamese": "khoản tiền đặt cọc trả trước (trong 1 hợp đồng trả góp)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Karl was disappointed when the real estate agent told him he needed a large _____ on the house."
+  },
+  {
+    "id": 248,
+    "english": "mortgage",
+    "hiragana": "",
+    "vietnamese": "tài sản thế chấp, tiền thế chấp; (v) cầm cố, thế nợ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Due to low interest rates, Sheila moved quickly to find a good deal on a _____."
+  },
+  {
+    "id": 249,
+    "english": "restriction",
+    "hiragana": "",
+    "vietnamese": "sự hạn chế. sự giới hạn",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "There is a strict _____ on the number of free withdrawals a customer can make on his account each month."
+  },
+  {
+    "id": 250,
+    "english": "signature",
+    "hiragana": "",
+    "vietnamese": "chữ ký",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The customers' _____ were kept on file for identification purposes."
+  },
+  {
+    "id": 251,
+    "english": "take out",
+    "hiragana": "",
+    "vietnamese": "thu hồi, rút lui",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "My checking account allows me to _____ money at any bank branch without a fee."
+  },
+  {
+    "id": 252,
+    "english": "transaction",
+    "hiragana": "",
+    "vietnamese": "công việc kinh doanh, giao dịch",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Banking _____s will appear on your monthly statement."
+  },
+  {
+    "id": 253,
+    "english": "accounting",
+    "hiragana": "",
+    "vietnamese": "sự tính toán, công tác kế toán",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "_____ for expenses is time-consuming."
+  },
+  {
+    "id": 254,
+    "english": "accumulate",
+    "hiragana": "",
+    "vietnamese": "cộng dồn; tích luỹ lại",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The bills started to _____ after secretary quit."
+  },
+  {
+    "id": 255,
+    "english": "asset",
+    "hiragana": "",
+    "vietnamese": "tài sản",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The company's _____ are worth millions of dollars."
+  },
+  {
+    "id": 256,
+    "english": "audit",
+    "hiragana": "",
+    "vietnamese": "công việc kiểm toán, sự kiểm tra sổ sách; (v) kiểm toán",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "No one looks forward to an _____ by government."
+  },
+  {
+    "id": 257,
+    "english": "budget",
+    "hiragana": "",
+    "vietnamese": "ngân sách, ngân quỹ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "If the development group doesn't cut back expenses, they'll be over the _____."
+  },
+  {
+    "id": 258,
+    "english": "build up",
+    "hiragana": "",
+    "vietnamese": "làm tăng theo thời gian, tăng theo thời gian",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The firm has _____ a solid reputation for itself."
+  },
+  {
+    "id": 259,
+    "english": "client",
+    "hiragana": "",
+    "vietnamese": "khách hàng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "We must provide excellent services for our _____s, otherwise we will lose them to our competition."
+  },
+  {
+    "id": 260,
+    "english": "debt",
+    "hiragana": "",
+    "vietnamese": "món nợ, khoản nợ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The banks are worried about your incresing _____."
+  },
+  {
+    "id": 261,
+    "english": "outstanding",
+    "hiragana": "",
+    "vietnamese": "còn tồn tại, chưa giải quyết xong",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "That client still has several _____ bills."
+  },
+  {
+    "id": 262,
+    "english": "profitable",
+    "hiragana": "",
+    "vietnamese": "có lợi, sinh lãi",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Our accounting department has helped us to become more _____."
+  },
+  {
+    "id": 263,
+    "english": "reconcile",
+    "hiragana": "",
+    "vietnamese": "làm thích hợp, làm phù hợp",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The client used his bank statements to _____ his accounts."
+  },
+  {
+    "id": 264,
+    "english": "turnover",
+    "hiragana": "",
+    "vietnamese": "sự luân chuyển vốn; số lượng công nhân thay thế (những người thôi việc trong một thời gian nhất định)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "We have to add another production shift to keep up with the high _____ rate."
+  },
+  {
+    "id": 265,
+    "english": "aggressive",
+    "hiragana": "",
+    "vietnamese": "quyết đoán; cạnh tranh",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Wall Street is a very _____ atmosphere where only the strong survive."
+  },
+  {
+    "id": 266,
+    "english": "attitude",
+    "hiragana": "",
+    "vietnamese": "thái độ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Each investor should assess his or her own _____ toward investment."
+  },
+  {
+    "id": 267,
+    "english": "commitment",
+    "hiragana": "",
+    "vietnamese": "sự cam kết",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The president made a _____ to his employees that they would be given shares of stock if the company was successful."
+  },
+  {
+    "id": 268,
+    "english": "conservative",
+    "hiragana": "",
+    "vietnamese": "dè dặt, thận trọng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Generally, older people should be more _____ in their investing than younger people."
+  },
+  {
+    "id": 269,
+    "english": "fund",
+    "hiragana": "",
+    "vietnamese": "quỹ; (v) cấp vốn, tài trợ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The company will _____ the trip to the conference."
+  },
+  {
+    "id": 270,
+    "english": "invest",
+    "hiragana": "",
+    "vietnamese": "đầu tư",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Don't _____ all of your time in just one project."
+  },
+  {
+    "id": 271,
+    "english": "long-term",
+    "hiragana": "",
+    "vietnamese": "dài hạn, lâu dài",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The CEO's _____ goal was to increase the return on investment."
+  },
+  {
+    "id": 272,
+    "english": "portfolio",
+    "hiragana": "",
+    "vietnamese": "danh mục đầu tư. danh mục vốn đầu tư",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Investors are advised to have diverse _____s."
+  },
+  {
+    "id": 273,
+    "english": "pull out",
+    "hiragana": "",
+    "vietnamese": "rút khỏi, rút lui; (n) sự rút khỏi",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The _____ of the bank has left the company without financing."
+  },
+  {
+    "id": 274,
+    "english": "resource",
+    "hiragana": "",
+    "vietnamese": "tài sản, tài nguyên",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The company's most valuable _____ was its staff."
+  },
+  {
+    "id": 275,
+    "english": "return",
+    "hiragana": "",
+    "vietnamese": "tiền lời; doanh lợi, thu nhập",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Some investor are satisfied with a 15 percent , while others want to see a much larger."
+  },
+  {
+    "id": 276,
+    "english": "wise",
+    "hiragana": "",
+    "vietnamese": "thông thái, sáng suốt, có kinh nghiệm, hiểu biết nhiều",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Are you sure it was a _____ decision to pull out all of your investments."
+  },
+  {
+    "id": 277,
+    "english": "calculate",
+    "hiragana": "",
+    "vietnamese": "tính toán",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "You should _____ how much the party will cost."
+  },
+  {
+    "id": 278,
+    "english": "deadline",
+    "hiragana": "",
+    "vietnamese": "hạn chót, hạn cuối cùng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ was to tight and they couldn't finish the project."
+  },
+  {
+    "id": 279,
+    "english": "file",
+    "hiragana": "",
+    "vietnamese": "hồ sơ, tài liệu; dãy người (xếp hàng)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The police have a large _____ on the suspected thief."
+  },
+  {
+    "id": 280,
+    "english": "fill out",
+    "hiragana": "",
+    "vietnamese": "hoàn thành",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "_____ the form and turn it in at the front desk."
+  },
+  {
+    "id": 281,
+    "english": "give up",
+    "hiragana": "",
+    "vietnamese": "từ bỏ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I _____ smoking last year."
+  },
+  {
+    "id": 282,
+    "english": "joint",
+    "hiragana": "",
+    "vietnamese": "chung, chia sẻ, cùng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "We opened a _____ account five years ago."
+  },
+  {
+    "id": 283,
+    "english": "owe",
+    "hiragana": "",
+    "vietnamese": "nợ, phải trả nợ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I am sorry, I _____ you an explanation."
+  },
+  {
+    "id": 284,
+    "english": "penalty",
+    "hiragana": "",
+    "vietnamese": "hình phạt, khoản tiền phạt",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Anyone who pays less than they should in taxes will face a _____."
+  },
+  {
+    "id": 285,
+    "english": "prepare",
+    "hiragana": "",
+    "vietnamese": "chuẩn bị",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Are you _____ed for the challenges of this new job?"
+  },
+  {
+    "id": 286,
+    "english": "refund",
+    "hiragana": "",
+    "vietnamese": "tiền trả lại; (v) hoàn lại",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "With the tax _____, we bought two plane tickets/"
+  },
+  {
+    "id": 287,
+    "english": "spouse",
+    "hiragana": "",
+    "vietnamese": "chồng, vợ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "You may invite your _____ to the company party."
+  },
+  {
+    "id": 288,
+    "english": "withhold",
+    "hiragana": "",
+    "vietnamese": "kìm lại, giữ lại, giấu",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "My employer _____s money from each paycheck to apply toward my income taxes."
+  },
+  {
+    "id": 289,
+    "english": "desired",
+    "hiragana": "",
+    "vietnamese": "muốn có",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The _____ outcome of a projected budget is increased control over the business."
+  },
+  {
+    "id": 290,
+    "english": "detail",
+    "hiragana": "",
+    "vietnamese": "trình bày tỉ mỉ, chi tiết",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The office manager _____ed each step of inventory process at the staff meeting."
+  },
+  {
+    "id": 291,
+    "english": "forecast",
+    "hiragana": "",
+    "vietnamese": "dự đoán, dự báo; (n) sự dự đoán",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Analysts _____ a strong economic outlook."
+  },
+  {
+    "id": 292,
+    "english": "level",
+    "hiragana": "",
+    "vietnamese": "mức, cấp độ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The meeting was only open to staff at the assistant director _____ or higher."
+  },
+  {
+    "id": 293,
+    "english": "overall",
+    "hiragana": "",
+    "vietnamese": "toàn bộ, toàn thể, nói chung, nhìn chung",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "_____, our costs are running true to prediction."
+  },
+  {
+    "id": 294,
+    "english": "perspective",
+    "hiragana": "",
+    "vietnamese": "viễn cảnh, triển vọng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The budget statement will give the manager some _____ on where the costs of running the business are to be found."
+  },
+  {
+    "id": 295,
+    "english": "projected",
+    "hiragana": "",
+    "vietnamese": "mang tính chất ước tính (dựa trên số liệu hiện có)",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The manager was distressed at the _____ number of staff hours to be paid on the next payroll cycle."
+  },
+  {
+    "id": 296,
+    "english": "realistic",
+    "hiragana": "",
+    "vietnamese": "có óc thực tế",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "_____ expectations are important when you review your financial statements."
+  },
+  {
+    "id": 297,
+    "english": "target",
+    "hiragana": "",
+    "vietnamese": "mục tiêu; (v) đặt mục tiêu",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Most managers _____ desired income as the primary criterion for success."
+  },
+  {
+    "id": 298,
+    "english": "translation",
+    "hiragana": "",
+    "vietnamese": "sự chuyển, sự dịch, bản dịch",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ of the statement from Japanese into English was very helpful."
+  },
+  {
+    "id": 299,
+    "english": "typical",
+    "hiragana": "",
+    "vietnamese": "tiêu biểu, đặc thù",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Part of a category summary is defining the expenses that are _____ to the business in question."
+  },
+  {
+    "id": 300,
+    "english": "yield",
+    "hiragana": "",
+    "vietnamese": "sản lượng, lợi nhuận; (v) sinh lợi",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The company's investment _____ed high returns."
+  },
+  {
+    "id": 301,
+    "english": "adjacent",
+    "hiragana": "",
+    "vietnamese": "gần kề, sát ngay",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Take the elevator to the third floor and my office is _____ to the receptionist area."
+  },
+  {
+    "id": 302,
+    "english": "collaboration",
+    "hiragana": "",
+    "vietnamese": "sự cộng tác",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The manager had never seen such effective _____ between two group."
+  },
+  {
+    "id": 303,
+    "english": "concentrate",
+    "hiragana": "",
+    "vietnamese": "tập trung",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "She should _____ her efforts on the last quarter of the year."
+  },
+  {
+    "id": 304,
+    "english": "conducive",
+    "hiragana": "",
+    "vietnamese": "đưa đến, dẫn đến/ có ích, có lợi",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Arranging chairs so that participants can see each other easily is _____ to open communication."
+  },
+  {
+    "id": 305,
+    "english": "disrupt",
+    "hiragana": "",
+    "vietnamese": "làm gián đoán, ngắt",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The strike _____ed the factory's production."
+  },
+  {
+    "id": 306,
+    "english": "hamper",
+    "hiragana": "",
+    "vietnamese": "cản trở, ngăn trở, làm vướng",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The lack of supplies _____ed our ability to finish on schedule."
+  },
+  {
+    "id": 307,
+    "english": "inconsiderate",
+    "hiragana": "",
+    "vietnamese": "thô lỗ, bất lịch sự, thiếu suy nghĩ",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Playing loud music in the office is _____ and will not be tolerated."
+  },
+  {
+    "id": 308,
+    "english": "lobby",
+    "hiragana": "",
+    "vietnamese": "phòng giải lao, phòng chờ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The reception area was moved from the _____ of the building to the third floor."
+  },
+  {
+    "id": 309,
+    "english": "move up",
+    "hiragana": "",
+    "vietnamese": "thăng tiến, thúc đẩy",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "In order to _____ in the company, employees had to demonstrate their loyalty."
+  },
+  {
+    "id": 310,
+    "english": "open to",
+    "hiragana": "",
+    "vietnamese": "dễ tiếp thu, dễ lĩnh hội",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "What I valued most in my previous suppervisor was that she was always _____ ideas and suggestions."
+  },
+  {
+    "id": 311,
+    "english": "opt",
+    "hiragana": "",
+    "vietnamese": "chọn, quyết định chọn (= decide on)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "If Mary _____s to joint that department, you will be working together."
+  },
+  {
+    "id": 312,
+    "english": "scrutinize",
+    "hiragana": "",
+    "vietnamese": "nhìn kỹ, xem xét kỹ lưỡng, nghiên cứu cẩn thận",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "After three months of _____ing the employee's work, the manager decided that he had, in fact, improved quite considerably."
+  },
+  {
+    "id": 313,
+    "english": "adhere to",
+    "hiragana": "",
+    "vietnamese": "tôn trọng, gi�� vững, tuân thủ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The chairman never _____ his own rules."
+  },
+  {
+    "id": 314,
+    "english": "agenda",
+    "hiragana": "",
+    "vietnamese": "chương trình nghị sự",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The board was able to cover fifteen items on the _____."
+  },
+  {
+    "id": 315,
+    "english": "bring up",
+    "hiragana": "",
+    "vietnamese": "đề cập tới (1 chủ đề...)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Just as the meeting was about to finish, the manager _____ a controversial issue."
+  },
+  {
+    "id": 316,
+    "english": "conclude",
+    "hiragana": "",
+    "vietnamese": "kết thúc, kết luận",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "After long discussions, the board has _____ed that the project has to be canceled."
+  },
+  {
+    "id": 317,
+    "english": "go ahead",
+    "hiragana": "",
+    "vietnamese": "tiếp tục làm; (n) sự cho phép làm",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Five of the six members felt that they should _____ with the plan."
+  },
+  {
+    "id": 318,
+    "english": "goal",
+    "hiragana": "",
+    "vietnamese": "mục tiêu, mục đích",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Employees are expected to analyze and evaluate their annual _____s."
+  },
+  {
+    "id": 319,
+    "english": "lengthy",
+    "hiragana": "",
+    "vietnamese": "xa, dài, dài dong",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "After _____ discussions, the chairperson was reelected for another term."
+  },
+  {
+    "id": 320,
+    "english": "matter",
+    "hiragana": "",
+    "vietnamese": "vấn đề, đề tài, nội dung",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "This is not the place to bring up personal _____s."
+  },
+  {
+    "id": 321,
+    "english": "periodically",
+    "hiragana": "",
+    "vietnamese": "một cách định kỳ",
+    "hanViet": "",
+    "hint": "(ADV) - Trạng từ",
+    "explanation": "The group tried to meet _____."
+  },
+  {
+    "id": 322,
+    "english": "priority",
+    "hiragana": "",
+    "vietnamese": "quyền ưu tiên, sự ưu tiên hàng đầu",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The manager was ineffective because she was unable to set _____es."
+  },
+  {
+    "id": 323,
+    "english": "progress",
+    "hiragana": "",
+    "vietnamese": "tiến độ, tiến trình, sự tiến bộ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "_____ is being made on the annual report; we expect to see a finished product by next week."
+  },
+  {
+    "id": 324,
+    "english": "waste",
+    "hiragana": "",
+    "vietnamese": "lãng phí; (n) rác, vật không có giá trị",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Withour a leader, the group members _____ed time and energy trying organize themselves."
+  },
+  {
+    "id": 325,
+    "english": "brand",
+    "hiragana": "",
+    "vietnamese": "mác sản phẩm, nhãn hàng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "All _____s of aspirin are the same."
+  },
+  {
+    "id": 326,
+    "english": "conform",
+    "hiragana": "",
+    "vietnamese": "làm cho phù hợp, làm cho thích hợp",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Our safety standards _____ to those established by the government."
+  },
+  {
+    "id": 327,
+    "english": "defect",
+    "hiragana": "",
+    "vietnamese": "sự sai sót, khuyết điểm, lỗi",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Because of a _____ in stitching, the entire suit was thrown out."
+  },
+  {
+    "id": 328,
+    "english": "enhance",
+    "hiragana": "",
+    "vietnamese": "làm tăng, làm nổi bật",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "A stylist color _____s appeal of a car."
+  },
+  {
+    "id": 329,
+    "english": "garment",
+    "hiragana": "",
+    "vietnamese": "hàng may mặc",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Every _____ must be carefully inspected for defects before it is shipped."
+  },
+  {
+    "id": 330,
+    "english": "inspect",
+    "hiragana": "",
+    "vietnamese": "kiểm tra, thanh tra, theo dõi",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "A quality control agent who does not _____ every product carefully can ruin his company's reputation."
+  },
+  {
+    "id": 331,
+    "english": "perceive",
+    "hiragana": "",
+    "vietnamese": "hiểu được, nhận thức được, lĩnh hội",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Every employee who enjoys profit sharing _____s his job as quality control."
+  },
+  {
+    "id": 332,
+    "english": "repel",
+    "hiragana": "",
+    "vietnamese": "khước từ, cự tuyệt, đẩy lùi",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Umbrellas that do not _____ water should never be passed through quality control."
+  },
+  {
+    "id": 333,
+    "english": "take back",
+    "hiragana": "",
+    "vietnamese": "nhận lại, rút l��i",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Good quality control significantly limits the number of products _____ for a refund."
+  },
+  {
+    "id": 334,
+    "english": "throw out",
+    "hiragana": "",
+    "vietnamese": "vứt bỏ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "It is cheaper to _____ shoddy products than to lose customers."
+  },
+  {
+    "id": 335,
+    "english": "uniform",
+    "hiragana": "",
+    "vietnamese": "đồng dạng, cùng kiểu",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "A successful company wil ensure _____ quality of its products."
+  },
+  {
+    "id": 336,
+    "english": "wrinkle",
+    "hiragana": "",
+    "vietnamese": "nếp gấp (vải, quần áo)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "A _____ in the finish can be repaired more economically before a sale that after."
+  },
+  {
+    "id": 337,
+    "english": "anxious",
+    "hiragana": "",
+    "vietnamese": "lo lắng; băn khoăn",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The developers were _____ about the sales forecast for the new product."
+  },
+  {
+    "id": 338,
+    "english": "ascertain",
+    "hiragana": "",
+    "vietnamese": "tìm hiểu chắc chắn, xác định",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "A customer survey will help to _____ whether there is a market for the product."
+  },
+  {
+    "id": 339,
+    "english": "assume",
+    "hiragana": "",
+    "vietnamese": "cho là đúng, thừa nhận",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The young man felt ready to _____ the new responsibilities of his promotion."
+  },
+  {
+    "id": 340,
+    "english": "decade",
+    "hiragana": "",
+    "vietnamese": "thập kỷ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Each _____ seems to have its own fad products"
+  },
+  {
+    "id": 341,
+    "english": "examine",
+    "hiragana": "",
+    "vietnamese": "nghiên cứu, khảo sát",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Before marketing a new product, researchers must carefully _____ it from every aspect."
+  },
+  {
+    "id": 342,
+    "english": "experiment",
+    "hiragana": "",
+    "vietnamese": "thí nghiệm, thử nghiệm; (n) sự thử, phép thử, cuộc thí nghiệm",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Product developers must conduct hundreds of _____ in their research."
+  },
+  {
+    "id": 343,
+    "english": "logical",
+    "hiragana": "",
+    "vietnamese": "hợp lý, theo lô gíc",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "It is only _____ for research and development team to concentrate on one or two new products at a time."
+  },
+  {
+    "id": 344,
+    "english": "research",
+    "hiragana": "",
+    "vietnamese": "sự nghiên cứu",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "For toy manufacturers, _____ can be pure fun."
+  },
+  {
+    "id": 345,
+    "english": "responsibility",
+    "hiragana": "",
+    "vietnamese": "bổn phận, nhiệm vụ, trách nhiệm",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Another _____ of product development is to ensure that there will be a demand for the product."
+  },
+  {
+    "id": 346,
+    "english": "solve",
+    "hiragana": "",
+    "vietnamese": "giải quyết, tháo gỡ (vấn đề)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "One of the biggest problems to _____ is why people would want to own the new product."
+  },
+  {
+    "id": 347,
+    "english": "supervisor",
+    "hiragana": "",
+    "vietnamese": "người giám sát",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "A good _____ gets his team to work with him, not just for him."
+  },
+  {
+    "id": 348,
+    "english": "systematic",
+    "hiragana": "",
+    "vietnamese": "có hệ thống, có phương pháp",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Any researcher know that creative thinking is necessary, but _____ analysis is indispensable."
+  },
+  {
+    "id": 349,
+    "english": "apprehensive",
+    "hiragana": "",
+    "vietnamese": "lo lắng, sợ hãi (về tương lai)",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The mortgage lender was _____ about the company's ability to pay."
+  },
+  {
+    "id": 350,
+    "english": "circumstance",
+    "hiragana": "",
+    "vietnamese": "điều kiện, hoàn cảnh, tình huống",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Under the current economic _____s, they will not be able to purchase the property."
+  },
+  {
+    "id": 351,
+    "english": "condition",
+    "hiragana": "",
+    "vietnamese": "điều kiện",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "There are certain _____s that are unique to leasing a property."
+  },
+  {
+    "id": 352,
+    "english": "due to",
+    "hiragana": "",
+    "vietnamese": "bởi vì, do",
+    "hanViet": "",
+    "hint": "(PREP) - Giới từ",
+    "explanation": "_____ the low interest rates, good office space is difficult to find."
+  },
+  {
+    "id": 353,
+    "english": "fluctuate",
+    "hiragana": "",
+    "vietnamese": "dao động, biến động tăng giảm",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "No one is very comfortable making a large investment while the currency values _____ almost daily."
+  },
+  {
+    "id": 354,
+    "english": "get out of",
+    "hiragana": "",
+    "vietnamese": "trốn thoát, đi ra",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The company wanted to _____ the area before property values declined even futher."
+  },
+  {
+    "id": 355,
+    "english": "indicator",
+    "hiragana": "",
+    "vietnamese": "vật chỉ thị, tín hiệu, dấu hiệu",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The results of the elections was seen as an important _____ of the stability in the area."
+  },
+  {
+    "id": 356,
+    "english": "lease",
+    "hiragana": "",
+    "vietnamese": "hợp đồng cho thuê, (v) thuê, cho thuê",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "They decided to _____ the property rather than buy it."
+  },
+  {
+    "id": 357,
+    "english": "lock into",
+    "hiragana": "",
+    "vietnamese": "cam kết",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Before you ___yourself ___ something, check all your options."
+  },
+  {
+    "id": 358,
+    "english": "occupancy",
+    "hiragana": "",
+    "vietnamese": "sự chiếm đóng, sự cư ngụ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ rate in the building has never fallen below 85 percent."
+  },
+  {
+    "id": 359,
+    "english": "option",
+    "hiragana": "",
+    "vietnamese": "sự lựa chọn",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "With the real estate market so tight right now, you don't have that many _____s."
+  },
+  {
+    "id": 360,
+    "english": "subject to",
+    "hiragana": "",
+    "vietnamese": "khuất phục, tuân thủ, phụ thuộc",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "This contract is _____ all the laws regulations of the state."
+  },
+  {
+    "id": 361,
+    "english": "appeal",
+    "hiragana": "",
+    "vietnamese": "hấp dẫn, lôi cuốn",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The colorful vegetable made the dish look _____ing."
+  },
+  {
+    "id": 362,
+    "english": "arrive",
+    "hiragana": "",
+    "vietnamese": "đến nơi",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "By the time our meal _____ed, it was cold."
+  },
+  {
+    "id": 363,
+    "english": "compromise",
+    "hiragana": "",
+    "vietnamese": "sự thoả hiệp",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The couple made a _____ and ordered food for take out."
+  },
+  {
+    "id": 364,
+    "english": "daring",
+    "hiragana": "",
+    "vietnamese": "táo bạo, liều lĩnh",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Ordering the raw squid seemed quite a _____ thing to do."
+  },
+  {
+    "id": 365,
+    "english": "familiar",
+    "hiragana": "",
+    "vietnamese": "quen thuộc, thông thường",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "It's nice to see some _____ items on the menu."
+  },
+  {
+    "id": 366,
+    "english": "guide",
+    "hiragana": "",
+    "vietnamese": "người hướng dẫn, người chỉ dẫn",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ led our tour group to a small restaurant only known to the locals."
+  },
+  {
+    "id": 367,
+    "english": "majority",
+    "hiragana": "",
+    "vietnamese": "phần lớn, đa số",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ of the group wanted to try the new Chinese restaurant."
+  },
+  {
+    "id": 368,
+    "english": "mix",
+    "hiragana": "",
+    "vietnamese": "trộn lẫn, hoà vào nhau; (n) hỗn hợp",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The _____ of bright colors on the plate was very pleasing."
+  },
+  {
+    "id": 369,
+    "english": "rely",
+    "hiragana": "",
+    "vietnamese": "tin cậy, dựa vào",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I have always ____ed on the restaurant advice this guidebook gives."
+  },
+  {
+    "id": 370,
+    "english": "secure",
+    "hiragana": "",
+    "vietnamese": "đạt được, chiếm được, tìm được, đảm bảo",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The hostess _____ed us another chair, so we could eat together."
+  },
+  {
+    "id": 371,
+    "english": "subjective",
+    "hiragana": "",
+    "vietnamese": "chủ quan",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The reviews in this guidebook are highly _____, but fun to read."
+  },
+  {
+    "id": 372,
+    "english": "suggest",
+    "hiragana": "",
+    "vietnamese": "đề nghị",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I _____ you think about the specials, since they are very good today."
+  },
+  {
+    "id": 373,
+    "english": "basic",
+    "hiragana": "",
+    "vietnamese": "cơ bản, cơ sở",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The new restaurant offers a very _____ menu."
+  },
+  {
+    "id": 374,
+    "english": "complete",
+    "hiragana": "",
+    "vietnamese": "đầy đủ, trọn vẹn, hoàn toàn",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The new restaurant offers a _____ menu of appetizers, entrees, and desserts."
+  },
+  {
+    "id": 375,
+    "english": "excite",
+    "hiragana": "",
+    "vietnamese": "kích thích, kích động, đánh thức cảm xúc",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Exotic flavors always _____ me."
+  },
+  {
+    "id": 376,
+    "english": "flavor",
+    "hiragana": "",
+    "vietnamese": "mùi vị",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The cook changed the _____ of the soup with a unique blend of herbs."
+  },
+  {
+    "id": 377,
+    "english": "forget",
+    "hiragana": "",
+    "vietnamese": "quên",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The waiter _____ to bring rolls, anoying the custormer."
+  },
+  {
+    "id": 378,
+    "english": "ingredient",
+    "hiragana": "",
+    "vietnamese": "thành phần (của 1 hỗn hợp)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "I was unfamiliar with some of the _____ in the dish."
+  },
+  {
+    "id": 379,
+    "english": "judge",
+    "hiragana": "",
+    "vietnamese": "phán đoán, đánh giá",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The restaurant review harshly _____ed the quality of the service."
+  },
+  {
+    "id": 380,
+    "english": "mix-up",
+    "hiragana": "",
+    "vietnamese": "tình trạng lộn xộn, cuộc ẩu đả.",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "There was a _____ in the kitchen so your order will be delayed."
+  },
+  {
+    "id": 381,
+    "english": "patron",
+    "hiragana": "",
+    "vietnamese": "khách hàng quen, khách hàng thường xuyên",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Once the word was out about the new chef, _____s lines up to get into the restaurant."
+  },
+  {
+    "id": 382,
+    "english": "predict",
+    "hiragana": "",
+    "vietnamese": "nói trước, báo trước, dự đoán",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I _____ed this restaurant would become popular and I was right."
+  },
+  {
+    "id": 383,
+    "english": "random",
+    "hiragana": "",
+    "vietnamese": "ngẫn nhiên, tình cờ",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "We made _____ selections from the menu."
+  },
+  {
+    "id": 384,
+    "english": "remind",
+    "hiragana": "",
+    "vietnamese": "nhắc nhở, làm nhớ lại",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Ms. Smith was annoyed at having to _____ the waitress to bring the check."
+  },
+  {
+    "id": 385,
+    "english": "burdensome",
+    "hiragana": "",
+    "vietnamese": "nặng nề, gánh nặng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The ______ load made the deliveryman's back ache."
+  },
+  {
+    "id": 386,
+    "english": "common",
+    "hiragana": "",
+    "vietnamese": "phổ biến, thông thường",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "It is _____ for the office manager to be designated to order lunch for business meetings."
+  },
+  {
+    "id": 387,
+    "english": "delivery",
+    "hiragana": "",
+    "vietnamese": "sự phân phát, sự giao hàng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The restaurant is reluctant to make _____es, but makes exception for your office."
+  },
+  {
+    "id": 388,
+    "english": "elegant",
+    "hiragana": "",
+    "vietnamese": "thanh lịch, tao nhã, thơm ngon (món ăn)",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The lunch we ordered was not _____, but it wwas hearty."
+  },
+  {
+    "id": 389,
+    "english": "fall to",
+    "hiragana": "",
+    "vietnamese": "là trách nhiệm (của...)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The task of preparing the meal _____ the assistant chef when chief chef was ill."
+  },
+  {
+    "id": 390,
+    "english": "impress",
+    "hiragana": "",
+    "vietnamese": "gây ấn tượng, làm cảm kích",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I was _____ed with how quickly they deliveried our lunch."
+  },
+  {
+    "id": 391,
+    "english": "individual",
+    "hiragana": "",
+    "vietnamese": "riêng lẻ, cá nhân, độc đáo, đặc biệt",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "He had the delivery man mark the contents of each _____ order."
+  },
+  {
+    "id": 392,
+    "english": "list",
+    "hiragana": "",
+    "vietnamese": "danh sách; (v) lập danh sách",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The office manager compiled a _____ of everyone's order."
+  },
+  {
+    "id": 393,
+    "english": "multiple",
+    "hiragana": "",
+    "vietnamese": "nhiều, phức tạp",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "It takes _____ steps to get into this building, which frustrates all our employees."
+  },
+  {
+    "id": 394,
+    "english": "narrow",
+    "hiragana": "",
+    "vietnamese": "thu hẹp; (adj) chật hẹp, eo hẹp",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The restaurant has a _____ range of choice, but can offer fast delivery."
+  },
+  {
+    "id": 395,
+    "english": "pick up",
+    "hiragana": "",
+    "vietnamese": "đảm nhiệm, nhận làm",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "If you ask me nicely, I will _____ the order on may way home."
+  },
+  {
+    "id": 396,
+    "english": "settle",
+    "hiragana": "",
+    "vietnamese": "xác định (nơi chốn); thanh toán (hoá đơn), trả (tiền)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "We _____ed the bill with the cashier."
+  },
+  {
+    "id": 397,
+    "english": "accustom to",
+    "hiragana": "",
+    "vietnamese": "làm cho quen, tập cho quen",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Chefs must _____ themselves to working long hours."
+  },
+  {
+    "id": 398,
+    "english": "apprentice",
+    "hiragana": "",
+    "vietnamese": "người học việc, sinh viên tập sự",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Instead of attending cooking school, Raul chose to work as an _____ with a experienced chef."
+  },
+  {
+    "id": 399,
+    "english": "culinary",
+    "hiragana": "",
+    "vietnamese": "liên quan tới bếp núc",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "His interest in ____ arts drew him to a commercial foods program."
+  },
+  {
+    "id": 400,
+    "english": "demanding",
+    "hiragana": "",
+    "vietnamese": "đòi hỏi khắt khe",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Theodore was exhausted by his _____ job in the restaurant."
+  },
+  {
+    "id": 401,
+    "english": "draw",
+    "hiragana": "",
+    "vietnamese": "lôi kéo, thu hút",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "We hope the new restaurant will _____ other business to the area."
+  },
+  {
+    "id": 402,
+    "english": "incorporate",
+    "hiragana": "",
+    "vietnamese": "sát nhập, kết hợp",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Here are the fresh greens for you to _____ into a salad."
+  },
+  {
+    "id": 403,
+    "english": "influx",
+    "hiragana": "",
+    "vietnamese": "sự chảy vào, sự tràn vào",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "An _____ of new chefs is constantly needed to fill open jobs."
+  },
+  {
+    "id": 404,
+    "english": "method",
+    "hiragana": "",
+    "vietnamese": "phương pháp, thủ tục",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Gloria perfected a simple _____ for making croissants."
+  },
+  {
+    "id": 405,
+    "english": "outlet",
+    "hiragana": "",
+    "vietnamese": "lối thoát; phương tiện thoả mãn (chí hướng)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Even before he became a professional baker, Jacob used baking as an _____ for frustration."
+  },
+  {
+    "id": 406,
+    "english": "profession",
+    "hiragana": "",
+    "vietnamese": "nghề nghiệp",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Coooking is considered as much a _____ as is law or medicine."
+  },
+  {
+    "id": 407,
+    "english": "relinquish",
+    "hiragana": "",
+    "vietnamese": "từ bỏ, giao, dâng, nộp",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "People find it hard to _____ their accustomed food preferences and try something new."
+  },
+  {
+    "id": 408,
+    "english": "theme",
+    "hiragana": "",
+    "vietnamese": "đề tài, chủ đề",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The caterers prepared food for a party with a tropical island theme."
+  },
+  {
+    "id": 409,
+    "english": "assist",
+    "hiragana": "",
+    "vietnamese": "giúp đỡ, trợ giúp",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Bonnie hired a secretary to _____ her with the many details of the event."
+  },
+  {
+    "id": 410,
+    "english": "coordinate",
+    "hiragana": "",
+    "vietnamese": "phối hợp, sắp xếp (công việc)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The colors of the flowers were ordered to _____ with the colors in the corporate logo."
+  },
+  {
+    "id": 411,
+    "english": "dimension",
+    "hiragana": "",
+    "vietnamese": "kích thước (dài, rộng, cao...)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "What are the _____s of the ballroom?"
+  },
+  {
+    "id": 412,
+    "english": "exact",
+    "hiragana": "",
+    "vietnamese": "chính xác, đúng đắn",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "We will need an _____ head count by noon tomorrow."
+  },
+  {
+    "id": 413,
+    "english": "general",
+    "hiragana": "",
+    "vietnamese": "chung chung, tổng quát",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "We have a _____ idea of how many guests will attend."
+  },
+  {
+    "id": 414,
+    "english": "ideal",
+    "hiragana": "",
+    "vietnamese": "lý tưởng, tồn tại trong tưởng tượng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The _____ location for the concert would have plenty of parking."
+  },
+  {
+    "id": 415,
+    "english": "lead time",
+    "hiragana": "",
+    "vietnamese": "tiến độ (thời gian giữa lúc bắt đầu và lúc hoàn thành 1 quá trình sản xuất)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "We will need to give the caterer enough _____ to cut the cake."
+  },
+  {
+    "id": 416,
+    "english": "plan",
+    "hiragana": "",
+    "vietnamese": "kế hoạch; (v) lên kế hoạch",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ is to gather tomorrow to discuss the menu."
+  },
+  {
+    "id": 417,
+    "english": "proximity",
+    "hiragana": "",
+    "vietnamese": "sự lân cận, trạng thái gần",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The fans were worried by the _____ of the storm clouds."
+  },
+  {
+    "id": 418,
+    "english": "regulation",
+    "hiragana": "",
+    "vietnamese": "quy định, quy tắc, điều lệ; (v) điều khiển, điều tiết",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "We followed all the state _____s for food safety."
+  },
+  {
+    "id": 419,
+    "english": "site",
+    "hiragana": "",
+    "vietnamese": "nơi, chỗ; (v) đặt, để",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Once we saw the _____, we knew it would be perfect for the event."
+  },
+  {
+    "id": 420,
+    "english": "stage",
+    "hiragana": "",
+    "vietnamese": "trình diễn",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "A historic house can be the perfect site to _____ a small reception."
+  },
+  {
+    "id": 421,
+    "english": "agency",
+    "hiragana": "",
+    "vietnamese": "đại lý, chi nhánh, sở, hãng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Once we decided we wanted to go to Costa Rica for vacation, we called the travel _____ to see how much flights would cost."
+  },
+  {
+    "id": 422,
+    "english": "announcement",
+    "hiragana": "",
+    "vietnamese": "lời tuyên bố, cáo thị, lời thông báo",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Did you hear an _____ about our new departure time."
+  },
+  {
+    "id": 423,
+    "english": "beverage",
+    "hiragana": "",
+    "vietnamese": "đồ uống",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The flight attendant offered all passengers a cold _____ during the flight."
+  },
+  {
+    "id": 424,
+    "english": "blanket",
+    "hiragana": "",
+    "vietnamese": "chăn; (v) phủ lên, che phủ, trùm chăn",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The snow _____ed the windshield, making ti diffucult to see the road."
+  },
+  {
+    "id": 425,
+    "english": "board",
+    "hiragana": "",
+    "vietnamese": "lên tàu/ ăn cơm trọ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "We will _____ the train for New York in ten minutes."
+  },
+  {
+    "id": 426,
+    "english": "claim",
+    "hiragana": "",
+    "vietnamese": "đòi hỏi, yêu sách, thỉnh cầu/ lấy lại, tìm lại được (vật đã mất)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Lost luggage can be _____ed at the airline office."
+  },
+  {
+    "id": 427,
+    "english": "delay",
+    "hiragana": "",
+    "vietnamese": "trì hoãn; (n) khoảng thời gian trì hoãn",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The bus was _____ed due to inclement weather."
+  },
+  {
+    "id": 428,
+    "english": "depart",
+    "hiragana": "",
+    "vietnamese": "rời khỏi, khởi hành/ sao lãng, đi lệch",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "After thw wedding, the married couple _____ed for their honeymoon in Morocco."
+  },
+  {
+    "id": 429,
+    "english": "embark",
+    "hiragana": "",
+    "vietnamese": "lên tàu/ bắt đầu",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "They were nervous, but also excited, to _____ on a long-awaited trip to Africa."
+  },
+  {
+    "id": 430,
+    "english": "itinerary",
+    "hiragana": "",
+    "vietnamese": "nhật ký đường đi; lịch trình",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "I had to change my _____ when I decided to add two more countries to my vacation."
+  },
+  {
+    "id": 431,
+    "english": "prohibit",
+    "hiragana": "",
+    "vietnamese": "cấm, ngăn cấm",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "We were _____ed from wearing casual clothes in the office."
+  },
+  {
+    "id": 432,
+    "english": "valid",
+    "hiragana": "",
+    "vietnamese": "có hiệu lực, hợp lệ",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "I need to make certain that my passport is ____ if we plan to go overseas this December."
+  },
+  {
+    "id": 433,
+    "english": "deal with",
+    "hiragana": "",
+    "vietnamese": "chú trọng, chăm lo/ giải quyết, xoay sở",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Ticket agents must _____ courteously with irate customers."
+  },
+  {
+    "id": 434,
+    "english": "destination",
+    "hiragana": "",
+    "vietnamese": "đích, điểm đến",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The Great Barrier Reef is a popular tourist _____ this year."
+  },
+  {
+    "id": 435,
+    "english": "distinguish",
+    "hiragana": "",
+    "vietnamese": "phân biệt",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Suki was able to _____ between the different types of jets on the runway."
+  },
+  {
+    "id": 436,
+    "english": "economical",
+    "hiragana": "",
+    "vietnamese": "tiết kiệm, kinh tế",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "There are a number of more _____ ways to get to Tokyo from here."
+  },
+  {
+    "id": 437,
+    "english": "equivalent",
+    "hiragana": "",
+    "vietnamese": "tương đương",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The food the airline serves in coach class is _____ to that served in first class."
+  },
+  {
+    "id": 438,
+    "english": "excursion",
+    "hiragana": "",
+    "vietnamese": "cuộc đi tham quan (với giá hạ có định hạn ngày đi và ngày về)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The finance officer was pleased to find an _____ for the entire consulting team."
+  },
+  {
+    "id": 439,
+    "english": "expensive",
+    "hiragana": "",
+    "vietnamese": "đắt",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The shops in the airport are convenient, but I think they are _____."
+  },
+  {
+    "id": 440,
+    "english": "extend",
+    "hiragana": "",
+    "vietnamese": "kéo dài, mở rộng/ dành cho (sự đón tiếp)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "We _____ ed our vacation by a day."
+  },
+  {
+    "id": 441,
+    "english": "prospective",
+    "hiragana": "",
+    "vietnamese": "thuộc tương lai, sẽ tới về sau",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "I narrow my list of _____ destinations to my three top choices."
+  },
+  {
+    "id": 442,
+    "english": "situation",
+    "hiragana": "",
+    "vietnamese": "tình thế, trạng thái",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The vast number of different air fares available makes for a complicated _____."
+  },
+  {
+    "id": 443,
+    "english": "substantial",
+    "hiragana": "",
+    "vietnamese": "giàu có, có tài sản, quan trọng, có giá trị lớn.",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "There is a _____ difference in the price for the two air fares."
+  },
+  {
+    "id": 444,
+    "english": "system",
+    "hiragana": "",
+    "vietnamese": "hệ thống",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The airline _____ covers the entire world with flights."
+  },
+  {
+    "id": 445,
+    "english": "comprehensive",
+    "hiragana": "",
+    "vietnamese": "bao gồm, kể cả/ sáng ý",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Our travel agent have us a _____ travel package, including rail passes."
+  },
+  {
+    "id": 446,
+    "english": "deluxe",
+    "hiragana": "",
+    "vietnamese": "sang trọng, xa xỉ",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "My parents decided to splurge on _____ accommodations for their trip."
+  },
+  {
+    "id": 447,
+    "english": "directory",
+    "hiragana": "",
+    "vietnamese": "sách hướng dẫn, sách chỉ dẫn",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "We consulted the _____ to see where the train station was located."
+  },
+  {
+    "id": 448,
+    "english": "duration",
+    "hiragana": "",
+    "vietnamese": "khoảng thời gian (tồn tại 1 sự việc)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Mother lend me her spare jacket for the _____ of the trip."
+  },
+  {
+    "id": 449,
+    "english": "entitle",
+    "hiragana": "",
+    "vietnamese": "cho quyền",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "During the holiday rush, a train ticket _____ed the passenger to a ride, but not necessarily a seat."
+  },
+  {
+    "id": 450,
+    "english": "fare",
+    "hiragana": "",
+    "vietnamese": "tiền xe, vé (tàu, xe, máy bay)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The train _____ has increased since i rode last."
+  },
+  {
+    "id": 451,
+    "english": "offset",
+    "hiragana": "",
+    "vietnamese": "đền bù, bù đắp",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "By reducing her transportation costs once in the United States, Mrs, Sato _____ the cost of getting to this country."
+  },
+  {
+    "id": 452,
+    "english": "operate",
+    "hiragana": "",
+    "vietnamese": "hoạt động, thực hiện chức năng",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The trains _____s on a punctual schedule."
+  },
+  {
+    "id": 453,
+    "english": "punctual",
+    "hiragana": "",
+    "vietnamese": "đúng giờ",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Please be on time. the train leaves _____ly at noon."
+  },
+  {
+    "id": 454,
+    "english": "relatively",
+    "hiragana": "",
+    "vietnamese": "hơi, tương đối",
+    "hanViet": "",
+    "hint": "(ADV) - Trạng từ",
+    "explanation": "The train is _____ empty for this time of day."
+  },
+  {
+    "id": 455,
+    "english": "remainder",
+    "hiragana": "",
+    "vietnamese": "phần còn lại, chỗ còn lại, số dư",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "We will move you to a less expensive room and credit the _____ of what you've already paid to your charge card."
+  },
+  {
+    "id": 456,
+    "english": "remote",
+    "hiragana": "",
+    "vietnamese": "xa, xa xôi, hẻo lánh",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "I was surprised to find train service to such a _____ location."
+  },
+  {
+    "id": 457,
+    "english": "advance",
+    "hiragana": "",
+    "vietnamese": "sự tiến bộ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Every _____ in technology was evident throughout the hotel's computerized functions."
+  },
+  {
+    "id": 458,
+    "english": "chain",
+    "hiragana": "",
+    "vietnamese": "chuỗi, dây chuyền (làm việc)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The hotel being built in Seoul is the newest one in the _____."
+  },
+  {
+    "id": 459,
+    "english": "check in",
+    "hiragana": "",
+    "vietnamese": "đăng ký tên (khách sạn, sân bay)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Patrons _____ at the hotel immediately upon their arrival."
+  },
+  {
+    "id": 460,
+    "english": "confirm",
+    "hiragana": "",
+    "vietnamese": "xác nhận, phê chuẩn",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Jorge called the hotel to _____ that he had a room reservation."
+  },
+  {
+    "id": 461,
+    "english": "expect",
+    "hiragana": "",
+    "vietnamese": "mong chờ, trông mong/ nghĩ rằng, cho rằng, chắc rằng",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Mr. Kim _____ed that the bed linens would be changed daily."
+  },
+  {
+    "id": 462,
+    "english": "housekeeper",
+    "hiragana": "",
+    "vietnamese": "người coi nhà, người quản gia",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Eloise's first job at the hotel was as a ____ and now she is the manager."
+  },
+  {
+    "id": 463,
+    "english": "notify",
+    "hiragana": "",
+    "vietnamese": "khai báo, thông báo, cho biết",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Lydia _____ed the hotel in writing that she was canceling her reservation."
+  },
+  {
+    "id": 464,
+    "english": "preclude",
+    "hiragana": "",
+    "vietnamese": "ngăn ngừa, loại trừ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The horrible rainstorm _____ed us from traveling any further."
+  },
+  {
+    "id": 465,
+    "english": "quote",
+    "hiragana": "",
+    "vietnamese": "trích dẫn, định giá; (n) đoạn trích dẫn, lời trích dẫn",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "We were _____d a price of $89 for the room for one night."
+  },
+  {
+    "id": 466,
+    "english": "rate",
+    "hiragana": "",
+    "vietnamese": "loại, hạng, sự đánh giá, sự xếp hạng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ for the hotel room is too high considering how few services are available on-site."
+  },
+  {
+    "id": 467,
+    "english": "reserve",
+    "hiragana": "",
+    "vietnamese": "đặt; giữ trước, để dành",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The bride and groom _____ed a block of rooms at the hotel for guests comming to their wedding from out of town."
+  },
+  {
+    "id": 468,
+    "english": "service",
+    "hiragana": "",
+    "vietnamese": "dịch vụ; sự phục vụ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Mr. Rockmont called room _____ to order a late-night snack."
+  },
+  {
+    "id": 469,
+    "english": "busy",
+    "hiragana": "",
+    "vietnamese": "bận rộn/ náo nhiệt, đông đúc",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The airport was busy, with people catching plants and heading for car rentel companies."
+  },
+  {
+    "id": 470,
+    "english": "coincide",
+    "hiragana": "",
+    "vietnamese": "xảy ra đồng thời, trùng khớp với nhau",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Sean was hoping that the days for the special discount on car rentals would _____ with his vacation, but they did not."
+  },
+  {
+    "id": 471,
+    "english": "confusion",
+    "hiragana": "",
+    "vietnamese": "sự mơ hồ, sự rối rắm",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "To avoid any ____ about renting the car, Yolanda asked her travel agent to make the arrangements on her behalf."
+  },
+  {
+    "id": 472,
+    "english": "contact",
+    "hiragana": "",
+    "vietnamese": "liên hệ, liên lạc",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Manuel _____ed at least a dozen car rental agencies to get the best deal."
+  },
+  {
+    "id": 473,
+    "english": "disappoint",
+    "hiragana": "",
+    "vietnamese": "làm thất vọng",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I hate to _____ you, but i can't allow you to rent a car unless you have a major credit card."
+  },
+  {
+    "id": 474,
+    "english": "intend",
+    "hiragana": "",
+    "vietnamese": "có ý định, có ý muốn",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Do you _____ to return the car to this location or to another location?"
+  },
+  {
+    "id": 475,
+    "english": "license",
+    "hiragana": "",
+    "vietnamese": "giấy phép",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "First, I'll need to see your driver's _____ and a major credit card."
+  },
+  {
+    "id": 476,
+    "english": "nervous",
+    "hiragana": "",
+    "vietnamese": "dễ bị kích thích, nóng nảy, hay hoảng sợ",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Lonnie is _____ about driving in the city, so I volunteered to drive that part of the trip."
+  },
+  {
+    "id": 477,
+    "english": "optional",
+    "hiragana": "",
+    "vietnamese": "tuỳ chọn, không bắt buộc",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Having a driver's license is not _____."
+  },
+  {
+    "id": 478,
+    "english": "tempt",
+    "hiragana": "",
+    "vietnamese": "cám dỗ, quyến rũ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I am _____ed by the idea of driving across the country instead of flying."
+  },
+  {
+    "id": 479,
+    "english": "thrill",
+    "hiragana": "",
+    "vietnamese": "sự rùng mình (hoảng sợ), sự rộn ràng (vì vui sướng)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The thought of renting a sports car gave John a _____."
+  },
+  {
+    "id": 480,
+    "english": "tier",
+    "hiragana": "",
+    "vietnamese": "tầng, lớp, bậc",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "If you are on a budget, I suggest you think about renting a car from our lowest _____."
+  },
+  {
+    "id": 481,
+    "english": "attain",
+    "hiragana": "",
+    "vietnamese": "đến tới, đạt được",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The director ____ his goal of an Academy Award."
+  },
+  {
+    "id": 482,
+    "english": "combine",
+    "hiragana": "",
+    "vietnamese": "kết hợp, phối hợp",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The director _____ed two previously separate visual techniques."
+  },
+  {
+    "id": 483,
+    "english": "continue",
+    "hiragana": "",
+    "vietnamese": "tiếp tục, tiếp diễn, duy tri",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The film _____s the story set out in an earlier film."
+  },
+  {
+    "id": 484,
+    "english": "description",
+    "hiragana": "",
+    "vietnamese": "sự mô tả, sự diễn tả",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ of the film did not match what we saw on screen."
+  },
+  {
+    "id": 485,
+    "english": "disperse",
+    "hiragana": "",
+    "vietnamese": "rắc, gieo rắc, truyền (tin)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The reporters _____ed after the press agent cancelled the interview with the film director."
+  },
+  {
+    "id": 486,
+    "english": "entertainment",
+    "hiragana": "",
+    "vietnamese": "sự giải trí, sự tiêu khiển",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The movie was provided for our _____."
+  },
+  {
+    "id": 487,
+    "english": "influence",
+    "hiragana": "",
+    "vietnamese": "ảnh hưởng, tác động",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The editor's style _____ed a generation of film editors."
+  },
+  {
+    "id": 488,
+    "english": "range",
+    "hiragana": "",
+    "vietnamese": "phạm vi, lĩnh vực",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ of the director's vision is impressive."
+  },
+  {
+    "id": 489,
+    "english": "release",
+    "hiragana": "",
+    "vietnamese": "phát hành, cấp phép",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The film was finally _____ed to movie theaters after many delays."
+  },
+  {
+    "id": 490,
+    "english": "represent",
+    "hiragana": "",
+    "vietnamese": "tiêu biểu cho, tượng trưng cho, đại diện cho",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The actor _____ed the ideals of the culture."
+  },
+  {
+    "id": 491,
+    "english": "separate",
+    "hiragana": "",
+    "vietnamese": "riêng rẽ. tách rời",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The financial and artistic team are usually in _____ divisions."
+  },
+  {
+    "id": 492,
+    "english": "successive",
+    "hiragana": "",
+    "vietnamese": "kế tiếp, liên tục, lần lượt",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Somehow the _____ images were interrupted and had to be edited again."
+  },
+  {
+    "id": 493,
+    "english": "action",
+    "hiragana": "",
+    "vietnamese": "hành động; quá trình diễn biến (của vở kichj)",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ on stage was spellbinding."
+  },
+  {
+    "id": 494,
+    "english": "approach",
+    "hiragana": "",
+    "vietnamese": "tiếp cận, lại gần; (n) sự tiếp cận, cách tiếp cận",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The director's _____ to the play was controversial."
+  },
+  {
+    "id": 495,
+    "english": "audience",
+    "hiragana": "",
+    "vietnamese": "khán giả, người xem",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ cheered the actors as they walked off the stage."
+  },
+  {
+    "id": 496,
+    "english": "create",
+    "hiragana": "",
+    "vietnamese": "sáng tạo, tạo nên",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The writer ____ed the characters to represent the seven deadly sins."
+  },
+  {
+    "id": 497,
+    "english": "dialogue",
+    "hiragana": "",
+    "vietnamese": "cuộc hội thoại",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The written _____ seemed great, but was hard to perform."
+  },
+  {
+    "id": 498,
+    "english": "element",
+    "hiragana": "",
+    "vietnamese": "yếu tố, cơ sở",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The audience is an essential _____ of live theater."
+  },
+  {
+    "id": 499,
+    "english": "experience",
+    "hiragana": "",
+    "vietnamese": "kinh nghiệm, điều đã trải qua",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Going to the theatre was not part of Claude's _____ growing up."
+  },
+  {
+    "id": 500,
+    "english": "occur",
+    "hiragana": "",
+    "vietnamese": "xảy ra, xuất hiện",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The murder in the play occurs in the second act."
+  },
+  {
+    "id": 501,
+    "english": "perform",
+    "hiragana": "",
+    "vietnamese": "trình diễn, biểu diễn",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Juan _____ed the role without forgetting any lines."
+  },
+  {
+    "id": 502,
+    "english": "rehearse",
+    "hiragana": "",
+    "vietnamese": "diễn tập, tập kịch",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The players _____ed for only three weeks before the show opened."
+  },
+  {
+    "id": 503,
+    "english": "review",
+    "hiragana": "",
+    "vietnamese": "sự phê bình, bài phê bình (cuốn sách, vở kịch); (v) phê bình",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The newspaper sent a rank amatuer to _____ the play."
+  },
+  {
+    "id": 504,
+    "english": "sold out",
+    "hiragana": "",
+    "vietnamese": "bán hết (vé, hàng)",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "We expect that this play will be a smash and _____ quickly."
+  },
+  {
+    "id": 505,
+    "english": "available",
+    "hiragana": "",
+    "vietnamese": "có sẵn, sẵn sàng để dùng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "I checked the list of _____ compact discs before ordering."
+  },
+  {
+    "id": 506,
+    "english": "broad",
+    "hiragana": "",
+    "vietnamese": "rộng, bao la, mênh mông",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The history of music covers a _____ range of culture and ethnicity."
+  },
+  {
+    "id": 507,
+    "english": "category",
+    "hiragana": "",
+    "vietnamese": "hạng, loại",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Jazz is one of many _____es of music."
+  },
+  {
+    "id": 508,
+    "english": "disparate",
+    "hiragana": "",
+    "vietnamese": "khác hẳn nhau, khác loại",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Religious songs cut across _____ categories of music."
+  },
+  {
+    "id": 509,
+    "english": "divide",
+    "hiragana": "",
+    "vietnamese": "chia, phân chia, tách rời",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The broad topic of music can be _____ed into manageable parts, such as themes, styles, or centuries."
+  },
+  {
+    "id": 510,
+    "english": "favorite",
+    "hiragana": "",
+    "vietnamese": "được ưa thích, được ưa chuộng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Hearing the jazz trio in such a large hall is not my _____ way to enjoy them."
+  },
+  {
+    "id": 511,
+    "english": "instinct",
+    "hiragana": "",
+    "vietnamese": "bản năng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The student's ability to play the cello was so natural, it seemed an _____."
+  },
+  {
+    "id": 512,
+    "english": "preference",
+    "hiragana": "",
+    "vietnamese": "sự thiên vị, sự ưu tiên, sự thích hơn",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "His musical _____ were for contemporary popular music."
+  },
+  {
+    "id": 513,
+    "english": "reason",
+    "hiragana": "",
+    "vietnamese": "lý do",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "We'll never understand the ____ why some music is popular and some is not."
+  },
+  {
+    "id": 514,
+    "english": "relaxation",
+    "hiragana": "",
+    "vietnamese": "sự nghỉ ngơi, sự giải trí",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Listening to soothing music before bedtime provides good _____."
+  },
+  {
+    "id": 515,
+    "english": "taste",
+    "hiragana": "",
+    "vietnamese": "sự nếm (thức ăn), khả năng nhận thức (vị), khiếu thẩm mĩ, khẩu vị",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "This music does not appeal to my _____s; but I'm old fashioned."
+  },
+  {
+    "id": 516,
+    "english": "urge",
+    "hiragana": "",
+    "vietnamese": "nài nỉ, cố thuyết phục/ thúc giục; (n) sự ham muốn mạnh mẽ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I get the urge to play the guitar every time I pass a music store window."
+  },
+  {
+    "id": 517,
+    "english": "acquire",
+    "hiragana": "",
+    "vietnamese": "đạt được, giành được, thu được, kiếm được",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The museum _____ed a Van Gogh during heavy bidding."
+  },
+  {
+    "id": 518,
+    "english": "admire",
+    "hiragana": "",
+    "vietnamese": "ngưỡng mộ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Raisa, _____ing the famous smile, stood before the Mona Lisa for hours"
+  },
+  {
+    "id": 519,
+    "english": "collection",
+    "hiragana": "",
+    "vietnamese": "bộ sưu tập, sự sưu tầm",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The museum's _____ contained many works donated by famous collectors"
+  },
+  {
+    "id": 520,
+    "english": "criticism",
+    "hiragana": "",
+    "vietnamese": "sự phê bình, lời bình phẩm",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The revered artist's _____ of the piece was particularly insighful."
+  },
+  {
+    "id": 521,
+    "english": "express",
+    "hiragana": "",
+    "vietnamese": "biểu lộ (cảm xúc), bày tỏ (ý kiến)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The photograph _____es a range of emotions."
+  },
+  {
+    "id": 522,
+    "english": "fashion",
+    "hiragana": "",
+    "vietnamese": "mốt, thời trang, kiểu cách",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The museum's classical architecture has never gone out of _____."
+  },
+  {
+    "id": 523,
+    "english": "leisure",
+    "hiragana": "",
+    "vietnamese": "thời gian rảnh rỗi, thì giờ rỗi rãi",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "We can go to the permanent collection at our _____."
+  },
+  {
+    "id": 524,
+    "english": "respond",
+    "hiragana": "",
+    "vietnamese": "trả lời, đáp ứng, phản ứng lại",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "You should _____ to the invitation to attend the museum gala."
+  },
+  {
+    "id": 525,
+    "english": "schedule",
+    "hiragana": "",
+    "vietnamese": "lịch trình làm việc, thời gian biểu; (n) lập thời gian biểu, lên lịch làm việc",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The museum offers a _____ of guided tours."
+  },
+  {
+    "id": 526,
+    "english": "significant",
+    "hiragana": "",
+    "vietnamese": "đầy ý nghĩ, quan trọng đáng kể",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The use of lambs to symbolize innocence is _____ in Western art."
+  },
+  {
+    "id": 527,
+    "english": "specialize",
+    "hiragana": "",
+    "vietnamese": "chuyên về, chuyên môn hoá",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The museum shop _____s in Ming vases."
+  },
+  {
+    "id": 528,
+    "english": "spectrum",
+    "hiragana": "",
+    "vietnamese": "một dãy, một chuỗi",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The whole _____ of artistic expression was represented in the water-color."
+  },
+  {
+    "id": 529,
+    "english": "assignment",
+    "hiragana": "",
+    "vietnamese": "sự phân công, sự giao việc, việc được giao",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "When the reporter is on _____, research piles up on her desk."
+  },
+  {
+    "id": 530,
+    "english": "choose",
+    "hiragana": "",
+    "vietnamese": "chọn, lựa",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "I did not _____ that candidate to be the editor of our student newspaper."
+  },
+  {
+    "id": 531,
+    "english": "constant",
+    "hiragana": "",
+    "vietnamese": "hằng số; (adj) không đổi",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "People _____ly look to the news to keep up-to-date on what is going on in the world."
+  },
+  {
+    "id": 532,
+    "english": "constitute",
+    "hiragana": "",
+    "vietnamese": "cấu thành",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "All the different news sources _____ the media industry."
+  },
+  {
+    "id": 533,
+    "english": "decisive",
+    "hiragana": "",
+    "vietnamese": "quả quyết; dứt khoát",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Newspaper editors must be _____ when determining which stories go on the front page."
+  },
+  {
+    "id": 534,
+    "english": "disseminate",
+    "hiragana": "",
+    "vietnamese": "gieo rắc; phổ biến, khuếch tán",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The media _____ news across the world."
+  },
+  {
+    "id": 535,
+    "english": "impact",
+    "hiragana": "",
+    "vietnamese": "sự tác động, sự ảnh hưởng; (v) tác động mạnh vào",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The story of the presidential scandal had a huge _____ on the public."
+  },
+  {
+    "id": 536,
+    "english": "in-depth",
+    "hiragana": "",
+    "vietnamese": "tỉ mỉ, kỹ lưỡng, chu đáo, triệt để, hoàn toàn",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The newspaper gave _____ coverage of the tragic bombing."
+  },
+  {
+    "id": 537,
+    "english": "investigative",
+    "hiragana": "",
+    "vietnamese": "thuộc điều tra nghiên cứu (về thông tin bị che giấu), thuộc tìm hiểu sự thật",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "He is one of the most famous _____ reporters."
+  },
+  {
+    "id": 538,
+    "english": "link",
+    "hiragana": "",
+    "vietnamese": "mối liên hệ, sự liên kết",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The computer _____s will take you to today's headlines"
+  },
+  {
+    "id": 539,
+    "english": "subscriber",
+    "hiragana": "",
+    "vietnamese": "đặt mua dài hạn; (n) thuê bao, người đặt mua",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Jill _____s to a gardening magazine."
+  },
+  {
+    "id": 540,
+    "english": "thorough",
+    "hiragana": "",
+    "vietnamese": "hoàn toàn, kỹ lưỡng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The story was the result of _____ research."
+  },
+  {
+    "id": 541,
+    "english": "annual",
+    "hiragana": "",
+    "vietnamese": "hàng năm",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "I try to schedule my _____ physical right after my birthday."
+  },
+  {
+    "id": 542,
+    "english": "appointment",
+    "hiragana": "",
+    "vietnamese": "sự hẹn gặp, chức vụ được bổ nhiệm",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "To get the most out of your _____, keep a log of your symptoms and concerns."
+  },
+  {
+    "id": 543,
+    "english": "assess",
+    "hiragana": "",
+    "vietnamese": "định giá, đánh giá",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The insurance rate Mr. Victor was _____ed went up this year after he admitted that he had started smoking again."
+  },
+  {
+    "id": 544,
+    "english": "diagnose",
+    "hiragana": "",
+    "vietnamese": "chẩn đoán (bệnh)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "She _____ed the problem as a failure to follow the directions for taking the medication."
+  },
+  {
+    "id": 545,
+    "english": "effective",
+    "hiragana": "",
+    "vietnamese": "có kết quả, có hiệu lực",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The new policies, _____ the beginning of the fiscal year, change the amount charged to see the physician."
+  },
+  {
+    "id": 546,
+    "english": "instrument",
+    "hiragana": "",
+    "vietnamese": "công cụ, phương tiên, trang thiết bị",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The senior physician carried his _____s in a black leather bag."
+  },
+  {
+    "id": 547,
+    "english": "manage",
+    "hiragana": "",
+    "vietnamese": "giải quyết, điều khiển, dạy bảo",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The head nurse's ability to _____ her staff through a difficult time caught the hospital administrator's attention."
+  },
+  {
+    "id": 548,
+    "english": "prevent",
+    "hiragana": "",
+    "vietnamese": "cản trở, gây trở ngại",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "His full caseload _____ed the doctor from taking on new patients."
+  },
+  {
+    "id": 549,
+    "english": "recommend",
+    "hiragana": "",
+    "vietnamese": "khuyên, tiến cử",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The doctor _____ed that Edwin take off at last a week to rest and regain his health."
+  },
+  {
+    "id": 550,
+    "english": "record",
+    "hiragana": "",
+    "vietnamese": "hồ sơ, biên bản, sự ghi chép",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Ms. Han typed a written request for her medical _____s."
+  },
+  {
+    "id": 551,
+    "english": "refer",
+    "hiragana": "",
+    "vietnamese": "ám chỉ, nhắc đến",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "As soon as Agnes ____ed to the failed treatment, everyone's mood soured."
+  },
+  {
+    "id": 552,
+    "english": "serious",
+    "hiragana": "",
+    "vietnamese": "nghiêm trọng, trầm trọng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The impact of the _____ news could be read on everyone's face."
+  },
+  {
+    "id": 553,
+    "english": "aware",
+    "hiragana": "",
+    "vietnamese": "biết, nhận thấy",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "My dentist made me _____ that I should have an appointment twice a year."
+  },
+  {
+    "id": 554,
+    "english": "catch up",
+    "hiragana": "",
+    "vietnamese": "đuổi kịp, bắt kịp",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The dental assistant ______ on her paperwork in between patients."
+  },
+  {
+    "id": 555,
+    "english": "distraction",
+    "hiragana": "",
+    "vietnamese": "sự xao lãng, sự mất tập trung, sự đãng trí, sự giải trí, thú tiêu khiển",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "To provide a ______ from the noise, Luisa's dentist offered her a pair of earphones"
+  },
+  {
+    "id": 556,
+    "english": "encouragement",
+    "hiragana": "",
+    "vietnamese": "sự động viên, sự khuyến khích",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Let me offer you some _____ about your crooked teeth."
+  },
+  {
+    "id": 557,
+    "english": "evident",
+    "hiragana": "",
+    "vietnamese": "hiển nhiên, rõ ràng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The presence of a wisdom tooth was not _____ until the dentist started to examine the patient."
+  },
+  {
+    "id": 558,
+    "english": "habit",
+    "hiragana": "",
+    "vietnamese": "thói quen",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The patient had a _____ of grinding his teeth during his sleep."
+  },
+  {
+    "id": 559,
+    "english": "illuminate",
+    "hiragana": "",
+    "vietnamese": "giải thích, giảng giải, làm sáng tỏ",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Let me turn on more lights to properly ______ the back teeth."
+  },
+  {
+    "id": 560,
+    "english": "irritate",
+    "hiragana": "",
+    "vietnamese": "chọc tức, kích thích (y học)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The broken tooth rubbed againsts my tongue, _____ing it."
+  },
+  {
+    "id": 561,
+    "english": "overview",
+    "hiragana": "",
+    "vietnamese": "tổng quan, sự khái quát",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "I did a quick _____ of your teeth and they look in good shape."
+  },
+  {
+    "id": 562,
+    "english": "position",
+    "hiragana": "",
+    "vietnamese": "vị trí, tư thế, địa vị",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Let me tilt your head to a more comfortable _____ for you."
+  },
+  {
+    "id": 563,
+    "english": "regularly",
+    "hiragana": "",
+    "vietnamese": "thường xuyên, đều đặn, theo quy tắc",
+    "hanViet": "",
+    "hint": "(ADV) - Trạng từ",
+    "explanation": "She brushes _____ after every meal."
+  },
+  {
+    "id": 564,
+    "english": "restore",
+    "hiragana": "",
+    "vietnamese": "phục hồi",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The cleaning _____ed the whiteness of my teeth."
+  },
+  {
+    "id": 565,
+    "english": "allow",
+    "hiragana": "",
+    "vietnamese": "cho phép, chấp nhận",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "My insurance does not _____ me to choose my own hospital."
+  },
+  {
+    "id": 566,
+    "english": "alternative",
+    "hiragana": "",
+    "vietnamese": "sự lựa chọn (một trong hai); phương án thay thế",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "I'd like to know the _____ to this treatment before I agree to it."
+  },
+  {
+    "id": 567,
+    "english": "aspect",
+    "hiragana": "",
+    "vietnamese": "khía cạnh, mặt, diện mạo",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ of HMOs that people most dislike is the lack of personal service."
+  },
+  {
+    "id": 568,
+    "english": "concern",
+    "hiragana": "",
+    "vietnamese": "liên quan, dính líu, quan tâm; (n) việc phải lo",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Whenever I have health _____s, I call my doctor."
+  },
+  {
+    "id": 569,
+    "english": "emphasize",
+    "hiragana": "",
+    "vietnamese": "nhấn mạnh, đề cao",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The nurse _____ed the importance of eating a balanced diet."
+  },
+  {
+    "id": 570,
+    "english": "incur",
+    "hiragana": "",
+    "vietnamese": "hình thành, ra đời, thừa hưởng",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Dominic _____s the cost of a co-payment at each doctor's visit"
+  },
+  {
+    "id": 571,
+    "english": "personnel",
+    "hiragana": "",
+    "vietnamese": "nhân viên, công chức",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The office manager insteaded that she need more _____ to finish the project on time."
+  },
+  {
+    "id": 572,
+    "english": "policy",
+    "hiragana": "",
+    "vietnamese": "chính sách",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Company _____ did not provide for overtime pay."
+  },
+  {
+    "id": 573,
+    "english": "portion",
+    "hiragana": "",
+    "vietnamese": "phần, đoạn, khúc",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "A _____ of my benefits is my health care coverage."
+  },
+  {
+    "id": 574,
+    "english": "regardless",
+    "hiragana": "",
+    "vietnamese": "bất chấp, mặc dù",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "_____ of the cost, we all need health insurance."
+  },
+  {
+    "id": 575,
+    "english": "salary",
+    "hiragana": "",
+    "vietnamese": "lương tháng",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The receptionist believed that he worked too hard for such a small _____."
+  },
+  {
+    "id": 576,
+    "english": "suitable",
+    "hiragana": "",
+    "vietnamese": "phù hợp, thích ứng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "I have finally found a health plan that is _____ for my needs."
+  },
+  {
+    "id": 577,
+    "english": "admit",
+    "hiragana": "",
+    "vietnamese": "cho vào, nhận vào",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The staff refused to _____ the patient until he had proof of insurance."
+  },
+  {
+    "id": 578,
+    "english": "authorization",
+    "hiragana": "",
+    "vietnamese": "sự cho phép, sự cấp phép, sự phê chuẩn",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The nurse could not submit an _____ over the phone, it had to be done in writing."
+  },
+  {
+    "id": 579,
+    "english": "designate",
+    "hiragana": "",
+    "vietnamese": "chỉ định, chọn lựa, bổ nhiệm",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "On her admittance form, Grandmother _____ed Aunt Tessa as her chief decision-maker."
+  },
+  {
+    "id": 580,
+    "english": "escort",
+    "hiragana": "",
+    "vietnamese": "người dẫn đường, người đi theo, người hộ tống",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "You cannot leave the unit on your own, you'll have to wait for an _____."
+  },
+  {
+    "id": 581,
+    "english": "identify",
+    "hiragana": "",
+    "vietnamese": "xác định, định danh, nhận dạng, đồng nhất hoá, coi như nhau",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Your medical records are all marked with your patient number to _____ them in case of a mix-up."
+  },
+  {
+    "id": 582,
+    "english": "mission",
+    "hiragana": "",
+    "vietnamese": "sứ mệnh, nhiệm vụ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The hospital chaplain took as his _____ to visit every patients admitted each day."
+  },
+  {
+    "id": 583,
+    "english": "permit",
+    "hiragana": "",
+    "vietnamese": "cho phép",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "Would you check with the nurse to see if I am _____ed to eat before surgery."
+  },
+  {
+    "id": 584,
+    "english": "pertinent",
+    "hiragana": "",
+    "vietnamese": "phù hợp, có liên quan",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "The patient's health record contained _____ information, like the dates of all his inoculations."
+  },
+  {
+    "id": 585,
+    "english": "procedure",
+    "hiragana": "",
+    "vietnamese": "thủ tục, chuỗi hành động (cần được hoàn thành để thực hiện cái gì).",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Can the hospital to schedule this _____ for tomorrow."
+  },
+  {
+    "id": 586,
+    "english": "result",
+    "hiragana": "",
+    "vietnamese": "hậu quả, kết quả",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Your lab _____s won't be ready for hours"
+  },
+  {
+    "id": 587,
+    "english": "statement",
+    "hiragana": "",
+    "vietnamese": "bản kê khai, bản báo cáo tài chính",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The billing _____ was filed with the insurance company last month."
+  },
+  {
+    "id": 588,
+    "english": "usual",
+    "hiragana": "",
+    "vietnamese": "thường lệ, thường dùng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "It is not _____ for that kind of surgery to be performed on an outpatient basic."
+  },
+  {
+    "id": 589,
+    "english": "consult",
+    "hiragana": "",
+    "vietnamese": "hỏi ý kiến, tham khảo",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "May I _____ with you about a drug interaction case I have?"
+  },
+  {
+    "id": 590,
+    "english": "control",
+    "hiragana": "",
+    "vietnamese": "chỉ huy, điều khiển, kiểm soát",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "To _____ the cost of this medication, you may get the generic verson."
+  },
+  {
+    "id": 591,
+    "english": "convenient",
+    "hiragana": "",
+    "vietnamese": "thuận tiện, dễ dàng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Is this a _____ location for you to pick up your prescription?"
+  },
+  {
+    "id": 592,
+    "english": "detect",
+    "hiragana": "",
+    "vietnamese": "dò tìm, xác định",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "My doctor put me through some simple tests to _____ if I have asthma."
+  },
+  {
+    "id": 593,
+    "english": "factor",
+    "hiragana": "",
+    "vietnamese": "nhân tố, yếu tố tạo thành",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "Could my cat be a _____ contributing to my asthma."
+  },
+  {
+    "id": 594,
+    "english": "interaction",
+    "hiragana": "",
+    "vietnamese": "sự ảnh hưởng lẫn nhau, tác động qua lại",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The _____ between the patient and the doctor showed a high level of trust."
+  },
+  {
+    "id": 595,
+    "english": "limit",
+    "hiragana": "",
+    "vietnamese": "giới hạn, hạn độ",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "My presciption has a _____ of three refills."
+  },
+  {
+    "id": 596,
+    "english": "monitor",
+    "hiragana": "",
+    "vietnamese": "theo dõi, giám sát (= keep track of)",
+    "hanViet": "",
+    "hint": "(V) - Động từ",
+    "explanation": "The patient had weekly appointments so that the doctor could _____ her progress."
+  },
+  {
+    "id": 597,
+    "english": "potential",
+    "hiragana": "",
+    "vietnamese": "khả năng",
+    "hanViet": "",
+    "hint": "(A) - Tính từ",
+    "explanation": "Given the _____ delay in getting reimbursed by the health plan, why don't we just fill one prescription today?"
+  },
+  {
+    "id": 598,
+    "english": "sample",
+    "hiragana": "",
+    "vietnamese": "mẫu, (v) lấy mẫu, thử mẫu",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "The pharmacist gave Myra a few free _____s of the allergy medication."
+  },
+  {
+    "id": 599,
+    "english": "sense",
+    "hiragana": "",
+    "vietnamese": "cảm giác, khả năng phán đoán",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "I got the _____ it would be better to get my prescription filled right away."
+  },
+  {
+    "id": 600,
+    "english": "volunteer",
+    "hiragana": "",
+    "vietnamese": "tình nguyện viên ; (v) xung phong làm",
+    "hanViet": "",
+    "hint": "(N) - Danh từ",
+    "explanation": "My doctor _____ed to call the drugstore, so my medication would be waiting for me."
+  }
+]
