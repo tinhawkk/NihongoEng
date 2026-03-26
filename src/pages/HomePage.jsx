@@ -24,16 +24,17 @@ import {
   Trash2,
   Brain,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { getSeasonalEvent, getDailyQuote, checkLunarEvents } from "../services/seasonalService";
 import { nhostService } from "../services/nhostService";
 import { useBookmarkStore } from "../store/useBookmarkStore";
 import { useUserStore } from "../store/useUserStore";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { CrudModal } from "../components/ui/CrudModal";
 import { ExcelImportModal } from "../components/ui/ExcelImportModal";
 import { getDueItems } from "../utils/srsUtils";
 import { renderMarkdownFurigana as renderFurigana } from "../utils/furigana";
+import { createCommunityRoot } from "../services/nhostService";
 
 const mainDecks = [
   {
@@ -315,6 +316,29 @@ const JLPTCountdown = () => {
 };
 
 export const HomePage = () => {
+  // State cho modal tạo danh mục gốc
+  const [createRootOpen, setCreateRootOpen] = useState(false);
+  const [newRootTitle, setNewRootTitle] = useState("");
+  const [newRootDesc, setNewRootDesc] = useState("");
+  const [createRootSaving, setCreateRootSaving] = useState(false);
+
+  // Hàm tạo danh mục gốc mới
+  const handleCreateRoot = async () => {
+    if (!newRootTitle.trim()) return;
+    setCreateRootSaving(true);
+    try {
+      await createCommunityRoot({ title: newRootTitle, description: newRootDesc });
+      await fetchCommunityData(); // Refresh UI
+      setCreateRootOpen(false);
+      setNewRootTitle("");
+      setNewRootDesc("");
+    } catch (e) {
+      console.error("Failed to create new category:", e);
+      alert("Đã xảy ra lỗi khi tạo danh mục mới. Vui lòng thử lại.");
+    } finally {
+      setCreateRootSaving(false);
+    }
+  };
   const navigate = useNavigate();
   const [event, setEvent] = useState(getSeasonalEvent());
   const [quote, setQuote] = useState(getDailyQuote());
@@ -513,8 +537,9 @@ export const HomePage = () => {
       label: "Thêm thần tốc bằng JSON Array (Bỏ qua các ô trên)",
       type: "textarea",
       description:
-        'Dán một danh sách JSON mẫu: [ { "word": "...", "meaning": "..." } ]. Toàn bộ các ô trên sẽ bị bỏ qua nếu ô này có dữ liệu.',
-      placeholder: 'VD: [ { "word": "食べる", "meaning": "Ăn" }, ... ]',
+        'Dán JSON mẫu (JP/EN đều được): [ { "word": "...", "meaning": "..." } ]. Toàn bộ các ô trên sẽ bị bỏ qua nếu ô này có dữ liệu.',
+      placeholder:
+        'VD JP: [ { "word": "食べる", "meaning": "Ăn" } ] | VD EN: [ { "word": "abandon", "meaning": "từ bỏ" } ]',
     },
   ];
 
@@ -1384,7 +1409,7 @@ export const HomePage = () => {
                     setNewFolderTitle("");
                     setCreateFolderOpen(true);
                   }}
-                  className="px-6 py-2.5 bg-indigo-500 text-white text-[10px] font-black rounded-xl uppercase tracking-widest shadow-lg hover:bg-indigo-600 transition-all"
+                  className="px-6 py-2.5 bg-indigo-500 text-white text-xs font-black rounded-xl uppercase tracking-widest shadow-lg hover:bg-indigo-600 transition-all"
                 >
                   + Tạo phần mới
                 </button>
@@ -1584,7 +1609,7 @@ export const HomePage = () => {
                   Cảm hứng
                 </h4>
               </div>
-              <p className="text-lg md:text-3xl font-black text-slate-800 dark:text-slate-100 leading-tight mb-3">
+              <p className="text-lg md:text-3xl font-black text-slate-800 dark:text-white leading-tight mb-3">
                 「{renderFurigana(quote.ja)}」
               </p>
               <p className="text-sm font-bold text-slate-400">{quote.vi}</p>
@@ -1892,9 +1917,9 @@ export const HomePage = () => {
                           )}
                         </div>
                         <div
-                          className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${isExpanded ? "bg-slate-800 border-slate-800 text-white rotate-180" : "border-slate-100 dark:border-slate-700 text-slate-300 group-hover:bg-indigo-500 group-hover:text-white group-hover:border-indigo-500"}`}
+                          className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-700 ${isExpanded ? "bg-[#009245] text-white rotate-180 border-[#009245] shadow-md shadow-green-200" : "border-slate-100 dark:border-slate-700 text-slate-300 group-hover:text-white group-hover:bg-[#009245] group-hover:border-[#009245]"}`}
                         >
-                          {isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+                          <ChevronDown size={18} />
                         </div>
                       </div>
                     </motion.div>
@@ -1905,9 +1930,9 @@ export const HomePage = () => {
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
                           transition={{ duration: 0.3 }}
-                          className="overflow-hidden px-6 pb-8"
+                          className="bg-white dark:bg-slate-800/40 rounded-[32px] mt-2 border-2 border-slate-100 dark:border-slate-800 shadow-xl overflow-hidden relative"
                         >
-                          {renderTreeContent(root, false)}
+                          {renderMoriTimeline(root, deck)}
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -2096,8 +2121,136 @@ export const HomePage = () => {
                     Khám phá thư viện từ vựng cộng đồng
                   </p>
                 </div>
+                <button
+                  onClick={() => setCreateRootOpen(true)}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-black rounded-xl shadow-lg shadow-indigo-200/30 transition-all hover:scale-105"
+                >
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+                    <path
+                      fill="currentColor"
+                      d="M12 5v14m7-7H5"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  Tạo danh mục mới
+                </button>
               </header>
-
+              {/* Modal tạo danh mục gốc mới */}
+              {createRootOpen && (
+                <div
+                  className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+                  onClick={() => setCreateRootOpen(false)}
+                >
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                    className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border-2 border-slate-100 dark:border-slate-700 w-full max-w-md mx-4 overflow-hidden"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-500/20 rounded-xl flex items-center justify-center">
+                          <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+                            <path
+                              fill="currentColor"
+                              d="M12 5v14m7-7H5"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-black text-slate-800 dark:text-white">
+                            Tạo danh mục mới
+                          </h3>
+                          <p className="text-xs text-slate-400 font-bold">
+                            Thêm danh mục gốc cho cộng đồng
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => setCreateRootOpen(false)}
+                        className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                      >
+                        <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+                          <path
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="p-6 space-y-4">
+                      <div>
+                        <label className="block text-xs font-black text-slate-600 dark:text-slate-300 mb-1.5">
+                          Tên danh mục *
+                        </label>
+                        <input
+                          type="text"
+                          value={newRootTitle}
+                          onChange={e => setNewRootTitle(e.target.value)}
+                          placeholder="VD: TIẾNG ANH - Khóa học cộng đồng"
+                          className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white font-bold text-sm outline-none focus:border-indigo-400 transition-colors"
+                          autoFocus
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-black text-slate-600 dark:text-slate-300 mb-1.5">
+                          Mô tả (tùy chọn)
+                        </label>
+                        <input
+                          type="text"
+                          value={newRootDesc}
+                          onChange={e => setNewRootDesc(e.target.value)}
+                          placeholder="VD: Từ vựng cộng đồng cho tiếng Anh"
+                          className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white font-bold text-sm outline-none focus:border-indigo-400 transition-colors"
+                        />
+                      </div>
+                      <div className="flex gap-3 pt-2">
+                        <button
+                          onClick={() => setCreateRootOpen(false)}
+                          className="flex-1 px-4 py-3 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-2xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-all"
+                        >
+                          Hủy
+                        </button>
+                        <button
+                          onClick={handleCreateRoot}
+                          disabled={!newRootTitle.trim() || createRootSaving}
+                          className={`flex-1 px-4 py-3 font-black rounded-2xl transition-all flex items-center justify-center gap-2 ${
+                            newRootTitle.trim() && !createRootSaving
+                              ? "bg-indigo-500 hover:bg-indigo-600 text-white shadow-lg shadow-indigo-200/50"
+                              : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                          }`}
+                        >
+                          {createRootSaving ? (
+                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          ) : (
+                            <>
+                              <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+                                <path
+                                  fill="currentColor"
+                                  d="M12 5v14m7-7H5"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                              Tạo danh mục
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
               <motion.div
                 variants={itemVars}
                 className="flex items-center gap-3 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-2xl px-5 py-3 shadow-sm"
@@ -2128,7 +2281,6 @@ export const HomePage = () => {
                   <FileSpreadsheet size={15} /> Import Excel
                 </button>
               </motion.div>
-
               <div className="space-y-6">
                 {(() => {
                   const premiumKeywords = [
@@ -2244,7 +2396,7 @@ export const HomePage = () => {
                               </button>
                             </div>
                             <div
-                              className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${isExpanded ? "bg-slate-800 border-slate-800 text-white rotate-180" : "bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400"}`}
+                              className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${isExpanded ? "bg-slate-800 border-slate-800 text-white rotate-180" : "border-slate-100 dark:border-slate-700 text-slate-300 group-hover:bg-indigo-500 group-hover:text-white group-hover:border-indigo-500"}`}
                             >
                               <ChevronDown size={20} />
                             </div>

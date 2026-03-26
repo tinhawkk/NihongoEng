@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useDragControls } from "framer-motion";
 import { useUserStore } from "../store/useUserStore";
 import { Play, Pause, Coffee, ArrowRight, Focus, Sparkles, GripVertical } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { sounds } from "../utils/sounds";
 
 export const PomodoroMini = () => {
     const navigate = useNavigate();
@@ -14,14 +15,15 @@ export const PomodoroMini = () => {
     const [mode, setMode] = useState("focus");
     const [isHovered, setIsHovered] = useState(false);
     const dragControls = useDragControls();
-    const [dragOffset, setDragOffset] = useState(() => {
-        try {
-            const saved = window.localStorage.getItem("pomodoro-mini-pos");
-            return saved ? JSON.parse(saved) : { x: 0, y: 0 };
-        } catch (e) {
-            return { x: 0, y: 0 };
+    const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+    
+    // Initial load from store for dragOffset if it existed
+    useEffect(() => {
+        if (account?.pomodoro?.miniPos) {
+            setDragOffset(account.pomodoro.miniPos);
         }
-    });
+    }, []);
+
 
     const userName = account?.displayName?.split(' ')[0] || "Bạn";
     const isPomodoroPage = location.pathname === "/pomodoro";
@@ -31,57 +33,36 @@ export const PomodoroMini = () => {
     useEffect(() => {
         stateRef.current = { timeLeft, isActive, mode };
     }, [timeLeft, isActive, mode]);    // Initialization & Storage Event Listener (Instant Sync across tabs)
+    // 1. Sync FROM Store: Listen for updates (e.g. from other tabs or the main page)
+    const lastRemoteTimeRef = useRef(null);
     useEffect(() => {
-        const loadFromStorage = () => {
-            try {
-                const raw = window.localStorage.getItem("pomodoro-timer-state");
-                if (raw) {
-                    const p = JSON.parse(raw);
-                    if (typeof p.turnTimeLeft === 'number' && !isNaN(p.turnTimeLeft)) {
-                        let exactTimeLeft = p.turnTimeLeft;
-                        // Correct for background time based on absolute timestamps
-                        if (p.isActive && p.savedAt) {
-                            const elapsed = Math.floor((Date.now() - p.savedAt) / 1000);
-                            exactTimeLeft = Math.max(0, p.turnTimeLeft - elapsed);
-                        }
-                        setTimeLeft(exactTimeLeft);
-                    }
-                    if (typeof p.isActive === 'boolean') setIsActive(p.isActive);
-                    if (p.mode) setMode(p.mode);
-                }
-            } catch(e) {}
-        };
-
-        loadFromStorage();
-        
-        // Listen to storage events from other tabs (INSTANT SYNC)
-        const handleStorage = (e) => {
-            if (e.key === "pomodoro-timer-state") loadFromStorage();
-        };
-
-        window.addEventListener("storage", handleStorage);
-        return () => window.removeEventListener("storage", handleStorage);
-    }, []);
-
-    // 1. DỮ LIỆU ĐỒNG BỘ: Liên tục đồng bộ với Store khi ở trang chính (để các component khác biết)
-    useEffect(() => {
-        if (isPomodoroPage) {
-            updatePomodoroData({ timeLeft, isActive, mode });
+        if (account?.pomodoro) {
+            const p = account.pomodoro;
+            // Only update local state if the remote value actually changed to avoid render loops
+            if (typeof p.timeLeft === 'number' && !isNaN(p.timeLeft) && p.timeLeft !== lastRemoteTimeRef.current) {
+                lastRemoteTimeRef.current = p.timeLeft;
+                setTimeLeft(p.timeLeft);
+            }
+            if (typeof p.isActive === 'boolean') setIsActive(p.isActive);
+            if (p.mode) setMode(p.mode);
         }
-    }, [isPomodoroPage, timeLeft, isActive, mode]);
+    }, [account?.pomodoro]);
 
-    // 2. CHẠY NGẦM: Khi rời trang, PomodoroMini sẽ tự động đếm ngược
+
+    // 2. DỮ LIỆU ĐỒNG BỘ: Đã bị xóa để tránh vòng lặp vô tận (Infinite Loop)
+    // PomodoroMini sẽ PUSH dữ liệu qua updatePomodoroData chỉ khi KHÔNG ở trang /pomodoro (xem useEffect ở dưới)
+    // PomodoroPage sẽ chịu trách nhiệm PUSH dữ liệu khi trực tiếp ở trang đó.
+
+    // 2. CHẠY NGẦM: PomodoroMini là "trái tim" đếm ngược của cả hệ thống
     useEffect(() => {
         let interval = null;
-        if (!isPomodoroPage && isActive && timeLeft > 0) {
+        if (isActive && timeLeft > 0) {
             interval = setInterval(() => {
                 setTimeLeft(prev => {
                     const next = prev - 1;
                     if (next <= 0) {
                         setIsActive(false);
-                        try {
-                           new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg").play();
-                        } catch(e) {}
+                        sounds.playNotification();
                         return 0;
                     }
                     return next;
@@ -89,37 +70,52 @@ export const PomodoroMini = () => {
             }, 1000);
         }
         return () => clearInterval(interval);
-    }, [isActive, timeLeft, isPomodoroPage]);
+    }, [isActive, timeLeft]);
 
-    // 3. GHI NHẬN TIẾN TRÌNH: Khi chạy ngầm, sync dữ liệu ngược lại LocalStorage và Store
+    // 3. ĐỒNG BỘ NHANH (LocalStorage & Store): Dùng để khôi phục khi F5/Crash
     useEffect(() => {
-        if (isPomodoroPage) return; // Nếu ở trang chính thì ko ghi đè
-
-        const sync = () => {
-            const { timeLeft: t, isActive: a, mode: m } = stateRef.current;
-            
-            // Sync to LocalStorage for PomodoroPage to resume pixel-perfectly
-            try {
-                let existing = {};
-                const raw = window.localStorage.getItem("pomodoro-timer-state");
-                if (raw) existing = JSON.parse(raw);
-                
-                const nextState = {
-                    ...existing,
-                    turnTimeLeft: t,
-                    isActive: a,
-                    mode: m,
-                    savedAt: Date.now()
-                };
-                window.localStorage.setItem("pomodoro-timer-state", JSON.stringify(nextState));
-            } catch(e) {}
-
-            updatePomodoroData({ timeLeft: t, isActive: a, mode: m });
-        };
-        const timer = setInterval(sync, 1000); // 1s sync when in background for smoothness
+        const syncState = { timeLeft, isActive, mode, timestamp: Date.now() };
+        localStorage.setItem("pomodoro_persistent_state", JSON.stringify(syncState));
         
-        return () => clearInterval(timer);
-    }, [isPomodoroPage, updatePomodoroData]);
+        // Cập nhật Store định kỳ để các trang khác (PomodoroPage) thấy được
+        const throttledUpdate = setTimeout(() => {
+            updatePomodoroData({ timeLeft, isActive, mode });
+        }, 100);
+        return () => clearTimeout(throttledUpdate);
+    }, [timeLeft, isActive, mode, updatePomodoroData]);
+
+    // 4. CLOUD SYNC (Nhost): Định kỳ mỗi 60s lưu lên server để đồng bộ đa thiết bị
+    const lastSyncTimeRef = useRef(Date.now());
+    useEffect(() => {
+        const now = Date.now();
+        // Cứ mỗi 60 giây hoặc khi trạng thái quan trọng thay đổi (Active/Inactive) thì đẩy lên Nhost
+        if (now - lastSyncTimeRef.current > 60000) {
+            lastSyncTimeRef.current = now;
+            updatePomodoroData({ timeLeft, isActive, mode }, true); // Force sync
+        }
+    }, [timeLeft, isActive, mode, updatePomodoroData]);
+
+    // 5. AUTO-RECOVERY: Khi mới load app, kiểm tra xem có timer nào đang chạy dở ko
+    useEffect(() => {
+        const saved = localStorage.getItem("pomodoro_persistent_state");
+        if (saved) {
+            try {
+                const { timeLeft: st, isActive: sa, mode: sm, timestamp: sp } = JSON.parse(saved);
+                if (sa) {
+                    const secondsPassed = Math.floor((Date.now() - sp) / 1000);
+                    const actualTimeLeft = Math.max(0, st - secondsPassed);
+                    setTimeLeft(actualTimeLeft);
+                    setIsActive(actualTimeLeft > 0);
+                    setMode(sm);
+                } else {
+                    setTimeLeft(st);
+                    setMode(sm);
+                }
+            } catch (e) {
+                console.error("Failed to restore pomodoro state", e);
+            }
+        }
+    }, []);
 
     const formatTime = (seconds) => {
         const s = Number(seconds);
@@ -129,8 +125,8 @@ export const PomodoroMini = () => {
         return `${m}:${sec < 10 ? "0" : ""}${sec}`;
     };
 
-    const showMini = account?.pomodoro?.showMini;
-    const shouldShow = !isPomodoroPage && account && showMini && (isActive || timeLeft < (mode === 'focus' ? 25 * 60 : 5 * 60));
+    const showMini = account?.pomodoro?.showMini !== false; // Default true
+    const shouldShow = !isPomodoroPage && account && showMini && (isActive || timeLeft < (mode === 'focus' ? (account?.pomodoro?.targetGoal || 25) * 60 : 15 * 60));
 
     // Dynamic content based on mode and status
     const getGreeting = () => {
@@ -143,7 +139,7 @@ export const PomodoroMini = () => {
     };
 
     const isFocus = mode === 'focus';
-    const totalTime = isFocus ? 25 * 60 : 5 * 60;
+    const totalTime = isFocus ? (account?.pomodoro?.targetGoal || 25) * 60 : (mode === 'shortBreak' ? 5 * 60 : 15 * 60);
     const progress = Math.max(0, Math.min(100, 100 - (timeLeft / totalTime) * 100));
 
     // Also update Store if users click Play/Pause directly on the widget
@@ -152,20 +148,6 @@ export const PomodoroMini = () => {
         const nextState = !isActive;
         setIsActive(nextState);
         
-        // Immediate sync to localStorage
-        try {
-            let existing = {};
-            const raw = window.localStorage.getItem("pomodoro-timer-state");
-            if (raw) existing = JSON.parse(raw);
-            window.localStorage.setItem("pomodoro-timer-state", JSON.stringify({
-                ...existing,
-                turnTimeLeft: timeLeft,
-                isActive: nextState,
-                mode,
-                savedAt: Date.now()
-            }));
-        } catch(e) {}
-
         // Khi tương tác từ Mini, luôn giữ showMini = true
         updatePomodoroData({ timeLeft, isActive: nextState, mode, showMini: true });
     };
@@ -181,7 +163,7 @@ export const PomodoroMini = () => {
                     onDragEnd={(e, info) => {
                         const newPos = { x: dragOffset.x + info.offset.x, y: dragOffset.y + info.offset.y };
                         setDragOffset(newPos);
-                        window.localStorage.setItem("pomodoro-mini-pos", JSON.stringify(newPos));
+                        updatePomodoroData({ miniPos: newPos });
                     }}
                     initial={{ scale: 0.8, y: 100, opacity: 0 }}
                     animate={{ 

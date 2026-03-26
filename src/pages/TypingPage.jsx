@@ -9,8 +9,10 @@ import { loadDeck } from "../api/loader";
 import { useUserStore } from "../store/useUserStore";
 import { useBookmarkStore } from "../store/useBookmarkStore";
 import { tts } from "../utils/tts";
+import { sounds } from "../utils/sounds";
 import { nhostService } from "../services/nhostService";
 import confetti from "canvas-confetti";
+import { romajiToHiragana } from "../utils/kana";
 
 const DECK_COLORS = {
   n1: "#FF4B4B", n2: "#FF9600", n3: "#1CB0F6", n4: "#58CC02", n5: "#A855F7",
@@ -103,8 +105,9 @@ export const TypingPage = () => {
         const normalized = data.map(w => ({
           ...w,
           word: w.word || w.english || "",
-          furigana: w.furigana || w.hiragana || "",
+          furigana: w.furigana || w.reading || w.hiragana || "",
           meaning: w.meaning || w.hanViet || w.vietnamese || "",
+          example: w.example || w.explanation || w.example_jp || "",
         }));
         // Filter to items that have reading
         const withReading = normalized.filter(w => w.furigana?.trim());
@@ -140,6 +143,7 @@ export const TypingPage = () => {
     
     if (isCorrect) {
       setScore(s => ({ ...s, correct: s.correct + 1 }));
+      sounds.playBeep(880, 100, 0.1);
       tts.playWithFallback(card.audio, card.word);
       // Update SRS - typing correct = Good
       updateSrsItem(card.id || card.word, card, 3, {
@@ -149,6 +153,7 @@ export const TypingPage = () => {
       });
     } else {
       setScore(s => ({ ...s, wrong: s.wrong + 1 }));
+      sounds.playError();
       // Update SRS - typing wrong = Again
       updateSrsItem(card.id || card.word, card, 0, {
         source: "typing",
@@ -376,8 +381,10 @@ export const TypingPage = () => {
                 <p className="text-sm font-bold text-slate-600 dark:text-slate-400">
                   Đáp án: <span className="text-lg font-black text-slate-800 dark:text-white">{card?.furigana}</span>
                 </p>
-                {card?.example_jp && (
-                  <p className="text-xs text-slate-400 mt-2 font-bold italic">{card.example_jp}</p>
+                {card?.example && (
+                   <p className="text-sm text-slate-500 mt-3 font-medium italic font-jp border-l-4 border-purple-200 pl-4 py-1.5 bg-slate-50 dark:bg-slate-900/40 rounded-r-xl">
+                    {card.example}
+                  </p>
                 )}
               </motion.div>
             )}

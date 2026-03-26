@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { loadDeck } from "../api/loader";
 import confetti from "canvas-confetti";
 import { useUserStore } from "../store/useUserStore";
+import { sounds } from "../utils/sounds";
 
 // Helper to shuffle arrays properly
 function shuffle(arr) {
@@ -48,17 +49,11 @@ export const SpeedGamePage = () => {
   const account = useUserStore(s => s.account);
   const [highScore, setHighScore] = useState(0);
 
-  // Sync high score with server and local storage
+  // Load high score from arenaProgress
   useEffect(() => {
-    const localKey = `speed_high_score_${selectedLevel}`;
-    const localHigh = parseInt(localStorage.getItem(localKey) || "0");
-    // Get per-level score from account if it exists
     const levelProgress = account?.arenaProgress?.levelScores?.[selectedLevel] || {};
     const serverHigh = levelProgress.bestScore || 0;
-    const finalHigh = Math.max(localHigh, serverHigh);
-    
-    setHighScore(finalHigh);
-    if (finalHigh > localHigh) localStorage.setItem(localKey, finalHigh.toString());
+    setHighScore(serverHigh);
   }, [selectedLevel, account?.arenaProgress]);
   const [countdown, setCountdown] = useState(null);
   const [streak, setStreak] = useState(0);
@@ -195,11 +190,8 @@ export const SpeedGamePage = () => {
 
   useEffect(() => {
     if (gameState === "finished") {
-      const currentHighScore = parseInt(
-        localStorage.getItem(`speed_high_score_${selectedLevel}`) || "0"
-      );
-      if (score > currentHighScore) {
-        localStorage.setItem(`speed_high_score_${selectedLevel}`, score.toString());
+      const currentServerBest = account?.arenaProgress?.levelScores?.[selectedLevel]?.bestScore || 0;
+      if (score > currentServerBest) {
         setHighScore(score);
         confetti({ particleCount: 200, spread: 90, origin: { y: 0.7 } });
         // celebration sound
@@ -303,27 +295,11 @@ export const SpeedGamePage = () => {
     playBeep(980, 120);
   };
 
-  // Simple WebAudio beep for feedback (no external files)
+  // Web Audio Context is now managed by sounds utility
+    
+  // Simple WebAudio beep for feedback (no external files) - OPTIMIZED for zero delay
   function playBeep(freq = 440, duration = 150) {
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.type = "sine";
-      o.frequency.value = freq;
-      o.connect(g);
-      g.connect(ctx.destination);
-      g.gain.setValueAtTime(0.0001, ctx.currentTime);
-      o.start();
-      g.gain.exponentialRampToValueAtTime(0.15, ctx.currentTime + 0.01);
-      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration / 1000);
-      setTimeout(() => {
-        o.stop();
-        ctx.close();
-      }, duration + 20);
-    } catch (e) {
-      // ignore
-    }
+     sounds.playBeep(freq, duration);
   }
 
   return (
@@ -438,7 +414,7 @@ export const SpeedGamePage = () => {
                           {lv.id === "eng" ? "TIẾNG ANH" : `TRÌNH ĐỘ ${lv.label}`}
                         </p>
                         <p className="text-xs text-slate-400 font-bold">
-                          Kỷ lục: {localStorage.getItem(`speed_high_score_${lv.id}`) || "0"} điểm
+                          Kỷ lục: {account?.arenaProgress?.levelScores?.[lv.id]?.bestScore || "0"} điểm
                         </p>
                       </div>
                     </div>

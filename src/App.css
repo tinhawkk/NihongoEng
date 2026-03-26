@@ -80,3 +80,34 @@ button {
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #E2E8F0;
 }
+
+/* Basic prose-like typography for crawled HTML */
+.prose {
+  color: #475569;
+}
+.prose b, .prose strong {
+  font-weight: 800;
+  color: #1a1a1a;
+}
+.prose rt {
+  color: #94a3b8;
+  font-size: 0.6em;
+}
+.prose ruby {
+  ruby-align: center;
+}
+.prose br {
+  display: block;
+  margin-bottom: 0.25rem;
+  content: "";
+}
+
+.dark .prose {
+  color: #cbd5e1;
+}
+.dark .prose b, .dark .prose strong {
+  color: #f8fafc;
+}
+.dark .prose rt {
+  color: #64748b;
+}

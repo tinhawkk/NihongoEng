@@ -12,7 +12,15 @@ const NHOST_URL =
   (import.meta.env.VITE_NHOST_BACKEND_URL
     ? import.meta.env.VITE_NHOST_BACKEND_URL + "/v1/graphql"
     : null);
+
 const ADMIN_SECRET = import.meta.env.VITE_HASURA_ADMIN_SECRET;
+
+if (!NHOST_URL || !ADMIN_SECRET) {
+  console.warn(
+    "[Nhost] Missing VITE_NHOST_GRAPHQL_URL or VITE_HASURA_ADMIN_SECRET. Sync will fail."
+  );
+}
+
 const searchCache = new Map();
 
 function getCached(key) {
@@ -193,6 +201,7 @@ function normalizeTermForCompare(t) {
     .replace(/\p{Diacritic}/gu, "")
     .toLowerCase();
 }
+
 // ── CRUD Mutations ──────────────────────────────────────────────────
 
 const MUTATIONS = {
@@ -300,7 +309,7 @@ const MUTATIONS = {
   DELETE_DECK: `mutation DeleteDeck($id: String!) {
     delete_decks_by_pk(id: $id) { id }
   }`,
-  
+
   // ─ community_folders ─
   INSERT_FOLDER: `mutation InsertFolder($obj: folders_insert_input!) {
     insert_folders_one(object: $obj) { id title parent_id }
@@ -311,7 +320,7 @@ const MUTATIONS = {
   DELETE_FOLDER: `mutation DeleteFolder($id: String!) {
     delete_folders_by_pk(id: $id) { id }
   }`,
-  
+
   // ─ radicals ─
   BULK_INSERT_RADICALS: `mutation BulkInsertRadicals($objects: [radicals_insert_input!]!) {
     insert_radicals(objects: $objects) {
@@ -320,13 +329,52 @@ const MUTATIONS = {
   }`,
 };
 
+MUTATIONS.CREATE_COMMUNITY_ROOT = `
+  mutation CreateCommunityRoot($id: uuid!, $title: String!, $description: String) {
+    insert_folders_one(object: { id: $id, title: $title, description: $description }) {
+      id
+      title
+      description
+      created_at
+    }
+  }
+`;
+
+async function createCommunityRoot({ title, description }) {
+  let uuid;
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    uuid = crypto.randomUUID();
+  } else {
+    uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+      const r = (Math.random() * 16) | 0;
+      const v = c === "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  }
+
+  const response = await fetchGraphQL(MUTATIONS.CREATE_COMMUNITY_ROOT, "CreateCommunityRoot", {
+    id: uuid,
+    title,
+    description: description || "",
+  });
+
+  if (response.errors) {
+    console.error("Error creating community root:", response.errors);
+    throw new Error(response.errors[0].message);
+  }
+
+  return response.data.insert_folders_one;
+}
+
+export { createCommunityRoot };
+
 export const nhostService = {
   fetchGraphQL, // Export the base fetch function for custom queries
-  
+
   async searchDictionary(term) {
     const raw = (term || "").trim();
     if (!raw) return [];
-    
+
     const cacheKey = `dict_${raw}`;
     if (getCached(cacheKey)) return getCached(cacheKey);
 
@@ -485,7 +533,7 @@ export const nhostService = {
   async searchGeneralKanji(term) {
     const raw = (term || "").trim();
     if (!raw) return [];
-    
+
     const kanaTerm = romajiToHiragana(raw);
     const cacheKey = `kanji_${raw}`;
     if (getCached(cacheKey)) return getCached(cacheKey);
@@ -515,7 +563,7 @@ export const nhostService = {
       if (ra !== rb) return ra - rb;
       return (a.kanji || "").localeCompare(b.kanji || "");
     });
-    
+
     setCached(cacheKey, items);
     return items;
   },
@@ -532,7 +580,7 @@ export const nhostService = {
       termLike: `%${raw}%`,
       kanaLike: `%${kanaTerm}%`,
     });
-    
+
     console.debug(`[Search] term: ${raw}, kana: ${kanaTerm}, results:`, data);
 
     // Normalize and merge results
@@ -577,7 +625,7 @@ export const nhostService = {
     }));
 
     const result = [...myVoca, ...japVoca, ...japKanji, ...grammar];
-    
+
     // Deduplicate by word and type to prevent redundant results
     const seen = new Set();
     const finalResult = result.filter(item => {
@@ -634,11 +682,7 @@ export const nhostService = {
     const cacheKey = "radicals_all";
     if (getCached(cacheKey)) return getCached(cacheKey);
 
-    const { data, errors } = await fetchGraphQL(
-      QUERIES.LIST_RADICALS,
-      "ListRadicals",
-      {}
-    );
+    const { data, errors } = await fetchGraphQL(QUERIES.LIST_RADICALS, "ListRadicals", {});
     if (errors) {
       console.error("[Nhost] getRadicals error:", errors);
       return [];

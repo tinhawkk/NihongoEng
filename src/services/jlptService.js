@@ -76,5 +76,18 @@ export const jlptService = {
     const { data, error } = await nhostService.fetchGraphQL(mutation, 'UpdateExplanation', { id: questionId, explanation });
     if (error) throw error;
     return data?.update_jlpt_practice_questions_by_pk;
+  },
+
+  async uploadExam(examData) {
+    const mutation = `
+      mutation InsertExam($object: jlpt_practice_exams_insert_input!) {
+        insert_jlpt_practice_exams_one(object: $object) {
+          id
+        }
+      }
+    `;
+    const { data, error } = await nhostService.fetchGraphQL(mutation, 'InsertExam', { object: examData });
+    if (error) throw error;
+    return data?.insert_jlpt_practice_exams_one;
   }
 };

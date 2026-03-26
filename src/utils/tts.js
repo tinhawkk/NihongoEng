@@ -6,24 +6,31 @@
 class TTSProvider {
   constructor() {
     this.synth = window.speechSynthesis;
-    this.voice = null;
+    this.jaVoice = null;
+    this.enVoice = null;
     this.currentAudio = null;
     this.playbackId = 0; 
-    this.resolveCurrent = null; // Callback để giải phóng Promise đang chờ
+    this.resolveCurrent = null;
     
     if (this.synth.onvoiceschanged !== undefined) {
-      this.synth.onvoiceschanged = () => this.loadVoice();
+      this.synth.onvoiceschanged = () => this.loadVoices();
     }
-    this.loadVoice();
+    this.loadVoices();
   }
 
-  loadVoice() {
+  loadVoices() {
     const voices = this.synth.getVoices();
-    // Ưu tiên các giọng nói chất lượng cao (Natural, Neural, Google)
-    this.voice = voices.find(v => (v.lang.startsWith('ja')) && (v.name.includes('Natural') || v.name.includes('Neural'))) 
-                 || voices.find(v => (v.lang.startsWith('ja')) && v.name.includes('Google'))
+    // Japanese
+    this.jaVoice = voices.find(v => v.lang.startsWith('ja') && (v.name.includes('Natural') || v.name.includes('Neural'))) 
+                 || voices.find(v => v.lang.startsWith('ja') && v.name.includes('Google'))
                  || voices.find(v => v.lang.startsWith('ja')) 
                  || voices[0];
+    
+    // English
+    this.enVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Neural')))
+                 || voices.find(v => v.lang.startsWith('en') && v.name.includes('Google'))
+                 || voices.find(v => v.lang.startsWith('en-US'))
+                 || voices.find(v => v.lang.startsWith('en'));
   }
 
   stop() {
@@ -39,7 +46,6 @@ class TTSProvider {
       this.currentAudio = null;
     }
 
-    // GIẢI PHÓNG PROMISE ĐANG TREO (CỰC KỲ QUAN TRỌNG)
     if (this.resolveCurrent) {
         this.resolveCurrent();
         this.resolveCurrent = null;
@@ -48,56 +54,75 @@ class TTSProvider {
     return this.playbackId;
   }
 
-  async speak(text, rate = 1.0, pitch = 1.0) {
+  async speak(text, options = {}) {
     if (!text) return;
+    const { lang = 'ja-JP', rate = 1.0, pitch = 1.0 } = options;
     const cleanText = text.replace(/[\[\(\{（].*?[\]\)\}）]/g, '').trim();
     const currentId = this.stop();
 
-    // Đối với chế độ đọc chậm, ưu tiên sử dụng Offline TTS vì nó xử lý giãn âm thanh tốt hơn online
-    if (rate < 0.9 || pitch !== 1.0) {
-      return this.speakOffline(cleanText, rate, pitch);
+    const voice = lang.startsWith('ja') ? this.jaVoice : this.enVoice;
+
+    // Prefer High Quality Local Voice (INSTANT)
+    if (voice && rate >= 0.9 && pitch === 1.0) {
+      this.speakOffline(cleanText, { lang, rate, pitch, voice });
+      return;
     }
 
-    try {
-      // Tối ưu hóa URL Google TTS: Chỉ làm chậm vừa phải để giữ độ trong của tiếng
-      const speed = rate < 1 ? 0.45 : 1; 
-      const googleTtsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q=${encodeURIComponent(cleanText)}&ttsspeed=${speed}`;
-      
-      const audio = new Audio(googleTtsUrl);
-      this.currentAudio = audio;
-      // KHÔNG dùng audio.playbackRate ở đây nữa để tránh méo tiếng 2 lần
-      
-      await audio.play();
-      if (this.playbackId !== currentId) {
-          audio.pause();
-          audio.src = "";
+    // Fallback to Google TTS (only for Japanese for now as it was prioritized)
+    if (lang.startsWith('ja')) {
+      try {
+        const speed = rate < 1 ? 0.45 : 1; 
+        const googleTtsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q=${encodeURIComponent(cleanText)}&ttsspeed=${speed}`;
+        
+        const audio = new Audio(googleTtsUrl);
+        this.currentAudio = audio;
+        await audio.play();
+        
+        if (this.playbackId !== currentId) {
+            audio.pause();
+            audio.src = "";
+        }
+        return;
+      } catch (error) {
+        // ignore and fallback
       }
-    } catch (error) {
-      if (this.playbackId === currentId) {
-          this.speakOffline(cleanText, rate, pitch);
-      }
+    }
+
+    if (this.playbackId === currentId) {
+        this.speakOffline(cleanText, { lang, rate, pitch, voice });
     }
   }
 
-  speakOffline(text, rate = 0.9, pitch = 1.0) {
+  speakOffline(text, options = {}) {
     if (!text) return;
+    const { lang = 'ja-JP', rate = 1.0, pitch = 1.0, voice = null } = options;
     const cleanText = text.replace(/[\[\(\{（].*?[\]\)\}）]/g, '').trim();
+    
+    // Brief cancel to ensure priority
     this.synth.cancel();
+    
     const utterance = new SpeechSynthesisUtterance(cleanText);
-    if (this.voice) {
-      utterance.voice = this.voice;
+    const selectedVoice = voice || (lang.startsWith('ja') ? this.jaVoice : this.enVoice);
+    
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
     }
-    utterance.lang = 'ja-JP';
+    utterance.lang = lang;
     utterance.rate = rate;
     utterance.pitch = pitch;
-    this.synth.speak(utterance);
+    
+    // Small timeout to allow synth to recover (chrome fix)
+    setTimeout(() => {
+        this.synth.speak(utterance);
+    }, 10);
   }
 
-  playWithFallback(url, text, rate = 1.0) {
+  playWithFallback(url, text, options = {}) {
+    const { lang = 'ja-JP', rate = 1.0 } = options;
     const currentId = this.stop();
 
     if (!url) {
-      this.speak(text, rate);
+      this.speak(text, options);
       return;
     }
 
@@ -109,8 +134,8 @@ class TTSProvider {
       if (this.playbackId !== currentId) return;
       audio.pause();
       audio.src = "";
-      this.speak(text, rate);
-    }, 3000);
+      this.speak(text, options);
+    }, 2500); // Reduced timeout for snappier fallback
 
     audio.onplay = () => {
       if (this.playbackId !== currentId) {
@@ -124,14 +149,14 @@ class TTSProvider {
     audio.onerror = () => {
       clearTimeout(timeout);
       if (this.playbackId === currentId) {
-          this.speak(text, rate);
+          this.speak(text, options);
       }
     };
 
     audio.play().catch(() => {
       clearTimeout(timeout);
       if (this.playbackId === currentId) {
-          this.speak(text, rate);
+          this.speak(text, options);
       }
     });
   }
@@ -143,7 +168,7 @@ class TTSProvider {
       if (this.playbackId !== currentId) break;
       
       await new Promise((resolve) => {
-        this.resolveCurrent = resolve; // Đăng ký callback để interrupt
+        this.resolveCurrent = resolve;
         
         if (item.url) {
           const audio = new Audio(item.url);
@@ -157,18 +182,18 @@ class TTSProvider {
           };
           audio.onerror = () => {
              if (this.playbackId !== currentId) return resolve();
-             this.speakOffline(item.text, rate * 0.9, item.pitch || 1.0);
+             this.speakOffline(item.text, { rate: rate * 0.9, pitch: item.pitch || 1.0 });
              setTimeout(resolve, (1500 + item.text.length * 50) / rate);
           };
           
           audio.play().catch(() => {
              if (this.playbackId !== currentId) return resolve();
-             this.speakOffline(item.text, rate * 0.9, item.pitch || 1.0);
+             this.speakOffline(item.text, { rate: rate * 0.9, pitch: item.pitch || 1.0 });
              setTimeout(resolve, (1500 + item.text.length * 50) / rate);
           });
         } else {
           if (this.playbackId !== currentId) return resolve();
-          this.speakOffline(item.text, rate * 1.0, item.pitch || 1.0);
+          this.speakOffline(item.text, { rate: rate * 1.0, pitch: item.pitch || 1.0 });
           setTimeout(() => {
               this.resolveCurrent = null;
               resolve();

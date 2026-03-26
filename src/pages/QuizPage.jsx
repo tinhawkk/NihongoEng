@@ -21,6 +21,7 @@ import confetti from "canvas-confetti";
 import { Button } from "../components/ui/Button";
 import { useUserStore } from "../store/useUserStore";
 import { tts } from "../utils/tts";
+import { sounds } from "../utils/sounds";
 import { ConfirmModal } from "../components/ui/ConfirmModal";
 
 const DECK_LABELS = {
@@ -584,6 +585,9 @@ export const QuizPage = () => {
     if (isCorrect) {
       scoreRef.current += 1;
       setScore(s => s + 1);
+      sounds.playBeep(880, 150, 0.1);
+    } else {
+      sounds.playError();
     }
 
     // Auto mode: advance after 1.2s (Good rating by default in auto mode)

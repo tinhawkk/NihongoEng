@@ -181,7 +181,7 @@ export const useUserStore = create(
         }),
 
       // Remove specific SRS item
-      removeSrsItem: wordId =>
+      removeSrsItem: wordId => {
         set(state => {
           if (!state.account?.srsData) return state;
           const newSrsData = { ...state.account.srsData };
@@ -192,10 +192,17 @@ export const useUserStore = create(
               srsData: newSrsData,
             },
           };
-        }),
+        });
+
+        const state = get();
+        if (state.isAuthenticated && state.account) {
+          const data = collectSyncData(useUserStore, useBookmarkStore);
+          if (data) saveProgressToNhost(data);
+        }
+      },
 
       // Reset all SRS data and progress for testing
-      resetSRS: () =>
+      resetSRS: () => {
         set(state => {
           if (!state.account) return state;
           return {
@@ -206,7 +213,14 @@ export const useUserStore = create(
               streak: [],
             },
           };
-        }),
+        });
+
+        const state = get();
+        if (state.isAuthenticated && state.account) {
+          const data = collectSyncData(useUserStore, useBookmarkStore);
+          if (data) saveProgressToNhost(data);
+        }
+      },
 
       theme: "light", // 'light' | 'dark'
       toggleTheme: () => set(state => ({ theme: state.theme === "light" ? "dark" : "light" })),

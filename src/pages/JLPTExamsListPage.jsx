@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   ChevronLeft,
   Headphones,
+  UploadCloud,
 } from "lucide-react";
 
 const EXAMS_PER_PAGE = 12;
@@ -40,8 +41,35 @@ export const JLPTExamsListPage = () => {
   const [examType, setExamType] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
   const quizHistory = useUserStore(s => s.account?.quizHistory || []);
+
+  const handleFileUpload = async event => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const text = await file.text();
+      const examData = JSON.parse(text);
+      
+      // Gán đúng level tab đang chọn nếu file chưa có
+      if (!examData.level) examData.level = activeTab;
+      
+      await jlptService.uploadExam(examData);
+      
+      alert(`Đã thêm thành công đề thi ${examData.title}!`);
+      const grouped = await jlptService.getExamsByLevel();
+      setExamsByLevel(grouped);
+      event.target.value = null; // reset
+    } catch (err) {
+      console.error("Upload failed", err);
+      alert("Lỗi khi thêm đề: " + err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchExams = async () => {
@@ -123,6 +151,19 @@ export const JLPTExamsListPage = () => {
             <p className="text-sm md:text-lg text-slate-400 font-bold max-w-xl">
               Kho đề thi phong phú giúp bạn quen với nhịp độ thi JLPT thực tế.
             </p>
+          </div>
+          <div className="flex shrink-0">
+            <input type="file" id="exam-upload" accept=".json" onChange={handleFileUpload} className="hidden" />
+            <button
+               disabled={uploading}
+               onClick={() => document.getElementById("exam-upload").click()}
+               className="flex items-center gap-2 px-4 py-3 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-2xl font-black text-slate-500 dark:text-slate-300 transition-all border-2 border-slate-200 dark:border-slate-600 active:scale-95 disabled:opacity-50"
+            >
+               <UploadCloud size={20} className={uploading ? "animate-bounce text-[#1CB0F6]" : ""} />
+               <span className="hidden sm:inline">
+                 {uploading ? "ĐANG TẢI..." : `THÊM BẰNG JSON`}
+               </span>
+            </button>
           </div>
         </div>
       </div>

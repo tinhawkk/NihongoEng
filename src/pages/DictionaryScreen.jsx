@@ -22,6 +22,8 @@ import { KanjiWriter } from "../components/ui/KanjiWriter";
 import { KanjiWriterModal } from "../components/ui/KanjiWriterModal";
 import { useUserStore } from "../store/useUserStore";
 
+import { tts } from "../utils/tts";
+
 const LEVEL_LABELS = { n5: "N5", n4: "N4", n3: "N3", n2: "N2", n1: "N1" };
 const LEVEL_COLORS = { n5: "#58CC02", n4: "#FF9600", n3: "#FF4B4B", n2: "#A342FF", n1: "#37464F" };
 const JA_LEVELS = ["n5", "n4", "n3", "n2", "n1"];
@@ -78,9 +80,7 @@ const EnglishSearch = ({
   }, [searchTerm]);
 
   const playAudio = (word, type = "us") => {
-    const utterance = new SpeechSynthesisUtterance(word);
-    utterance.lang = type === "us" ? "en-US" : "en-GB";
-    window.speechSynthesis.speak(utterance);
+    tts.speak(word, { lang: type === "us" ? "en-US" : "en-GB" });
   };
 
   const handleBookmark = item => {
@@ -667,15 +667,11 @@ const JapaneseSearch = ({
                   <button
                     onClick={() => {
                       const text = selectedWord.type === "kanji" ? selectedWord.word : (selectedWord.word + " " + (selectedWord.reading || ""));
-                      const utterance = new SpeechSynthesisUtterance(text);
-                      utterance.lang = "ja-JP";
-                      window.speechSynthesis.speak(utterance);
+                      tts.speak(text, { lang: "ja-JP" });
                     }}
                     onMouseEnter={() => {
                       const text = selectedWord.type === "kanji" ? selectedWord.word : (selectedWord.word + " " + (selectedWord.reading || ""));
-                      const utterance = new SpeechSynthesisUtterance(text);
-                      utterance.lang = "ja-JP";
-                      window.speechSynthesis.speak(utterance);
+                      tts.speak(text, { lang: "ja-JP" });
                     }}
                     className="p-2.5 bg-blue-50 dark:bg-blue-500/10 rounded-2xl text-blue-500 hover:bg-blue-100 transition-all"
                     title="Nghe phát âm"

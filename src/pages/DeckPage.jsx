@@ -65,9 +65,9 @@ const DECK_COLORS = {
   it: "#6366f1",
 };
 
-const parseRelatedVoca = (relatedVoca) => {
+const parseRelatedVoca = relatedVoca => {
   if (!relatedVoca) return [];
-  if (typeof relatedVoca === 'string') {
+  if (typeof relatedVoca === "string") {
     try {
       return JSON.parse(relatedVoca);
     } catch {
@@ -81,18 +81,18 @@ export const DeckPage = () => {
   const { deckId } = useParams();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   const currentPage = parseInt(searchParams.get("p")) || 1;
   const search = searchParams.get("q") || "";
   const filterType = searchParams.get("filter") || "all";
 
-  const setCurrentPage = (val) => {
+  const setCurrentPage = val => {
     const next = new URLSearchParams(searchParams);
-    next.set("p", typeof val === 'function' ? val(currentPage) : val);
+    next.set("p", typeof val === "function" ? val(currentPage) : val);
     setSearchParams(next, { replace: true });
   };
 
-  const setSearch = (val) => {
+  const setSearch = val => {
     const next = new URLSearchParams(searchParams);
     if (val) next.set("q", val);
     else next.delete("q");
@@ -100,7 +100,7 @@ export const DeckPage = () => {
     setSearchParams(next, { replace: true });
   };
 
-  const setFilterType = (val) => {
+  const setFilterType = val => {
     const next = new URLSearchParams(searchParams);
     next.set("filter", val);
     next.delete("p"); // Reset page when filtering
@@ -165,7 +165,11 @@ export const DeckPage = () => {
 
   const vocaFields = [
     { key: "word", label: "Từ vựng / Hán tự", placeholder: "例: 食べる / 日" },
-    { key: "furigana", label: "Furigana / Reading", placeholder: "たべる (hoặc để trống nếu là Kanji đơn)" },
+    {
+      key: "furigana",
+      label: "Furigana / Reading",
+      placeholder: "たべる (hoặc để trống nếu là Kanji đơn)",
+    },
     { key: "meaning", label: "Nghĩa", placeholder: "Ăn / Ngày" },
     { key: "han_viet", label: "Hán Việt", placeholder: "Thực / Nhật" },
     { key: "onyomi", label: "Onyomi", placeholder: "ショK, ニチ (Âm Ôn)" },
@@ -199,7 +203,13 @@ export const DeckPage = () => {
         { key: "m", label: "Nghĩa", placeholder: "chú ý" },
       ],
     },
-    { key: "raw_json", label: "Nhập nhanh bằng JSON Array (Bỏ qua các ô trên)", type: "textarea", placeholder: "[ { \"word\": \"...\", \"meaning\": \"...\" }, ... ]" },
+    {
+      key: "raw_json",
+      label: "Nhập nhanh bằng JSON Array (Bỏ qua các ô trên)",
+      type: "textarea",
+      placeholder:
+        'VD JP: [ { "word": "食べる", "meaning": "Ăn" } ] | VD EN: [ { "word": "abandon", "meaning": "từ bỏ" } ]',
+    },
   ];
 
   const openCreate = () => {
@@ -225,7 +235,10 @@ export const DeckPage = () => {
       example_vi: word.exampleMeaning || "",
       mnemonic: word.mnemonic || "",
       radical_analysis: word.radicalAnalysis || "",
-      related_voca: typeof word.relatedVoca === 'string' ? word.relatedVoca : JSON.stringify(word.relatedVoca || []),
+      related_voca:
+        typeof word.relatedVoca === "string"
+          ? word.relatedVoca
+          : JSON.stringify(word.relatedVoca || []),
       level: word.level || deckId.toUpperCase(),
     });
     setCrudOpen(true);
@@ -241,44 +254,45 @@ export const DeckPage = () => {
       const { raw_json, ...fields } = formData;
 
       if (crudMode === "create") {
-         if (raw_json && raw_json.trim().startsWith("[")) {
-            const parsed = JSON.parse(raw_json);
-            if (Array.isArray(parsed)) {
-               const bucket = parsed.map(item => ({
-                  ...item,
-                  id: generateUUID(),
-                  level: finalLevel
-               }));
-               const { errors } = await nhostService.bulkInsertMyVoca(bucket);
-               if (errors?.length) throw new Error(errors[0].message);
-               // Refresh list after bulk
-               loadDeck(deckId, source).then(setWords);
-               alert(`Đã thêm thành công ${bucket.length} từ vựng!`);
-            }
-         } else {
-            if (!fields.word?.trim() || !fields.meaning?.trim()) {
-               throw new Error("Hãy nhập ít nhất 'Từ vựng' và 'Nghĩa' hoặc sử dụng ô nhập JSON.");
-            }
-            const obj = { 
-               ...fields, 
-               id: generateUUID(), 
-               level: finalLevel,
-               type: fields.onyomi || fields.kunyomi || fields.related_voca ? "kanji" : "voca"
-            };
-            const { errors } = await nhostService.createRow(table, obj);
+        if (raw_json && raw_json.trim().startsWith("[")) {
+          const parsed = JSON.parse(raw_json);
+          if (Array.isArray(parsed)) {
+            const bucket = parsed.map(item => ({
+              ...item,
+              id: generateUUID(),
+              level: finalLevel,
+            }));
+            const { errors } = await nhostService.bulkInsertMyVoca(bucket);
             if (errors?.length) throw new Error(errors[0].message);
-            setWords(prev => [obj, ...prev]);
-            addToast("Đã thêm thành công!", "success");
-         }
+            // Refresh list after bulk
+            loadDeck(deckId, source).then(setWords);
+            alert(`Đã thêm thành công ${bucket.length} từ vựng!`);
+          }
+        } else {
+          if (!fields.word?.trim() || !fields.meaning?.trim()) {
+            throw new Error("Hãy nhập ít nhất 'Từ vựng' và 'Nghĩa' hoặc sử dụng ô nhập JSON.");
+          }
+          const obj = {
+            ...fields,
+            id: generateUUID(),
+            level: finalLevel,
+            type: fields.onyomi || fields.kunyomi || fields.related_voca ? "kanji" : "voca",
+          };
+          const { errors } = await nhostService.createRow(table, obj);
+          if (errors?.length) throw new Error(errors[0].message);
+          setWords(prev => [obj, ...prev]);
+          addToast("Đã thêm thành công!", "success");
+        }
       } else {
         const { id, ...setFields } = fields;
-        const autoType = setFields.onyomi || setFields.kunyomi || setFields.related_voca ? "kanji" : "voca";
+        const autoType =
+          setFields.onyomi || setFields.kunyomi || setFields.related_voca ? "kanji" : "voca";
         const finalSet = { ...setFields, type: autoType };
 
         const { errors } = await nhostService.updateRow(table, crudItem.id, finalSet);
         if (errors?.length) throw new Error(errors[0].message);
 
-        setWords(prev => prev.map(w => w.id === crudItem.id ? { ...w, ...finalSet } : w));
+        setWords(prev => prev.map(w => (w.id === crudItem.id ? { ...w, ...finalSet } : w)));
         addToast("Đã cập nhật!", "success");
       }
       setCrudOpen(false);
@@ -309,7 +323,7 @@ export const DeckPage = () => {
   const isBookmarked = word => bookmarks.some(b => b.word === word);
 
   // JSON Import helper functions
-  const handleJsonTextChange = (text) => {
+  const handleJsonTextChange = text => {
     const trimmed = text.trim();
     if (!trimmed) {
       setJsonPreview({ count: 0, valid: false, error: "" });
@@ -318,17 +332,29 @@ export const DeckPage = () => {
     try {
       const parsed = JSON.parse(trimmed);
       if (!Array.isArray(parsed)) {
-        setJsonPreview({ count: 0, valid: false, error: "JSON phải là một mảng (Array), bắt đầu bằng [ và kết thúc bằng ]" });
+        setJsonPreview({
+          count: 0,
+          valid: false,
+          error: "JSON phải là một mảng (Array), bắt đầu bằng [ và kết thúc bằng ]",
+        });
         return;
       }
       if (parsed.length === 0) {
-        setJsonPreview({ count: 0, valid: false, error: "Mảng JSON rỗng, hãy thêm ít nhất 1 từ vựng" });
+        setJsonPreview({
+          count: 0,
+          valid: false,
+          error: "Mảng JSON rỗng, hãy thêm ít nhất 1 từ vựng",
+        });
         return;
       }
       // Validate each item has at least 'word' and 'meaning'
       const invalid = parsed.filter((item, i) => !item.word?.trim() || !item.meaning?.trim());
       if (invalid.length > 0) {
-        setJsonPreview({ count: 0, valid: false, error: `Có ${invalid.length} mục thiếu trường "word" hoặc "meaning"` });
+        setJsonPreview({
+          count: 0,
+          valid: false,
+          error: `Có ${invalid.length} mục thiếu trường "word" hoặc "meaning"`,
+        });
         return;
       }
       setJsonPreview({ count: parsed.length, valid: true, error: "" });
@@ -344,21 +370,21 @@ export const DeckPage = () => {
       const parsed = JSON.parse(jsonText.trim());
       const currentTitle = deckMetadata?.title || DECK_LABELS[deckId] || deckId;
       const finalLevel = currentTitle.toUpperCase();
-      
+
       const bucket = parsed.map(item => ({
         ...item,
         id: generateUUID(),
         level: finalLevel,
         type: item.onyomi || item.kunyomi || item.radical_analysis ? "kanji" : "voca",
       }));
-      
+
       const { errors } = await nhostService.bulkInsertMyVoca(bucket);
       if (errors?.length) throw new Error(errors[0].message);
-      
+
       // Refresh word list
       const data = await loadDeck(deckId, source);
       setWords(data);
-      
+
       setJsonImportOpen(false);
       setJsonText("");
       setJsonPreview({ count: 0, valid: false, error: "" });
@@ -549,7 +575,9 @@ export const DeckPage = () => {
           <Button
             variant="secondary"
             onClick={() =>
-              navigate(`/flashcards/${deckId}${filterType !== "all" ? "?filter=" + filterType : ""}`)
+              navigate(
+                `/flashcards/${deckId}${filterType !== "all" ? "?filter=" + filterType : ""}`
+              )
             }
             className="w-full h-full relative overflow-hidden group py-3 lg:py-2.5"
           >
@@ -557,9 +585,11 @@ export const DeckPage = () => {
               <BookOpen size={18} /> Flashcard
             </div>
             {flashcardProgress && flashcardProgress.totalCards > 0 && (
-              <div 
-                className="absolute bottom-0 left-0 h-1 bg-[#1CB0F6]/50 transition-all group-hover:bg-[#1CB0F6]" 
-                style={{ width: `${Math.round((flashcardProgress.studied / flashcardProgress.totalCards) * 100)}%` }}
+              <div
+                className="absolute bottom-0 left-0 h-1 bg-[#1CB0F6]/50 transition-all group-hover:bg-[#1CB0F6]"
+                style={{
+                  width: `${Math.round((flashcardProgress.studied / flashcardProgress.totalCards) * 100)}%`,
+                }}
               />
             )}
           </Button>
@@ -573,7 +603,7 @@ export const DeckPage = () => {
         >
           <Keyboard size={18} /> Gõ
         </Button>
-        
+
         {canCrud && (
           <Button
             variant="secondary"
@@ -705,237 +735,250 @@ export const DeckPage = () => {
               key={`${word.id || word.word}-${i}`}
               className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[24px] overflow-hidden hover:border-[#1CB0F6]/30 hover:shadow-sm transition-all"
             >
-            <div
-              className="w-full p-4 flex items-center justify-between text-left group cursor-pointer"
-              onClick={() => {
-                const isExpanding = expandedId !== word.id;
-                setExpandedId(isExpanding ? word.id : null);
-              }}
-            >
-              <div className="flex items-center gap-4 min-w-0">
-                <span
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-black shrink-0 shadow-sm"
-                  style={{ backgroundColor: color }}
-                >
-                  {i + 1}
-                </span>
-                <div className="min-w-0 flex flex-col justify-center">
-                  <div className="flex items-center gap-3">
-                    <p className="text-lg font-bold text-slate-800 leading-tight group-hover:text-[#1CB0F6] transition-colors">
-                      {word.word}
-                    </p>
+              <div
+                className="w-full p-4 flex items-center justify-between text-left group cursor-pointer"
+                onClick={() => {
+                  const isExpanding = expandedId !== word.id;
+                  setExpandedId(isExpanding ? word.id : null);
+                }}
+              >
+                <div className="flex items-center gap-4 min-w-0">
+                  <span
+                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-black shrink-0 shadow-sm"
+                    style={{ backgroundColor: color }}
+                  >
+                    {i + 1}
+                  </span>
+                  <div className="min-w-0 flex flex-col justify-center">
+                    <div className="flex items-center gap-3">
+                      <p className="text-lg font-bold text-slate-800 leading-tight group-hover:text-[#1CB0F6] transition-colors">
+                        {word.word}
+                      </p>
+                      <button
+                        onClick={e => {
+                          e.stopPropagation();
+                          tts.playWithFallback(word.audio, word.word);
+                        }}
+                        onMouseEnter={() => tts.playWithFallback(word.audio, word.word)}
+                        className="p-2.5 rounded-full text-[#1CB0F6] bg-sky-50 hover:bg-[#1CB0F6] hover:text-white transition-all shadow-sm border-b-2 border-sky-200 active:border-b-0 active:translate-y-0.5 flex items-center justify-center"
+                        title="Nghe"
+                      >
+                        <Volume2 size={20} strokeWidth={2.5} />
+                      </button>
+                    </div>
+                    {word.reading && (
+                      <p className="text-sm text-slate-400 font-medium leading-tight mt-1">
+                        {word.reading}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 shrink-0 ml-4">
+                  <span className="text-sm text-slate-400 font-bold text-right max-w-[120px] sm:max-w-[200px] truncate">
+                    {word.meaning}
+                  </span>
+                  {canCrud && (
                     <button
                       onClick={e => {
                         e.stopPropagation();
-                        tts.playWithFallback(word.audio, word.word);
+                        openEdit(word);
                       }}
-                      onMouseEnter={() => tts.playWithFallback(word.audio, word.word)}
-                      className="p-2.5 rounded-full text-[#1CB0F6] bg-sky-50 hover:bg-[#1CB0F6] hover:text-white transition-all shadow-sm border-b-2 border-sky-200 active:border-b-0 active:translate-y-0.5 flex items-center justify-center"
-                      title="Nghe"
+                      className="p-1.5 rounded-lg text-slate-300 hover:text-[#1CB0F6] hover:bg-sky-50 transition-colors"
+                      title="Sửa từ này"
                     >
-                      <Volume2 size={20} strokeWidth={2.5} />
+                      <Pencil size={16} />
                     </button>
-                  </div>
-                  {word.reading && (
-                    <p className="text-sm text-slate-400 font-medium leading-tight mt-1">
-                      {word.reading}
-                    </p>
                   )}
-                </div>
-              </div>
-              <div className="flex items-center gap-3 shrink-0 ml-4">
-                <span className="text-sm text-slate-400 font-bold text-right max-w-[120px] sm:max-w-[200px] truncate">
-                  {word.meaning}
-                </span>
-                {canCrud && (
-                  <button
-                    onClick={e => {
-                      e.stopPropagation();
-                      openEdit(word);
-                    }}
-                    className="p-1.5 rounded-lg text-slate-300 hover:text-[#1CB0F6] hover:bg-sky-50 transition-colors"
-                    title="Sửa từ này"
+                  <div
+                    className={`p-1 rounded-lg transition-colors ${expandedId === word.id ? "bg-slate-100 text-[#1CB0F6]" : "text-slate-300 group-hover:text-slate-400"}`}
                   >
-                    <Pencil size={16} />
-                  </button>
-                )}
-                <div
-                  className={`p-1 rounded-lg transition-colors ${expandedId === word.id ? "bg-slate-100 text-[#1CB0F6]" : "text-slate-300 group-hover:text-slate-400"}`}
-                >
-                  {expandedId === word.id ? (
-                    <ChevronUp className="w-5 h-5" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5" />
-                  )}
+                    {expandedId === word.id ? (
+                      <ChevronUp className="w-5 h-5" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5" />
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <AnimatePresence>
-              {expandedId === word.id && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="overflow-hidden"
-                >
-                  <div className="px-4 pb-4 pt-0 border-t-2 border-slate-100 space-y-2">
-                    <div className="flex items-center justify-between pt-3">
-                      <div className="grid grid-cols-2 gap-2 text-sm flex-1">
-                        <div>
-                          <span className="text-slate-400 font-bold text-xs uppercase">Nghĩa</span>
-                          <p className="font-bold text-slate-700">{word.meaning}</p>
+              <AnimatePresence>
+                {expandedId === word.id && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="px-4 pb-4 pt-0 border-t-2 border-slate-100 space-y-2">
+                      <div className="flex items-center justify-between pt-3">
+                        <div className="grid grid-cols-2 gap-2 text-sm flex-1">
+                          <div>
+                            <span className="text-slate-400 font-bold text-xs uppercase">
+                              Nghĩa
+                            </span>
+                            <p className="font-bold text-slate-700">{word.meaning}</p>
+                          </div>
+                          {word.hanViet && (
+                            <div>
+                              <span className="text-slate-400 font-bold text-xs uppercase">
+                                Hán Việt
+                              </span>
+                              <p className="font-bold text-slate-700">{word.hanViet}</p>
+                            </div>
+                          )}
+                          {word.partOfSpeech && (
+                            <div>
+                              <span className="text-slate-400 font-bold text-xs uppercase">
+                                Loại từ
+                              </span>
+                              <p className="font-medium text-slate-600">{word.partOfSpeech}</p>
+                            </div>
+                          )}
+                          {word.onyomi && (
+                            <div>
+                              <span className="text-slate-400 font-bold text-xs uppercase">
+                                Âm On
+                              </span>
+                              <p className="font-bold text-indigo-500">{word.onyomi}</p>
+                            </div>
+                          )}
+                          {word.kunyomi && (
+                            <div>
+                              <span className="text-slate-400 font-bold text-xs uppercase">
+                                Âm Kun
+                              </span>
+                              <p className="font-bold text-emerald-500">{word.kunyomi}</p>
+                            </div>
+                          )}
                         </div>
-                        {word.hanViet && (
-                          <div>
-                            <span className="text-slate-400 font-bold text-xs uppercase">
-                              Hán Việt
-                            </span>
-                            <p className="font-bold text-slate-700">{word.hanViet}</p>
-                          </div>
-                        )}
-                        {word.partOfSpeech && (
-                          <div>
-                            <span className="text-slate-400 font-bold text-xs uppercase">
-                              Loại từ
-                            </span>
-                            <p className="font-medium text-slate-600">{word.partOfSpeech}</p>
-                          </div>
-                        )}
-                        {word.onyomi && (
-                          <div>
-                            <span className="text-slate-400 font-bold text-xs uppercase">
-                              Âm On
-                            </span>
-                            <p className="font-bold text-indigo-500">{word.onyomi}</p>
-                          </div>
-                        )}
-                        {word.kunyomi && (
-                          <div>
-                            <span className="text-slate-400 font-bold text-xs uppercase">
-                              Âm Kun
-                            </span>
-                            <p className="font-bold text-emerald-500">{word.kunyomi}</p>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <button
-                          onClick={e => {
-                            e.stopPropagation();
-                            tts.playWithFallback(word.audio, word.word);
-                          }}
-                          className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#1CB0F6] text-white font-black text-xs hover:bg-[#1899D6] transition-all shadow-md active:scale-95 border-b-4 border-[#1899D6] active:border-b-0"
-                        >
-                          <Volume2 size={18} strokeWidth={3} />
-                          NGHE
-                        </button>
-                        {word.type === "kanji" && word.word?.length === 1 && (
+                        <div className="flex items-center gap-2 shrink-0">
                           <button
                             onClick={e => {
                               e.stopPropagation();
-                              setWritingKanji(word);
-                              setWritingOpen(true);
+                              tts.playWithFallback(word.audio, word.word);
                             }}
-                            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#A342FF] text-white font-black text-xs hover:bg-[#8B2BE2] transition-all shadow-md active:scale-95 border-b-4 border-[#8B2BE2] active:border-b-0"
+                            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#1CB0F6] text-white font-black text-xs hover:bg-[#1899D6] transition-all shadow-md active:scale-95 border-b-4 border-[#1899D6] active:border-b-0"
                           >
-                            <PenTool size={18} strokeWidth={3} />
-                            VIẾT
+                            <Volume2 size={18} strokeWidth={3} />
+                            NGHE
                           </button>
-                        )}
-                        {canCrud && (
+                          {word.type === "kanji" && word.word?.length === 1 && (
+                            <button
+                              onClick={e => {
+                                e.stopPropagation();
+                                setWritingKanji(word);
+                                setWritingOpen(true);
+                              }}
+                              className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#A342FF] text-white font-black text-xs hover:bg-[#8B2BE2] transition-all shadow-md active:scale-95 border-b-4 border-[#8B2BE2] active:border-b-0"
+                            >
+                              <PenTool size={18} strokeWidth={3} />
+                              VIẾT
+                            </button>
+                          )}
+                          {canCrud && (
+                            <button
+                              onClick={e => {
+                                e.stopPropagation();
+                                openEdit(word);
+                              }}
+                              className="p-2.5 rounded-2xl text-slate-400 bg-slate-50 hover:text-[#1CB0F6] hover:bg-sky-50 transition-all border border-slate-100"
+                              title="Sửa"
+                            >
+                              <Pencil size={20} />
+                            </button>
+                          )}
                           <button
                             onClick={e => {
                               e.stopPropagation();
-                              openEdit(word);
+                              if (isBookmarked(word.word)) {
+                                removeBookmark(word.word);
+                              } else {
+                                addBookmark({ ...word, deck: word.deck || deckId });
+                              }
                             }}
-                            className="p-2.5 rounded-2xl text-slate-400 bg-slate-50 hover:text-[#1CB0F6] hover:bg-sky-50 transition-all border border-slate-100"
-                            title="Sửa"
+                            className={`p-2.5 rounded-2xl transition-all border ${
+                              isBookmarked(word.word)
+                                ? "text-[#FFC800] bg-[#FFF8D9] border-[#FFC800]/20"
+                                : "text-slate-400 bg-slate-50 hover:text-[#FFC800] border-slate-100"
+                            }`}
+                            title={isBookmarked(word.word) ? "Bỏ bookmark" : "Thêm bookmark"}
                           >
-                            <Pencil size={20} />
+                            <Star size={24} fill={isBookmarked(word.word) ? "#FFC800" : "none"} />
                           </button>
-                        )}
-                        <button
-                          onClick={e => {
-                            e.stopPropagation();
-                            if (isBookmarked(word.word)) {
-                              removeBookmark(word.word);
-                            } else {
-                              addBookmark({ ...word, deck: word.deck || deckId });
-                            }
-                          }}
-                          className={`p-2.5 rounded-2xl transition-all border ${
-                            isBookmarked(word.word)
-                              ? "text-[#FFC800] bg-[#FFF8D9] border-[#FFC800]/20"
-                              : "text-slate-400 bg-slate-50 hover:text-[#FFC800] border-slate-100"
-                          }`}
-                          title={isBookmarked(word.word) ? "Bỏ bookmark" : "Thêm bookmark"}
-                        >
-                          <Star size={24} fill={isBookmarked(word.word) ? "#FFC800" : "none"} />
-                        </button>
+                        </div>
                       </div>
-                    </div>
-                    {word.type === "kanji" && word.word?.length === 1 && (
-                      <div className="flex justify-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-[32px] border-2 border-slate-100 dark:border-slate-800 mb-4">
-                        <KanjiWriter kanji={word.word} size={150} simple={true} />
-                      </div>
-                    )}
-                    {word.example && (
-                      <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3">
-                        <span className="text-slate-400 font-bold text-xs uppercase">
-                          Ví dụ / Cấu trúc
-                        </span>
-                        <p className="text-sm text-slate-600 dark:text-slate-200 font-medium mt-1">
-                          {word.example}
-                        </p>
-                        {word.exampleMeaning && (
-                          <p className="text-xs text-slate-400 font-medium mt-1 italic">
-                            {word.exampleMeaning}
+                      {word.type === "kanji" && word.word?.length === 1 && (
+                        <div className="flex justify-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-[32px] border-2 border-slate-100 dark:border-slate-800 mb-4">
+                          <KanjiWriter kanji={word.word} size={150} simple={true} />
+                        </div>
+                      )}
+                      {word.example && (
+                        <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3">
+                          <span className="text-slate-400 font-bold text-xs uppercase">
+                            Ví dụ / Cấu trúc
+                          </span>
+                          <p className="text-sm text-slate-600 dark:text-slate-200 font-medium mt-1">
+                            {word.example}
                           </p>
-                        )}
-                      </div>
-                    )}
-                    {word.radicalAnalysis && (
-                      <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 rounded-xl p-3">
-                        <span className="text-blue-700 dark:text-blue-400 font-bold text-xs uppercase">
-                          Phân tích bộ thủ (Dũng Mori)
-                        </span>
-                        <p className="text-sm text-slate-700 dark:text-blue-100 font-bold mt-1">
-                          {word.radicalAnalysis}
-                        </p>
-                      </div>
-                    )}
-                    {word.mnemonic && (
-                      <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/20 rounded-xl p-3">
-                        <span className="text-amber-700 dark:text-amber-400 font-bold text-xs uppercase">
-                          Mẹo nhớ (Japience / Dũng Mori)
-                        </span>
-                        <p className="text-sm text-slate-700 dark:text-amber-100 font-medium mt-1 italic leading-relaxed">
-                          {word.mnemonic}
-                        </p>
-                      </div>
-                    )}
-                    {word.relatedVoca && parseRelatedVoca(word.relatedVoca).length > 0 && (
-                      <div className="space-y-2">
-                         <span className="text-slate-400 font-bold text-xs uppercase px-1">Từ vựng liên quan</span>
-                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {word.exampleMeaning && (
+                            <p className="text-xs text-slate-400 font-medium mt-1 italic">
+                              {word.exampleMeaning}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                      {word.radicalAnalysis && (
+                        <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 rounded-xl p-3">
+                          <span className="text-blue-700 dark:text-blue-400 font-bold text-xs uppercase">
+                            Phân tích bộ thủ (Dũng Mori)
+                          </span>
+                          <p className="text-sm text-slate-700 dark:text-blue-100 font-bold mt-1">
+                            {word.radicalAnalysis}
+                          </p>
+                        </div>
+                      )}
+                      {word.mnemonic && (
+                        <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/20 rounded-xl p-3">
+                          <span className="text-amber-700 dark:text-amber-400 font-bold text-xs uppercase">
+                            Mẹo nhớ (Japience / Dũng Mori)
+                          </span>
+                          <p className="text-sm text-slate-700 dark:text-amber-100 font-medium mt-1 italic leading-relaxed">
+                            {word.mnemonic}
+                          </p>
+                        </div>
+                      )}
+                      {word.relatedVoca && parseRelatedVoca(word.relatedVoca).length > 0 && (
+                        <div className="space-y-2">
+                          <span className="text-slate-400 font-bold text-xs uppercase px-1">
+                            Từ vựng liên quan
+                          </span>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             {parseRelatedVoca(word.relatedVoca).map((v, i) => (
-                              <div key={i} className="flex items-center justify-between p-3 bg-white dark:bg-slate-700 border-2 border-slate-50 dark:border-slate-600 rounded-xl hover:border-indigo-100 transition-all group/v">
-                                 <div className="min-w-0">
-                                    <p className="text-sm font-bold text-slate-800 dark:text-white">{v.w}</p>
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase">{v.r}</p>
-                                 </div>
-                                 <p className="text-xs font-bold text-slate-500 dark:text-slate-400 group-hover/v:text-indigo-500 truncate ml-2">{v.m}</p>
+                              <div
+                                key={i}
+                                className="flex items-center justify-between p-3 bg-white dark:bg-slate-700 border-2 border-slate-50 dark:border-slate-600 rounded-xl hover:border-indigo-100 transition-all group/v"
+                              >
+                                <div className="min-w-0">
+                                  <p className="text-sm font-bold text-slate-800 dark:text-white">
+                                    {v.w}
+                                  </p>
+                                  <p className="text-[10px] text-slate-400 font-bold uppercase">
+                                    {v.r}
+                                  </p>
+                                </div>
+                                <p className="text-xs font-bold text-slate-500 dark:text-slate-400 group-hover/v:text-indigo-500 truncate ml-2">
+                                  {v.m}
+                                </p>
                               </div>
                             ))}
-                         </div>
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           );
         })}
@@ -945,7 +988,15 @@ export const DeckPage = () => {
       {totalPages > 1 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 bg-white dark:bg-slate-800 p-6 rounded-[32px] border-2 border-slate-100 dark:border-slate-700 shadow-sm">
           <p className="text-sm font-bold text-slate-400">
-            Hiển thị <span className="text-slate-600 dark:text-slate-200">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> - <span className="text-slate-600 dark:text-slate-200">{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}</span> trong tổng số <span className="font-black text-[#1CB0F6]">{filtered.length}</span> mục
+            Hiển thị{" "}
+            <span className="text-slate-600 dark:text-slate-200">
+              {(currentPage - 1) * ITEMS_PER_PAGE + 1}
+            </span>{" "}
+            -{" "}
+            <span className="text-slate-600 dark:text-slate-200">
+              {Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}
+            </span>{" "}
+            trong tổng số <span className="font-black text-[#1CB0F6]">{filtered.length}</span> mục
           </p>
           <div className="flex items-center gap-3">
             <Button
@@ -959,7 +1010,7 @@ export const DeckPage = () => {
             >
               <ChevronLeft size={18} /> Trước
             </Button>
-            
+
             <div className="flex items-center bg-slate-100 dark:bg-slate-900 px-4 py-2 rounded-xl font-black text-[#1CB0F6]">
               {currentPage} / {totalPages}
             </div>
@@ -1064,8 +1115,12 @@ export const DeckPage = () => {
                     <Code size={18} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-black text-slate-800 dark:text-white">Nhập nhanh bằng JSON</h3>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Giáo trình Dũng Mori / Bulk Import</p>
+                    <h3 className="text-lg font-black text-slate-800 dark:text-white">
+                      Nhập nhanh bằng JSON
+                    </h3>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      Giáo trình Dũng Mori / Bulk Import
+                    </p>
                   </div>
                 </div>
                 <button
@@ -1081,13 +1136,43 @@ export const DeckPage = () => {
                 {/* Template */}
                 <div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-4 border-2 border-dashed border-slate-200 dark:border-slate-700">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">📋 Mẫu JSON</span>
+                    <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">
+                      📋 Mẫu JSON
+                    </span>
                     <button
                       onClick={() => {
-                        const template = JSON.stringify([
-                          { word: "食べる", furigana: "たべる", meaning: "Ăn", han_viet: "Thực", example_jp: "毎日ご飯を食べます。", example_vi: "Mỗi ngày ăn cơm.", mnemonic: "Thực phẩm = Ăn" },
-                          { word: "飲む", furigana: "のむ", meaning: "Uống", han_viet: "Ẩm", example_jp: "水を飲む。", example_vi: "Uống nước.", mnemonic: "Ẩm thực = Uống" }
-                        ], null, 2);
+                        const template = JSON.stringify(
+                          [
+                            {
+                              word: "食べる",
+                              furigana: "たべる",
+                              meaning: "Ăn",
+                              han_viet: "Thực",
+                              example_jp: "毎日ご飯を食べます。",
+                              example_vi: "Mỗi ngày ăn cơm.",
+                              mnemonic: "Thực phẩm = Ăn",
+                            },
+                            {
+                              word: "飲む",
+                              furigana: "のむ",
+                              meaning: "Uống",
+                              han_viet: "Ẩm",
+                              example_jp: "水を飲む。",
+                              example_vi: "Uống nước.",
+                              mnemonic: "Ẩm thực = Uống",
+                            },
+                            {
+                              word: "abandon",
+                              furigana: "əˈbæn.dən",
+                              meaning: "từ bỏ",
+                              example_jp: "He abandoned the plan.",
+                              example_vi: "Anh ấy từ bỏ kế hoạch.",
+                              mnemonic: "a + bandon -> bỏ đi",
+                            },
+                          ],
+                          null,
+                          2
+                        );
                         setJsonText(template);
                         handleJsonTextChange(template);
                       }}
@@ -1097,7 +1182,7 @@ export const DeckPage = () => {
                     </button>
                   </div>
                   <pre className="text-[11px] font-mono text-slate-500 dark:text-slate-400 whitespace-pre-wrap leading-relaxed">
-{`[{
+                    {`[{
   "word": "漢字",
   "furigana": "かんじ",
   "meaning": "Chữ Hán",
@@ -1105,16 +1190,34 @@ export const DeckPage = () => {
   "mnemonic": "Mẹo nhớ...",
   "example_jp": "漢字を書く。",
   "example_vi": "Viết chữ Hán."
+}, {
+  "word": "abandon",
+  "furigana": "əˈbæn.dən",
+  "meaning": "từ bỏ",
+  "example_jp": "He abandoned the plan.",
+  "example_vi": "Anh ấy đã từ bỏ kế hoạch."
 }]`}
                   </pre>
                   <p className="text-[10px] text-slate-400 mt-2 font-bold">
-                    Các trường hỗ trợ: <code className="text-emerald-500">word</code>, <code className="text-emerald-500">furigana</code>, <code className="text-emerald-500">meaning</code>, <code className="text-emerald-500">han_viet</code>, <code className="text-emerald-500">onyomi</code>, <code className="text-emerald-500">kunyomi</code>, <code className="text-emerald-500">example_jp</code>, <code className="text-emerald-500">example_vi</code>, <code className="text-emerald-500">mnemonic</code>, <code className="text-emerald-500">radical_analysis</code>
+                    Các trường hỗ trợ: <code className="text-emerald-500">word</code>,{" "}
+                    <code className="text-emerald-500">furigana</code>,{" "}
+                    <code className="text-emerald-500">meaning</code>,{" "}
+                    <code className="text-emerald-500">han_viet</code>,{" "}
+                    <code className="text-emerald-500">onyomi</code>,{" "}
+                    <code className="text-emerald-500">kunyomi</code>,{" "}
+                    <code className="text-emerald-500">example_jp</code>,{" "}
+                    <code className="text-emerald-500">example_vi</code>,{" "}
+                    <code className="text-emerald-500">mnemonic</code>,{" "}
+                    <code className="text-emerald-500">radical_analysis</code>. Với tiếng Anh, dùng{" "}
+                    <code className="text-emerald-500">furigana</code> cho phiên âm.
                   </p>
                 </div>
 
                 {/* Textarea */}
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 block">Dán JSON Array vào đây</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 block">
+                    Dán JSON Array vào đây
+                  </label>
                   <textarea
                     value={jsonText}
                     onChange={e => {
@@ -1130,22 +1233,28 @@ export const DeckPage = () => {
 
                 {/* Preview / Validation */}
                 {jsonText.trim() && (
-                  <div className={`flex items-center gap-3 p-3 rounded-xl border-2 ${
-                    jsonPreview.valid
-                      ? "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30"
-                      : "bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/30"
-                  }`}>
+                  <div
+                    className={`flex items-center gap-3 p-3 rounded-xl border-2 ${
+                      jsonPreview.valid
+                        ? "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30"
+                        : "bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/30"
+                    }`}
+                  >
                     {jsonPreview.valid ? (
                       <>
                         <CheckCircle2 size={18} className="text-emerald-500 shrink-0" />
                         <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400">
-                          ✅ Hợp lệ! Sẵn sàng nhập <span className="text-emerald-500 font-black">{jsonPreview.count}</span> từ vựng
+                          ✅ Hợp lệ! Sẵn sàng nhập{" "}
+                          <span className="text-emerald-500 font-black">{jsonPreview.count}</span>{" "}
+                          từ vựng
                         </p>
                       </>
                     ) : (
                       <>
                         <AlertTriangle size={18} className="text-red-500 shrink-0" />
-                        <p className="text-sm font-bold text-red-600 dark:text-red-400">{jsonPreview.error}</p>
+                        <p className="text-sm font-bold text-red-600 dark:text-red-400">
+                          {jsonPreview.error}
+                        </p>
                       </>
                     )}
                   </div>
@@ -1155,7 +1264,10 @@ export const DeckPage = () => {
               {/* Footer */}
               <div className="flex items-center justify-between p-5 pt-3 border-t border-slate-100 dark:border-slate-700 shrink-0">
                 <button
-                  onClick={() => { setJsonText(""); setJsonPreview({ count: 0, valid: false, error: "" }); }}
+                  onClick={() => {
+                    setJsonText("");
+                    setJsonPreview({ count: 0, valid: false, error: "" });
+                  }}
                   className="px-4 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                 >
                   Xóa tất cả

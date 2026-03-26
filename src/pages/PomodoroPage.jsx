@@ -25,6 +25,7 @@ import { useUserStore } from "../store/useUserStore";
 import { useBookmarkStore } from "../store/useBookmarkStore";
 import { debouncedSync, collectSyncData } from "../services/syncService";
 import { PixelOfficeCanvas } from "../components/PixelOfficeCanvas";
+import { sounds } from "../utils/sounds";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const MODES = {
@@ -130,14 +131,14 @@ const BREAK_QUOTES = [
 
 const CatBody = () => (
   <>
-    {/* Body - Round and chubby */}
-    <ellipse cx="80" cy="150" rx="52" ry="44" fill="white" stroke="#432c23" strokeWidth="3.5" />
+    {/* Body - Pear shaped (Belly heavy) */}
+    <ellipse cx="80" cy="155" rx="56" ry="46" fill="white" stroke="#432c23" strokeWidth="3.5" />
     {/* Floor shadow */}
-    <ellipse cx="80" cy="186" rx="38" ry="8" fill="#cbd5e1" opacity="0.6" />
+    <ellipse cx="80" cy="195" rx="42" ry="7" fill="#cbd5e1" opacity="0.6" />
   </>
 );
 
-const CatHead = ({ showHachimaki, happiness }) => (
+const CatHead = ({ showHachimaki, happiness, isActive }) => (
   <>
     {/* Left ear */}
     <motion.g
@@ -169,68 +170,64 @@ const CatHead = ({ showHachimaki, happiness }) => (
       <path d="M126 52 Q130 24 104 38" fill="#ffb8b8" />
     </motion.g>
 
-    {/* Head - Extra wide (chubby cheeks) */}
-    <ellipse cx="80" cy="84" rx="66" ry="54" fill="white" stroke="#432c23" strokeWidth="3.5" />
+    {/* ── Dynamic Head Container (Bobs up and down when active) ── */}
+    <motion.g
+      animate={isActive ? { y: [0, -2, 0] } : {}}
+      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+    >
+      {/* Head - Extra wide (chubby cheeks) */}
+      <ellipse cx="80" cy="84" rx="66" ry="54" fill="white" stroke="#432c23" strokeWidth="3.5" />
 
-    {/* Sleeping Zzz bubbles */}
-    {happiness < 40 && (
-      <motion.g
-        animate={{ opacity: [0, 1, 0], y: [60, 30], x: [120, 130] }}
-        transition={{ duration: 3, repeat: Infinity }}
-      >
-        <text x="0" y="0" fontSize="14" fontWeight="bold" fill="#94a3b8">
-          Zz
-        </text>
-      </motion.g>
-    )}
-
-    {/* Bandana (Hachimaki) - Only in FOCUS mode */}
-    {showHachimaki && (
-      <g>
-        {/* The ribbon tails (flowing) */}
-        <motion.path
-          d="M18 78 Q5 70 8 60"
-          stroke="#ff4b4b"
-          strokeWidth="6"
-          fill="none"
-          strokeLinecap="round"
-          animate={{ rotate: [-5, 10, -5] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        />
-        <motion.path
-          d="M142 78 Q155 70 152 60"
-          stroke="#ff4b4b"
-          strokeWidth="6"
-          fill="none"
-          strokeLinecap="round"
-          animate={{ rotate: [5, -10, 5] }}
-          transition={{ duration: 1.8, repeat: Infinity }}
-        />
-        {/* Main stripe */}
-        <path
-          d="M16 82 Q80 74 144 82 L144 92 Q80 84 16 92 Z"
-          fill="#ff4b4b"
-          stroke="#432c23"
-          strokeWidth="2"
-        />
-        <text
-          x="80"
-          y="88"
-          fontSize="6"
-          fontWeight="900"
-          fill="white"
-          textAnchor="middle"
-          style={{ letterSpacing: "0.1em" }}
-        >
-          TEAM WORK
-        </text>
-      </g>
-    )}
+      {/* Bandana (Hachimaki) - Only in FOCUS mode */}
+      {showHachimaki && (
+        <g>
+          {/* The ribbon tails (flowing) */}
+          <motion.path
+            d="M18 78 Q5 70 8 60"
+            stroke="#ff4b4b"
+            strokeWidth="6"
+            fill="none"
+            strokeLinecap="round"
+            animate={{ rotate: [-5, 10, -5] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          />
+          <motion.path
+            d="M142 78 Q155 70 152 60"
+            stroke="#ff4b4b"
+            strokeWidth="6"
+            fill="none"
+            strokeLinecap="round"
+            animate={{ rotate: [5, -10, 5] }}
+            transition={{ duration: 1.8, repeat: Infinity }}
+          />
+          {/* Main stripe */}
+          <path
+            d="M16 82 Q80 74 144 82 L144 92 Q80 84 16 92 Z"
+            fill="#ff4b4b"
+            stroke="#432c23"
+            strokeWidth="2"
+          />
+          <text
+            x="80"
+            y="88"
+            fontSize="6"
+            fontWeight="900"
+            fill="white"
+            textAnchor="middle"
+            style={{ letterSpacing: "0.1em" }}
+          >
+            TEAM WORK
+          </text>
+        </g>
+      )}
+    </motion.g>
   </>
 );
 
-const CatFaceBase = ({ mode, isActive, isFeeding, happiness }) => {
-  const happy = isFeeding || (mode === "longBreak" && isActive);
+const CatFaceBase = ({ mode, isActive, isFeeding, happiness, idleAction }) => {
+  const isSleeping = !isActive && !isFeeding && idleAction === 1;
+  const isBoxOrYarn = !isActive && !isFeeding && (idleAction === 2 || idleAction === 3);
+  const happy = isFeeding || (mode === "longBreak" && isActive) || isBoxOrYarn;
   const exercise = mode === "shortBreak" && isActive;
   const squint = mode === "focus" && isActive;
 
@@ -241,26 +238,10 @@ const CatFaceBase = ({ mode, isActive, isFeeding, happiness }) => {
       <ellipse cx="122" cy="102" rx="14" ry="9" fill="#ff99a8" opacity="0.45" />
 
       {/* Eyes */}
-      {squint
-        ? /* Focused (Serious lines + furrowed brows) */
-          [52, 108].map((cx, i) => (
-            <g key={cx}>
-              {/* Eyebrow */}
-              <path
-                d={i === 0 ? `M${cx - 7} 85 L${cx + 6} 88` : `M${cx - 6} 88 L${cx + 7} 85`}
-                stroke="#432c23"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                opacity="0.8"
-              />
-              {/* Eye line */}
-              <path
-                d={i === 0 ? `M${cx - 7} 94 L${cx + 5} 97` : `M${cx - 5} 97 L${cx + 7} 94`}
-                stroke="#432c23"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-              />
-            </g>
+      {isSleeping
+        ? /* Sleeping (> < curved) eyes */
+          [52, 108].map((cx) => (
+            <path key={cx} d={`M${cx - 7} 95 Q${cx} 100 ${cx + 7} 95`} stroke="#432c23" strokeWidth="3.5" fill="none" strokeLinecap="round" />
           ))
         : exercise
           ? /* Gym (> <) eyes */
@@ -286,56 +267,39 @@ const CatFaceBase = ({ mode, isActive, isFeeding, happiness }) => {
                     fill="none"
                     strokeLinecap="round"
                   />
-                  {/* sparkle dot */}
                   <circle cx={cx - 4} cy="90" r="1.5" fill="#ff99a8" opacity="0.7" />
                 </g>
               ))
-            : /* Normal (Big anime dots with shine) + Licking Squint */
+            : /* Normal (Big Anime Sparkling Eyes) */
               [52, 108].map(cx => (
                 <g key={cx}>
-                  {/* Outer iris */}
-                  <circle cx={cx} cy="95" r="8" fill="#2d1a10" />
-                  {/* Brown ring */}
-                  <circle cx={cx} cy="95" r="6.5" fill="#432c23" />
-                  {/* Main shine */}
-                  <circle cx={cx - 3} cy="91.5" r="2.8" fill="white" opacity="0.92" />
-                  {/* Small shine */}
-                  <circle cx={cx + 3.5} cy="94.5" r="1.3" fill="white" opacity="0.65" />
+                  {/* Outer Pupil */}
+                  <ellipse cx={cx} cy="95" rx="7" ry="8.5" fill="#1a1a1a" />
+                  {/* 3-Point Sparkle Highlights */}
+                  <circle cx={cx - 3.5} cy="91.5" r="3.2" fill="white" />
+                  <circle cx={cx + 3} cy="95" r="1.5" fill="white" opacity="0.8" />
+                  <circle cx={cx} cy="99" r="2" fill="white" opacity="0.3" />
 
-                  {/* Licking Squint (Only when idling) */}
-                  {!isActive && !isFeeding && (
+                  {/* Licking Squint */}
+                  {!isActive && !isFeeding && idleAction === 0 && (
                     <motion.path
-                      d={`M${cx - 9} 95 Q${cx} 88 ${cx + 9} 95`}
+                      d={`M${cx - 10} 95 Q${cx} 88 ${cx + 10} 95`}
                       stroke="white"
-                      strokeWidth="10"
+                      strokeWidth="11"
                       fill="none"
-                      initial={{ opacity: 0 }}
-                      animate={{
-                        opacity: [0, 1, 1, 1, 0, 1, 1, 1, 0],
-                      }}
-                      transition={{
-                        duration: 4,
-                        repeat: Infinity,
-                        repeatDelay: 8,
-                        times: [0, 0.1, 0.3, 0.4, 0.45, 0.55, 0.75, 0.85, 0.9],
-                      }}
+                      animate={{ opacity: [0, 0.7, 0.7, 0] }}
+                      transition={{ duration: 5, repeat: Infinity, repeatDelay: 6, times: [0, 0.2, 0.6, 0.8] }}
                     />
                   )}
-
-                  {/* Blinking Lid */}
+                  {/* Blinking */}
                   <motion.rect
-                    x={cx - 10}
-                    y="85"
-                    width="20"
-                    height="20"
-                    fill="white"
-                    animate={{ height: [0, 0, 20, 0, 0] }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      times: [0, 0.9, 0.95, 1, 1],
-                    }}
+                    x={cx - 10} y="82" width="20" fill="white"
+                    initial={{ height: 0 }}
+                    animate={{ height: [0, 0, 22, 0, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, times: [0, 0.9, 0.95, 1, 1] }}
                   />
+                  {/* Lashes */}
+                  <path d={`M${cx+6} 91 L${cx+10} 88`} stroke="#1a1a1a" strokeWidth="1" opacity="0.6" />
                 </g>
               ))}
 
@@ -406,25 +370,32 @@ const CatFaceBase = ({ mode, isActive, isFeeding, happiness }) => {
 
       {/* Mouth and Licking Tongue */}
       <g>
-        {/* Tongue - Optimized for Licking the Paw surface at Y ~115 */}
-        {!isActive && !isFeeding && (
+        {/* Tongue - Slanted to lick the paw at (70, 110) */}
+        {!isActive && !isFeeding && idleAction === 0 && (
           <motion.path
-            d="M72 104 Q80 128 88 104"
+            initial={{ opacity: 0, d: "M72 104 Q80 108 88 104" }}
+            animate={{
+              opacity: [0, 1, 1, 1, 0, 1, 1, 1, 0],
+              d: [
+                "M72 104 Q80 108 88 104",  // hidden
+                "M72 104 Q62 120 72 114",  // rapid lap 1
+                "M72 104 Q72 110 75 106",  // in
+                "M72 104 Q62 120 72 114",  // rapid lap 2
+                "M72 104 Q80 108 88 104",  // pause
+                "M72 104 Q60 122 70 116",  // long draw lick
+                "M72 104 Q60 122 70 116",  // dwell
+                "M72 104 Q72 110 75 106",  // in
+                "M72 104 Q80 108 88 104"   // hidden
+              ]
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              times: [0, 0.1, 0.15, 0.2, 0.3, 0.45, 0.6, 0.7, 0.8],
+            }}
             fill="#ff4d6d"
             stroke="#432c23"
             strokeWidth="1.5"
-            initial={{ opacity: 0, scaleY: 0 }}
-            animate={{
-              opacity: [0, 1, 1, 1, 0, 1, 1, 1, 0],
-              scaleY: [0, 1.3, 1.8, 1.3, 0, 1.3, 1.8, 1.3, 0],
-              y: [0, 4, 10, 4, 0, 4, 10, 4, 0],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              repeatDelay: 8,
-              times: [0, 0.1, 0.3, 0.4, 0.45, 0.55, 0.75, 0.85, 0.9],
-            }}
           />
         )}
 
@@ -443,7 +414,9 @@ const CatFaceBase = ({ mode, isActive, isFeeding, happiness }) => {
           </motion.text>
         )}
 
-        {happiness < 40 && !isActive && !isFeeding ? (
+        {isSleeping ? (
+          <ellipse cx="80" cy="106" rx="3" ry="2.5" fill="#ff8da1" stroke="#432c23" strokeWidth="1.5" />
+        ) : happiness < 40 && !isActive && !isFeeding ? (
           /* Sad/Hungry Mouth */
           <path
             d="M74 108 Q80 102 86 108"
@@ -491,323 +464,424 @@ const CatFaceBase = ({ mode, isActive, isFeeding, happiness }) => {
   );
 };
 
-const IdleProps = () => (
-  <>
-    {/* Left Arm - Licking - HIGH SHOULDER JOINT */}
-    <motion.g
-      animate={{ rotate: [0, -110, -100, -110, 0, -110, -100, -110, 0] }}
-      transition={{
-        duration: 4,
-        repeat: Infinity,
-        repeatDelay: 8,
-        times: [0, 0.1, 0.3, 0.4, 0.45, 0.55, 0.75, 0.85, 0.9],
-      }}
-      style={{ transformOrigin: "35px 118px" }}
-    >
-      <path
-        d="M35 118 Q20 145 45 145"
-        stroke="#432c23"
-        strokeWidth="7"
-        fill="white"
-        strokeLinecap="round"
+const SittingCatLegs = ({ leftLegNode, rightLegNode, animateBreathing }) => (
+  <motion.g animate={animateBreathing ? { y: [0, 2, 0] } : {}} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
+    {/* Hind Paws (Chân sau hình đám mây nhỏ xinh) */}
+    <g transform="translate(0, 15)">
+      {/* Left Hind Paw - Scaled Down */}
+      <path 
+        d="M 38 178 Q 36 173 41 172 Q 45 167 48 170 Q 51 167 55 172 Q 60 173 58 178 Q 58 184 48 184 Q 38 184 38 178 Z" 
+        fill="white" stroke="#432c23" strokeWidth="3" strokeLinejoin="round" 
       />
-      <circle cx="35" cy="118" r="4" fill="white" />
-      <circle cx="45" cy="145" r="8" fill="white" stroke="#432c23" strokeWidth="2.5" />
-      <circle cx="43" cy="143" r="1.5" fill="#ffb8b8" />
-      <circle cx="47" cy="143" r="1.5" fill="#ffb8b8" />
-      <circle cx="45" cy="147" r="1.5" fill="#ffb8b8" />
-    </motion.g>
-
-    {/* Right Arm - Resting - HIGH SHOULDER */}
-    <g>
-      <path
-        d="M125 118 Q140 145 115 145"
-        stroke="#432c23"
-        strokeWidth="7"
-        fill="white"
-        strokeLinecap="round"
+      {/* Central Pad */}
+      <circle cx="48" cy="178" r="3.5" fill="#ffb7b7" opacity="0.9" />
+      {/* 4 Toes around */}
+      <circle cx="42" cy="175" r="1.6" fill="#ffb7b7" />
+      <circle cx="46" cy="172" r="1.8" fill="#ffb7b7" />
+      <circle cx="50" cy="172" r="1.8" fill="#ffb7b7" />
+      <circle cx="54" cy="175" r="1.6" fill="#ffb7b7" />
+      
+      {/* Right Hind Paw - Scaled Down (Mirrored) */}
+      <path 
+        d="M 102 178 Q 100 173 105 172 Q 109 167 112 170 Q 115 167 119 172 Q 124 173 122 178 Q 122 184 112 184 Q 102 184 102 178 Z" 
+        fill="white" stroke="#432c23" strokeWidth="3" strokeLinejoin="round" 
       />
-      <circle cx="125" cy="118" r="4" fill="white" />
-      <circle cx="115" cy="145" r="8" fill="white" stroke="#432c23" strokeWidth="2.5" />
+      {/* Central Pad */}
+      <circle cx="112" cy="178" r="3.5" fill="#ffb7b7" opacity="0.9" />
+      {/* 4 Toes around */}
+      <circle cx="106" cy="175" r="1.6" fill="#ffb7b7" />
+      <circle cx="110" cy="172" r="1.8" fill="#ffb7b7" />
+      <circle cx="114" cy="172" r="1.8" fill="#ffb7b7" />
+      <circle cx="118" cy="175" r="1.6" fill="#ffb7b7" />
     </g>
 
-    {/* Floating Hearts */}
-    <motion.g
-      animate={{ opacity: [0, 1, 0], y: [-30, -80], x: [80, 75, 90] }}
-      transition={{ duration: 4, repeat: Infinity, repeatDelay: 8, delay: 0.2 }}
-    >
-      <text x="0" y="0" fontSize="18">
-        💕
-      </text>
+    {/* Minimalist Front Paws Only - Layered so right covers left */}
+    <g transform="translate(0, 15)">
+      {leftLegNode || (
+        <g transform="rotate(-6, 80, 160)">
+          {/* Paw Base with Fill to mask what's behind */}
+          <path d="M 68 152 Q 68 182 78 182 Q 88 182 88 152" stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" />
+          <line x1="78" y1="172" x2="78" y2="180" stroke="#432c23" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+        </g>
+      )}
+
+      {rightLegNode || (
+        <g transform="rotate(6, 80, 160)">
+          {/* Paw Base with Fill to mask what's behind (Left Paw) */}
+          <path d="M 72 152 Q 72 182 82 182 Q 92 182 92 142" stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" />
+          <line x1="82" y1="172" x2="82" y2="180" stroke="#432c23" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+        </g>
+      )}
+    </g>
+  </motion.g>
+);
+
+const IdleProps = () => (
+  <>
+    <SittingCatLegs
+      leftLegNode={
+        <motion.g
+          style={{ transformOrigin: "65px 145px", zIndex: 10 }}
+          animate={{ 
+            rotate: [0, -84, -78, -84, 0, 0, -82, -82, 0], 
+            scaleX: [1, 1, 1.05, 1, 1, 1, 1.05, 1, 1] 
+          }}
+          transition={{ duration: 10, repeat: Infinity, times: [0, 0.1, 0.15, 0.2, 0.3, 0.45, 0.5, 0.7, 0.8] }}
+        >
+          <circle cx="65" cy="145" r="45" fill="transparent" pointerEvents="none" />
+          {/* Licking paw - Morphing path with elastic feel */}
+          <motion.path 
+            initial={{ d: "M 65 145 Q 65 174 75 174 Q 85 174 85 145" }}
+            animate={{ 
+              d: [
+                "M 65 145 Q 65 174 75 174 Q 85 174 85 145", // Resting U
+                "M 65 145 Q 60 130 80 120 Q 95 110 95 95 Q 85 92 82 105", // Reaching mouth (Stretched but U-tip)
+                "M 65 145 Q 60 130 80 120 Q 92 112 92 102 Q 82 100 82 108", // Licking contact (Chubby tip)
+                "M 65 145 Q 65 174 75 174 Q 85 174 85 145"  // Return to U
+              ]
+            }}
+            transition={{ duration: 5, repeat: Infinity, repeatDelay: 6, times: [0, 0.2, 0.4, 0.8] }}
+            stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" 
+          />
+          <motion.g
+            animate={{ 
+              x: [0, 16, 14, 0], 
+              y: [0, -58, -52, 0],
+              rotate: [0, -30, -25, 0] 
+            }}
+            transition={{ duration: 5, repeat: Infinity, repeatDelay: 6, times: [0, 0.2, 0.4, 0.8] }}
+          >
+            <circle cx="75" cy="164" r="2.2" fill="#ffb7b7" />
+            <line x1="75" y1="160" x2="75" y2="168" stroke="#432c23" strokeWidth="2" strokeLinecap="round" opacity="0.4" />
+          </motion.g>
+        </motion.g>
+      }
+    />
+    {/* Tongue - synchronized with chubby paw contact */}
+    <motion.circle 
+       cx="80" cy="108" r="4.5" fill="#ffb7b7" 
+       animate={{ opacity: [0, 0.4, 1, 1, 0], scale: [0.5, 1, 1.3, 1, 0.5] }}
+       transition={{ duration: 5, repeat: Infinity, repeatDelay: 6, times: [0, 0.2, 0.3, 0.6, 0.8] }}
+    />
+    <motion.g animate={{ opacity: [0, 1, 0], y: [-30, -80], x: [80, 75, 90] }} transition={{ duration: 4, repeat: Infinity, repeatDelay: 8, delay: 0.2 }}>
+      <text x="0" y="0" fontSize="18">💕</text>
     </motion.g>
-    <motion.g
-      animate={{ opacity: [0, 1, 0], y: [0, -55], x: [0, 15, -15] }}
-      transition={{ duration: 4, repeat: Infinity, repeatDelay: 8, delay: 1.2 }}
+  </>
+);
+
+const SleepProps = () => (
+  <>
+    <SittingCatLegs animateBreathing={true} />
+    {/* Sleep Zzz Bubbles - animated */}
+    <motion.g animate={{ opacity: [0, 1, 0], y: [-10, -50], x: [80, 85, 95], scale: [0.8, 1.2, 1.5] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
+      <text x="0" y="0" fontSize="24" fontWeight="bold" fill="#60a5fa">Zz</text>
+    </motion.g>
+    {/* Snot bubble */}
+    <motion.circle cx="83" cy="98" fill="#bae6fd" stroke="#38bdf8" strokeWidth="1.5" opacity="0.6" animate={{ r: [3, 9, 3] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }} />
+  </>
+);
+
+const BoxProps = () => (
+  <>
+    {/* The Box Front Flap (Rendered first so paws can hang OVER it) */}
+    <g>
+      <path d="M 10 138 L 150 138 L 158 215 L 2 215 Z" fill="#d97706" stroke="#b45309" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M 10 138 L -10 170 L 10 180 Z" fill="#f59e0b" stroke="#b45309" strokeWidth="2" strokeLinejoin="round"/>
+      <path d="M 150 138 L 170 170 L 150 180 Z" fill="#f59e0b" stroke="#b45309" strokeWidth="2" strokeLinejoin="round"/>
+      <path d="M 75 138 L 85 138 L 85 188 L 75 188 Z" fill="#fcd34d" opacity="0.6"/>
+      <text x="80" y="180" fontSize="14" fontWeight="900" fill="#78350f" textAnchor="middle" style={{ letterSpacing: 4, transform: "rotate(-3deg)", transformOrigin: "80px 180px" }}>AMOMEOW</text>
+    </g>
+    {/* Left Arm hanging on box (Independent U) */}
+    <g>
+      <motion.g animate={{ rotate: [0, -5, 0] }} style={{ transformOrigin: "80px 145px" }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
+        <circle cx="80" cy="145" r="45" fill="transparent" pointerEvents="none" />
+        <path d="M 60 135 Q 60 160 70 160 Q 80 160 80 135" stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" />
+        <line x1="70" y1="150" x2="70" y2="160" stroke="#432c23" strokeWidth="2" strokeLinecap="round" />
+      </motion.g>
+    </g>
+    {/* Right Arm hanging on box (Independent U) */}
+    <g>
+      <motion.g animate={{ rotate: [0, 5, 0] }} style={{ transformOrigin: "80px 145px" }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}>
+        <circle cx="80" cy="145" r="45" fill="transparent" pointerEvents="none" />
+        <path d="M 80 135 Q 80 160 90 160 Q 100 160 100 135" stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" />
+        <line x1="90" y1="150" x2="90" y2="160" stroke="#432c23" strokeWidth="2" strokeLinecap="round" />
+      </motion.g>
+    </g>
+  </>
+);
+
+const YarnBallProps = () => (
+  <>
+    <SittingCatLegs 
+      leftLegNode={
+        <motion.g 
+          style={{ transformOrigin: "65px 145px" }} 
+          animate={{ 
+            rotate: [0, 0, 0, 48, -5, 48, 0], 
+            y: [0, 0, 0, 4, 0, 4, 0],
+            x: [0, 0, 0, 10, 0, 10, 0] 
+          }} 
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", times: [0, 0.4, 0.5, 0.6, 0.7, 0.8, 1] }}
+        >
+          <circle cx="65" cy="145" r="45" fill="transparent" pointerEvents="none" />
+          <path d="M 65 145 Q 65 174 74 168 Q 80 168 80 145" stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" />
+          <circle cx="74" cy="164" r="2.2" fill="#ffb7b7" />
+        </motion.g>
+      }
+      rightLegNode={
+        <motion.g 
+          style={{ transformOrigin: "95px 145px" }} 
+          animate={{ 
+            rotate: [10, -48, 15, -48, 15, -48, 10], 
+            y: [0, 4, 0, 4, 0, 4, 0],
+            x: [0, -10, 0, -10, 0, -10, 0] 
+          }} 
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", times: [0, 0.2, 0.4, 0.6, 0.75, 0.9, 1] }}
+        >
+          <circle cx="95" cy="145" r="45" fill="transparent" pointerEvents="none" />
+          <path d="M 95 145 Q 95 174 86 168 Q 80 168 80 145" stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" />
+          <circle cx="86" cy="164" r="2.2" fill="#ffb7b7" />
+        </motion.g>
+      }
+    />
+    {/* Yarn ball - Brought UP closer to hands */}
+    <motion.g 
+      animate={{ 
+        x: [18, 12, 18, -18, 12, -18, 18], 
+        y: [165, 158, 165, 158, 165, 158, 165], 
+        rotate: [0, 90, 180, 270, 360, 450, 540] 
+      }} 
+      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", times: [0, 0.2, 0.4, 0.6, 0.75, 0.9, 1] }}
+      style={{ transformOrigin: "80px 165px" }}
     >
-      <text x="65" y="75" fontSize="12">
-        ❤️
-      </text>
+       <circle cx="80" cy="168" r="14" fill="#f43f5e" stroke="#be123c" strokeWidth="2.5" />
+       <path d="M 72 165 Q 80 158 88 165 M 72 171 Q 80 164 88 171" fill="none" stroke="#fda4af" strokeWidth="1.2" />
+       <path d="M 66 168 L 60 160 M 94 168 L 100 175" fill="none" stroke="#f43f5e" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
+    </motion.g>
+  </>
+);
+
+const ScratchProps = () => (
+  <>
+    {/* Centered Scratching Post */}
+    <motion.g animate={{ x: [-0.6, 0.6, -0.6], rotate: [-0.2, 0.2, -0.2] }} transition={{ duration: 0.1, repeat: Infinity }}>
+      <rect x="68" y="110" width="24" height="90" rx="4" fill="#d4d4d8" stroke="#a1a1aa" strokeWidth="2" />
+      <path d="M 68 120 L 92 125 M 68 140 L 92 145 M 68 160 L 92 165 M 68 180 L 92 185" stroke="#a1a1aa" strokeWidth="1.5" strokeLinecap="round" opacity="0.4" />
     </motion.g>
 
-    {/* Feet with toe beans */}
-    <ellipse cx="56" cy="192" rx="14" ry="9" fill="white" stroke="#432c23" strokeWidth="3.5" />
-    <circle cx="50" cy="191" r="2" fill="#ffb8b8" />
-    <circle cx="56" cy="189" r="2" fill="#ffb8b8" />
-    <circle cx="62" cy="191" r="2" fill="#ffb8b8" />
-    <ellipse cx="104" cy="192" rx="14" ry="9" fill="white" stroke="#432c23" strokeWidth="3.5" />
-    <circle cx="98" cy="191" r="2" fill="#ffb8b8" />
-    <circle cx="104" cy="189" r="2" fill="#ffb8b8" />
-    <circle cx="110" cy="191" r="2" fill="#ffb8b8" />
+    <SittingCatLegs 
+      animateBreathing={false}
+      leftLegNode={
+        <motion.g 
+          style={{ transformOrigin: "60px 145px" }} 
+          animate={{ rotate: [-10, 20, -10] }} 
+          transition={{ duration: 0.16, repeat: Infinity, ease: "linear" }}
+        >
+          <circle cx="60" cy="145" r="45" fill="transparent" pointerEvents="none" />
+          {/* Paw stretching from body side toward the center post */}
+          <path d="M 60 145 Q 65 170 76 172 Q 82 172 82 155" stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" />
+          <circle cx="76" cy="168" r="2.2" fill="#ffb7b7" />
+          <line x1="74" y1="165" x2="74" y2="171" stroke="#432c23" strokeWidth="2" opacity="0.3" />
+        </motion.g>
+      }
+      rightLegNode={
+        <motion.g 
+          style={{ transformOrigin: "100px 145px" }} 
+          animate={{ rotate: [10, -20, 10] }} 
+          transition={{ duration: 0.16, repeat: Infinity, ease: "linear", delay: 0.08 }}
+        >
+          <circle cx="100" cy="145" r="45" fill="transparent" pointerEvents="none" />
+          {/* Paw stretching from body side toward the center post */}
+          <path d="M 100 145 Q 95 170 84 172 Q 78 172 78 155" stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" />
+          <circle cx="84" cy="168" r="2.2" fill="#ffb7b7" />
+          <line x1="86" y1="165" x2="86" y2="171" stroke="#432c23" strokeWidth="2" opacity="0.3" />
+        </motion.g>
+      }
+    />
+    
+    {/* Scratch sparks/particles */}
+    <motion.text x="35" y="170" animate={{ opacity: [1, 0], scale: [1, 1.4] }} transition={{ duration: 0.2, repeat: Infinity }}>💢</motion.text>
+    <motion.text x="115" y="130" animate={{ opacity: [1, 0], scale: [1, 1.4] }} transition={{ duration: 0.2, repeat: Infinity, delay: 0.1 }}>💢</motion.text>
   </>
 );
 
 const FocusProps = ({ isActive }) => (
   <>
-    {/* Improved Laptop/Computer */}
+    <SittingCatLegs 
+      leftLegNode={
+        <motion.g 
+          style={{ transformOrigin: "80px 150px" }} 
+          animate={isActive ? { x: -22, y: [0, -4, 2], scaleY: [1, 0.85, 1], rotate: -15 } : { x: -22, rotate: -10 }} 
+          transition={{ duration: 0.15, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <circle cx="80" cy="150" r="45" fill="transparent" pointerEvents="none" />
+          <path d="M 62 145 Q 62 170 72 170 Q 82 170 82 145" stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" />
+          {/* Paw detail - Meatballs */}
+          <circle cx="72" cy="166" r="2.2" fill="#ffb7b7" />
+          <circle cx="67" cy="162" r="1.5" fill="#ffb7b7" />
+          <circle cx="77" cy="162" r="1.5" fill="#ffb7b7" />
+          <line x1="72" y1="162" x2="72" y2="170" stroke="#432c23" strokeWidth="2.5" strokeLinecap="round" opacity="0.3" />
+        </motion.g>
+      }
+      rightLegNode={
+        <motion.g 
+          style={{ transformOrigin: "80px 150px" }} 
+          animate={isActive ? { x: 22, y: [-4, 2, -4], scaleY: [0.85, 1, 0.85], rotate: 15 } : { x: 22, rotate: 10 }} 
+          transition={{ duration: 0.15, repeat: Infinity, delay: 0.05, ease: "easeInOut" }}
+        >
+          <circle cx="80" cy="150" r="45" fill="transparent" pointerEvents="none" />
+          <path d="M 78 145 Q 78 170 88 170 Q 98 170 98 145" stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" />
+          {/* Paw detail - Meatballs */}
+          <circle cx="88" cy="166" r="2.2" fill="#ffb7b7" />
+          <circle cx="83" cy="162" r="1.5" fill="#ffb7b7" />
+          <circle cx="93" cy="162" r="1.5" fill="#ffb7b7" />
+          <line x1="88" y1="162" x2="88" y2="170" stroke="#432c23" strokeWidth="2.5" strokeLinecap="round" opacity="0.3" />
+        </motion.g>
+      }
+    />
+
+    {/* Laptop Screen placed OVER the paws - facing the cat */}
     <g transform="translate(0, 10)">
-      <rect
-        x="24"
-        y="164"
-        width="112"
-        height="10"
-        rx="4"
-        fill="#1e293b"
-        stroke="#0f172a"
-        strokeWidth="1.5"
-      />
-      {/* Keyboard detail */}
-      <rect x="30" y="166" width="100" height="2" rx="1" fill="#4ade80" opacity="0.3" />
-      <rect x="30" y="170" width="100" height="2" rx="1" fill="#4ade80" opacity="0.2" />
+      {/* Base/Keyboard Area */}
+      <rect x="34" y="164" width="92" height="10" rx="4" fill="#1e293b" stroke="#0f172a" strokeWidth="1.5" />
+      <rect x="30" y="166" width="100" height="2" rx="1" fill="#4ade80" opacity="0.2" />
 
-      <rect
-        x="34"
-        y="132"
-        width="92"
-        height="32"
-        rx="6"
-        fill="#334155"
-        stroke="#0f172a"
-        strokeWidth="1.5"
-      />
-      <rect x="40" y="138" width="80" height="20" rx="3" fill="#0f172a" />
-
-      {isActive && (
-        <>
-          <rect x="45" y="143" width="30" height="2" rx="1" fill="#4ade80" opacity="0.9" />
-          <rect x="45" y="147" width="22" height="2" rx="1" fill="#60a5fa" opacity="0.8" />
-          <rect x="45" y="151" width="40" height="2" rx="1" fill="#f472b6" opacity="0.7" />
-          <motion.rect
-            x="88"
-            y="143"
-            width="2"
-            height="6"
-            rx="1"
-            fill="#e2e8f0"
-            animate={{ opacity: [1, 0, 1] }}
-            transition={{ duration: 0.75, repeat: Infinity }}
-          />
-        </>
-      )}
+      {/* Screen Back - Facing USER (Cat is looking at the other side) */}
+      <rect x="42" y="145" width="76" height="32" rx="4" fill="#334155" stroke="#0f172a" strokeWidth="1.5" transform="rotate(180, 80, 161)" />
+      {/* Subtle Apple-style Logo */}
+      <circle cx="80" cy="148" r="3" fill="#94a3b8" opacity="0.4" />
     </g>
-
-    {/* Typing hands - LOCKED TO HIGH SHOULDER (35, 118) */}
-    <motion.g
-      style={{ transformOrigin: "35px 118px" }}
-      animate={isActive ? { rotate: [-5, 12, -5] } : { rotate: 0 }}
-      transition={{ duration: 0.15, repeat: Infinity }}
-    >
-      <path
-        d="M35 118 Q20 135 45 142"
-        stroke="#432c23"
-        strokeWidth="7"
-        fill="white"
-        strokeLinecap="round"
-      />
-      <circle cx="35" cy="118" r="4.5" fill="white" />
-      <circle cx="45" cy="142" r="8" fill="white" stroke="#432c23" strokeWidth="2.5" />
-    </motion.g>
-    <motion.g
-      style={{ transformOrigin: "125px 118px" }}
-      animate={isActive ? { rotate: [5, -12, 5] } : { rotate: 0 }}
-      transition={{ duration: 0.18, repeat: Infinity, delay: 0.05 }}
-    >
-      <path
-        d="M125 118 Q140 135 115 142"
-        stroke="#432c23"
-        strokeWidth="7"
-        fill="white"
-        strokeLinecap="round"
-      />
-      <circle cx="125" cy="118" r="4.5" fill="white" />
-      <circle cx="115" cy="142" r="8" fill="white" stroke="#432c23" strokeWidth="2.5" />
-    </motion.g>
-
-    <ellipse cx="56" cy="192" rx="14" ry="9" fill="white" stroke="#432c23" strokeWidth="3.5" />
-    <ellipse cx="104" cy="192" rx="14" ry="9" fill="white" stroke="#432c23" strokeWidth="3.5" />
   </>
 );
 
-const ExerciseArm = ({ side, delay = 0, isActive }) => {
-  const liftT = { duration: 0.8, repeat: Infinity, ease: "easeInOut" };
-  return (
-    <motion.g
-      style={{ transformOrigin: side === "left" ? "35px 118px" : "125px 118px" }}
-      animate={
-        isActive
-          ? {
-              rotate: side === "left" ? [70, -10, 70] : [-70, 10, -70],
-            }
-          : { rotate: side === "left" ? 30 : -30 }
+const ExerciseProps = ({ isActive }) => (
+  <>
+    <SittingCatLegs 
+      leftLegNode={
+        <motion.g 
+          style={{ transformOrigin: "45px 145px" }} 
+          animate={isActive ? { rotate: [0, 65, 0] } : { rotate: 0 }} 
+          transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <circle cx="45" cy="145" r="45" fill="transparent" pointerEvents="none" />
+          {/* Left Dumbbell Arm - Outward Stance */}
+          <path d="M 45 145 Q 45 174 35 174 Q 25 174 25 145" stroke="#432c23" strokeWidth="4" fill="white" strokeLinecap="round" />
+          <line x1="35" y1="168" x2="35" y2="176" stroke="#432c23" strokeWidth="3" strokeLinecap="round" />
+          {/* Dumbell Bar */}
+          <line x1="15" y1="174" x2="55" y2="174" stroke="#94a3b8" strokeWidth="4" strokeLinecap="round" />
+          <rect x="10" y="164" width="8" height="20" rx="3" fill="#475569" />
+          <rect x="52" y="164" width="8" height="20" rx="3" fill="#475569" />
+        </motion.g>
       }
-      transition={{ ...liftT, delay }}
+      rightLegNode={
+        <motion.g 
+          style={{ transformOrigin: "115px 145px" }} 
+          animate={isActive ? { rotate: [0, -65, 0] } : { rotate: 0 }} 
+          transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut", delay: 0.1 }}
+        >
+          <circle cx="115" cy="145" r="45" fill="transparent" pointerEvents="none" />
+          {/* Right Dumbbell Arm - Outward Stance */}
+          <path d="M 115 145 Q 115 174 125 174 Q 135 174 135 145" stroke="#432c23" strokeWidth="4" fill="white" strokeLinecap="round" />
+          <line x1="125" y1="168" x2="125" y2="176" stroke="#432c23" strokeWidth="3" strokeLinecap="round" />
+          {/* Dumbell Bar */}
+          <line x1="105" y1="174" x2="145" y2="174" stroke="#94a3b8" strokeWidth="4" strokeLinecap="round" />
+          <rect x="100" y="164" width="8" height="20" rx="3" fill="#475569" />
+          <rect x="142" y="164" width="8" height="20" rx="3" fill="#475569" />
+        </motion.g>
+      }
+    />
+    {/* Sweat Band - Properly centered on forehead */}
+    <motion.g
+      animate={isActive ? { y: [0, -3, 0] } : {}}
+      transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
     >
-      <path
-        d={side === "left" ? "M35 118 Q20 145 45 148" : "M125 118 Q140 145 115 148"}
-        stroke="#432c23"
-        strokeWidth="7"
-        fill="white"
-        strokeLinecap="round"
-      />
-      <circle cx={side === "left" ? 35 : 125} cy="118" r="3.5" fill="white" />
-      <circle
-        cx={side === "left" ? 45 : 115}
-        cy="148"
-        r="8"
-        fill="white"
-        stroke="#432c23"
-        strokeWidth="2.5"
-      />
-      {/* Dumbbell */}
-      <g
-        transform={side === "left" ? "translate(45, 148)" : "translate(115, 148)"}
-        rotate={side === "left" ? "-10" : "10"}
-      >
-        <rect x="-2" y="-14" width="4" height="28" rx="2" fill="#475569" />
-        <rect x="-12" y="-18" width="24" height="10" rx="3" fill="#1e293b" />
-        <rect x="-12" y="8" width="24" height="10" rx="3" fill="#1e293b" />
-      </g>
+      <path d="M 32 75 Q 80 85 128 75" stroke="#3b82f6" strokeWidth="10" fill="none" opacity="0.8" />
+      <path d="M 32 75 Q 80 85 128 75" stroke="#93c5fd" strokeWidth="5" fill="none" />
     </motion.g>
-  );
-};
+    <motion.text
+      x="80"
+      y="24"
+      fontSize="12"
+      fontWeight="900"
+      fill="#3b82f6"
+      textAnchor="middle"
+      animate={{ y: [24, 14], opacity: [1, 0] }}
+      transition={{ duration: 1.2, repeat: Infinity }}
+    >
+      1, 2, 1, 2!
+    </motion.text>
+  </>
+);
 
-const ExerciseProps = ({ isActive }) => {
-  return (
-    <>
-      {isActive && (
-        <path d="M 18 64 Q 80 90 142 64 L 138 54 Q 80 80 22 54 Z" fill="#38bdf8" opacity="0.9" />
-      )}
-      <ExerciseArm side="left" isActive={isActive} />
-      <ExerciseArm side="right" delay={0.4} isActive={isActive} />
-
-      <ellipse cx="56" cy="192" rx="14" ry="9" fill="white" stroke="#432c23" strokeWidth="3.5" />
-      <ellipse cx="104" cy="192" rx="14" ry="9" fill="white" stroke="#432c23" strokeWidth="3.5" />
-    </>
-  );
-};
-
-const PlayProps = ({ isActive }) => {
-  const T = { duration: isActive ? 0.6 : 2, repeat: Infinity, ease: "easeInOut" };
-  return (
-    <>
-      {/* Balloon */}
-      <motion.g
-        animate={isActive ? { y: [0, -15, 0], rotate: [-2, 2, -2] } : { y: [0, -2, 0] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <path d="M125 118 Q140 100 148 110" stroke="#cbd5e1" strokeWidth="1.5" fill="none" />
-        <ellipse cx="152" cy="85" rx="18" ry="22" fill="#f472b6" stroke="#db2777" strokeWidth="2" />
-        <path d="M152 107 L148 112 L156 112 Z" fill="#f472b6" stroke="#db2777" strokeWidth="1" />
-      </motion.g>
-
-      {/* Left Arm - Wave */}
-      <motion.g
-        style={{ transformOrigin: "35px 118px" }}
-        animate={isActive ? { rotate: [70, -30, 70] } : { rotate: 20 }}
-        transition={T}
-      >
-        <path
-          d="M35 118 Q20 145 45 148"
-          stroke="#432c23"
-          strokeWidth="7"
-          fill="white"
-          strokeLinecap="round"
-        />
-        <circle cx="35" cy="118" r="4" fill="white" />
-        <circle cx="45" cy="148" r="8" fill="white" stroke="#432c23" strokeWidth="2.5" />
-      </motion.g>
-
-      {/* Right Arm - Wave */}
-      <motion.g
-        style={{ transformOrigin: "125px 118px" }}
-        animate={isActive ? { rotate: [-70, 30, -70] } : { rotate: -20 }}
-        transition={{ ...T, delay: 0.1 }}
-      >
-        <path
-          d="M125 118 Q140 145 115 148"
-          stroke="#432c23"
-          strokeWidth="7"
-          fill="white"
-          strokeLinecap="round"
-        />
-        <circle cx="125" cy="118" r="4" fill="white" />
-        <circle cx="115" cy="148" r="8" fill="white" stroke="#432c23" strokeWidth="2.5" />
-      </motion.g>
-
-      {/* Happy Feet */}
-      <motion.g
-        style={{ transformOrigin: "56px 188px" }}
-        animate={isActive ? { rotate: [15, -15, 15] } : { rotate: 0 }}
-        transition={T}
-      >
-        <ellipse cx="56" cy="192" rx="14" ry="9" fill="white" stroke="#432c23" strokeWidth="3.5" />
-      </motion.g>
-      <motion.g
-        style={{ transformOrigin: "104px 188px" }}
-        animate={isActive ? { rotate: [-15, 15, -15] } : { rotate: 0 }}
-        transition={{ ...T, delay: 0.2 }}
-      >
-        <ellipse cx="104" cy="192" rx="14" ry="9" fill="white" stroke="#432c23" strokeWidth="3.5" />
-      </motion.g>
-    </>
-  );
-};
+const PlayProps = ({ isActive }) => (
+  <>
+    <SittingCatLegs 
+      leftLegNode={
+        <motion.g 
+          style={{ transformOrigin: "75px 145px" }} 
+          animate={isActive ? { rotate: [-20, 60, -20] } : {}} 
+          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <circle cx="75" cy="145" r="45" fill="transparent" pointerEvents="none" />
+          <path d="M 55 145 Q 55 175 65 175 Q 75 175 75 145" stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" />
+          <circle cx="65" cy="171" r="2.2" fill="#ffb7b7" />
+        </motion.g>
+      }
+      rightLegNode={
+        <motion.g 
+          style={{ transformOrigin: "85px 145px" }} 
+          animate={isActive ? { rotate: [20, -60, 20] } : {}} 
+          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+        >
+          <circle cx="85" cy="145" r="45" fill="transparent" pointerEvents="none" />
+          <path d="M 85 145 Q 85 175 95 175 Q 105 175 105 145" stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" />
+          <circle cx="95" cy="171" r="2.2" fill="#ffb7b7" />
+        </motion.g>
+      }
+    />
+    {/* Floating Balloon that reacts to paw taps */}
+    <motion.g
+      animate={isActive ? { 
+        x: [20, -20, 20], 
+        y: [0, -2, 0, -2, 0],
+        rotate: [15, -15, 15] 
+      } : {}}
+      transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+    >
+      <circle cx="80" cy="140" r="18" fill="#38bdf8" fillOpacity="0.4" stroke="#0ea5e9" strokeWidth="2" />
+      <path d="M 80 158 Q 80 175 75 180" fill="none" stroke="#0ea5e9" strokeWidth="1.5" strokeDasharray="3 3" />
+      <ellipse cx="74" cy="132" rx="4" ry="2" fill="white" opacity="0.6" transform="rotate(-30 74 132)" />
+    </motion.g>
+  </>
+);
 
 const EatingProps = () => (
   <>
-    {/* Left Arm - Eating */}
+    <SittingCatLegs 
+      leftLegNode={
+        <motion.g style={{ transformOrigin: "80px 160px" }} animate={{ rotate: [-20, 20, -20] }} transition={{ duration: 0.4, repeat: Infinity, ease: "easeInOut" }}>
+          <circle cx="80" cy="160" r="45" fill="transparent" pointerEvents="none" />
+          <path d="M 62 145 Q 62 170 72 170 Q 82 170 82 145" stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" />
+          <line x1="72" y1="162" x2="72" y2="170" stroke="#432c23" strokeWidth="2.5" strokeLinecap="round" />
+        </motion.g>
+      }
+      rightLegNode={
+        <motion.g style={{ transformOrigin: "80px 160px" }} animate={{ rotate: [20, -20, 20] }} transition={{ duration: 0.4, repeat: Infinity, ease: "easeInOut" }}>
+          <circle cx="80" cy="160" r="45" fill="transparent" pointerEvents="none" />
+          <path d="M 78 145 Q 78 170 88 170 Q 98 170 98 145" stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" />
+          <line x1="88" y1="162" x2="88" y2="170" stroke="#432c23" strokeWidth="2.5" strokeLinecap="round" />
+        </motion.g>
+      }
+    />
     <motion.g
-      style={{ transformOrigin: "35px 118px" }}
-      animate={{ rotate: [-45, 25, -45] }}
-      transition={{ duration: 0.4, repeat: Infinity, ease: "easeInOut" }}
+      animate={{ y: [0, -3, 0] }}
+      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
     >
-      <path
-        d="M35 118 Q20 100 45 105"
-        stroke="#432c23"
-        strokeWidth="7"
-        fill="white"
-        strokeLinecap="round"
-      />
-      <circle cx="35" cy="118" r="3.5" fill="white" />
-      <circle cx="45" cy="105" r="8" fill="white" stroke="#432c23" strokeWidth="2.5" />
+      <rect x="50" y="145" width="60" height="25" rx="3" fill="#fcd34d" stroke="#b45309" strokeWidth="2" />
+      <circle cx="65" cy="155" r="6" fill="white" />
+      <circle cx="95" cy="155" r="6" fill="#f87171" />
+      <rect x="75" y="152" width="10" height="10" fill="#4ade80" />
     </motion.g>
-    {/* Right Arm - Eating */}
-    <motion.g
-      style={{ transformOrigin: "125px 118px" }}
-      animate={{ rotate: [45, -25, 45] }}
-      transition={{ duration: 0.4, repeat: Infinity, ease: "easeInOut" }}
-    >
-      <path
-        d="M125 118 Q140 100 115 105"
-        stroke="#432c23"
-        strokeWidth="7"
-        fill="white"
-        strokeLinecap="round"
-      />
-      <circle cx="125" cy="118" r="3.5" fill="white" />
-      <circle cx="115" cy="105" r="8" fill="white" stroke="#432c23" strokeWidth="2.5" />
-    </motion.g>
-    <ellipse cx="56" cy="192" rx="14" ry="9" fill="white" stroke="#432c23" strokeWidth="3.5" />
-    <ellipse cx="104" cy="192" rx="14" ry="9" fill="white" stroke="#432c23" strokeWidth="3.5" />
     <motion.text
       x="80"
       y="52"
@@ -835,6 +909,19 @@ const EatingProps = () => (
 
 const StudyBuddy = ({ mode, isActive, isFeeding, happiness }) => {
   const glow = mode === "focus" ? "#FF4B4B" : mode === "shortBreak" ? "#58CC02" : "#1CB0F6";
+
+  const [idleAction, setIdleAction] = useState(0);
+
+  useEffect(() => {
+    if (!isActive && !isFeeding) {
+      const interval = setInterval(() => {
+        setIdleAction(prev => (prev + 1) % 5);
+      }, 15000); // Change action every 15s
+      return () => clearInterval(interval);
+    } else {
+      setIdleAction(0);
+    }
+  }, [isActive, isFeeding]);
 
   // QA: Reuse AudioContext to prevent memory leaks/browser limits
   const audioCtxRef = useRef(null);
@@ -869,7 +956,13 @@ const StudyBuddy = ({ mode, isActive, isFeeding, happiness }) => {
 
   let catPropsElem;
   if (isFeeding) catPropsElem = <EatingProps />;
-  else if (!isActive) catPropsElem = <IdleProps />;
+  else if (!isActive) {
+    if (idleAction === 1) catPropsElem = <SleepProps />;
+    else if (idleAction === 2) catPropsElem = <BoxProps />;
+    else if (idleAction === 3) catPropsElem = <YarnBallProps />;
+    else if (idleAction === 4) catPropsElem = <ScratchProps />;
+    else catPropsElem = <IdleProps />;
+  }
   else if (mode === "focus") catPropsElem = <FocusProps isActive />;
   else if (mode === "shortBreak") catPropsElem = <ExerciseProps isActive />;
   else catPropsElem = <PlayProps isActive />;
@@ -891,39 +984,27 @@ const StudyBuddy = ({ mode, isActive, isFeeding, happiness }) => {
 
       <motion.div
         animate={{
-          y:
-            isActive && mode === "longBreak"
-              ? [0, -8, -12, -14, -12, -8, 0, 8, 12, 14, 12, 8, 0]
-              : isActive
-                ? [0, -9, 0]
-                : [0, -5, 0, -3, 0],
-          x:
-            isActive && mode === "longBreak"
-              ? [0, 40, 80, 120, 140, 120, 80, 40, 0, -40, -80, -120, -140, -120, -80, -40, 0]
-              : 0,
+          y: isActive ? [0, -5, 0] : [0, -3, 0, -1, 0],
+          x: 0,
         }}
         transition={{
           y: {
-            duration: isActive ? (mode === "longBreak" ? 6.0 : 0.75) : 3.8,
+            duration: isActive ? 0.75 : 3.8,
             repeat: Infinity,
             ease: "easeInOut",
           },
-          x:
-            isActive && mode === "longBreak"
-              ? { duration: 6.0, repeat: Infinity, ease: "easeInOut" }
-              : undefined,
         }}
         className="relative"
       >
-        <motion.div
-          animate={{
-            scaleX: isActive ? [1, 0.7, 1] : [0.85, 0.9, 0.85],
-            opacity: isActive ? [0.18, 0.04, 0.18] : [0.08, 0.13, 0.08],
-          }}
-          transition={{ duration: isActive ? 0.75 : 3.8, repeat: Infinity }}
-          className="absolute -bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black blur-md"
-          style={{ width: 110, height: 10 }}
-        />
+          <motion.div
+            animate={{
+              scaleX: isActive ? [1, 0.9, 1] : [0.85, 0.9, 0.85],
+              opacity: isActive ? [0.12, 0.08, 0.12] : [0.05, 0.08, 0.05],
+            }}
+            transition={{ duration: isActive ? 0.75 : 3.8, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -bottom-6 left-1/2 -translate-x-1/2 rounded-full bg-black blur-xl"
+            style={{ width: "110px", height: "10px" }}
+          />
 
         <motion.div
           animate={
@@ -931,19 +1012,24 @@ const StudyBuddy = ({ mode, isActive, isFeeding, happiness }) => {
               ? { rotate: [-1, 1, -1] }
               : !isActive
                 ? {
-                    rotate: [0, 5, 3, 5, 0, 5, 3, 5, 0], // Tilting head during lick
+                    // Organic 10s head dip cycle for licking
+                    rotate: idleAction === 0 
+                      ? [0, 6, 4, 6, 2, 8, 8, 4, 0] 
+                      : [0, 5, 3, 5, 0, 5, 3, 5, 0], 
+                    y: idleAction === 0 
+                      ? [0, 8, 5, 8, 2, 10, 10, 5, 0] 
+                      : [0, 0, 0, 0, 0, 0, 0, 0, 0],
                     scale: happiness > 90 ? [1, 1.02, 1] : 1,
                   }
                 : mode === "shortBreak" && isActive
-                  ? { y: [0, -5, 0], rotate: [-3, 3, -3], scale: [1, 1.05, 1] } // Heavy lifting exertion
+                  ? { y: [0, -5, 0], rotate: [-3, 3, -3], scale: [1, 1.05, 1] }
                   : { rotate: 0 }
           }
           transition={{
-            duration: isActive && mode === "focus" ? 1.4 : !isActive ? 4 : 0.5,
+            duration: isActive && mode === "focus" ? 1.4 : !isActive ? 10 : 0.5,
             repeat: Infinity,
             ease: "easeInOut",
-            repeatDelay: !isActive ? (happiness > 90 ? 0 : 8) : 0,
-            times: !isActive ? [0, 0.1, 0.3, 0.4, 0.45, 0.55, 0.75, 0.85, 0.9] : undefined,
+            times: !isActive ? [0, 0.1, 0.15, 0.2, 0.35, 0.5, 0.7, 0.8, 1] : undefined,
           }}
         >
           <svg
@@ -951,27 +1037,23 @@ const StudyBuddy = ({ mode, isActive, isFeeding, happiness }) => {
             style={{ width: 240, height: 322 }}
             className="drop-shadow-2xl overflow-visible"
           >
-            {/* 1. Tail goes behind everything */}
+            {/* 1. Long, Fluid S-Curve Tail */}
             <motion.path
-              d="M125 170 Q160 180 145 210"
+              d="M130 165 C155 160 165 190 150 205 C145 210 155 215 165 212"
               stroke="#432c23"
-              strokeWidth="3.5"
-              fill="white"
+              strokeWidth="4"
+              fill="none"
               strokeLinecap="round"
-              animate={{
-                d: isActive
-                  ? [
-                      "M125 170 Q160 180 145 210",
-                      "M125 170 Q170 190 140 220",
-                      "M125 170 Q155 175 148 205",
-                    ]
-                  : [
-                      "M125 170 Q155 185 145 210",
-                      "M125 170 Q165 190 142 215",
-                      "M125 170 Q155 185 145 210",
-                    ],
+              animate={{ 
+                d: [
+                  "M130 165 C155 160 165 190 150 205 C145 210 155 215 165 212",
+                  "M130 165 C165 170 175 185 155 200 C145 205 165 212 175 215",
+                  "M130 165 C155 160 165 190 150 205 C145 210 155 215 165 212"
+                ],
+                rotate: [0, 5, -5, 0]
               }}
-              transition={{ duration: isActive ? 1.0 : 3.0, repeat: Infinity, ease: "easeInOut" }}
+              style={{ transformOrigin: "130px 165px" }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
             {/* 2. Body */}
             <CatBody />
@@ -1004,13 +1086,10 @@ const StudyBuddy = ({ mode, isActive, isFeeding, happiness }) => {
             </g>
 
             {/* ── REORDERING: Arm Base then Head then Face Details ── */}
-            {/* 3. Limbs (Arms/Legs) -> Drawn UNDER the head but OVER body */}
-            {!isActive && catPropsElem}
+            <CatHead showHachimaki={mode === "focus" && isActive} happiness={happiness} isActive={isActive} />
 
-            <CatHead showHachimaki={mode === "focus" && isActive} happiness={happiness} />
-
-            {/* If active, props go OVER head (like computer) */}
-            {isActive && catPropsElem}
+            {/* Limbs (Arms/Legs) -> MUST be drawn OVER head so paws can reach the face (licking, eating) */}
+            {catPropsElem}
 
             {/* 4. Face and Tongue -> Drawn OVER the paw for perfect lick sync */}
             <CatFaceBase
@@ -1018,6 +1097,7 @@ const StudyBuddy = ({ mode, isActive, isFeeding, happiness }) => {
               isActive={isActive}
               isFeeding={isFeeding}
               happiness={happiness}
+              idleAction={idleAction}
             />
           </svg>
         </motion.div>
@@ -1230,153 +1310,146 @@ const PixelOffice = ({ mode, isActive }) => {
   );
 };
 
-// ─── Confetti Burst ───────────────────────────────────────────────────────────
-const CONFETTI_COLORS = [
-  "#FF4B4B",
-  "#58CC02",
-  "#1CB0F6",
-  "#FFC800",
-  "#CE82FF",
-  "#f472b6",
-  "#fb923c",
-];
-const CONFETTI_PARTICLES = Array.from({ length: 32 }, (_, i) => ({
-  id: i,
-  angle: (i / 32) * 360 + (Math.random() * 15 - 7),
-  color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-  dist: 90 + ((i * 37) % 80),
-  size: 5 + ((i * 11) % 8),
-  shape: i % 3 === 0 ? "circle" : "rect",
-}));
+const FloatingBooks = ({ isActive }) => {
+  const books = [
+    { id: 1, x: "12%", y: "18%", color: "#5d4037", stroke: "#2e150d", rib: "#a52a2a", delay: 0 },
+    { id: 2, x: "85%", y: "45%", color: "#4e342e", stroke: "#1b0000", rib: "#8b0000", delay: 1.5 },
+    { id: 3, x: "15%", y: "75%", color: "#6d4c41", stroke: "#311b1b", rib: "#b71c1c", delay: 3.0 },
+  ];
 
-const WaterReminderToast = ({ onDismiss }) => (
-  <motion.div
-    className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-2 border-blue-200 dark:border-blue-500/40 shadow-2xl rounded-3xl px-6 py-4"
-    initial={{ y: 100, opacity: 0, scale: 0.85 }}
-    animate={{ y: 0, opacity: 1, scale: 1 }}
-    exit={{ y: 100, opacity: 0, scale: 0.85 }}
-    transition={{ type: "spring", stiffness: 300, damping: 24 }}
-  >
-    <motion.div
-      animate={{ y: [0, -5, 0] }}
-      transition={{ duration: 1.4, repeat: Infinity }}
-      className="text-3xl shrink-0"
-    >
-      💧
-    </motion.div>
-    <div className="flex flex-col">
-      <p className="text-sm font-bold text-blue-700 dark:text-blue-200">
-        Đã đến lúc uống nước rồi đó!
-      </p>
-      <p className="text-xs text-slate-500 dark:text-slate-300">
-        Giữ nước cho não khoẻ, học tốt hơn nhé!
-      </p>
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      {books.map((b) => (
+        <motion.div
+          key={b.id}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{
+            opacity: 0.8, y: 0,
+            y: [-25, 25, -25],
+            rotateX: [15, 25, 15],
+            rotateY: [-5, 5, -5]
+          }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          transition={{
+            y: { duration: 8 + b.id, repeat: Infinity, ease: "easeInOut", delay: b.delay },
+            rotateX: { duration: 10 + b.id, repeat: Infinity, ease: "easeInOut" },
+            opacity: { duration: 1.5 }
+          }}
+          className="absolute"
+          style={{ left: b.x, top: b.y, perspective: "1000px" }}
+        >
+          <svg width="120" height="110" viewBox="0 0 120 110" className="drop-shadow-2xl overflow-visible">
+            <defs>
+              <radialGradient id={`glow-${b.id}`} cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="gold" stopOpacity="0.25" />
+                <stop offset="100%" stopColor="gold" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            <circle cx="60" cy="55" r="50" fill={`url(#glow-${b.id})`} />
+
+            <g transform="translate(10, 10)">
+              {/* 1. Spine (Top-Back perspective) */}
+              <path d="M 30 15 Q 50 10 70 15 L 75 20 Q 50 15 25 20 Z" fill={b.stroke} opacity="0.4" />
+              {[42, 50, 58].map(rx => (
+                <rect key={rx} x={rx} y="11" width="3" height="6" rx="1.5" fill={b.rib} transform="rotate(-15, 50, 15)" opacity="0.6" />
+              ))}
+
+              {/* 2. Main Leather Cover - Facing User */}
+              <path d="M 25 20 L 75 20 L 95 70 L 5 70 Z" fill={b.color} stroke={b.stroke} strokeWidth="2" />
+              <line x1="50" y1="20" x2="50" y2="70" stroke={b.stroke} strokeWidth="1.5" opacity="0.6" />
+
+              {/* 3. Aged Page Stacks */}
+              <path d="M 12 25 Q 30 22 48 25 L 48 65 Q 30 68 8 65 Z" fill="#fdf5e6" stroke={b.stroke} strokeWidth="1" />
+              <path d="M 52 25 Q 70 22 88 25 L 92 65 Q 70 68 52 65 Z" fill="#fdf5e6" stroke={b.stroke} strokeWidth="1" />
+
+              {/* 4. The "Liquid" Page Flip - Refined Morph */}
+              {isActive && (
+                <motion.g>
+                   <motion.path
+                      initial={{ d: "M 88 25 Q 70 22 52 25 L 52 65 Q 70 68 92 65 Z", opacity: 0 }}
+                      animate={{
+                        d: [
+                            "M 88 25 Q 70 22 52 25 L 52 65 Q 70 68 92 65 Z", // Flat Right
+                            "M 80 15 Q 70 5 60 15 L 60 70 Q 70 80 85 75 Z",    // Lift
+                            "M 50 10 Q 50 0 50 10 L 50 70 Q 50 80 50 70 Z",    // Peak (S-curve feel)
+                            "M 12 25 Q 30 22 48 25 L 48 65 Q 30 68 8 65 Z",   // Drop Left
+                            "M 88 25 Q 70 22 52 25 L 52 65 Q 70 68 92 65 Z"   // Reset
+                        ],
+                        opacity: [0, 1, 1, 1, 0]
+                      }}
+                      transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        times: [0, 0.25, 0.5, 0.75, 1],
+                        ease: [0.4, 0, 0.2, 1],
+                        delay: b.delay
+                      }}
+                      stroke={b.stroke} strokeWidth="0.8" fill="#fdf5e6"
+                  />
+                </motion.g>
+              )}
+
+              {/* Content / Ornaments (Facing user) */}
+              <g opacity="0.4">
+                  <path d="M 20 35 L 35 35 M 20 40 L 30 40" stroke={b.stroke} strokeWidth="0.6" />
+                  <circle cx="70" cy="45" r="4" stroke={b.stroke} fill="none" strokeWidth="0.5" />
+                  <path d="M 68 45 L 72 45 M 70 43 L 70 47" stroke={b.stroke} strokeWidth="0.5" />
+              </g>
+
+              {/* Magical Particles (Floating towards User) */}
+              <motion.circle 
+                  animate={{ opacity: [0, 1, 0], z: [0, 100], y: [-10, -40], scale: [0.5, 1.5, 0.5] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: b.delay }}
+                  cx="50" cy="40" r="1.5" fill="gold"
+              />
+            </g>
+          </svg>
+        </motion.div>
+      ))}
     </div>
-    <button
-      onClick={onDismiss}
-      className="ml-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 active:scale-95 text-white text-xs font-black rounded-2xl transition-all shrink-0"
-    >
-      OK 👍
-    </button>
-  </motion.div>
-);
+  );
+};
 
-const ConfettiBurst = ({ onDone }) => (
-  <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
-    {CONFETTI_PARTICLES.map(p => (
-      <motion.div
-        key={p.id}
-        className={p.shape === "circle" ? "absolute rounded-full" : "absolute rounded-sm"}
-        style={{ width: p.size, height: p.size, background: p.color, top: "50%", left: "50%" }}
-        initial={{ x: 0, y: 0, opacity: 1, rotate: 0, scale: 1 }}
-        animate={{
-          x: Math.cos((p.angle * Math.PI) / 180) * p.dist,
-          y: Math.sin((p.angle * Math.PI) / 180) * p.dist - 60,
-          opacity: 0,
-          rotate: p.angle * 4,
-          scale: 0.3,
-        }}
-        transition={{ duration: 1.4, ease: "easeOut" }}
-        onAnimationComplete={p.id === 0 ? onDone : undefined}
-      />
-    ))}
-    <motion.div
-      className="absolute text-6xl"
-      initial={{ scale: 0, opacity: 1 }}
-      animate={{ scale: [0, 1.6, 1.2, 0], opacity: [1, 1, 1, 0] }}
-      transition={{ duration: 1.6 }}
-    >
-      🎉
-    </motion.div>
-    <motion.div
-      className="fixed top-1/3 left-1/2 -translate-x-1/2 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border-2 border-[#58CC02]/40 shadow-2xl rounded-3xl px-8 py-5 flex flex-col items-center gap-2 text-center z-10"
-      initial={{ scale: 0.5, opacity: 0, y: 20 }}
-      animate={{ scale: 1, opacity: 1, y: 0 }}
-      exit={{ scale: 0.8, opacity: 0, y: -20 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
-    >
-      <span className="text-3xl">🏆</span>
-      <p className="text-base font-black text-slate-800 dark:text-white">Pomodoro hoàn thành!</p>
-      <p className="text-xs text-slate-500 dark:text-slate-400 font-bold">
-        +1 🍱 cho Buddy • +10% Mood
-      </p>
-    </motion.div>
-  </div>
-);
+// ─── Main Page ─────────────────────────────────────────────────────────────────
 
 // ─── Main Page ─────────────────────────────────────────────────────────────────
 export const PomodoroPage = () => {
-  // Read saved timer state ONCE during initial render (no effects = no race conditions)
-  const [_saved] = useState(() => {
-    try {
-      const raw = localStorage.getItem("pomodoro-timer-state");
-      return raw ? JSON.parse(raw) : {};
-    } catch {
-      return {};
-    }
-  });
+  // Global Store Access - MOVED TO TOP to fix ReferenceError
+  const updatePomodoroData = useUserStore(s => s.updatePomodoroData);
+  const account = useUserStore(s => s.account);
+
+  const initialPomodoro = account?.pomodoro || {};
 
   // Hiệu ứng visual chuông rung khi bắt đầu
   const [showBell, setShowBell] = useState(false);
-  const [mode, setMode] = useState(_saved.mode || "focus");
-  // Restore isActive from saved state so background mini widget sessions continue seamlessly
-  const [isActive, setIsActive] = useState(() => {
-    if (_saved.isActive && typeof _saved.savedAt === "number") {
-      // Only auto-resume if saved recently (within 30 minutes)
-      const elapsed = (Date.now() - _saved.savedAt) / 1000;
-      return elapsed < 30 * 60;
-    }
-    return false;
-  });
-  // Turn logic
-  const [turns, setTurns] = useState([]); // [{duration: 50*60}, ...]
-  const [currentTurnIdx, setCurrentTurnIdx] = useState(_saved.currentTurnIdx ?? 0);
-  const [turnTimeLeft, setTurnTimeLeft] = useState(() => {
-    if (typeof _saved.turnTimeLeft === "number" && _saved.turnTimeLeft > 0) {
-      // Timer was running → subtract elapsed time since last save
-      if (_saved.isActive && typeof _saved.savedAt === "number") {
-        const elapsed = Math.floor((Date.now() - _saved.savedAt) / 1000);
-        return Math.max(0, _saved.turnTimeLeft - elapsed);
+  // Restore values from global store (Sync behavior)
+  const [mode, setMode] = useState(initialPomodoro.mode || "focus");
+  const [isActive, setIsActive] = useState(initialPomodoro.isActive || false);
+  const [turnTimeLeft, setTurnTimeLeft] = useState(initialPomodoro.timeLeft || 25 * 60);
+
+  // Sync with global store (PomodoroMini does the background work)
+  useEffect(() => {
+    if (account?.pomodoro) {
+      const p = account.pomodoro;
+      if (p.mode) setMode(p.mode);
+      if (p.isActive !== undefined) setIsActive(p.isActive);
+      
+      // Critical: Only sync timeLeft if there is a running session or significant difference
+      // to avoid 'jumpy' UI, but ALWAYS trust the store if isActive is true
+      if (p.timeLeft !== undefined) {
+         setTurnTimeLeft(p.timeLeft);
       }
-      // Timer was paused → exact value
-      return _saved.turnTimeLeft;
     }
-    return 25 * 60; // Default focus time
-  });
+  }, [account?.pomodoro?.isActive, account?.pomodoro?.mode]); // Only re-sync on core state changes post-init
+
   // Removed redundant 'timeLeft' state - using 'turnTimeLeft' universally
   const [soundConfig, setSoundConfig] = useState({ type: null, id: null });
   const [customYtUrl, setCustomYtUrl] = useState("");
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [volume, setVolume] = useState(0.6);
   const [activeTrackTitle, setActiveTrackTitle] = useState("");
-
-  // Global Store Access
-  const updatePomodoroData = useUserStore(s => s.updatePomodoroData);
-  const account = useUserStore(s => s.account);
-  const userStore = useUserStore();
-  const bookmarkStore = useBookmarkStore();
-
-  const initialPomodoro = account?.pomodoro || {};
+  const [turns, setTurns] = useState([]); // [{duration: 50*60}, ...]
+  const [currentTurnIdx, setCurrentTurnIdx] = useState(0);
 
   // Gamification & Target - MERGED STATE (from Nhost if possible)
   const [sessions, setSessions] = useState(initialPomodoro.totalSessions ?? 0);
@@ -1397,6 +1470,7 @@ export const PomodoroPage = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [quoteIdx, setQuoteIdx] = useState(0);
   const [buddyType, setBuddyType] = useState(initialPomodoro.buddyType ?? "cat");
+  const [showMini, setShowMini] = useState(initialPomodoro.showMini ?? true);
 
   // Smart System Analysis for Session Durations
   const getSmartDuration = m => {
@@ -1410,26 +1484,43 @@ export const PomodoroPage = () => {
   };
   // Update turns when targetGoal or turnDuration changes
   useEffect(() => {
-    // Chia mục tiêu thành các turn (đều là giây)
     const totalSeconds = targetGoal * 60;
-    const numTurns = Math.ceil(totalSeconds / turnDuration);
+    const numTurns = Math.max(1, Math.ceil(totalSeconds / turnDuration));
     const turnsArr = Array.from({ length: numTurns }, (_, i) => {
       const remain = totalSeconds - i * turnDuration;
       return { duration: remain >= turnDuration ? turnDuration : remain };
     });
-    setTimeout(() => {
-      setTurns(turnsArr);
-      // Only reset if targetGoal or turnDuration actually changed from saved values
-      // (on reload they match → keep restored state; on manual change → reset)
-      if (_saved.targetGoal === targetGoal && _saved.turnDuration === turnDuration) {
-        if (turnTimeLeft === 0) setTurnTimeLeft(turnsArr[currentTurnIdx]?.duration || turnDuration);
-        return;
-      }
-      setCurrentTurnIdx(0);
-      setTurnTimeLeft(turnsArr[0]?.duration || 0);
-    }, 0);
-    // Do NOT reset Focus Today here
-  }, [targetGoal, turnDuration, _saved.targetGoal, _saved.turnDuration]);
+    setTurns(turnsArr);
+    
+    // Nếu số lượng turn thay đổi mà turn hiện tại vượt quá, reset về cuối
+    if (currentTurnIdx >= numTurns) {
+        setCurrentTurnIdx(numTurns - 1);
+    }
+  }, [targetGoal, turnDuration]);
+
+  // Sync state from account when it loads from server the first time
+  const hasInitedRef = useRef(false);
+  useEffect(() => {
+    if (account?.pomodoro && !hasInitedRef.current) {
+      const p = account.pomodoro;
+      if (p.totalSessions !== undefined) setSessions(p.totalSessions);
+      if (p.totalFocusMinutes !== undefined) setTotalFocusMinutes(p.totalFocusMinutes);
+      if (p.targetGoal !== undefined) setTargetGoal(p.targetGoal);
+      if (p.happiness !== undefined) setHappiness(p.happiness);
+      if (p.foodStock !== undefined) setFoodStock(p.foodStock);
+      if (p.buddyType !== undefined) setBuddyType(p.buddyType);
+      if (p.autoCycle !== undefined) setAutoCycle(p.autoCycle);
+      if (p.showMini !== undefined) setShowMini(p.showMini);
+      if (p.currentTurnIdx !== undefined) setCurrentTurnIdx(p.currentTurnIdx);
+      
+      // We don't auto-resume timer from Nhost to avoid jumpy behavior if synced from another tab
+      // But we set proper initial time if it exists
+      if (p.timeLeft !== undefined) setTurnTimeLeft(p.timeLeft);
+      else setTurnTimeLeft(p.targetGoal ? (p.targetGoal > 180 ? 50 * 60 : 25 * 60) : 25 * 60);
+      
+      hasInitedRef.current = true;
+    }
+  }, [account?.pomodoro]);
 
   // Tự động cập nhật turnDuration mặc định khi targetGoal thay đổi
   useEffect(() => {
@@ -1479,23 +1570,8 @@ export const PomodoroPage = () => {
   }, [mode, isActive, turnTimeLeft]);
 
   // ─── Bidirectional Instant Sync (Storage Event) ───
-  useEffect(() => {
-    const handleStorage = (e) => {
-      if (e.key === "pomodoro-timer-state") {
-        try {
-          const p = JSON.parse(e.newValue);
-          if (p) {
-            if (typeof p.turnTimeLeft === 'number') setTurnTimeLeft(p.turnTimeLeft);
-            if (typeof p.isActive === 'boolean') setIsActive(p.isActive);
-            if (p.mode) setMode(p.mode);
-            if (typeof p.currentTurnIdx === 'number') setCurrentTurnIdx(p.currentTurnIdx);
-          }
-        } catch(err) {}
-      }
-    };
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, []);
+  // Removed bidirectional Storage Event sync as per "no storage" request
+
 
   useEffect(() => {
     const sync = () => {
@@ -1666,43 +1742,82 @@ export const PomodoroPage = () => {
     [loadYouTubeAPI, volume]
   );
 
-  // Timer tick for turns - OPTIMIZED
+  const targetTimeRef = useRef(null);
+
+  // Handle YouTube Playback Trigger
   useEffect(() => {
-    let interval;
-    if (isActive && turns.length > 0 && turnTimeLeft > 0) {
-      const startTime = Date.now();
-      const initialTimeLeft = turnTimeLeft;
-
-      interval = setInterval(() => {
-        setTurnTimeLeft(prev => {
-          const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
-          const next = Math.max(0, initialTimeLeft - elapsedSeconds);
-
-          if (next >= 0) {
-            const timerState = {
-              turnTimeLeft: next,
-              currentTurnIdx,
-              isActive,
-              mode,
-              savedAt: Date.now(),
-              targetGoal,
-              turnDuration,
-            };
-            localStorage.setItem("pomodoro-timer-state", JSON.stringify(timerState));
-          }
-          return next;
-        });
-      }, 1000);
+    if (soundConfig.type === "youtube" && soundConfig.id) {
+      setupPlayer(soundConfig.id);
+    } else if (!soundConfig.id && ytPlayerRef.current?.pauseVideo) {
+      try { ytPlayerRef.current.pauseVideo(); } catch (e) {}
+      setActiveTrackTitle("");
     }
-    return () => clearInterval(interval);
-  }, [isActive, turns.length, currentTurnIdx, targetGoal, turnDuration, turnTimeLeft]); // Added turnTimeLeft to dependencies to properly capture initialTimeLeft
+  }, [soundConfig, setupPlayer]);
+
+  // Handle Audio Mute/Unmute Toggle
+  useEffect(() => {
+    if (ytPlayerRef.current?.playVideo) {
+      try {
+        if (audioEnabled) ytPlayerRef.current.playVideo();
+        else ytPlayerRef.current.pauseVideo();
+      } catch (e) {}
+    }
+  }, [audioEnabled]);
+
+  // UI Sync with Global Timer (PomodoroMini/Store)
+  useEffect(() => {
+    if (account?.pomodoro) {
+        const p = account.pomodoro;
+        // Only update local state if drift is significant (>2s) or state changed
+        if (Math.abs(p.timeLeft - turnTimeLeft) > 2 || p.isActive !== isActive || p.mode !== mode) {
+            setTurnTimeLeft(p.timeLeft ?? turnTimeLeft);
+            setIsActive(p.isActive ?? isActive);
+            setMode(p.mode ?? mode);
+        }
+    }
+  }, [account?.pomodoro]);
+
+  // Local tick for smooth UI (Mini syncs every 1s)
+  useEffect(() => {
+      let interval;
+      if (isActive && turnTimeLeft > 0) {
+          interval = setInterval(() => {
+              setTurnTimeLeft(prev => {
+                  const next = prev - 1;
+                  if (next <= 0) {
+                      completeSession();
+                      return 0;
+                  }
+                  return next;
+              });
+          }, 1000);
+      }
+      return () => clearInterval(interval);
+  }, [isActive, turnTimeLeft]);
+
+  const completeSession = () => {
+      setIsActive(false);
+      setShowConfetti(true);
+      setSessions(s => s + 1);
+      setFoodStock(f => f + 1);
+      setHappiness(h => Math.min(100, h + 10));
+      setTotalFocusMinutes(m => m + (turnDuration / 60));
+      playJingle();
+      
+      updatePomodoroData({
+          timeLeft: 0,
+          isActive: false,
+          totalSessions: sessions + 1,
+          foodStock: foodStock + 1,
+          happiness: Math.min(100, happiness + 10),
+          totalFocusMinutes: totalFocusMinutes + (turnDuration / 60)
+      }, true); // Force cloud sync on completion
+  };
 
   // Trigger turn completion when time hits 0
   useEffect(() => {
     if (isActive && turns.length > 0 && turnTimeLeft === 0) {
-      new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3")
-        .play()
-        .catch(() => {});
+      sounds.playNotification();
 
       setTimeout(() => {
         // 1. If it was FOCUS mode, increment sessions and minutes
@@ -1756,7 +1871,7 @@ export const PomodoroPage = () => {
         }
 
         // Global Sync
-        const syncData = collectSyncData(userStore, bookmarkStore);
+        const syncData = collectSyncData(useUserStore, useBookmarkStore);
         if (syncData) debouncedSync(syncData);
       }, 0);
 
@@ -1803,23 +1918,13 @@ export const PomodoroPage = () => {
   };
 
   const persistTimerState = (active, time, m) => {
-    try {
-      let existing = {};
-      const raw = localStorage.getItem("pomodoro-timer-state");
-      if (raw) existing = JSON.parse(raw);
-      localStorage.setItem("pomodoro-timer-state", JSON.stringify({
-        ...existing,
-        turnTimeLeft: time,
-        currentTurnIdx,
-        isActive: active,
-        mode: m,
-        savedAt: Date.now(),
-        targetGoal,
-        turnDuration,
-      }));
-    } catch(e) {}
-    // Nếu active (Start) thì hiện mini, nếu pause từ Tab thì ẩn mini
-    updatePomodoroData({ timeLeft: time, isActive: active, mode: m, showMini: active });
+    updatePomodoroData({ 
+        timeLeft: time, 
+        isActive: active, 
+        mode: m, 
+        showMini: active,
+        currentTurnIdx // Lưu luôn vị trí turn hiện tại
+    });
   };
 
   const toggleTimer = () => {
@@ -1828,8 +1933,15 @@ export const PomodoroPage = () => {
         setIsActive(true);
         persistTimerState(true, turnTimeLeft, mode);
       } else {
-        setCurrentTurnIdx(0);
-        const freshTime = turns[0]?.duration || turnDuration;
+        // Nếu đã hết thời gian của turn hiện tại, chuyển sang turn mới (hoặc reset nếu là cuối cùng)
+        const isLastTurn = currentTurnIdx + 1 >= turns.length;
+        const nextIdx = isLastTurn ? 0 : currentTurnIdx + (mode === 'focus' ? 0 : 1);
+        
+        if (isLastTurn && mode !== 'focus') {
+             setCurrentTurnIdx(0);
+        }
+        
+        const freshTime = turns[nextIdx]?.duration || turnDuration;
         setTurnTimeLeft(freshTime);
         setIsActive(true);
         persistTimerState(true, freshTime, mode);
@@ -1853,11 +1965,24 @@ export const PomodoroPage = () => {
   };
 
   const switchMode = m => {
+    if (isActive) {
+        if (!window.confirm("Timer đang chạy, bạn có chắc muốn dừng và đổi chế độ không?")) {
+            return;
+        }
+    }
+    // Dừng ngay lập tức và đặt lại thời gian về mặc định của chế độ đó
+    setIsActive(false);
     setMode(m);
     const time = getSmartDuration(m);
     setTurnTimeLeft(time);
-    setIsActive(false);
-    updatePomodoroData({ timeLeft: time, isActive: false, mode: m, showMini: false });
+    
+    // Cập nhật Store ngay lập tức để đồng bộ background worker
+    updatePomodoroData({ 
+        timeLeft: time, 
+        isActive: false, 
+        mode: m, 
+        showMini: false 
+    }, true);
   };
   const fmt = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   const modeData = MODES[mode];
@@ -1887,6 +2012,10 @@ export const PomodoroPage = () => {
             background: `radial-gradient(ellipse at 50% 40%, ${modeData.color}12 0%, transparent 68%)`,
           }}
         />
+
+        <AnimatePresence>
+          {mode === "focus" && <FloatingBooks isActive={isActive} />}
+        </AnimatePresence>
 
         {/* Top Header: Smart Banner OR Manual Mode Selectors */}
         <div className="relative z-10 flex justify-center pt-3 sm:pt-5 pb-2 sm:pb-3 px-3">
@@ -2015,26 +2144,52 @@ export const PomodoroPage = () => {
                 </div>
               </div>
               {/* Chọn thời lượng turn */}
-              <div className="mt-4 sm:mt-6 flex flex-col items-center w-full max-w-[280px] sm:max-w-xs px-2">
-                <span className="text-[10px] font-black text-slate-400 uppercase mb-1">
-                  Chọn thời lượng mỗi turn
-                </span>
-                <div className="w-full flex items-center gap-2">
-                  <span className="text-[11px] font-bold text-slate-400">15</span>
-                  <input
-                    type="range"
-                    min={15 * 60}
-                    max={120 * 60}
-                    step={5 * 60}
-                    value={turnDuration}
-                    onChange={e => setTurnDuration(Number(e.target.value))}
-                    className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500"
-                  />
-                  <span className="text-[11px] font-bold text-slate-400">120</span>
+              <div className="mt-4 sm:mt-6 flex flex-col items-center w-full max-w-[300px] sm:max-w-md px-2">
+                <div className="flex items-center gap-2 mb-1.5 justify-between w-full">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    Chỉnh sửa Turn
+                  </span>
+                  {targetGoal >= 180 ? (
+                      <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20">
+                          <Brain size={10} className="text-amber-500" />
+                          <span className="text-[9px] font-black text-amber-600 uppercase">Gợi ý: Deep Work (50m+)</span>
+                      </div>
+                  ) : (
+                      <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20">
+                          <Wind size={10} className="text-emerald-500" />
+                          <span className="text-[9px] font-black text-emerald-600 uppercase">Gợi ý: Standard (25m)</span>
+                      </div>
+                  )}
                 </div>
-                <div className="mt-1 text-[12px] font-bold text-amber-600">
-                  {Math.round(turnDuration / 60)} phút / turn
+
+                <div className="w-full flex items-center gap-3 bg-white/50 dark:bg-white/5 p-3 rounded-2xl border border-slate-200/50 dark:border-white/5">
+                  <div className="flex-1">
+                    <div className="flex justify-between mb-2">
+                        <span className="text-[11px] font-bold text-slate-400">15m</span>
+                        <div className="text-[13px] font-black text-slate-800 dark:text-white">
+                           {Math.round(turnDuration / 60)} phút / turn
+                        </div>
+                        <span className="text-[11px] font-bold text-slate-400">120m</span>
+                    </div>
+                    <input
+                        type="range"
+                        min={15 * 60}
+                        max={120 * 60}
+                        step={5 * 60}
+                        value={turnDuration}
+                        onChange={e => {
+                            const val = Number(e.target.value);
+                            setTurnDuration(val);
+                            if (!isActive) setTurnTimeLeft(val);
+                        }}
+                        className="w-full h-1.5 bg-slate-200 dark:bg-slate-700/50 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                    />
+                  </div>
                 </div>
+                
+                <p className="mt-2 text-[10px] text-center text-slate-400 font-medium italic">
+                    Hệ thống đề xuất chia kế hoạch {Math.floor(targetGoal/60)}h thành <strong>{turns.length} sessions</strong> để đạt mục tiêu tối ưu.
+                </p>
               </div>
             </div>
             {/* ...existing code... */}
@@ -2113,8 +2268,8 @@ export const PomodoroPage = () => {
           )}
         </button>
 
-        <div className={`${soundPanelOpen ? "block" : "hidden"} xl:block`}>
-          <div className="p-4 sm:p-5 space-y-4 sm:space-y-5 flex-1">
+        <div className={`${soundPanelOpen ? "block" : "hidden"} xl:block flex-1 overflow-y-auto custom-scrollbar`}>
+          <div className="p-4 space-y-3 flex-1">
             {/* Header */}
             <div className="flex items-center justify-between">
               <h3 className="font-black text-slate-800 dark:text-white uppercase tracking-widest text-xs flex items-center gap-2">
@@ -2185,7 +2340,7 @@ export const PomodoroPage = () => {
             </div>
 
             {/* Target Goal Selector */}
-            <div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-4 space-y-4 border border-slate-100 dark:border-slate-700/50">
+            <div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-3 space-y-3 border border-slate-100 dark:border-slate-700/50">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Target size={16} className="text-amber-500" />
@@ -2204,6 +2359,16 @@ export const PomodoroPage = () => {
                   >
                     {autoCycle ? "AUTO ON" : "AUTO OFF"}
                   </button>
+                  <button
+                    onClick={() => {
+                      const newVal = !showMini;
+                      setShowMini(newVal);
+                      updatePomodoroData({ showMini: newVal });
+                    }}
+                    className={`text-[9px] font-black px-2 py-1 rounded-lg transition-all ${showMini ? "bg-purple-500 text-white shadow-sm" : "bg-slate-200 dark:bg-slate-600 text-slate-500"}`}
+                  >
+                    {showMini ? "MINI ON" : "MINI OFF"}
+                  </button>
                 </div>
               </div>
 
@@ -2214,7 +2379,7 @@ export const PomodoroPage = () => {
                   </span>
                   <span>Mục tiêu: {targetGoal} phút</span>
                 </div>
-                <div className="flex items-center gap-2 mt-2">
+                <div className="flex items-center gap-2 mt-1">
                   <button
                     onMouseDown={() => {
                       let interval = setInterval(() => {
@@ -2270,8 +2435,6 @@ export const PomodoroPage = () => {
               </div>
             </div>
 
-            <hr className="border-slate-100 dark:border-slate-700" />
-
             {/* Now Playing */}
             <AnimatePresence>
               {soundConfig.id && activeTrackTitle && (
@@ -2315,10 +2478,8 @@ export const PomodoroPage = () => {
               )}
             </AnimatePresence>
 
-            <hr className="border-slate-100 dark:border-slate-700" />
-
             {/* YouTube Lofi Section */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                   YouTube Lofi
@@ -2350,7 +2511,7 @@ export const PomodoroPage = () => {
                     <button
                       key={track.id}
                       onClick={() => toggleYoutube(track.id)}
-                      className={`p-3 rounded-xl border-2 text-left transition-all relative overflow-hidden ${
+                      className={`p-2.5 rounded-xl border-2 text-left transition-all relative overflow-hidden ${
                         active
                           ? "bg-red-50 dark:bg-red-500/10 border-red-300 dark:border-red-500/40"
                           : "bg-white dark:bg-slate-700 border-slate-100 dark:border-slate-600 hover:border-red-200"
@@ -2380,10 +2541,8 @@ export const PomodoroPage = () => {
               </div>
             </div>
 
-            <hr className="border-slate-100 dark:border-slate-700" />
-
             {/* Nature Sounds */}
-            <div className="space-y-3">
+            <div className="space-y-2 mt-1">
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                 Nature Escape
               </span>
@@ -2394,7 +2553,7 @@ export const PomodoroPage = () => {
                     <button
                       key={sound.id}
                       onClick={() => toggleAmbient(sound.id)}
-                      className={`p-3 rounded-xl border-2 transition-all flex items-center gap-2.5 ${
+                      className={`p-2.5 rounded-xl border-2 transition-all flex items-center gap-2.5 ${
                         active
                           ? "bg-blue-50 dark:bg-blue-500/10 border-blue-300 dark:border-blue-500/40"
                           : "bg-white dark:bg-slate-700 border-slate-100 dark:border-slate-600 hover:border-blue-200"
@@ -2420,7 +2579,7 @@ export const PomodoroPage = () => {
 
         {/* Bottom tip card - Click to refresh */}
         <div
-          className={`${soundPanelOpen ? "block" : "hidden"} xl:block p-4 border-t border-slate-100 dark:border-slate-700 cursor-pointer group`}
+          className={`${soundPanelOpen ? "block" : "hidden"} xl:block p-3 border-t border-slate-100 dark:border-slate-700 cursor-pointer group`}
           onClick={() => setQuoteIdx(q => q + 1)}
         >
           <AnimatePresence mode="wait">

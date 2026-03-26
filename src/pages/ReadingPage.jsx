@@ -16,12 +16,14 @@ import {
   Sparkles,
   Layers,
   RotateCcw,
+  UploadCloud,
 } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { readingListeningService } from "../services/readingListeningService";
 import { useUserStore } from "../store/useUserStore";
 import { useToastStore } from "../store/useToastStore";
 import { tts } from "../utils/tts";
+import { PedagogicalText } from "../components/ui/GrammarFormItem";
 import { Headphones as HeadphonesIcon, Volume2 } from "lucide-react";
 
 const LEVELS = ["N5", "N4", "N3", "N2", "N1"];
@@ -115,6 +117,33 @@ export const ReadingPage = () => {
   const handleSubmitQuiz = () => {
     setShowResults(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleFileUpload = async event => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setLoading(true);
+    try {
+      const text = await file.text();
+      const jsonData = JSON.parse(text);
+      
+      const { sections, ...lessonData } = jsonData;
+      if (!lessonData.title) throw new Error("File JSON thiếu trường title");
+      
+      if (!lessonData.level) lessonData.level = level;
+      
+      await readingListeningService.importLesson(lessonData, sections || []);
+      
+      addToast(`Đã thêm thành công: ${lessonData.title}!`, "success");
+      loadLessons();
+      event.target.value = null; // reset
+    } catch (err) {
+      console.error("Upload failed", err);
+      addToast("Lỗi import JSON: " + err.message, "error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // --- Import Logic ---
@@ -393,6 +422,18 @@ export const ReadingPage = () => {
           >
             {isImportMode ? <Plus className="w-5 h-5 rotate-45" /> : <Plus className="w-5 h-5" />}
             {isImportMode ? "Hủy bỏ" : "Nhập bài mới"}
+          </button>
+
+          <input type="file" id="reading-upload" accept=".json" onChange={handleFileUpload} className="hidden" />
+          <button
+             disabled={loading}
+             onClick={() => document.getElementById("reading-upload").click()}
+             className="flex items-center gap-2 px-6 py-3 rounded-2xl font-black text-sm transition-all shadow-lg bg-indigo-50 dark:bg-slate-800 text-indigo-500 hover:scale-105 border-2 border-indigo-100 dark:border-slate-700 disabled:opacity-50"
+          >
+             <UploadCloud size={20} className={loading ? "animate-bounce" : ""} />
+             <span className="hidden sm:inline">
+               {loading ? "ĐANG TẢI..." : "THÊM JSON"}
+             </span>
           </button>
         </div>
       </div>
@@ -754,12 +795,9 @@ export const ReadingPage = () => {
                         <Volume2 size={16} />
                       </button>
                     </div>
-                    <div
-                      className="text-base md:text-lg font-bold text-slate-700 dark:text-slate-200 reading-text-container"
-                      dangerouslySetInnerHTML={{
-                        __html: renderContent(selectedLesson.reading_points),
-                      }}
-                    />
+                    <div className="reading-text-container">
+                      <PedagogicalText text={selectedLesson.reading_points} mode="list" />
+                    </div>
                   </div>
                 )}
               </div>

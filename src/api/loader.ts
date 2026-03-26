@@ -36,10 +36,25 @@ export const loadDeck = async (
 
   try {
     // 1. Nhost Mode (voca source) or UUID check
-    const isActuallyUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(deckId);
+    const isActuallyUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      deckId
+    );
     if (type === "voca" || deckUpper === "GRAMMAR" || isActuallyUUID) {
       // A. Standard JLPT / IT / ENG Decks
-      const advancedLevels = ["N1", "N2", "N3", "N4", "N5", "IT", "ENG", "JLPT N1", "JLPT N2", "JLPT N3", "JLPT N4", "JLPT N5"];
+      const advancedLevels = [
+        "N1",
+        "N2",
+        "N3",
+        "N4",
+        "N5",
+        "IT",
+        "ENG",
+        "JLPT N1",
+        "JLPT N2",
+        "JLPT N3",
+        "JLPT N4",
+        "JLPT N5",
+      ];
       if (advancedLevels.includes(deckUpper)) {
         const q = `query GetAdvancedVoca($levels: [String!], $kanjiLevels: [String!]) { 
           jap_voca: japience_voca(where: {level: {_in: $levels}}, order_by: [{deck_id: asc}, {word: asc}]) {
@@ -53,12 +68,12 @@ export const loadDeck = async (
           }
         }`;
 
-        const baseLv = deckUpper.replace('JLPT ', '');
+        const baseLv = deckUpper.replace("JLPT ", "");
         const levels = [baseLv, `JLPT ${baseLv}`, deckUpper, deckId];
 
-        const { data } = await fetchFromNhost(q, { 
+        const { data } = await fetchFromNhost(q, {
           levels,
-          kanjiLevels: levels
+          kanjiLevels: levels,
         });
 
         const userVocaModels = (data?.userVoca || []).map((uv: any) => ({
@@ -109,8 +124,11 @@ export const loadDeck = async (
           deck: k.deck_id || deckId,
         }));
 
-        return [...japVoca, ...japKanji, ...userVocaModels].sort((a, b) => 
-          (a.deck || "").localeCompare(b.deck || "", undefined, { numeric: true, sensitivity: 'base' })
+        return [...japVoca, ...japKanji, ...userVocaModels].sort((a, b) =>
+          (a.deck || "").localeCompare(b.deck || "", undefined, {
+            numeric: true,
+            sensitivity: "base",
+          })
         );
       }
 
@@ -158,7 +176,7 @@ export const loadDeck = async (
       const standardDecks = ["N1", "N2", "N3", "N4", "N5", "IT", "ENG", "GRAMMAR", "JLPT"];
       if (!standardDecks.includes(deckUpper)) {
         const qMeta = `query GetDeckMeta($id: String!) {
-          decks_by_pk(id: $id) { id title original_deck_id }
+          decks_by_pk(id: $id) { id title original_deck_id community_folder_id }
         }`;
         const metaRes = await fetchFromNhost(qMeta, { id: deckId });
         const deck = metaRes.data?.decks_by_pk;
@@ -166,11 +184,31 @@ export const loadDeck = async (
 
         let targetId = deck?.original_deck_id || deckId;
         let targetTitle = deck?.title || "";
+        const uuidLevelHints: string[] = [];
 
-        const queryData = async (dId: string, title?: string) => {
-          const isActuallyUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(dId);
+        if (isActuallyUUID && deck?.community_folder_id) {
+          const qFolder = `query GetFolderTitle($id: String!) {
+            folders_by_pk(id: $id) { id title parent_id }
+          }`;
+          const folderRes = await fetchFromNhost(qFolder, { id: deck.community_folder_id });
+          const folder = folderRes.data?.folders_by_pk;
+
+          if (folder?.title) uuidLevelHints.push(folder.title, folder.title.toUpperCase());
+
+          if (folder?.parent_id) {
+            const parentRes = await fetchFromNhost(qFolder, { id: folder.parent_id });
+            const parent = parentRes.data?.folders_by_pk;
+            if (parent?.title) uuidLevelHints.push(parent.title, parent.title.toUpperCase());
+          }
+        }
+
+        const queryData = async (dId: string, title?: string, levelHints: string[] = []) => {
+          const isActuallyUUID =
+            /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(dId);
           const possibleIds = [dId, dId.toUpperCase(), dId.toLowerCase()];
-          
+          const isGenericLessonTitle = /^bài\s*\d+/i.test((title || "").trim());
+          const legacyLevels: string[] = [...levelHints];
+
           if (!isActuallyUUID) {
             if (dId.includes("-")) possibleIds.push(dId.replace(/-/g, " "));
             if (dId.includes("_")) possibleIds.push(dId.replace(/_/g, " "));
@@ -181,27 +219,41 @@ export const loadDeck = async (
             possibleIds.push(title);
             possibleIds.push(title.toUpperCase());
             possibleIds.push(title.toLowerCase());
-            
-            if (t.includes("テクノロジ") || t.includes("technology")) possibleIds.push("IT Technology");
-            if (t.includes("マネジメント") || t.includes("management")) possibleIds.push("IT Management");
+
+            // Legacy compatibility: old rows were saved by level (title), not deck_id.
+            // Skip generic lesson titles to avoid cross-deck data leakage.
+            if (isActuallyUUID && !isGenericLessonTitle) {
+              legacyLevels.push(title, title.toUpperCase(), title.toLowerCase());
+            }
+
+            if (t.includes("テクノロジ") || t.includes("technology"))
+              possibleIds.push("IT Technology");
+            if (t.includes("マネジメント") || t.includes("management"))
+              possibleIds.push("IT Management");
             if (t.includes("ストラテジ") || t.includes("strategy")) possibleIds.push("IT Strategy");
           }
 
-          const qCombined = `query GetDeckData($ids: [String!]) {
+          const qCombined = `query GetDeckData($ids: [String!], $legacyLevels: [String!]) {
             vocaByDeck: japience_voca(where: {deck_id: {_in: $ids}}, order_by: {word: asc}) { id word reading meaning example example_meaning mnemonic level deck_id }
             kanjiByDeck: japience_kanji(where: {deck_id: {_in: $ids}}, order_by: {kanji: asc}) { id kanji han_viet onyomi kunyomi meaning mnemonic level deck_id }
-            userVoca: my_vocabulary(where: {level: {_in: $ids}}, order_by: {word: asc}) { id word furigana meaning han_viet example_jp example_vi romaji level mnemonic type onyomi kunyomi }
+            userVocaByLevel: my_vocabulary(where: {level: {_in: $legacyLevels}}, order_by: {word: asc}) { id word furigana meaning han_viet example_jp example_vi romaji level mnemonic type onyomi kunyomi }
           }`;
 
-          const { data, errors } = await fetchFromNhost(qCombined, { 
-            ids: possibleIds
+          const { data, errors } = await fetchFromNhost(qCombined, {
+            ids: possibleIds,
+            legacyLevels: isActuallyUUID
+              ? [...new Set(legacyLevels)]
+              : [...new Set([...legacyLevels, ...possibleIds])],
           });
 
           if (errors) console.error("[Loader] queryData errors:", errors);
           const v = data?.vocaByDeck || [];
           const k = data?.kanjiByDeck || [];
-          const uv = data?.userVoca || [];
-          console.debug(`[Loader] Querying IDs: ${possibleIds.join(", ")} -> Found: Voca:${v.length}, Kanji:${k.length}, UserVoca:${uv.length}`);
+          const uvByLevel = data?.userVocaByLevel || [];
+          const uv = uvByLevel || [];
+          console.debug(
+            `[Loader] Querying IDs: ${possibleIds.join(", ")} -> Found: Voca:${v.length}, Kanji:${k.length}, UserVoca:${uv.length}`
+          );
 
           return {
             voca: v,
@@ -210,9 +262,15 @@ export const loadDeck = async (
           };
         };
 
-        let { voca, kanji, userVoca } = await queryData(targetId, targetTitle);
+        let { voca, kanji, userVoca } = await queryData(targetId, targetTitle, uuidLevelHints);
 
-        if (voca.length === 0 && kanji.length === 0 && userVoca.length === 0 && targetTitle) {
+        if (
+          !isActuallyUUID &&
+          voca.length === 0 &&
+          kanji.length === 0 &&
+          userVoca.length === 0 &&
+          targetTitle
+        ) {
           const qOthers = `query FindActiveDecks($title: String!) {
             decks(where: {title: {_eq: $title}, original_deck_id: {_is_null: true}}) { id title }
           }`;
@@ -277,8 +335,11 @@ export const loadDeck = async (
             level: uv.level,
             deck: deckId,
           }));
-          return [...vocaModels, ...kanjiModels, ...userVocaModels].sort((a, b) => 
-            (a.deck || "").localeCompare(b.deck || "", undefined, { numeric: true, sensitivity: 'base' })
+          return [...vocaModels, ...kanjiModels, ...userVocaModels].sort((a, b) =>
+            (a.deck || "").localeCompare(b.deck || "", undefined, {
+              numeric: true,
+              sensitivity: "base",
+            })
           );
         }
       }
