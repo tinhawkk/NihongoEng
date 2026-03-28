@@ -563,7 +563,7 @@ const IdleProps = () => (
        animate={{ opacity: [0, 0.4, 1, 1, 0], scale: [0.5, 1, 1.3, 1, 0.5] }}
        transition={{ duration: 5, repeat: Infinity, repeatDelay: 6, times: [0, 0.2, 0.3, 0.6, 0.8] }}
     />
-    <motion.g animate={{ opacity: [0, 1, 0], y: [-30, -80], x: [80, 75, 90] }} transition={{ duration: 4, repeat: Infinity, repeatDelay: 8, delay: 0.2 }}>
+    <motion.g animate={{ opacity: [0, 1, 0], y: [-30, -55, -80], x: [80, 75, 90] }} transition={{ duration: 4, repeat: Infinity, repeatDelay: 8, delay: 0.2 }}>
       <text x="0" y="0" fontSize="18">💕</text>
     </motion.g>
   </>
@@ -923,37 +923,6 @@ const StudyBuddy = ({ mode, isActive, isFeeding, happiness }) => {
     }
   }, [isActive, isFeeding]);
 
-  // QA: Reuse AudioContext to prevent memory leaks/browser limits
-  const audioCtxRef = useRef(null);
-  const playJingle = () => {
-    try {
-      if (!audioCtxRef.current) {
-        audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      const ctx = audioCtxRef.current;
-      if (ctx.state === "suspended") ctx.resume();
-
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.type = "sine";
-      o.frequency.setValueAtTime(1400, ctx.currentTime);
-      o.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
-      g.gain.setValueAtTime(0.001, ctx.currentTime);
-      g.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.01);
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-      o.connect(g);
-      g.connect(ctx.destination);
-      o.start();
-      setTimeout(() => {
-        try {
-          o.stop();
-        } catch (e) {}
-      }, 400);
-    } catch (e) {
-      console.warn("Audio jingle failed:", e);
-    }
-  };
-
   let catPropsElem;
   if (isFeeding) catPropsElem = <EatingProps />;
   else if (!isActive) {
@@ -1047,6 +1016,7 @@ const StudyBuddy = ({ mode, isActive, isFeeding, happiness }) => {
               animate={{ 
                 d: [
                   "M130 165 C155 160 165 190 150 205 C145 210 155 215 165 212",
+                  "M130 165 C165 170 175 185 155 200 C145 205 165 212 175 215",
                   "M130 165 C165 170 175 185 155 200 C145 205 165 212 175 215",
                   "M130 165 C155 160 165 190 150 205 C145 210 155 215 165 212"
                 ],
@@ -1777,47 +1747,28 @@ export const PomodoroPage = () => {
     }
   }, [account?.pomodoro]);
 
-  // Local tick for smooth UI (Mini syncs every 1s)
+  // Local tick for smooth UI (Protected against browser background throttling & sleeping tabs)
+  const lastTickRef = useRef(Date.now());
   useEffect(() => {
       let interval;
       if (isActive && turnTimeLeft > 0) {
+          lastTickRef.current = Date.now();
           interval = setInterval(() => {
-              setTurnTimeLeft(prev => {
-                  const next = prev - 1;
-                  if (next <= 0) {
-                      completeSession();
-                      return 0;
-                  }
-                  return next;
-              });
+              const now = Date.now();
+              const elapsedSeconds = Math.round((now - lastTickRef.current) / 1000);
+              if (elapsedSeconds >= 1) {
+                  lastTickRef.current = now;
+                  setTurnTimeLeft(prev => Math.max(0, prev - elapsedSeconds));
+              }
           }, 1000);
       }
       return () => clearInterval(interval);
-  }, [isActive, turnTimeLeft]);
-
-  const completeSession = () => {
-      setIsActive(false);
-      setShowConfetti(true);
-      setSessions(s => s + 1);
-      setFoodStock(f => f + 1);
-      setHappiness(h => Math.min(100, h + 10));
-      setTotalFocusMinutes(m => m + (turnDuration / 60));
-      playJingle();
-      
-      updatePomodoroData({
-          timeLeft: 0,
-          isActive: false,
-          totalSessions: sessions + 1,
-          foodStock: foodStock + 1,
-          happiness: Math.min(100, happiness + 10),
-          totalFocusMinutes: totalFocusMinutes + (turnDuration / 60)
-      }, true); // Force cloud sync on completion
-  };
+  }, [isActive]);
 
   // Trigger turn completion when time hits 0
   useEffect(() => {
     if (isActive && turns.length > 0 && turnTimeLeft === 0) {
-      sounds.playNotification();
+      sounds.playSuccess();
 
       setTimeout(() => {
         // 1. If it was FOCUS mode, increment sessions and minutes
@@ -1827,6 +1778,9 @@ export const PomodoroPage = () => {
 
           setSessions(s => s + 1);
           setTotalFocusMinutes(prev => prev + finishedMinutes);
+          setFoodStock(s => s + 1);
+          setHappiness(h => Math.min(100, h + 10));
+          setShowConfetti(true);
 
           // Use latest store data to avoid stale initialPomodoro bug
           const currentTotal = useUserStore.getState().account?.pomodoro?.totalFocusMinutes || 0;
@@ -1836,6 +1790,8 @@ export const PomodoroPage = () => {
             totalSessions: currentSessions + 1,
             lastSessionDate: new Date().toISOString(),
             totalFocusMinutes: currentTotal + finishedMinutes,
+            foodStock: foodStock + 1,
+            happiness: Math.min(100, happiness + 10),
           });
 
           // Transition logic
@@ -2179,10 +2135,11 @@ export const PomodoroPage = () => {
                         value={turnDuration}
                         onChange={e => {
                             const val = Number(e.target.value);
+                            const diff = val - turnDuration;
                             setTurnDuration(val);
-                            if (!isActive) setTurnTimeLeft(val);
+                            setTurnTimeLeft(prev => Math.max(0, prev + diff));
                         }}
-                        className="w-full h-1.5 bg-slate-200 dark:bg-slate-700/50 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                        className="w-full h-1.5 bg-slate-200 dark:bg-slate-700/50 rounded-lg appearance-none cursor-pointer accent-amber-500 transition-all active:accent-amber-600"
                     />
                   </div>
                 </div>

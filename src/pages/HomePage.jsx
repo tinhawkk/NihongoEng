@@ -1932,7 +1932,7 @@ export const HomePage = () => {
                           transition={{ duration: 0.3 }}
                           className="bg-white dark:bg-slate-800/40 rounded-[32px] mt-2 border-2 border-slate-100 dark:border-slate-800 shadow-xl overflow-hidden relative"
                         >
-                          {renderMoriTimeline(root, deck)}
+                          {renderTreeContent(root, true)}
                         </motion.div>
                       )}
                     </AnimatePresence>

@@ -23,6 +23,7 @@ import { useUserStore } from "../store/useUserStore";
 import { tts } from "../utils/tts";
 import { sounds } from "../utils/sounds";
 import { ConfirmModal } from "../components/ui/ConfirmModal";
+import { renderMarkdownFurigana, renderFurigana } from "../utils/furigana";
 
 const DECK_LABELS = {
   eng: "Tiếng Anh",
@@ -51,48 +52,91 @@ function shuffle(arr) {
 function generateQuestions(words, count = 10, globalDistractorPool = []) {
   if (words.length === 0) return [];
   
-  // Shuffle and pick the target words
   const selected = shuffle(words).slice(0, Math.min(count, words.length));
   
-  // Create a massive pool for distractors by merging everything we have
-  // Priority: current words + global pool
   const basePool = [...words, ...globalDistractorPool];
 
   return selected.map(word => {
-    // Pick 3 wrong answers from the massive pool
-    // Filter out the word itself and any synonyms (same meaning string)
-    let wrongPool = basePool.filter(w => 
-      w.word !== word.word && 
-      w.meaning && // Đảm bảo từ nhiễu có nghĩa
-      w.meaning.trim() !== "" &&
-      w.meaning !== word.meaning &&
-      w.id !== word.id
-    );
+    const reading = word.reading || word.furigana || "";
+    const example = word.example || word.example_jp || "";
+    
+    // Choose question type
+    // types: meaning, reverse, reading, context
+    const types = ['meaning', 'reverse'];
+    if (reading && reading !== word.word) types.push('reading');
+    if (example && example.includes(word.word)) types.push('context');
+    
+    const qType = types[Math.floor(Math.random() * types.length)];
+    
+    let questionText = word.word;
+    let correctAnswer = word.meaning;
+    let distractorKey = 'meaning';
+    let prompt = "Nghĩa của từ này là gì?";
 
-    // Shuffle the wrong pool and pick 3 unique meanings
+    if (qType === 'meaning') {
+      questionText = word.word;
+      correctAnswer = word.meaning;
+      distractorKey = 'meaning';
+      prompt = "Nghĩa của từ này là gì?";
+    } else if (qType === 'reverse') {
+      questionText = word.meaning;
+      correctAnswer = word.word;
+      distractorKey = 'word';
+      prompt = "Chọn từ tiếng Nhật tương ứng:";
+    } else if (qType === 'reading') {
+      questionText = word.word;
+      correctAnswer = reading;
+      distractorKey = 'reading'; 
+      prompt = "Cách đọc đúng là gì?";
+    } else if (qType === 'context') {
+      const safeWord = word.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      let qText = example;
+      // Strip [word](furigana) format
+      qText = qText.replace(new RegExp(`\\[${safeWord}\\]\\([^)]+\\)`, 'g'), "___");
+      // Strip word(furigana) or word（furigana）format
+      qText = qText.replace(new RegExp(`${safeWord}[（\\(\\[<][^）\\)\\]>]+[）\\)\\]>]`, 'g'), "___");
+      // Strip plain word
+      qText = qText.replace(new RegExp(safeWord, 'g'), "___");
+      
+      questionText = qText;
+      correctAnswer = word.word;
+      distractorKey = 'word';
+      prompt = "Điền từ thích hợp vào chỗ trống:";
+    }
+
+    let wrongPool = basePool.filter(w => {
+      if (w.id === word.id) return false;
+      const val = distractorKey === 'reading' ? (w.reading || w.furigana) : w[distractorKey];
+      return val && val.trim() !== "" && val !== correctAnswer;
+    });
+
     const wrongs = [];
     shuffle(wrongPool).forEach(w => {
-      const m = w.meaning?.trim();
-      if (wrongs.length < 3 && m && !wrongs.includes(m)) {
-        wrongs.push(m);
+      const val = distractorKey === 'reading' ? (w.reading || w.furigana) : w[distractorKey];
+      const cleanVal = val?.trim();
+      if (wrongs.length < 3 && cleanVal && !wrongs.includes(cleanVal)) {
+        wrongs.push(cleanVal);
       }
     });
     
-    // Fallback in the rare case we still don't have enough
     while (wrongs.length < 3) {
       wrongs.push(`Đáp án nhiễu ${wrongs.length + 1}`);
     }
 
-    const options = shuffle([word.meaning, ...wrongs]);
+    const options = shuffle([correctAnswer, ...wrongs]);
 
     return {
       id: word.id,
-      word: word.word,
-      reading: word.reading || word.furigana || "",
-      correctAnswer: word.meaning,
+      word: word.word, 
+      qType,
+      prompt,
+      questionText,
+      reading,
+      correctAnswer,
       options,
       audio: word.audio || "",
-      explanation: word.example || word.example_jp || `${word.word} = ${word.meaning}`,
+      meaning: word.meaning,
+      example: example,
       mnemonic: word.mnemonic || "",
       hanViet: word.hanViet || "",
     };
@@ -190,6 +234,14 @@ const SetupScreen = ({ deckId, wordCount, onStart }) => {
   );
 };
 
+const renderRichText = (text) => {
+  if (!text) return "";
+  if (text.includes("[") && text.includes("](")) {
+    return renderMarkdownFurigana(text);
+  }
+  return renderFurigana(text) || text;
+};
+
 // ─── Question Screen ─────────────────────────────────────────
 const QuestionScreen = ({
   question,
@@ -210,7 +262,7 @@ const QuestionScreen = ({
   const getNextInterval = useUserStore(s => s.getNextInterval);
 
   return (
-    <div className="max-w-lg mx-auto space-y-6">
+    <div className="max-w-lg md:max-w-xl mx-auto space-y-3 md:space-y-4">
       {/* Progress bar + exit */}
       <div className="flex items-center gap-3">
         <button
@@ -238,19 +290,26 @@ const QuestionScreen = ({
         key={question.id}
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
-        className="text-center py-6 space-y-2"
+        className="text-center py-3 md:py-4 space-y-2"
       >
-        <div className="flex items-center justify-center gap-4">
-          <p className="text-5xl font-black text-slate-800 dark:text-white">{question.word}</p>
-          <div className="flex flex-col gap-2">
-            <button
-              onClick={() => tts.playWithFallback(question.audio, question.word)}
-              onMouseEnter={() => tts.playWithFallback(question.audio, question.word)}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-blue-500 hover:bg-blue-50 transition-all shadow-sm border-b-2 border-slate-200 dark:border-slate-700 active:border-b-0 active:translate-y-0.5"
-              title="Nghe phát âm"
-            >
-              <Volume2 size={24} />
-            </button>
+        <p className="text-sm font-bold text-slate-400 border-b-2 border-slate-100 dark:border-slate-800 pb-1 mb-2 w-max mx-auto px-4 uppercase tracking-widest">
+          {question.prompt}
+        </p>
+        <div className="flex items-center justify-center gap-4 px-2">
+          <div className={`${question.qType === 'context' ? 'text-xl md:text-2xl text-center leading-norma' : 'text-3xl md:text-5xl leading-tight text-center'} font-black text-slate-800 dark:text-white`}>
+            {renderRichText(question.questionText)}
+          </div>
+          <div className="flex flex-col gap-2 shrink-0">
+            {question.qType === 'meaning' && (
+              <button
+                onClick={() => tts.playWithFallback(question.audio, question.word)}
+                onMouseEnter={() => tts.playWithFallback(question.audio, question.word)}
+                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-blue-500 hover:bg-blue-50 transition-all shadow-sm border-b-2 border-slate-200 dark:border-slate-700 active:border-b-0 active:translate-y-0.5"
+                title="Nghe phát âm"
+              >
+                <Volume2 size={24} />
+              </button>
+            )}
             <button
                onClick={() => setShowHint(!showHint)}
                className={`p-2 rounded-xl transition-all shadow-sm border-b-2 active:border-b-0 active:translate-y-0.5 ${showHint ? "bg-amber-100 text-amber-600 border-amber-200" : "bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-amber-50"}`}
@@ -290,7 +349,7 @@ const QuestionScreen = ({
       </motion.div>
 
       {/* Options */}
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
         {question.options.map((opt, i) => {
           let style =
             "bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-[#1CB0F6] hover:bg-blue-50 dark:hover:bg-sky-900/30";
@@ -310,7 +369,7 @@ const QuestionScreen = ({
               whileTap={!answered ? { scale: 0.98 } : undefined}
               disabled={answered}
               onClick={() => onAnswer(i, opt)}
-              className={`w-full p-4 rounded-2xl font-bold text-left transition-all flex items-center gap-3 ${style}`}
+              className={`w-full h-full p-3 sm:p-4 rounded-xl font-bold text-left transition-all flex items-center justify-start gap-3 ${style}`}
             >
               <span
                 className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black shrink-0 ${
@@ -341,38 +400,66 @@ const QuestionScreen = ({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-4"
+            className="space-y-3"
           >
-            <div className={`p-4 rounded-2xl border-2 ${isCorrect ? "bg-[#d7ffb8]/50 border-[#58CC02]/30" : "bg-[#ffdfe0]/50 border-[#FF4B4B]/30"}`}>
-              <p className={`text-sm font-black uppercase tracking-widest mb-1 ${isCorrect ? "text-[#58CC02]" : "text-[#FF4B4B]"}`}>
+            <div className={`p-3 sm:p-4 rounded-xl border-2 text-left ${isCorrect ? "bg-[#d7ffb8]/50 border-[#58CC02]/30" : "bg-[#ffdfe0]/50 border-[#FF4B4B]/30"}`}>
+              <p className={`text-[11px] sm:text-sm font-black uppercase tracking-widest mb-2 ${isCorrect ? "text-[#58CC02]" : "text-[#FF4B4B]"}`}>
                 {isCorrect ? "✅ Chính xác!" : "❌ Sai rồi!"}
               </p>
-              <p className="text-sm text-slate-600 font-medium">
-                <span className="font-bold">Đáp án:</span> {question.correctAnswer}
-              </p>
+              <div className="text-xs sm:text-sm text-slate-600 font-medium space-y-2">
+                <p>
+                  <span className="font-bold text-slate-400 uppercase text-[10px] tracking-wider block mb-0.5">Từ vựng</span>
+                  <span className="font-black text-lg text-slate-800 dark:text-white mr-2">{question.word}</span>
+                  {question.reading && <span className="text-slate-500 font-bold">{question.reading}</span>}
+                  {question.hanViet && <span className="text-amber-600 dark:text-amber-400 font-black ml-2 text-xs bg-amber-100 dark:bg-amber-900/30 px-1.5 py-0.5 rounded">[{question.hanViet}]</span>}
+                </p>
+                <p>
+                  <span className="font-bold text-slate-400 uppercase text-[10px] tracking-wider block mb-0.5">Ý nghĩa</span>
+                  <span className="font-bold text-sm text-slate-700 dark:text-slate-300">{question.meaning}</span>
+                </p>
+                {question.example && (
+                  <div className="bg-white/50 dark:bg-slate-900/50 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700/50 mt-2">
+                    <span className="font-black text-[10px] uppercase text-slate-400 tracking-wider mb-1 block">Ví dụ minh hoạ</span>
+                    <div className="text-sm font-bold text-slate-700 dark:text-slate-300 italic">
+                      {renderRichText(question.example)}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-2">
-              {[
-                { label: "Again", value: 0 },
-                { label: "Hard", value: 1 },
-                { label: "Good", value: 2 },
-                { label: "Easy", value: 3 }
-              ].map((btn) => (
-                <button
-                  key={btn.value}
-                  onClick={() => onNext(btn.value)}
-                  className="flex flex-col items-center py-3 rounded-2xl border-b-4 border-black/10 active:border-b-0 active:translate-y-1 transition-all group"
-                  style={{ backgroundColor: "white", border: "2px solid #e2e8f0" }}
-                >
-                  <span className="text-[10px] font-black text-slate-400 uppercase group-hover:text-slate-600">{btn.label}</span>
-                  <span className={`text-lg font-black ${btn.value === 0 ? "text-red-500" : btn.value === 1 ? "text-orange-500" : btn.value === 2 ? "text-blue-500" : "text-green-500"}`}>
-                    {getNextInterval(question.word, btn.value) || "--"}
-                  </span>
-                </button>
-              ))}
-            </div>
-            <p className="text-[10px] text-center font-bold text-slate-400 italic">Rate your recall to schedule next review</p>
+            {isCorrect ? (
+              <div className="grid grid-cols-4 gap-1.5 lg:gap-2">
+                {[
+                  { label: "Again", value: 0 },
+                  { label: "Hard", value: 1 },
+                  { label: "Good", value: 2 },
+                  { label: "Easy", value: 3 }
+                ].map((btn) => (
+                  <button
+                    key={btn.value}
+                    onClick={() => onNext(btn.value)}
+                    className="flex flex-col items-center py-2 lg:py-3 rounded-xl lg:rounded-2xl border-b-[3px] lg:border-b-4 border-black/10 active:border-b-0 active:translate-y-1 transition-all group"
+                    style={{ backgroundColor: "white", border: "2px solid #e2e8f0" }}
+                  >
+                    <span className="text-[9px] lg:text-[10px] font-black text-slate-400 uppercase group-hover:text-slate-600">{btn.label}</span>
+                    <span className={`text-base lg:text-lg font-black ${btn.value === 0 ? "text-red-500" : btn.value === 1 ? "text-orange-500" : btn.value === 2 ? "text-blue-500" : "text-green-500"}`}>
+                      {getNextInterval(question.word, btn.value) || "--"}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <button
+                onClick={() => onNext(0)}
+                className="w-full py-3 lg:py-4 bg-[#FF4B4B] hover:bg-red-600 text-white font-black rounded-xl lg:rounded-[1.25rem] transition-all shadow-md shadow-red-500/20 active:scale-95 flex items-center justify-center gap-2 tracking-wide"
+              >
+                TIẾP TỤC (TÍNH QUÊN)
+              </button>
+            )}
+            <p className="text-[10px] text-center font-bold text-slate-400 italic">
+              {isCorrect ? "Đánh giá độ khó để lên lịch ôn lặp lại" : "Từ này sẽ được ghi nhận là quên và đưa xuống cuối bài làm lại"}
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -485,41 +572,50 @@ export const QuizPage = () => {
           isSrs ? Promise.resolve([]) : loadDeck(deckId, isVocaSource ? "voca" : "sheet")
         ]);
         
-        let filtered = isSrs ? Object.values(useUserStore.getState().account?.srsData || {}) : mainData;
         const params = new URLSearchParams(window.location.search);
+        let currentDistractorPool = [];
+        let filtered = [];
         
         if (isSrs) {
+          const allSrsItems = Object.values(useUserStore.getState().account?.srsData || {});
           const targetDeck = params.get("deck");
           const mode = params.get("mode"); // 'all' or undefined/null
           const today = new Date();
           
-          filtered = filtered.filter(item => {
+          let srsDeckItems = allSrsItems;
+          if (targetDeck && targetDeck !== "all") {
+             srsDeckItems = allSrsItems.filter(item => {
+               if (targetDeck === "DICTIONARY_SOURCE" || targetDeck === "Từ điển & Tìm kiếm") {
+                 return item.source === "search";
+               }
+               return item.deckName === targetDeck || item.deck === targetDeck || item.deckId === targetDeck;
+             });
+          }
+          
+          filtered = srsDeckItems.filter(item => {
             const reviewDate = new Date(item.nextReview || 0);
-            let matchDeck = true;
-            
-            if (targetDeck && targetDeck !== "all") {
-              if (targetDeck === "DICTIONARY_SOURCE" || targetDeck === "Từ điển & Tìm kiếm") {
-                matchDeck = item.source === "search";
-              } else {
-                matchDeck = item.deckName === targetDeck || item.deck === targetDeck || item.deckId === targetDeck;
-              }
-            }
-            
-            // If mode is 'all', show everything in the deck. Otherwise only due items.
             const isDue = reviewDate <= today;
-            return mode === 'all' ? matchDeck : (isDue && matchDeck);
+            return mode === 'all' ? true : isDue;
           });
+          
+          currentDistractorPool = srsDeckItems;
+        } else {
+          filtered = mainData;
+          currentDistractorPool = extraData;
         }
 
         const filter = params.get("filter") || "all";
         if (filter === "kanji") {
           filtered = filtered.filter(w => w.type === "kanji");
+          // Optionally also filter distractors to be kanji
+          currentDistractorPool = currentDistractorPool.filter(w => w.type === "kanji");
         } else if (filter === "voca") {
           filtered = filtered.filter(w => w.type === "voca" || !w.type);
+          currentDistractorPool = currentDistractorPool.filter(w => w.type === "voca" || !w.type);
         }
 
         setWords(filtered);
-        setDistractorPool(extraData);
+        setDistractorPool(currentDistractorPool);
       } catch (err) {
         console.error("Failed to load quiz data:", err);
       } finally {
@@ -588,7 +684,29 @@ export const QuizPage = () => {
       sounds.playBeep(880, 150, 0.1);
     } else {
       sounds.playError();
+      if (deckId === "srs") {
+        setQuestions(prev => [...prev, currentQuestion]);
+      }
     }
+
+    setTimeout(() => {
+      const cleanExample = currentQuestion.example
+        ? currentQuestion.example
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+            .replace(/[（(][^)）]*[)）]/g, "")
+        : "";
+
+      if (currentQuestion.qType === 'context' && cleanExample) {
+        tts.playWithFallback("", cleanExample);
+      } else if (cleanExample) {
+        tts.playSequentially([
+          { url: currentQuestion.audio, text: currentQuestion.word },
+          { url: "", text: cleanExample }
+        ]);
+      } else {
+        tts.playWithFallback(currentQuestion.audio, currentQuestion.word);
+      }
+    }, 300);
 
     // Auto mode: advance after 1.2s (Good rating by default in auto mode)
     if (mode === "auto") {
