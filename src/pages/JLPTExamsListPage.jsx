@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useExamList } from "../hooks/useCases/useExamList";
 import { motion, AnimatePresence } from "framer-motion";
-import { jlptService } from "../services/jlptService";
-import { useUserStore } from "../store/useUserStore";
 import {
   Trophy,
   ChevronRight,
@@ -35,93 +34,25 @@ const LEVEL_BADGES = {
 };
 
 export const JLPTExamsListPage = () => {
-  const [examsByLevel, setExamsByLevel] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("n5");
-  const [examType, setExamType] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
-  const quizHistory = useUserStore(s => s.account?.quizHistory || []);
-
-  const handleFileUpload = async event => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    setUploading(true);
-    try {
-      const text = await file.text();
-      const examData = JSON.parse(text);
-      
-      // Gán đúng level tab đang chọn nếu file chưa có
-      if (!examData.level) examData.level = activeTab;
-      
-      await jlptService.uploadExam(examData);
-      
-      alert(`Đã thêm thành công đề thi ${examData.title}!`);
-      const grouped = await jlptService.getExamsByLevel();
-      setExamsByLevel(grouped);
-      event.target.value = null; // reset
-    } catch (err) {
-      console.error("Upload failed", err);
-      alert("Lỗi khi thêm đề: " + err.message);
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  useEffect(() => {
-    const fetchExams = async () => {
-      try {
-        const grouped = await jlptService.getExamsByLevel();
-        setExamsByLevel(grouped);
-        const levels = Object.keys(grouped).sort();
-        if (levels.length > 0 && !grouped[activeTab]) {
-          setActiveTab(levels[0]);
-        }
-      } catch (err) {
-        console.error("Failed to fetch JLPT exams:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchExams();
-  }, []);
-
-  // Handle Level Change or Filter Change: Reset Page
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeTab, examType]);
-
-  const currentExams = useMemo(() => {
-    let exams = examsByLevel[activeTab] || [];
-    if (examType === "real") {
-      exams = exams.filter(e => e.Type === "REAL_EXAM");
-    } else if (examType === "knowledge") {
-      exams = exams.filter(e => ["VOCAB", "GRAMMAR", "READING"].includes(e.Type));
-    } else if (examType === "listening") {
-      exams = exams.filter(e => e.is_listening === true || e.Type === "LISTENING");
-    }
-    if (searchTerm.trim()) {
-      const norm = normalizeString(searchTerm.trim());
-      exams = exams.filter(e => normalizeString(e.title).includes(norm));
-    }
-    return exams;
-  }, [examsByLevel, activeTab, examType, searchTerm]);
-
-  const totalPages = Math.ceil(currentExams.length / EXAMS_PER_PAGE);
-  const paginatedExams = currentExams.slice(
-    (currentPage - 1) * EXAMS_PER_PAGE,
-    currentPage * EXAMS_PER_PAGE
-  );
-
-  // Helper to find if exam is finished
-  const getExamResult = id => {
-    return quizHistory
-      .filter(h => h.deckId === `exam_${id}`)
-      .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
-  };
+  const {
+    levels,
+    activeTab,
+    setActiveTab,
+    examType,
+    setExamType,
+    searchTerm,
+    setSearchTerm,
+    currentPage,
+    setCurrentPage,
+    currentExams,
+    paginatedExams,
+    totalPages,
+    loading,
+    uploading,
+    handleFileUpload,
+    getExamResult,
+  } = useExamList();
 
   if (loading) {
     return (
@@ -134,8 +65,7 @@ export const JLPTExamsListPage = () => {
     );
   }
 
-  const levels = Object.keys(examsByLevel).sort().reverse(); // N3, N4, N5
-
+  
   return (
     <div className="max-w-5xl mx-auto space-y-4 lg:space-y-8 pb-32">
       {/* Header */}
@@ -399,3 +329,4 @@ export const JLPTExamsListPage = () => {
     </div>
   );
 };
+

@@ -4,25 +4,47 @@ import { calculateNextSrs, getNextIntervalLabel } from "../utils/srsUtils";
 import { useBookmarkStore } from "./useBookmarkStore";
 import { collectSyncData, saveProgressToNhost } from "../services/syncService";
 
-export const useUserStore = create(
+export interface UserState {
+  account: any;
+  isAuthenticated: boolean;
+  theme: "light" | "dark";
+  vocaSource: "sheet" | "voca";
+  setAccount: (account: any) => void;
+  updateStreak: (date?: string) => void;
+  updateFlashcardProgress: (deckId: string, progressData: any) => void;
+  addQuizResult: (result: any) => void;
+  addArenaResult: (result: any) => void;
+  updateArenaProgress: (progressData: any) => void;
+  updateSrsItem: (wordId: string, wordData: any, rating: number, meta?: any) => void;
+  getNextInterval: (wordId: string, rating: number, wordStr?: string) => string | null;
+  syncBookmarksToAccount: (bookmarks: any[]) => void;
+  removeSrsItem: (wordId: string) => void;
+  resetSRS: () => void;
+  toggleTheme: () => void;
+  setTheme: (theme: "light" | "dark") => void;
+  setVocaSource: (source: "sheet" | "voca") => void;
+  updatePomodoroData: (data: any) => void;
+  logout: () => void;
+}
+
+export const useUserStore = create<UserState>()(
   persist(
     (set, get) => ({
       account: null,
       isAuthenticated: false,
 
-      setAccount: account => set({ account, isAuthenticated: true }),
+      setAccount: (account) => set({ account, isAuthenticated: true }),
 
-      updateStreak: date =>
-        set(state => {
+      updateStreak: (date) =>
+        set((state) => {
           if (!state.account) return state;
 
-          // Use provided date or local date to avoid timezone issues
           let activeDate = date;
           if (!date || typeof date !== "string") {
             activeDate = new Date().toLocaleDateString("en-CA");
           }
 
-          const newStreak = [...new Set([...state.account.streak, activeDate])];
+          const newStreak = [...new Set([...(state.account.streak || []), activeDate])];
           return {
             account: {
               ...state.account,
@@ -32,9 +54,8 @@ export const useUserStore = create(
           };
         }),
 
-      // Update flashcard progress for a specific deck
       updateFlashcardProgress: (deckId, progressData) =>
-        set(state => {
+        set((state) => {
           if (!state.account) return state;
           return {
             account: {
@@ -50,9 +71,8 @@ export const useUserStore = create(
           };
         }),
 
-      // Add quiz result to history
-      addQuizResult: result =>
-        set(state => {
+      addQuizResult: (result) =>
+        set((state) => {
           if (!state.account) return state;
           const history = [
             ...(state.account.quizHistory || []),
@@ -60,7 +80,7 @@ export const useUserStore = create(
               ...result,
               date: new Date().toISOString(),
             },
-          ].slice(-50); // Keep last 50 results
+          ].slice(-50);
           return {
             account: {
               ...state.account,
@@ -70,9 +90,8 @@ export const useUserStore = create(
           };
         }),
 
-      // Add arena result to history (e.g., 60s arena sessions)
-      addArenaResult: result =>
-        set(state => {
+      addArenaResult: (result) =>
+        set((state) => {
           if (!state.account) return state;
           const history = [
             ...(state.account.arenaHistory || []),
@@ -80,7 +99,7 @@ export const useUserStore = create(
               ...result,
               date: new Date().toISOString(),
             },
-          ].slice(-100); // Keep last 100 arena runs
+          ].slice(-100);
           return {
             account: {
               ...state.account,
@@ -93,9 +112,8 @@ export const useUserStore = create(
           };
         }),
 
-      // Update arena aggregated progress (best score, best streak, coins earned, etc.)
-      updateArenaProgress: progressData =>
-        set(state => {
+      updateArenaProgress: (progressData) =>
+        set((state) => {
           if (!state.account) return state;
           return {
             account: {
@@ -109,19 +127,22 @@ export const useUserStore = create(
           };
         }),
 
-      // Update Spaced Repetition (SRS) data for a word using refined SM-2 logic
-      // meta: { source: 'flashcard'|'typing'|'quiz'|'search', deckName: string, deckId: string }
       updateSrsItem: (wordId, wordData, rating, meta) => {
-        set(state => {
+        set((state) => {
           if (!state.account) return state;
           const currentSrs = state.account.srsData || {};
-          const stableId = wordId || wordData.id || wordData.word;
+          
+          const wordStr = wordData.word || wordData.english || "";
+          const stableId = wordId || wordData.id || wordStr;
 
-          const existing = currentSrs[stableId];
+          let existing = currentSrs[stableId];
+          if (!existing && wordStr) {
+            existing = Object.values(currentSrs).find((item: any) => item.word === wordStr);
+          }
+
           const nextState = calculateNextSrs(existing, rating);
 
-          // Clean deckName: if it's a UUID, don't use it as a display name
-          const isUUID = val =>
+          const isUUID = (val: string) =>
             /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val);
           const providedName = meta?.deckName;
           const finalDeckName =
@@ -139,7 +160,7 @@ export const useUserStore = create(
                   ...wordData,
                   ...nextState,
                   id: wordData.id || stableId,
-                  word: wordData.word || wordData.english || stableId,
+                  word: wordStr,
                   meaning: wordData.meaning || wordData.hanViet || wordData.vietnamese || "",
                   furigana: wordData.furigana || wordData.hiragana || wordData.reading || "",
                   source: meta?.source || existing?.source || "unknown",
@@ -160,17 +181,21 @@ export const useUserStore = create(
         }
       },
 
-      // Helper to estimate next interval for UI display
-      getNextInterval: (wordId, rating) => {
+      getNextInterval: (wordId, rating, wordStr) => {
         const state = get();
         if (!state.account) return null;
         const currentSrs = state.account.srsData || {};
-        return getNextIntervalLabel(currentSrs[wordId], rating);
+        
+        let item = currentSrs[wordId];
+        if (!item && wordStr) {
+          item = Object.values(currentSrs).find((it: any) => it.word === wordStr);
+        }
+        
+        return getNextIntervalLabel(item, rating);
       },
 
-      // Sync bookmarks into account (for saving to sheet)
-      syncBookmarksToAccount: bookmarks =>
-        set(state => {
+      syncBookmarksToAccount: (bookmarks) =>
+        set((state) => {
           if (!state.account) return state;
           return {
             account: {
@@ -180,9 +205,8 @@ export const useUserStore = create(
           };
         }),
 
-      // Remove specific SRS item
-      removeSrsItem: wordId => {
-        set(state => {
+      removeSrsItem: (wordId) => {
+        set((state) => {
           if (!state.account?.srsData) return state;
           const newSrsData = { ...state.account.srsData };
           delete newSrsData[wordId];
@@ -201,9 +225,8 @@ export const useUserStore = create(
         }
       },
 
-      // Reset all SRS data and progress for testing
       resetSRS: () => {
-        set(state => {
+        set((state) => {
           if (!state.account) return state;
           return {
             account: {
@@ -222,16 +245,15 @@ export const useUserStore = create(
         }
       },
 
-      theme: "light", // 'light' | 'dark'
-      toggleTheme: () => set(state => ({ theme: state.theme === "light" ? "dark" : "light" })),
-      setTheme: theme => set({ theme }),
+      theme: "light",
+      toggleTheme: () => set((state) => ({ theme: state.theme === "light" ? "dark" : "light" })),
+      setTheme: (theme) => set({ theme }),
 
-      vocaSource: "voca", // 'sheet' | 'voca'
-      setVocaSource: source => set({ vocaSource: source }),
+      vocaSource: "voca",
+      setVocaSource: (source) => set({ vocaSource: source }),
 
-      // Update Pomodoro settings and stats
-      updatePomodoroData: data =>
-        set(state => {
+      updatePomodoroData: (data) =>
+        set((state) => {
           if (!state.account) return state;
           return {
             account: {
@@ -245,11 +267,8 @@ export const useUserStore = create(
         }),
 
       logout: () => {
-        // Clear sensitive local storage items
         localStorage.removeItem("pomodoro-timer-state");
-        // Clear other stores to prevent pollution on next login
-        import("./useBookmarkStore").then(m => m.useBookmarkStore.getState().clearBookmarks());
-
+        import("./useBookmarkStore").then((m) => m.useBookmarkStore.getState().clearBookmarks());
         set({ account: null, isAuthenticated: false });
       },
     }),

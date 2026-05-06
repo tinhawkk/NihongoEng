@@ -20,6 +20,7 @@
     "localforage": "^1.10.0",
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.575.0",
+    "marked": "^18.0.3",
     "pngjs": "^7.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@tailwindcss/typography": "^0.5.19",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",

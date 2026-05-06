@@ -54,19 +54,25 @@ export const PomodoroMini = () => {
     // PomodoroPage sẽ chịu trách nhiệm PUSH dữ liệu khi trực tiếp ở trang đó.
 
     // 2. CHẠY NGẦM: PomodoroMini là "trái tim" đếm ngược của cả hệ thống
+    const lastMiniTickRef = useRef(Date.now());
     useEffect(() => {
         let interval = null;
         if (isActive && timeLeft > 0) {
+            lastMiniTickRef.current = Date.now();
             interval = setInterval(() => {
-                setTimeLeft(prev => {
-                    const next = prev - 1;
-                    if (next <= 0) {
-                        setIsActive(false);
-                        sounds.playNotification();
-                        return 0;
-                    }
-                    return next;
-                });
+                const now = Date.now();
+                const elapsedSeconds = Math.round((now - lastMiniTickRef.current) / 1000);
+                if (elapsedSeconds >= 1) {
+                    lastMiniTickRef.current = now;
+                    setTimeLeft(prev => {
+                        const next = Math.max(0, prev - elapsedSeconds);
+                        if (next === 0 && prev > 0) {
+                            setIsActive(false);
+                            sounds.playNotification();
+                        }
+                        return next;
+                    });
+                }
             }, 1000);
         }
         return () => clearInterval(interval);

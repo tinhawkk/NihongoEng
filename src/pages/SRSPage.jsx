@@ -21,11 +21,13 @@ import {
   X,
   Layers,
   Stars,
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { ConfirmModal } from "../components/ui/ConfirmModal";
 import { getDueItems, getCardCategory, CATEGORY_LABELS, formatInterval } from "../utils/srsUtils";
 import { nhostService } from "../services/nhostService";
+import { useSync } from "../components/SyncProvider";
 
 const IS_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -44,12 +46,16 @@ const StudyHeatmap = ({ streak = [] }) => {
   const days = useMemo(() => {
     const result = [];
     const today = new Date();
-    // 28 days for a neat 4x7 grid
-    for (let i = 27; i >= 0; i--) {
+    // 35 days (5 full weeks)
+    for (let i = 34; i >= 0; i--) {
       const d = new Date();
       d.setDate(today.getDate() - i);
       const ds = d.toLocaleDateString("en-CA");
-      result.push({ date: ds, active: streak.includes(ds) });
+      result.push({ 
+        date: ds, 
+        active: streak.includes(ds),
+        label: d.toLocaleDateString("vi-VN", { day: 'numeric', month: 'numeric' })
+      });
     }
     return result;
   }, [streak]);
@@ -57,18 +63,40 @@ const StudyHeatmap = ({ streak = [] }) => {
   const currentMonth = new Date().toLocaleString("vi-VN", { month: "long" });
 
   return (
-    <div className="flex flex-col items-center">
-      <p className="text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">
-        {currentMonth}
-      </p>
-      <div className="grid grid-cols-7 gap-1.5 p-1">
+    <div className="flex flex-col items-start bg-white/5 p-4 rounded-2xl border border-white/10">
+      <div className="flex items-center gap-2 mb-3">
+        <Calendar size={12} className="text-emerald-400" />
+        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">
+          Lịch học {currentMonth}
+        </p>
+      </div>
+      <div className="grid grid-cols-7 gap-1.5">
         {days.map((d, i) => (
           <div
             key={i}
-            title={d.date}
-            className={`w-3.5 h-3.5 rounded-sm transition-all shadow-sm ${d.active ? "bg-green-500 scale-110 shadow-green-500/20" : "bg-slate-200 dark:bg-slate-700 opacity-40"}`}
-          />
+            title={`${d.label}: ${d.active ? "Đã học" : "Chưa học"}`}
+            className={`w-4 h-4 rounded-[2px] transition-all relative group ${
+              d.active 
+                ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]" 
+                : "bg-white/5 border border-white/5"
+            }`}
+          >
+            {/* Tooltip on hover */}
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-800 text-white text-[8px] font-bold rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+              {d.label}: {d.active ? "✅ Đã học" : "❌ Chưa học"}
+            </div>
+          </div>
         ))}
+      </div>
+      <div className="mt-3 flex items-center gap-2">
+        <span className="text-[8px] font-bold text-slate-500 uppercase">Ít</span>
+        <div className="flex gap-1">
+          <div className="w-2 h-2 rounded-[1px] bg-white/5 border border-white/5" />
+          <div className="w-2 h-2 rounded-[1px] bg-emerald-500/30" />
+          <div className="w-2 h-2 rounded-[1px] bg-emerald-500/60" />
+          <div className="w-2 h-2 rounded-[1px] bg-emerald-500" />
+        </div>
+        <span className="text-[8px] font-bold text-slate-500 uppercase">Nhiều</span>
       </div>
     </div>
   );
@@ -159,6 +187,7 @@ const SrsDistributionBar = ({ items }) => {
 
 export const SRSPage = () => {
   const navigate = useNavigate();
+  const { syncing, forceRefresh } = useSync();
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedDeck = searchParams.get("deck") || "all";
   const searchQuery = searchParams.get("q") || "";
@@ -341,10 +370,20 @@ export const SRSPage = () => {
                 <Brain size={24} className="lg:hidden text-white" />
                 <Brain size={32} className="hidden lg:block text-white" />
               </div>
-              <div>
-                <h1 className="text-2xl lg:text-4xl font-black text-white tracking-tight">
-                  Ôn Tập SRS
-                </h1>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-2xl lg:text-4xl font-black text-white tracking-tight truncate">
+                    Ôn Tập SRS
+                  </h1>
+                  <button
+                    onClick={forceRefresh}
+                    disabled={syncing}
+                    className={`p-2 rounded-xl bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 transition-all ${syncing ? "animate-spin text-blue-400" : ""}`}
+                    title="Đồng bộ với đám mây"
+                  >
+                    <RefreshCw size={16} />
+                  </button>
+                </div>
                 <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest mt-0.5">
                   Hệ thống ghi nhớ dài hạn
                 </p>

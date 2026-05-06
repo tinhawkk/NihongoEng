@@ -122,7 +122,7 @@ const QUERIES = {
           {han_viet: {_ilike: $termLike}}
         ]
       }, limit: 50) {
-        id word furigana meaning han_viet example_jp example_vi level mnemonic type onyomi kunyomi radical_analysis related_voca
+        id word furigana meaning han_viet example_jp example_vi level mnemonic type onyomi kunyomi deck_id
       }
       jap_voca: japience_voca(where: {
         _or: [
@@ -143,7 +143,7 @@ const QUERIES = {
           {meaning: {_ilike: $termLike}}
         ]
       }, limit: 30) {
-        id kanji han_viet onyomi kunyomi meaning mnemonic level radical_analysis related_voca
+        id kanji han_viet onyomi kunyomi meaning mnemonic level
       }
       grammar: grammar_entries(where: {
         _or: [
@@ -153,7 +153,7 @@ const QUERIES = {
           {structure: {_ilike: $termLike}}
         ]
       }, limit: 20) {
-        id title meaning structure examples lesson_id
+        id title meaning structure lesson_id
       }
     }
   `,
@@ -168,7 +168,7 @@ const QUERIES = {
   `,
   LIST_COMMUNITY_FOLDERS: `
     query ListCommunityFolders {
-      folders(order_by: {created_at: asc}) {
+      folders(order_by: {created_at: desc}) {
         id title description parent_id
       }
     }
@@ -191,6 +191,22 @@ const QUERIES = {
       }
     }
   `,
+  LIST_CONTENT_CATEGORIES: `
+    query ListContentCategories {
+      content_categories(order_by: {position: asc, id: asc}) {
+        id
+        title
+        type
+        level
+        description
+        color
+        icon_url
+        root_folder_id
+        position
+        metadata
+      }
+    }
+  `,
 };
 
 // Utility: remove diacritics and normalize for comparisons
@@ -202,6 +218,65 @@ function normalizeTermForCompare(t) {
     .toLowerCase();
 }
 
+// ── Database Schema Constants ──────────────────────────────────────
+const MY_VOCA_COLUMNS = [
+  "id",
+  "word",
+  "furigana",
+  "meaning",
+  "han_viet",
+  "romaji",
+  "example_jp",
+  "example_vi",
+  "level",
+  "mnemonic",
+  "type",
+  "onyomi",
+  "kunyomi",
+  "deck_id",
+];
+
+/**
+ * Filters an object to only include keys that are valid columns in the my_vocabulary table.
+ * This prevents "Column not found" errors in Hasura when importing extra JSON fields.
+ */
+function sanitizeMyVoca(obj) {
+  if (!obj || typeof obj !== "object") return obj;
+  
+  const VALID_COLS = [
+    "id", "word", "furigana", "meaning", "han_viet", "romaji",
+    "example_jp", "example_vi", "level", "mnemonic", "type",
+    "onyomi", "kunyomi", "deck_id"
+  ];
+  
+  const clean = {};
+
+  // Extract values with fallbacks
+  const word = String(obj.word || obj.word_en || obj.english || obj.kanji || "").trim();
+  const furigana = String(obj.furigana || obj.reading || obj.kana || "").trim();
+  const meaning = String(obj.meaning || obj.meaning_en || obj.meaning_vi || obj.vietnamese || "").trim();
+
+  // Map to valid columns only
+  VALID_COLS.forEach(col => {
+    if (col === "word") clean.word = word;
+    else if (col === "furigana") clean.furigana = furigana;
+    else if (col === "meaning") clean.meaning = meaning;
+    else if (obj[col] !== undefined && obj[col] !== null) {
+      clean[col] = String(obj[col]).trim();
+    }
+  });
+
+  // CRITICAL: Double check that no invalid keys leaked through
+  const finalKeys = Object.keys(clean);
+  if (finalKeys.includes("radical_analysis") || finalKeys.includes("related_voca")) {
+    console.error("[Nhost] LEAK DETECTED! Cleaning again...", finalKeys);
+    delete clean.radical_analysis;
+    delete clean.related_voca;
+  }
+
+  return clean;
+}
+
 // ── CRUD Mutations ──────────────────────────────────────────────────
 
 const MUTATIONS = {
@@ -210,7 +285,7 @@ const MUTATIONS = {
     insert_my_vocabulary_one(object: $obj) { id word }
   }`,
   BULK_INSERT_MY_VOCA: `mutation BulkInsertMyVoca($objects: [my_vocabulary_insert_input!]!) {
-    insert_my_vocabulary(objects: $objects, on_conflict: {constraint: my_vocabulary_pkey, update_columns: [word, furigana, meaning, han_viet, romaji, example_jp, example_vi, level, mnemonic, type, onyomi, kunyomi, radical_analysis, related_voca]}) {
+    insert_my_vocabulary(objects: $objects, on_conflict: {constraint: my_vocabulary_pkey, update_columns: [word, furigana, meaning, han_viet, romaji, example_jp, example_vi, level, mnemonic, type, onyomi, kunyomi, deck_id]}) {
       affected_rows
       returning { id word }
     }
@@ -267,13 +342,13 @@ const MUTATIONS = {
   }`,
 
   // ─ grammar_entries ─
-  INSERT_GRAMMAR_ENTRY: `mutation InsertGRAMMAR_ENTRY($obj: grammar_entries_insert_input!) {
+  INSERT_GRAMMAR_POINT: `mutation InsertGRAMMAR_ENTRY($obj: grammar_entries_insert_input!) {
     insert_grammar_entries_one(object: $obj) { id title }
   }`,
-  UPDATE_GRAMMAR_ENTRY: `mutation UpdateGRAMMAR_ENTRY($id: String!, $set: grammar_entries_set_input!) {
+  UPDATE_GRAMMAR_POINT: `mutation UpdateGRAMMAR_ENTRY($id: String!, $set: grammar_entries_set_input!) {
     update_grammar_entries_by_pk(pk_columns: {id: $id}, _set: $set) { id title }
   }`,
-  DELETE_GRAMMAR_ENTRY: `mutation DeleteGRAMMAR_ENTRY($id: String!) {
+  DELETE_GRAMMAR_POINT: `mutation DeleteGRAMMAR_ENTRY($id: String!) {
     delete_grammar_entries_by_pk(id: $id) { id }
   }`,
 
@@ -330,7 +405,7 @@ const MUTATIONS = {
 };
 
 MUTATIONS.CREATE_COMMUNITY_ROOT = `
-  mutation CreateCommunityRoot($id: uuid!, $title: String!, $description: String) {
+  mutation CreateCommunityRoot($id: String!, $title: String!, $description: String) {
     insert_folders_one(object: { id: $id, title: $title, description: $description }) {
       id
       title
@@ -363,6 +438,7 @@ async function createCommunityRoot({ title, description }) {
     throw new Error(response.errors[0].message);
   }
 
+  clearAllCaches();
   return response.data.insert_folders_one;
 }
 
@@ -678,6 +754,44 @@ export const nhostService = {
     return data?.decks || [];
   },
 
+  async getVocabCountsPerDeck() {
+    const q = `query GetVocabCounts {
+      decks {
+        id
+        my_vocabularies_aggregate {
+          aggregate {
+            count
+          }
+        }
+      }
+    }`;
+    const { data, errors } = await fetchGraphQL(q, "GetVocabCounts", {});
+    if (errors) return [];
+    return (data?.decks || []).map(d => ({
+      deck_id: d.id,
+      count: d.my_vocabularies_aggregate?.aggregate?.count || 0
+    }));
+  },
+
+  async getContentCategories() {
+    const { data, errors } = await fetchGraphQL(
+      QUERIES.LIST_CONTENT_CATEGORIES,
+      "ListContentCategories",
+      {}
+    );
+    if (errors) {
+      console.error("[Nhost] getContentCategories error:", errors);
+      // Fallback to local data if table doesn't exist yet
+      try {
+        const local = await import("../data/content_categories.json");
+        return local.default || [];
+      } catch (e) {
+        return [];
+      }
+    }
+    return data?.content_categories || [];
+  },
+
   async getRadicals() {
     const cacheKey = "radicals_all";
     if (getCached(cacheKey)) return getCached(cacheKey);
@@ -713,91 +827,59 @@ export const nhostService = {
     return res;
   },
 
-  async deleteDeck(id) {
-    const res = await fetchGraphQL(MUTATIONS.DELETE_DECK, "DeleteDeck", { id });
-    if (!res.errors) clearAllCaches();
-    return res;
-  },
-
-  async updateDeck(id, title) {
-    const res = await fetchGraphQL(MUTATIONS.UPDATE_DECK, "UpdateDeck", { id, title });
-    if (!res.errors) clearAllCaches();
-    return res;
-  },
-
-  /** Create a new community folder */
-  async createFolder({ title, description, parent_id }) {
-    let uuid = "";
-    if (typeof crypto !== "undefined" && crypto.randomUUID) {
-      uuid = crypto.randomUUID();
-    } else {
-      uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-        var r = (Math.random() * 16) | 0,
-          v = c === "x" ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      });
-    }
-    const res = await fetchGraphQL(MUTATIONS.INSERT_FOLDER, "InsertFolder", {
-      obj: { id: uuid, title, description: description || "", parent_id },
-    });
-    if (!res.errors) clearAllCaches();
-    return res;
-  },
-
-  async updateFolder(id, title) {
-    const res = await fetchGraphQL(MUTATIONS.UPDATE_FOLDER, "UpdateFolder", { id, title });
-    if (!res.errors) clearAllCaches();
-    return res;
-  },
-
-  async deleteFolder(id) {
-    const res = await fetchGraphQL(MUTATIONS.DELETE_FOLDER, "DeleteFolder", { id });
-    if (!res.errors) clearAllCaches();
-    return res;
-  },
-
-  /**
-   * Trigger a server-side crawl/action to fetch examples for `word` if available.
-   * This calls a GraphQL mutation named `CrawlExamples` (Hasura action) if present,
-   * then re-fetches the dictionary entry via `searchDictionary`.
-   */
-  async fetchExamples(word) {
-    if (!word) return null;
-    // Try to call a Hasura action/mutation named `crawl_examples` or `crawlExamples`.
-    const MUTATION_CRAWL = `mutation CrawlExamples($word: String!) { crawl_examples(word: $word) }`;
-    try {
-      // Fire and forget; server may return errors if action not defined.
-      await fetchGraphQL(MUTATION_CRAWL, "CrawlExamples", { word });
-    } catch (e) {
-      // ignore — action may not exist
-      console.debug("crawl examples action failed or not present:", e.message);
-    }
-    // Re-query the dictionary for this word (exact match)
-    const results = await this.searchDictionary(word);
-    // Return first exact match if present
-    return results.find(r => r.word.toLowerCase() === word.toLowerCase()) || results[0] || null;
-  },
-
   // ── Generic CRUD helpers ──────────────────────────────────────────
 
   /** Create a row. Returns { data, errors } */
-  async createRow(table, obj) {
+  async createRow(table, object) {
+    if (table === "my_vocabulary") {
+      object = sanitizeMyVoca(object);
+    }
+
     const mutMap = {
       my_vocabulary: "INSERT_MY_VOCA",
       japience_voca: "INSERT_JAP_VOCA",
       japience_kanji: "INSERT_JAP_KANJI",
       grammar_levels: "INSERT_GRAMMAR_LEVEL",
       grammar_lessons: "INSERT_GRAMMAR_LESSON",
-      grammar_entries: "INSERT_GRAMMAR_ENTRY",
+      grammar_entries: "INSERT_GRAMMAR_POINT",
       dictionary: "INSERT_DICTIONARY",
       general_kanji: "INSERT_GENERAL_KANJI",
     };
+
     const key = mutMap[table];
-    if (!key) return { data: null, errors: [{ message: `Unknown table: ${table}` }] };
-    return fetchGraphQL(MUTATIONS[key], key.replace("INSERT_", "Insert"), { obj });
+    let finalObj = object;
+    if (table === "my_vocabulary") {
+      finalObj = sanitizeMyVoca(object);
+    }
+
+    if (key) return fetchGraphQL(MUTATIONS[key], key.replace("INSERT_", "Insert"), { obj: finalObj });
+
+    // Fallback: construct a dynamic insert mutation for tables not in the map
+    try {
+      const safeTable = table.replace(/[^a-zA-Z0-9_]/g, "");
+      const opName = `Insert_${safeTable}`;
+      const q = `mutation ${opName}($obj: ${safeTable}_insert_input!) { insert_${safeTable}_one(object: $obj) { id } }`;
+      return fetchGraphQL(q, opName, { obj: finalObj });
+    } catch (e) {
+      return { data: null, errors: [{ message: `Unknown table: ${table}` }] };
+    }
   },
 
-  /** Update a row by primary key. Returns { data, errors } */
+  async bulkInsertMyVoca(objects) {
+    console.log("[Nhost] Attempting bulk insert of", objects.length, "items");
+    const sanitized = objects.map(obj => sanitizeMyVoca(obj));
+    
+    const res = await fetchGraphQL(MUTATIONS.BULK_INSERT_MY_VOCA, "BulkInsertMyVoca", {
+      objects: sanitized,
+    });
+    if (!res.errors) clearAllCaches();
+    return res;
+  },
+
+  async insertMyVoca(object) {
+    return this.createRow("my_vocabulary", object);
+  },
+
   async updateRow(table, pk, setFields) {
     const mutMap = {
       my_vocabulary: { key: "UPDATE_MY_VOCA", pkName: "id" },
@@ -805,28 +887,36 @@ export const nhostService = {
       japience_kanji: { key: "UPDATE_JAP_KANJI", pkName: "id" },
       grammar_levels: { key: "UPDATE_GRAMMAR_LEVEL", pkName: "id" },
       grammar_lessons: { key: "UPDATE_GRAMMAR_LESSON", pkName: "id" },
-      grammar_entries: { key: "UPDATE_GRAMMAR_ENTRY", pkName: "id" },
+      grammar_entries: { key: "UPDATE_GRAMMAR_POINT", pkName: "id" },
       dictionary: { key: "UPDATE_DICTIONARY", pkName: "word" },
       general_kanji: { key: "UPDATE_GENERAL_KANJI", pkName: "kanji" },
     };
     const cfg = mutMap[table];
-    if (!cfg) return { data: null, errors: [{ message: `Unknown table: ${table}` }] };
-    return fetchGraphQL(MUTATIONS[cfg.key], cfg.key.replace("UPDATE_", "Update"), {
-      [cfg.pkName]: pk,
-      set: setFields,
-    });
+    
+    // Sanitization for my_vocabulary to prevent "field not found" errors
+    let finalSet = setFields;
+    if (table === "my_vocabulary" && typeof finalSet === "object") {
+      finalSet = sanitizeMyVoca(finalSet);
+    }
+
+    if (cfg)
+      return fetchGraphQL(MUTATIONS[cfg.key], cfg.key.replace("UPDATE_", "Update"), {
+        [cfg.pkName]: pk,
+        set: finalSet,
+      });
+
+    // Fallback: attempt dynamic update_by_pk with 'id' as primary key
+    try {
+      const safeTable = table.replace(/[^a-zA-Z0-9_]/g, "");
+      const pkName = cfg?.pkName || "id";
+      const opName = `Update_${safeTable}`;
+      const q = `mutation ${opName}($${pkName}: String!, $set: ${safeTable}_set_input!) { update_${safeTable}_by_pk(pk_columns: {${pkName}: $${pkName}}, _set: $set) { ${pkName} } }`;
+      return fetchGraphQL(q, opName, { [pkName]: pk, set: finalSet });
+    } catch (e) {
+      return { data: null, errors: [{ message: `Unknown table: ${table}` }] };
+    }
   },
 
-  /** Bulk insert rows. Returns { data, errors } */
-  async bulkInsertMyVoca(objects) {
-    return fetchGraphQL(MUTATIONS.BULK_INSERT_MY_VOCA, "BulkInsertMyVoca", { objects });
-  },
-
-  async bulkInsertRadicals(objects) {
-    return fetchGraphQL(MUTATIONS.BULK_INSERT_RADICALS, "BulkInsertRadicals", { objects });
-  },
-
-  /** Delete a row by primary key. Returns { data, errors } */
   async deleteRow(table, pk) {
     const mutMap = {
       my_vocabulary: { key: "DELETE_MY_VOCA", pkName: "id" },
@@ -834,14 +924,63 @@ export const nhostService = {
       japience_kanji: { key: "DELETE_JAP_KANJI", pkName: "id" },
       grammar_levels: { key: "DELETE_GRAMMAR_LEVEL", pkName: "id" },
       grammar_lessons: { key: "DELETE_GRAMMAR_LESSON", pkName: "id" },
-      grammar_entries: { key: "DELETE_GRAMMAR_ENTRY", pkName: "id" },
+      grammar_entries: { key: "DELETE_GRAMMAR_POINT", pkName: "id" },
       dictionary: { key: "DELETE_DICTIONARY", pkName: "word" },
       general_kanji: { key: "DELETE_GENERAL_KANJI", pkName: "kanji" },
     };
     const cfg = mutMap[table];
-    if (!cfg) return { data: null, errors: [{ message: `Unknown table: ${table}` }] };
-    return fetchGraphQL(MUTATIONS[cfg.key], cfg.key.replace("DELETE_", "Delete"), {
-      [cfg.pkName]: pk,
-    });
+    if (cfg)
+      return fetchGraphQL(MUTATIONS[cfg.key], cfg.key.replace("DELETE_", "Delete"), {
+        [cfg.pkName]: pk,
+      });
+
+    // Fallback: attempt dynamic delete_by_pk with 'id' as primary key
+    try {
+      const safeTable = table.replace(/[^a-zA-Z0-9_]/g, "");
+      const pkName = "id";
+      const opName = `Delete_${safeTable}`;
+      const q = `mutation ${opName}($${pkName}: String!) { delete_${safeTable}_by_pk(${pkName}: $${pkName}) { ${pkName} } }`;
+      return fetchGraphQL(q, opName, { [pkName]: pk });
+    } catch (e) {
+      return { data: null, errors: [{ message: `Unknown table: ${table}` }] };
+    }
+  },
+
+  async createFolder(obj) {
+    // Generate UUID if not provided
+    if (!obj.id) {
+      obj.id = typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
+        const r = (Math.random() * 16) | 0;
+        return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+      });
+    }
+    return fetchGraphQL(MUTATIONS.INSERT_FOLDER, "InsertFolder", { obj });
+  },
+
+  async updateFolder(id, title) {
+    return this.updateRow("folders", id, { title });
+  },
+
+  async deleteFolder(id) {
+    return this.deleteRow("folders", id);
+  },
+
+  async updateDeck(id, updates) {
+    const setFields = typeof updates === "string" ? { title: updates } : updates;
+    return this.updateRow("decks", id, setFields);
+  },
+
+  async deleteDeck(id) {
+    return this.deleteRow("decks", id);
+  },
+
+  async bulkInsertRadicals(objects) {
+    return fetchGraphQL(MUTATIONS.BULK_INSERT_RADICALS, "BulkInsertRadicals", { objects });
+  },
+
+  async bulkInsertMyVoca(objects) {
+    // Sanitize all objects before insertion
+    const sanitized = objects.map(obj => sanitizeMyVoca(obj));
+    return fetchGraphQL(MUTATIONS.BULK_INSERT_MY_VOCA, "BulkInsertMyVoca", { objects: sanitized });
   },
 };

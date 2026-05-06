@@ -12,13 +12,23 @@ export const SEASONAL_EVENTS = {
     decoration: '🇻🇳',
     effect: 'flag' // Flying flags
   },
+  CPV_DAY: {
+    id: 'cpv_day',
+    name: 'Thành lập Đảng',
+    keywords: ['3/2'],
+    icon: '🚩',
+    color: '#d32f2f', // Red
+    greeting: 'Kỷ niệm Ngày thành lập Đảng Cộng sản Việt Nam 3/2',
+    decoration: '🇻🇳',
+    effect: 'flag'
+  },
   REUNIFICATION: {
     id: 'reunification',
     name: 'Giải phóng miền Nam',
     keywords: ['30/4', 'liberation'],
     icon: '⭐',
     color: '#d32f2f', // Red
-    greeting: 'Mừng ngày Giải phóng miền Nam 30/4!',
+    greeting: 'Mừng ngày Giải phóng miền Nam thống nhất đất nước (30/4/1975)!',
     decoration: '🇻🇳',
     effect: 'fireworks'
   },
@@ -368,6 +378,9 @@ export function getSeasonalEvent() {
   // 2. Check Calendar Holidays (Solar calendar - exact dates)
   if (month === 1 && date === 1) {
     event = { ...SEASONAL_EVENTS.NEW_YEAR, greeting: `Happy New Year ${year}!` };
+  }
+  else if (month === 2 && date === 3) {
+    event = SEASONAL_EVENTS.CPV_DAY;
   }
   else if (month === 2 && date === 14) {
     event = SEASONAL_EVENTS.VALENTINE;

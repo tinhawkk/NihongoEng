@@ -11,6 +11,8 @@ export const Button = ({
   children, 
   variant = 'primary', 
   className, 
+  loading = false,
+  disabled,
   ...props 
 }) => {
   const variants = {
@@ -29,8 +31,12 @@ export const Button = ({
         variants[variant],
         className
       )}
+      disabled={disabled || loading}
       {...props}
     >
+      {loading && (
+        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+      )}
       {children}
     </motion.button>
   );

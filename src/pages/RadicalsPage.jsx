@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ArrowLeft, BookOpen, Layers, Upload } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, BookOpen, Layers, Upload, Search, X } from "lucide-react";
 import { nhostService } from "../services/nhostService";
 
 export const RadicalsPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const highlight = searchParams.get("highlight");
   const [radicals, setRadicals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     nhostService.getRadicals().then((data) => {
@@ -16,14 +19,37 @@ export const RadicalsPage = () => {
     });
   }, []);
 
+  const filteredRadicals = useMemo(() => {
+    if (!searchTerm.trim()) return radicals;
+    const q = searchTerm.toLowerCase();
+    return radicals.filter(
+      r =>
+        r.character?.includes(q) ||
+        r.name_vi?.toLowerCase().includes(q) ||
+        r.meaning_vi?.toLowerCase().includes(q) ||
+        String(r.radical_number) === q
+    );
+  }, [radicals, searchTerm]);
+
   const groupedByStrokes = useMemo(() => {
-    return radicals.reduce((acc, r) => {
+    return filteredRadicals.reduce((acc, r) => {
       const s = r.strokes || 1;
       if (!acc[s]) acc[s] = [];
       acc[s].push(r);
       return acc;
     }, {});
-  }, [radicals]);
+  }, [filteredRadicals]);
+
+  useEffect(() => {
+    if (!loading && highlight) {
+      setTimeout(() => {
+        const el = document.getElementById(`radical-${highlight}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 500);
+    }
+  }, [loading, highlight]);
 
   const strokesOrder = Object.keys(groupedByStrokes)
     .map(Number)
@@ -48,6 +74,29 @@ export const RadicalsPage = () => {
             Nền tảng cấu tạo Hán tự giúp ghi nhớ Kanji dễ dàng hơn
           </p>
         </div>
+      </div>
+
+      {/* Search Bar */}
+      <div className="relative max-w-md">
+        <Search
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+          size={18}
+        />
+        <input
+          type="text"
+          placeholder="Tìm bộ thủ, tên hoặc ý nghĩa..."
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+          className="w-full pl-11 pr-12 py-3.5 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:border-indigo-500 transition-all font-bold text-sm shadow-sm"
+        />
+        {searchTerm && (
+          <button
+            onClick={() => setSearchTerm("")}
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-400"
+          >
+            <X size={16} />
+          </button>
+        )}
       </div>
 
       {loading ? (
@@ -140,11 +189,21 @@ export const RadicalsPage = () => {
                 {groupedByStrokes[strokeCount].map((k, idx) => (
                   <motion.div
                     key={k.radical_number || idx}
+                    id={`radical-${k.character}`}
                     initial={{ opacity: 0, y: 10 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-20px" }}
-                    className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-lg transition-all group flex flex-col items-center text-center relative overflow-hidden"
+                    className={`bg-white dark:bg-slate-800 p-4 rounded-3xl border-2 transition-all group flex flex-col items-center text-center relative overflow-hidden ${
+                      highlight === k.character
+                        ? "border-indigo-500 shadow-xl shadow-indigo-500/10 scale-105 z-10"
+                        : "border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-lg"
+                    }`}
                   >
+                    {highlight === k.character && (
+                      <div className="absolute top-0 right-0 p-1 bg-indigo-500 text-white rounded-bl-xl font-black text-[8px] animate-pulse">
+                        SPOHLIGHT
+                      </div>
+                    )}
                     <div className="absolute top-2 left-3 text-[10px] font-black text-slate-300 dark:text-slate-600">
                       #{k.radical_number}
                     </div>
@@ -152,8 +211,12 @@ export const RadicalsPage = () => {
                       {k.character}
                     </div>
                     <div className="w-full space-y-1 mt-2">
-                      <p className="font-black text-indigo-500 text-sm uppercase tracking-wider">{k.name_vi}</p>
-                      <p className="text-[10px] font-bold text-slate-500 line-clamp-2 leading-relaxed h-8">{k.meaning_vi}</p>
+                      <p className="font-black text-indigo-500 text-sm uppercase tracking-wider">
+                        {k.name_vi}
+                      </p>
+                      <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed h-8">
+                        {k.meaning_vi}
+                      </p>
                     </div>
                   </motion.div>
                 ))}

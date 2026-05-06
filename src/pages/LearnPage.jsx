@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { loadDeck } from "../api/loader";
+import { vocabularyRepository } from "../data/repositories/NhostVocabularyRepository";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -22,18 +22,10 @@ import confetti from "canvas-confetti";
 import { shuffleArray, getRandomItems } from "../utils/helpers";
 import { romajiToHiragana } from "../utils/kana";
 import { nhostService } from "../services/nhostService";
+import { examGeneratorService } from "../services/examGeneratorService";
+import { useLearnSession } from "../hooks/useCases/useLearnSession";
 
-const DECK_LABELS = {
-  eng: "Tiếng Anh",
-  n5: "JLPT N5",
-  n4: "JLPT N4",
-  n3: "JLPT N3",
-  n2: "JLPT N2",
-  n1: "JLPT N1",
-  jlpt: "JLPT Tổng hợp",
-  grammar: "Ngữ pháp",
-  it: "IT Passport",
-};
+import { DECK_LABELS } from "../utils/constants";
 
 function parseDialog(text) {
   if (!text) return [];
@@ -394,64 +386,30 @@ export const LearnPage = () => {
   const [searchParams] = useSearchParams();
   const filterFilter = searchParams.get("filter") || "all";
 
-  const [loading, setLoading] = useState(true);
-  const [allWords, setAllWords] = useState([]);
-  const [steps, setSteps] = useState([]);
-  const [currentIdx, setCurrentIdx] = useState(0);
-  const [isFinished, setIsFinished] = useState(false);
-  const [userAnswer, setUserAnswer] = useState(null);
-  const [isCorrect, setIsCorrect] = useState(null);
-  const [showFeedback, setShowFeedback] = useState(false);
   const [shake, setShake] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [isSlow, setIsSlow] = useState(false);
-  const [deckTitle, setDeckTitle] = useState(""); // Human-readable deck title
   const typingRef = useRef(null);
 
-  const updateSrsItem = useUserStore(s => s.updateSrsItem);
-  const step = useMemo(() => steps[currentIdx], [steps, currentIdx]);
-
-  useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-      try {
-        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-          deckId
-        );
-
-        // Fetch deck title for UUID decks (user-created lessons)
-        if (isUUID) {
-          try {
-            const q = `query GetDeckTitle($id: String!) { decks_by_pk(id: $id) { title } }`;
-            const res = await nhostService.fetchGraphQL(q, "GetDeckTitle", { id: deckId });
-            if (res.data?.decks_by_pk?.title) {
-              setDeckTitle(res.data.decks_by_pk.title);
-            }
-          } catch (e) {
-            /* ignore */
-          }
-        } else {
-          setDeckTitle(DECK_LABELS[deckId] || deckId.toUpperCase());
-        }
-
-        const data = await loadDeck(
-          deckId,
-          isUUID ? "voca" : filterFilter === "sheet" ? "sheet" : "voca"
-        );
-        let list = Array.isArray(data) ? data : data.vocabulary || [];
-        if (filterFilter === "voca") list = list.filter(w => !w.isKanji);
-        if (filterFilter === "kanji") list = list.filter(w => w.isKanji);
-        const shuffledList = shuffleArray(list).slice(0, 15);
-        setAllWords(list);
-        setSteps(generateLessonSteps(shuffledList));
-      } catch (err) {
-        console.error("Learn fetch failed:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetch();
-  }, [deckId, filterFilter]);
+  const {
+    loading,
+    allWords,
+    remainingWords,
+    step,
+    steps,
+    currentIdx,
+    isFinished,
+    userAnswer,
+    isCorrect,
+    showFeedback,
+    deckTitle,
+    startBatch,
+    checkAnswer,
+    goToNext,
+    setShowFeedback,
+    setIsCorrect,
+    setUserAnswer,
+  } = useLearnSession(deckId, filterFilter);
 
   const playStepAudio = useCallback(() => {
     if (!step || step.type === "matching") return;
@@ -487,60 +445,21 @@ export const LearnPage = () => {
     }
   }, [currentIdx, loading, step, isFinished, playStepAudio]);
 
-  const goToNext = useCallback(() => {
+  const handleNextWithAudioStop = useCallback(() => {
     tts.stop();
-    if (currentIdx < steps.length - 1) {
-      setCurrentIdx(i => i + 1);
-      setUserAnswer(null);
-      setIsCorrect(null);
-      setShowFeedback(false);
-    } else {
-      setIsFinished(true);
+    goToNext();
+    if (currentIdx >= steps.length - 1) {
       confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
     }
-  }, [currentIdx, steps.length]);
+  }, [goToNext, currentIdx, steps.length]);
 
-  const handleResult = useCallback(
-    success => {
-      setIsCorrect(success);
-      setShowFeedback(true);
-      if (success) {
-        updateSrsItem(step.word.id || step.word.word, step.word, 2, {
-          source: "learn",
-          deckName: deckTitle || DECK_LABELS[deckId] || deckId,
-        });
-      } else {
-        setShake(true);
-        setTimeout(() => setShake(false), 500);
-        tts.playWithFallback(step.word.audio, removeFurigana(step.word.word), isSlow ? 0.6 : 1.0);
-      }
-    },
-    [step, deckId, updateSrsItem, isSlow]
-  );
-
-  const checkAnswer = useCallback(
-    answer => {
-      if (!step) return;
-      const finalAnswer = typeof answer === "string" ? romajiToHiragana(answer) : answer;
-      setUserAnswer(finalAnswer);
-      if (step.type === "choice" || step.type === "choice_kanji" || step.type === "listen") {
-        handleResult(finalAnswer.word === step.word.word);
-        return;
-      }
-
-      // Sửa lỗi dấu ngoặc và ký hiệu: Loại bỏ các ký tự phụ trợ để check chính xác hơn
-      const cleanTarget = text =>
-        text?.toString().replace(/[<>＜＞()[\]（）［］【】〜~.．…・]/g, "") || "";
-
-      const target = cleanTarget(step.word.reading || step.word.word)
-        .toLowerCase()
-        .trim();
-
-      const cleanInput = typeof finalAnswer === "string" ? cleanTarget(finalAnswer) : "";
-      handleResult(cleanInput.toLowerCase().trim() === target);
-    },
-    [step, handleResult]
-  );
+  useEffect(() => {
+    if (showFeedback && isCorrect === false) {
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
+      tts.playWithFallback(step?.word?.audio, removeFurigana(step?.word?.word), isSlow ? 0.6 : 1.0);
+    }
+  }, [showFeedback, isCorrect, step, isSlow]);
 
   useEffect(() => {
     const handleKey = e => {
@@ -593,15 +512,36 @@ export const LearnPage = () => {
             Tuyệt vời!
           </h2>
           <p className="text-slate-500 font-bold text-lg max-w-sm mx-auto">
-            Bạn đã hoàn thành bài học một cách xuất sắc.
+            {remainingWords.length > 0 
+              ? "Bạn đã hoàn thành đợt học này." 
+              : "Bạn đã hoàn thành toàn bộ từ vựng trong bài."}
           </p>
         </div>
-        <button
-          onClick={() => navigate(`/deck/${deckId}`)}
-          className="w-full max-w-xs py-5 bg-[#58CC02] text-white rounded-3xl font-black shadow-xl hover:shadow-2xl transition-all text-xl hover:scale-105 active:scale-95 uppercase tracking-widest"
-        >
-          TIẾP TỤC
-        </button>
+        <div className="space-y-4 w-full max-w-xs">
+          {remainingWords.length > 0 ? (
+            <>
+              <button
+                onClick={() => startBatch(remainingWords)}
+                className="w-full py-5 bg-[#58CC02] text-white rounded-3xl font-black shadow-xl hover:shadow-2xl transition-all text-xl hover:scale-105 active:scale-95 uppercase tracking-widest"
+              >
+                HỌC TIẾP ({remainingWords.length} TỪ)
+              </button>
+              <button
+                onClick={() => navigate(`/deck/${deckId}`)}
+                className="w-full py-5 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-3xl font-black hover:bg-slate-200 dark:hover:bg-slate-700 transition-all text-sm uppercase tracking-widest"
+              >
+                NGHỈ NGƠI
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => navigate(`/deck/${deckId}`)}
+              className="w-full py-5 bg-[#58CC02] text-white rounded-3xl font-black shadow-xl hover:shadow-2xl transition-all text-xl hover:scale-105 active:scale-95 uppercase tracking-widest"
+            >
+              HOÀN THÀNH
+            </button>
+          )}
+        </div>
       </div>
     );
 
@@ -682,13 +622,25 @@ export const LearnPage = () => {
                   )}
                 </div>
                 <div className="w-full space-y-4">
-                  <div className="text-center">
-                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">
-                      Ý nghĩa
-                    </h4>
-                    <p className="text-2xl sm:text-3xl md:text-4xl font-black text-[#A342FF] tracking-tight truncate whitespace-nowrap px-4">
-                      {step.word.meaning}
-                    </p>
+                  <div className="text-center space-y-4 w-full">
+                    <div>
+                      <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">
+                        Ý nghĩa
+                      </h4>
+                      <p className="text-2xl sm:text-3xl md:text-4xl font-black text-[#A342FF] tracking-tight truncate whitespace-nowrap px-4">
+                        {step.word.meaning}
+                      </p>
+                    </div>
+                    {step.word.mnemonic && (
+                      <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-2xl p-4 mt-4 text-center max-w-lg mx-auto shadow-sm">
+                        <p className="text-xs font-black text-amber-500 uppercase tracking-widest mb-2 flex items-center justify-center gap-1">
+                          💡 Mẹo nhớ
+                        </p>
+                        <p className="text-sm font-bold text-slate-700 dark:text-slate-300 leading-relaxed">
+                          {step.word.mnemonic}
+                        </p>
+                      </div>
+                    )}
                   </div>
                   {step.word.example && (
                     <div
@@ -834,7 +786,7 @@ export const LearnPage = () => {
           {step.type === "matching" ? null : !showFeedback ? (
             <button
               onClick={() =>
-                step.type === "intro" ? goToNext() : userAnswer && checkAnswer(userAnswer)
+                step.type === "intro" ? handleNextWithAudioStop() : userAnswer && checkAnswer(userAnswer)
               }
               className={`w-full max-w-md mx-auto py-3.5 rounded-[2rem] font-black text-xl transition-all shadow-xl active:scale-[0.97] uppercase tracking-widest ${step.type === "intro" || userAnswer ? "bg-[#58CC02] text-white shadow-green-200/50 hover:bg-[#46a302]" : "bg-slate-100 text-slate-300 pointer-events-none"}`}
             >

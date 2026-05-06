@@ -905,6 +905,7 @@ export const DictionaryScreen = () => {
     {
       key: "type",
       label: "Loại học liệu",
+      required: true,
       type: "select",
       options: [
         { value: "voca", label: "Từ vựng" },

@@ -9,6 +9,18 @@ export const LEVELS = {
   GRAMMAR: "Grammar",
 };
 
+export const DECK_LABELS = {
+  eng: "Tiếng Anh",
+  n5: "JLPT N5",
+  n4: "JLPT N4",
+  n3: "JLPT N3",
+  n2: "JLPT N2",
+  n1: "JLPT N1",
+  jlpt: "JLPT Tổng hợp",
+  grammar: "Ngữ pháp",
+  it: "IT Passport",
+};
+
 export const QUIZ_MODES = {
   RANDOM: "random",
   SEQUENTIAL: "sequential",

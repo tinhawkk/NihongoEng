@@ -10,10 +10,10 @@ import { nhostService } from "../../services/nhostService";
 export const ExcelImportModal = ({ open, onClose, deckId, onImportDone }) => {
   // ─── Excel column mapping logic (Moved inside to support Vite Fast Refresh) ───
   const COLUMN_ALIASES = {
-    word: ["word", "từ vựng", "tu vung", "単語", "tango", "vocabulary", "kanji", "english"],
-    furigana: ["furigana", "reading", "hiragana", "phiên âm", "phien am", "đọc", "doc"],
-    meaning: ["meaning", "nghĩa", "nghia", "ý nghĩa", "y nghia", "意味", "vietnamese", "vi"],
-    han_viet: ["han_viet", "hán việt", "han viet", "漢越"],
+    word: ["word", "từ vựng", "tu vung", "単語", "tango", "vocabulary", "kanji", "english", "en", "eng"],
+    furigana: ["furigana", "reading", "hiragana", "phiên âm", "phien am", "đọc", "doc", "yomikata"],
+    meaning: ["meaning", "nghĩa", "nghia", "ý nghĩa", "y nghia", "意味", "vietnamese", "vi", "en", "eng", "english meaning"],
+    han_viet: ["han_viet", "hán việt", "han viet", "漢越", "sino-vietnamese"],
     onyomi: ["onyomi", "on", "音読み"],
     kunyomi: ["kunyomi", "kun", "訓読み"],
     mnemonic: ["mnemonic", "mẹo nhớ", "meo nho", "memo"],

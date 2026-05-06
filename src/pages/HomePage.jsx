@@ -23,11 +23,13 @@ import {
   Edit2,
   Trash2,
   Brain,
+  RefreshCw,
 } from "lucide-react";
 import { getSeasonalEvent, getDailyQuote, checkLunarEvents } from "../services/seasonalService";
 import { nhostService } from "../services/nhostService";
 import { useBookmarkStore } from "../store/useBookmarkStore";
 import { useUserStore } from "../store/useUserStore";
+import { useSync } from "../components/SyncProvider";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { CrudModal } from "../components/ui/CrudModal";
@@ -84,48 +86,43 @@ const mainDecks = [
 const premiumDecks = [
   {
     id: "JLPT N1",
-    shortTitle: "30",
+    shortTitle: "N1",
     title: "3000 Từ vựng JLPT N1",
     count: "2310",
     description: "Tài liệu học N1",
     color: "bg-[#37464F]",
-    icon: "https://jtest.net/static/img/cover/n1.jpg",
   },
   {
     id: "JLPT N2",
-    shortTitle: "25",
+    shortTitle: "N2",
     title: "2500 Từ vựng JLPT N2",
     count: "1931",
     description: "Tài liệu học N2",
     color: "bg-[#A342FF]",
-    icon: "https://jtest.net/static/img/cover/n2.jpg",
   },
   {
     id: "JLPT N3",
-    shortTitle: "20",
+    shortTitle: "N3",
     title: "2000 Từ vựng JLPT N3",
-    count: "1698",
+    count: "1542",
     description: "Tài liệu học N3",
     color: "bg-[#FF4B4B]",
-    icon: "https://jtest.net/static/img/cover/n3.jpg",
   },
   {
     id: "JLPT N4",
-    shortTitle: "15",
+    shortTitle: "N4",
     title: "1500 Từ vựng JLPT N4",
-    count: "1029",
+    count: "1120",
     description: "Tài liệu học N4",
     color: "bg-[#FF9600]",
-    icon: "https://jtest.net/static/img/cover/n4.jpg",
   },
   {
     id: "JLPT N5",
-    shortTitle: "10",
+    shortTitle: "N5",
     title: "1000 Từ vựng JLPT N5",
-    count: "1142",
+    count: "840",
     description: "Tài liệu học N5",
     color: "bg-[#58CC02]",
-    icon: "https://jtest.net/static/img/cover/n5.jpg",
   },
 ];
 
@@ -342,9 +339,50 @@ export const HomePage = () => {
   const navigate = useNavigate();
   const [event, setEvent] = useState(getSeasonalEvent());
   const [quote, setQuote] = useState(getDailyQuote());
+  const [communityTree, setCommunityTree] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [levelModal, setLevelModal] = useState(null);
+  const [specialtyDecksState, setSpecialtyDecksState] = useState([]);
+  const [vocaCounts, setVocaCounts] = useState({});
   const bookmarks = useBookmarkStore(state => state.bookmarks);
   const { account, vocaSource, setVocaSource } = useUserStore();
-  const [specialtyDecksState, setSpecialtyDecksState] = useState([]);
+  const { syncing, forceRefresh } = useSync();
+
+  const [moveDeckTarget, setMoveDeckTarget] = useState(null);
+
+  // Logic to filter communityTree based on Premium/Japience/Mori matches
+  const matchedIds = useMemo(() => {
+    const ids = new Set();
+    communityTree.forEach(root => {
+      const t = root.title.toUpperCase();
+      const levelMatch = t.match(/N[1-5]/i)?.[0];
+      
+      // Check Premium match
+      const isPremium = levelMatch && (
+        (t.includes("8000") && t.includes("TỪ VỰNG")) ||
+        (t.includes("TỪ VỰNG") && !t.includes("MONDAI") && !t.includes("ORIGINAL") && !t.includes("JAPAN") && !t.includes("MORI"))
+      );
+      if (isPremium) {
+        ids.add(root.id);
+        return;
+      }
+
+      // Check Japanience match
+      const isJapience = levelMatch && (t.includes("JAPAN") || t.includes("ORIGINAL")) && !t.includes("MORI");
+      if (isJapience) {
+        ids.add(root.id);
+        return;
+      }
+
+      // Check Mori match
+      const isMori = t.includes("MORI");
+      if (isMori) {
+        ids.add(root.id);
+        return;
+      }
+    });
+    return ids;
+  }, [communityTree]);
 
   // Calculate SRS Reviews
   const srsData = account?.srsData || {};
@@ -387,10 +425,6 @@ export const HomePage = () => {
       sessionStorage.removeItem("home_expanded_level");
     }
   }, [expandedLevelId]);
-
-  const [communityTree, setCommunityTree] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [levelModal, setLevelModal] = useState(null);
 
   // ─── CRUD & Excel Import state ────────────────────────────────────────────
   const [addVocabOpen, setAddVocabOpen] = useState(false);
@@ -690,15 +724,33 @@ export const HomePage = () => {
         folderMap[f.id] = { ...f, subfolders: [], decks: [] };
       });
 
-      // 2. Map decks to folders
+      // 2. Map decks to folders and fetch counts
+      const counts = await nhostService.getVocabCountsPerDeck();
+      const countMap = {};
+      counts.forEach(c => {
+        countMap[c.deck_id] = c.count;
+      });
+      setVocaCounts(countMap);
+
+      const standardKeywords = ["JLPT", "N1", "N2", "N3", "N4", "N5", "TOEIC", "MORI", "JAPANIENCE", "ORIGINAL", "8000 TỪ VỰNG"];
       decks.forEach(d => {
+        const deckObj = { ...d, count: countMap[d.id] || 0 };
         if (d.community_folder_id && folderMap[d.community_folder_id]) {
-          folderMap[d.community_folder_id].decks.push(d);
+          folderMap[d.community_folder_id].decks.push(deckObj);
+        } else {
+          // If it's orphaned, check if it's a redundant deck that's likely already shown in Premium/Specialized sections
+          const isRedundant = standardKeywords.some(kw => d.title.toUpperCase().includes(kw));
+          if (!isRedundant) {
+            d.isOrphaned = true;
+            d.count = deckObj.count;
+          }
         }
       });
 
       // 3. Build the tree
       const roots = [];
+      const orphanedDecks = decks.filter(d => d.isOrphaned);
+
       folders.forEach(f => {
         const folderObj = folderMap[f.id];
         if (!f.parent_id) {
@@ -707,6 +759,22 @@ export const HomePage = () => {
           folderMap[f.parent_id].subfolders.push(folderObj);
         }
       });
+
+      if (orphanedDecks.length > 0) {
+        // Find if we already have an "Uncategorized" folder in the roots
+        const existingOrphanedRoot = roots.find(r => r.title === "Chưa phân loại");
+        if (existingOrphanedRoot) {
+          existingOrphanedRoot.decks = [...(existingOrphanedRoot.decks || []), ...orphanedDecks];
+        } else {
+          roots.push({
+            id: "orphaned_root",
+            title: "Chưa phân loại",
+            description: "Các bài học chưa được đưa vào danh mục",
+            subfolders: [],
+            decks: orphanedDecks
+          });
+        }
+      }
 
       setCommunityTree(roots);
     } catch (e) {
@@ -805,7 +873,42 @@ export const HomePage = () => {
                         </div>
                         <h4 className="text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-indigo-600 truncate transition-colors">
                           {deck.title}
+                          {deck.count > 0 && (
+                            <span className="ml-2 text-[10px] text-slate-400 font-medium">({deck.count} từ)</span>
+                          )}
                         </h4>
+                      </div>
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={e => {
+                            e.stopPropagation();
+                            handleEditDeck(deck);
+                          }}
+                          className="p-1.5 rounded-md text-slate-300 hover:text-amber-500 hover:bg-amber-50"
+                          title="Đổi tên"
+                        >
+                          <Edit2 size={12} />
+                        </button>
+                        <button
+                          onClick={e => {
+                            e.stopPropagation();
+                            setMoveDeckTarget(deck);
+                          }}
+                          className="p-1.5 rounded-md text-slate-300 hover:text-indigo-500 hover:bg-indigo-50"
+                          title="Di chuyển"
+                        >
+                          <FolderPlus size={12} />
+                        </button>
+                        <button
+                          onClick={e => {
+                            e.stopPropagation();
+                            handleDeleteDeck(deck);
+                          }}
+                          className="p-1.5 rounded-md text-slate-300 hover:text-red-500 hover:bg-red-50"
+                          title="Xóa"
+                        >
+                          <Trash2 size={12} />
+                        </button>
                       </div>
                       <ChevronRight
                         size={14}
@@ -839,10 +942,44 @@ export const HomePage = () => {
                     {deck.title}
                   </span>
                 </div>
-                <ChevronRight
-                  size={16}
-                  className="text-slate-200 group-hover:text-indigo-400 transition-all"
-                />
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleEditDeck(deck);
+                      }}
+                      className="p-1.5 rounded-md text-slate-300 hover:text-amber-500 hover:bg-amber-50"
+                      title="Đổi tên"
+                    >
+                      <Edit2 size={12} />
+                    </button>
+                    <button
+                      onClick={e => {
+                        e.stopPropagation();
+                        setMoveDeckTarget(deck);
+                      }}
+                      className="p-1.5 rounded-md text-slate-300 hover:text-indigo-500 hover:bg-indigo-50"
+                      title="Di chuyển"
+                    >
+                      <FolderPlus size={12} />
+                    </button>
+                    <button
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleDeleteDeck(deck);
+                      }}
+                      className="p-1.5 rounded-md text-slate-300 hover:text-red-500 hover:bg-red-50"
+                      title="Xóa"
+                    >
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
+                  <ChevronRight
+                    size={16}
+                    className="text-slate-200 group-hover:text-indigo-400 transition-all"
+                  />
+                </div>
               </motion.div>
             ))}
           </div>
@@ -971,6 +1108,16 @@ export const HomePage = () => {
       await fetchCommunityData();
     } catch (err) {
       alert("Lỗi đổi tên: " + err.message);
+    }
+  };
+
+  const handleMoveDeck = async (deck, targetFolderId) => {
+    try {
+      await nhostService.updateDeck(deck.id, { community_folder_id: targetFolderId });
+      setMoveDeckTarget(null);
+      await fetchCommunityData();
+    } catch (err) {
+      alert("Lỗi di chuyển: " + err.message);
     }
   };
 
@@ -1279,6 +1426,16 @@ export const HomePage = () => {
                                       >
                                         <Trash2 size={12} />
                                       </button>
+                                      <button
+                                        onClick={e => {
+                                          e.stopPropagation();
+                                          setMoveDeckTarget(d);
+                                        }}
+                                        className="p-1.5 rounded-md text-slate-300 hover:text-indigo-500 hover:bg-indigo-50 transition-colors"
+                                        title="Chuyển thư mục"
+                                      >
+                                        <FolderPlus size={12} />
+                                      </button>
                                       <div className="w-px h-3 bg-slate-200 dark:bg-slate-700 mx-1"></div>
                                       <button
                                         onClick={e => {
@@ -1545,6 +1702,14 @@ export const HomePage = () => {
             <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
               <Languages size={16} className="text-indigo-500" /> Ôn tập chớp nhoáng
             </h3>
+            <button
+              onClick={forceRefresh}
+              disabled={syncing}
+              className={`p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-indigo-500 transition-all ${syncing ? "animate-spin text-indigo-500" : ""}`}
+              title="Cập nhật dữ liệu từ đám mây"
+            >
+              <RefreshCw size={14} />
+            </button>
           </div>
           <div className="flex-1 grid grid-cols-1 gap-4">
             {randomSrsWords.length > 0 ? (
@@ -1712,10 +1877,10 @@ export const HomePage = () => {
                 const root = communityTree.find(r => {
                   const t = r.title.toUpperCase();
                   if (!t.includes(levelMatch)) return false;
-                  // Strictly Premium: match '8000' or 'TỪ VỰNG' and EXCLUDE 'ORIGINAL' or 'JAPAN'
+                  // Strictly Premium: prioritize '8000' and 'TỪ VỰNG', exclude others
                   return (
-                    t.includes("8000") ||
-                    (t.includes("TỪ VỰNG") && !t.includes("ORIGINAL") && !t.includes("JAPAN")) ||
+                    (t.includes("8000") && t.includes("TỪ VỰNG")) ||
+                    (t.includes("TỪ VỰNG") && !t.includes("MONDAI") && !t.includes("ORIGINAL") && !t.includes("JAPAN") && !t.includes("MORI")) ||
                     t === deck.title.toUpperCase()
                   );
                 });
@@ -1749,17 +1914,34 @@ export const HomePage = () => {
                           }}
                           className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg cursor-pointer ${deck.color}`}
                         >
-                          {deck.shortTitle}
+                          {deck.icon ? (
+                            <img 
+                              src={deck.icon} 
+                              alt={deck.shortTitle} 
+                              className="w-full h-full object-cover" 
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                                e.currentTarget.parentElement.innerHTML = deck.shortTitle;
+                              }}
+                            />
+                          ) : (
+                            deck.shortTitle
+                          )}
                         </motion.div>
                         <div>
                           <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 group-hover:text-indigo-500 transition-colors">
                             {deck.title}
                           </h3>
                           <p className="text-xs font-bold text-slate-400">
-                            {subfolderCount > 0
-                              ? `${subfolderCount} chuyên mục`
-                              : `${root?.decks?.length || 0} bài học`}{" "}
-                            &middot; {deck.description}
+                            {root ? (
+                              subfolderCount > 0
+                                ? `${subfolderCount} chuyên mục`
+                                : `${root?.decks?.length || 0} bài học`
+                            ) : (vocaCounts[deck.id] || deck.count) ? (
+                              `${vocaCounts[deck.id] || deck.count} bài học`
+                            ) : null}
+                            { (root || deck.count) && " · " }
+                            {deck.description}
                           </p>
                         </div>
                       </div>
@@ -1873,7 +2055,19 @@ export const HomePage = () => {
                           }}
                           className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg cursor-pointer ${deck.color}`}
                         >
-                          {deck.shortTitle}
+                          {deck.icon ? (
+                            <img 
+                              src={deck.icon} 
+                              alt={deck.shortTitle} 
+                              className="w-full h-full object-cover" 
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                                e.currentTarget.parentElement.innerHTML = deck.shortTitle;
+                              }}
+                            />
+                          ) : (
+                            deck.shortTitle
+                          )}
                         </motion.div>
                         <div>
                           <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 group-hover:text-indigo-500 transition-colors">
@@ -2005,7 +2199,19 @@ export const HomePage = () => {
                         <div
                           className={`w-14 h-14 rounded-2xl ${deck.color} flex items-center justify-center text-white font-black text-xl shadow-lg cursor-pointer group-hover:rotate-6 transition-transform duration-500 shrink-0`}
                         >
-                          {deck.shortTitle}
+                          {deck.icon ? (
+                            <img 
+                              src={deck.icon} 
+                              alt={deck.shortTitle} 
+                              className="w-full h-full object-cover" 
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                                e.currentTarget.parentElement.innerHTML = deck.shortTitle;
+                              }}
+                            />
+                          ) : (
+                            deck.shortTitle
+                          )}
                         </div>
                         <div>
                           <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 group-hover:text-[#009245] transition-colors">
@@ -2283,24 +2489,8 @@ export const HomePage = () => {
               </motion.div>
               <div className="space-y-6">
                 {(() => {
-                  const premiumKeywords = [
-                    "từ vựng",
-                    "hán tự",
-                    "premium",
-                    "n1",
-                    "n2",
-                    "n3",
-                    "n4",
-                    "n5",
-                    "toeic",
-                    "passport",
-                    "it -",
-                    "8000",
-                  ];
                   const filteredRoots = communityTree.filter(root => {
-                    const t = root.title.toLowerCase();
-                    // exclude anything that looks like a main JLPT or specialty deck
-                    return !premiumKeywords.some(kw => t.includes(kw));
+                    return !matchedIds.has(root.id);
                   });
 
                   if (filteredRoots.length === 0) {
@@ -2883,6 +3073,71 @@ export const HomePage = () => {
                     </>
                   )}
                 </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+      {/* Modal di chuyển bài học */}
+      {moveDeckTarget && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm"
+          onClick={() => setMoveDeckTarget(null)}
+        >
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border-2 border-slate-100 dark:border-slate-700 w-full max-w-lg mx-4 overflow-hidden"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="p-6 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-black text-slate-800 dark:text-white">
+                  Di chuyển bài học
+                </h3>
+                <p className="text-sm text-slate-400 font-bold mt-0.5">
+                  Chọn thư mục đích cho "{moveDeckTarget.title}"
+                </p>
+              </div>
+              <button
+                onClick={() => setMoveDeckTarget(null)}
+                className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="p-4 max-h-[60vh] overflow-y-auto">
+              <div className="space-y-2">
+                <button
+                  onClick={() => handleMoveDeck(moveDeckTarget, null)}
+                  className="w-full text-left p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-700 hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all flex items-center justify-between group"
+                >
+                  <span className="font-bold text-slate-700 dark:text-slate-200">Rời vào mục "Chưa phân loại"</span>
+                  <ChevronRight size={16} className="text-slate-300 group-hover:text-indigo-500" />
+                </button>
+                {communityTree.filter(r => r.id !== "orphaned_root").map(root => (
+                  <div key={root.id} className="space-y-2">
+                    <button
+                      onClick={() => handleMoveDeck(moveDeckTarget, root.id)}
+                      className="w-full text-left p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/40 border-2 border-transparent hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all flex items-center justify-between group"
+                    >
+                      <span className="font-black text-indigo-600 dark:text-indigo-400">{root.title}</span>
+                      <ChevronRight size={16} className="text-indigo-300 group-hover:text-indigo-500" />
+                    </button>
+                    <div className="pl-6 grid grid-cols-1 gap-2">
+                      {root.subfolders?.map(sub => (
+                        <button
+                          key={sub.id}
+                          onClick={() => handleMoveDeck(moveDeckTarget, sub.id)}
+                          className="w-full text-left p-3 rounded-xl border border-slate-100 dark:border-slate-700 hover:border-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all flex items-center justify-between group"
+                        >
+                          <span className="text-sm font-bold text-slate-600 dark:text-slate-300">{sub.title}</span>
+                          <Plus size={14} className="text-slate-300 group-hover:text-emerald-500" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </motion.div>

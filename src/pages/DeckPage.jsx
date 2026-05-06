@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { loadDeck } from "../api/loader";
+import { vocabularyRepository } from "../data/repositories/NhostVocabularyRepository";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
@@ -26,6 +26,8 @@ import {
   AlertTriangle,
   Keyboard,
   GraduationCap,
+  ClipboardCheck,
+  Loader2,
 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { CrudModal } from "../components/ui/CrudModal";
@@ -37,6 +39,8 @@ import { nhostService } from "../services/nhostService";
 import { tts } from "../utils/tts";
 import { KanjiWriter } from "../components/ui/KanjiWriter";
 import { KanjiWriterModal } from "../components/ui/KanjiWriterModal";
+import { examGeneratorService } from "../services/examGeneratorService";
+import { examRepository } from "../data/repositories/NhostExamRepository";
 
 const DECK_LABELS = {
   eng: "Tiếng Anh 600",
@@ -136,6 +140,8 @@ export const DeckPage = () => {
   // Excel import state
   const [excelOpen, setExcelOpen] = useState(false);
   // JSON import state
+
+
   const [jsonImportOpen, setJsonImportOpen] = useState(false);
   const [jsonText, setJsonText] = useState("");
   const [jsonPreview, setJsonPreview] = useState({ count: 0, valid: false, error: "" });
@@ -143,6 +149,19 @@ export const DeckPage = () => {
   // Writing modal state
   const [writingOpen, setWritingOpen] = useState(false);
   const [writingKanji, setWritingKanji] = useState(null);
+
+  // Exam generation state
+  const [examGenerating, setExamGenerating] = useState(false);
+  const [examProgress, setExamProgress] = useState({ step: 0, total: 12 });
+  const [selectedLevel, setSelectedLevel] = useState(deckId.match(/n[1-5]/i)?.[0]?.toUpperCase() || "N3");
+  const [radicals, setRadicals] = useState([]);
+  const [spotlightRadical, setSpotlightRadical] = useState(null);
+  const [spotlightAnchor, setSpotlightAnchor] = useState(null);
+
+  // Bulk Edit JSON state
+  const [bulkJsonOpen, setBulkJsonOpen] = useState(false);
+  const [bulkJsonText, setBulkJsonText] = useState("");
+  const [bulkJsonSaving, setBulkJsonSaving] = useState(false);
 
   // Determine if this deck is from Nhost (CRUD-capable)
   const isNhostDeck =
@@ -261,11 +280,12 @@ export const DeckPage = () => {
               ...item,
               id: generateUUID(),
               level: finalLevel,
+              deck_id: deckId,
             }));
             const { errors } = await nhostService.bulkInsertMyVoca(bucket);
             if (errors?.length) throw new Error(errors[0].message);
             // Refresh list after bulk
-            loadDeck(deckId, source).then(setWords);
+            vocabularyRepository.loadDeck(deckId, source).then(setWords);
             alert(`Đã thêm thành công ${bucket.length} từ vựng!`);
           }
         } else {
@@ -276,6 +296,7 @@ export const DeckPage = () => {
             ...fields,
             id: generateUUID(),
             level: finalLevel,
+            deck_id: deckId,
             type: fields.onyomi || fields.kunyomi || fields.related_voca ? "kanji" : "voca",
           };
           const { errors } = await nhostService.createRow(table, obj);
@@ -371,18 +392,22 @@ export const DeckPage = () => {
       const currentTitle = deckMetadata?.title || DECK_LABELS[deckId] || deckId;
       const finalLevel = currentTitle.toUpperCase();
 
-      const bucket = parsed.map(item => ({
-        ...item,
-        id: generateUUID(),
-        level: finalLevel,
-        type: item.onyomi || item.kunyomi || item.radical_analysis ? "kanji" : "voca",
-      }));
+      const bucket = parsed.map(item => {
+        const { radical_analysis, related_voca, ...rest } = item;
+        return {
+          ...rest,
+          id: generateUUID(),
+          level: finalLevel,
+          deck_id: deckId,
+          type: item.onyomi || item.kunyomi ? "kanji" : "voca",
+        };
+      });
 
       const { errors } = await nhostService.bulkInsertMyVoca(bucket);
       if (errors?.length) throw new Error(errors[0].message);
 
       // Refresh word list
-      const data = await loadDeck(deckId, source);
+      const data = await vocabularyRepository.loadDeck(deckId, source);
       setWords(data);
 
       setJsonImportOpen(false);
@@ -431,11 +456,57 @@ export const DeckPage = () => {
       return;
     }
 
-    loadDeck(deckId, source).then(data => {
+    vocabularyRepository.loadDeck(deckId, source).then(data => {
       setWords(data);
       setLoading(false);
     });
+
+    // Fetch radicals for spotlighting
+    nhostService.getRadicals().then(setRadicals);
   }, [deckId, source, isSrsDeck, srsDep]);
+
+  // Create radical lookup maps
+  const radicalMaps = useMemo(() => {
+    const byChar = {};
+    const byName = {};
+    radicals.forEach(r => {
+      if (r.character) byChar[r.character] = r;
+      if (r.name_vi) byName[r.name_vi.toLowerCase()] = r;
+    });
+    return { byChar, byName };
+  }, [radicals]);
+
+  const renderRadicalAnalysis = text => {
+    if (!text) return null;
+    // Smart split: identify components in parentheses or separated by symbols
+    // Format examples: "意 (Ý) = 立 (Lập) + 日 (Nhật) + 心 (Tâm)" OR "山 + 石"
+    const parts = text.split(/([()=+\-\s])/);
+
+    return parts.map((part, i) => {
+      const trimmed = part.trim();
+      if (!trimmed) return part;
+
+      // Try matching by character first, then by name
+      const match = radicalMaps.byChar[trimmed] || radicalMaps.byName[trimmed.toLowerCase()];
+
+      if (match) {
+        return (
+          <span
+            key={i}
+            className="text-indigo-600 dark:text-indigo-400 cursor-pointer hover:underline decoration-2 underline-offset-2 transition-all font-black px-0.5 rounded hover:bg-indigo-50 dark:hover:bg-indigo-500/10"
+            onClick={e => {
+              e.stopPropagation();
+              setSpotlightRadical(match);
+              setSpotlightAnchor(e.currentTarget);
+            }}
+          >
+            {part}
+          </span>
+        );
+      }
+      return <span key={i}>{part}</span>;
+    });
+  };
 
   const filtered = useMemo(() => {
     let result = words;
@@ -551,85 +622,171 @@ export const DeckPage = () => {
         </div>
       </div>
 
-      {/* Action buttons */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:flex gap-2 lg:gap-3">
-        <Button
-          variant="primary"
-          onClick={() =>
-            navigate(`/learn/${deckId}${filterType !== "all" ? "?filter=" + filterType : ""}`)
-          }
-          className="lg:flex-1 !bg-indigo-600 !border-indigo-700 shadow-indigo-100 py-3 lg:py-2.5"
-        >
-          <GraduationCap size={18} /> Học bài
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={() =>
-            navigate(`/quiz/${deckId}${filterType !== "all" ? "?filter=" + filterType : ""}`)
-          }
-          className="lg:flex-1 py-3 lg:py-2.5"
-        >
-          <Zap size={18} /> Quiz
-        </Button>
-        <div className="flex-1 flex flex-col gap-1 relative">
-          <Button
-            variant="secondary"
-            onClick={() =>
-              navigate(
-                `/flashcards/${deckId}${filterType !== "all" ? "?filter=" + filterType : ""}`
-              )
-            }
-            className="w-full h-full relative overflow-hidden group py-3 lg:py-2.5"
-          >
-            <div className="relative z-10 flex items-center gap-2">
-              <BookOpen size={18} /> Flashcard
-            </div>
-            {flashcardProgress && flashcardProgress.totalCards > 0 && (
-              <div
-                className="absolute bottom-0 left-0 h-1 bg-[#1CB0F6]/50 transition-all group-hover:bg-[#1CB0F6]"
-                style={{
-                  width: `${Math.round((flashcardProgress.studied / flashcardProgress.totalCards) * 100)}%`,
-                }}
-              />
-            )}
-          </Button>
-        </div>
-        <Button
-          variant="secondary"
-          onClick={() =>
-            navigate(`/typing/${deckId}${filterType !== "all" ? "?filter=" + filterType : ""}`)
-          }
-          className="!bg-purple-50 !text-purple-600 hover:!bg-purple-100 !border-purple-200 dark:!bg-purple-500/10 dark:!text-purple-400 dark:!border-purple-500/30 py-3 lg:py-2.5"
-        >
-          <Keyboard size={18} /> Gõ
-        </Button>
+      {/* Action Toolbar */}
+      <div className="space-y-6">
+        {/* Luyện tập Group */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Luyện tập & Kiểm tra</span>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            <Button
+              variant="primary"
+              onClick={() => navigate(`/learn/${deckId}${filterType !== "all" ? "?filter=" + filterType : ""}`)}
+              className="!h-14 !rounded-2xl !bg-[#1CB0F6] hover:!bg-[#1899D6] !border-b-4 !border-[#1899D6] shadow-lg shadow-sky-100 dark:shadow-none"
+            >
+              <GraduationCap size={20} strokeWidth={2.5} /> Học bài
+            </Button>
+            
+            <Button
+              variant="secondary"
+              onClick={() => navigate(`/flashcards/${deckId}${filterType !== "all" ? "?filter=" + filterType : ""}`)}
+              className="!h-14 !rounded-2xl relative overflow-hidden group !bg-white dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-[#1CB0F6]/30 shadow-sm"
+            >
+              <div className="relative z-10 flex items-center gap-2 text-[#1CB0F6] font-black">
+                <BookOpen size={20} strokeWidth={2.5} /> Flashcard
+              </div>
+              {flashcardProgress && flashcardProgress.totalCards > 0 && (
+                <div
+                  className="absolute bottom-0 left-0 h-1.5 bg-[#1CB0F6]/30 transition-all group-hover:bg-[#1CB0F6]/50"
+                  style={{ width: `${Math.round((flashcardProgress.studied / flashcardProgress.totalCards) * 100)}%` }}
+                />
+              )}
+            </Button>
 
+            <Button
+              variant="secondary"
+              onClick={() => navigate(`/quiz/${deckId}${filterType !== "all" ? "?filter=" + filterType : ""}`)}
+              className="!h-14 !rounded-2xl !bg-white dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-amber-400/30 shadow-sm"
+            >
+              <Zap size={20} strokeWidth={2.5} className="text-amber-500" /> <span className="text-amber-600 font-black">Quiz</span>
+            </Button>
+
+            <Button
+              variant="secondary"
+              onClick={() => navigate(`/typing/${deckId}${filterType !== "all" ? "?filter=" + filterType : ""}`)}
+              className="!h-14 !rounded-2xl !bg-white dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-purple-400/30 shadow-sm"
+            >
+              <Keyboard size={20} strokeWidth={2.5} className="text-purple-500" /> <span className="text-purple-600 font-black">Gõ</span>
+            </Button>
+
+            {/* Exam Button with Level Picker */}
+            <div className="flex flex-col gap-1.5">
+              <div className="flex gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700 h-6">
+                {['N5', 'N4', 'N3', 'N2', 'N1'].map(lvl => (
+                  <button
+                    key={lvl}
+                    onClick={() => setSelectedLevel(lvl)}
+                    disabled={examGenerating}
+                    className={`flex-1 text-[9px] font-black rounded-lg transition-all ${
+                      selectedLevel === lvl ? 'bg-white dark:bg-slate-700 text-[#1CB0F6] shadow-sm' : 'text-slate-400 hover:text-slate-600'
+                    }`}
+                  >
+                    {lvl}
+                  </button>
+                ))}
+              </div>
+              <Button
+                variant="secondary"
+                disabled={examGenerating || words.length === 0}
+                onClick={async () => {
+                  if (examGenerating) return;
+                  setExamGenerating(true);
+                  setExamProgress({ step: 0, total: 12 });
+                  try {
+                    const deckTitle = deckMetadata?.title || DECK_LABELS[deckId] || deckId;
+                    const level = selectedLevel.toLowerCase();
+                    const existing = await examRepository.getExamByDeckId(deckId);
+                    if (existing?.id) {
+                      const existingNums = existing.existingMondais || [];
+                      const ALL = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+                      const missing = ALL.filter(n => !existingNums.includes(n));
+                      if (missing.length === 0) {
+                        navigate(`/jlpt-exams/${existing.id}`);
+                        return;
+                      }
+                      addToast(`🔧 Đề thi thiếu ${missing.length} phần. Đang bổ sung...`, "info");
+                      setExamProgress({ step: 0, total: missing.length });
+                      const newMondais = await examGeneratorService.generateMissingMondais(existingNums, words, { deckId, deckTitle, level }, (step, total) => setExamProgress({ step, total }));
+                      if (newMondais.length > 0) {
+                        await examRepository.addMondaisToExam(existing.id, newMondais);
+                        addToast(`✅ Đã bổ sung ${newMondais.length} phần!`, "success");
+                      }
+                      navigate(`/jlpt-exams/${existing.id}`);
+                      return;
+                    }
+                    const examData = await examGeneratorService.generateExam(words, { deckId, deckTitle, level }, (step, total) => setExamProgress({ step, total }));
+                    const saved = await examRepository.saveGeneratedExam(examData);
+                    if (saved?.id) {
+                      addToast("Đề thi đã được tạo thành công!", "success");
+                      navigate(`/jlpt-exams/${saved.id}`);
+                    } else throw new Error("Không thể lưu đề thi.");
+                  } catch (err) {
+                    console.error("[ExamGen] Error:", err);
+                    addToast("Lỗi: " + err.message, "error");
+                  } finally {
+                    setExamGenerating(false);
+                    setExamProgress({ step: 0, total: 0 });
+                  }
+                }}
+                className="!h-[2.1rem] !rounded-xl !bg-amber-50 !text-amber-600 hover:!bg-amber-100 !border-amber-200 dark:!bg-amber-500/10 dark:!text-amber-400 dark:!border-amber-500/30 relative text-xs font-black"
+              >
+                {examGenerating ? (
+                  <><Loader2 size={14} className="animate-spin" /> {examProgress.step}/{examProgress.total}</>
+                ) : (
+                  <><ClipboardCheck size={14} strokeWidth={2.5} /> Đề thi {selectedLevel}</>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Quản lý Group */}
         {canCrud && (
-          <Button
-            variant="secondary"
-            onClick={openCreate}
-            className="lg:shrink-0 !bg-[#58CC02]/10 !text-[#58CC02] hover:!bg-[#58CC02]/20 !border-[#58CC02]/30 py-3 lg:py-2.5"
-          >
-            <Plus size={18} /> Thêm từ
-          </Button>
-        )}
-        {canCrud && (
-          <Button
-            variant="secondary"
-            onClick={() => setExcelOpen(true)}
-            className="lg:shrink-0 !bg-indigo-50 !text-indigo-600 hover:!bg-indigo-100 !border-indigo-200 dark:!bg-indigo-500/10 dark:!text-indigo-400 dark:!border-indigo-500/30 py-3 lg:py-2.5"
-          >
-            <FileSpreadsheet size={18} /> Excel
-          </Button>
-        )}
-        {canCrud && (
-          <Button
-            variant="secondary"
-            onClick={() => setJsonImportOpen(true)}
-            className="lg:shrink-0 !bg-emerald-50 !text-emerald-600 hover:!bg-emerald-100 !border-emerald-200 dark:!bg-emerald-500/10 dark:!text-emerald-400 dark:!border-emerald-500/30 py-3 lg:py-2.5"
-          >
-            <Code size={18} /> JSON
-          </Button>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Quản lý dữ liệu</span>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <Button
+                variant="secondary"
+                onClick={openCreate}
+                className="!h-12 !rounded-2xl !bg-[#58CC02]/10 !text-[#58CC02] hover:!bg-[#58CC02]/20 !border-2 !border-[#58CC02]/20 font-black"
+              >
+                <Plus size={18} strokeWidth={3} /> Thêm từ
+              </Button>
+
+              <Button
+                variant="secondary"
+                onClick={() => setExcelOpen(true)}
+                className="!h-12 !rounded-2xl !bg-indigo-50 !text-indigo-600 hover:!bg-indigo-100 !border-2 !border-indigo-100 font-black"
+              >
+                <FileSpreadsheet size={18} strokeWidth={2.5} /> Excel
+              </Button>
+
+              <Button
+                variant="secondary"
+                onClick={() => setJsonImportOpen(true)}
+                className="!h-12 !rounded-2xl !bg-emerald-50 !text-emerald-600 hover:!bg-emerald-100 !border-2 !border-emerald-100 font-black"
+              >
+                <Code size={18} strokeWidth={2.5} /> JSON
+              </Button>
+
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  const exportable = words.map(({ id, word, reading, furigana, meaning, hanViet, han_viet, romaji, example, example_jp, exampleMeaning, example_vi, mnemonic, onyomi, kunyomi, type }) => ({
+                    id, word: word || "", reading: reading || furigana || "", meaning: meaning || "", han_viet: han_viet || hanViet || "", romaji: romaji || "", example_jp: example_jp || example || "", example_vi: example_vi || exampleMeaning || "", mnemonic: mnemonic || "", onyomi: onyomi || "", kunyomi: kunyomi || "", type: type || "voca"
+                  }));
+                  setBulkJsonText(JSON.stringify(exportable, null, 2));
+                  setBulkJsonOpen(true);
+                }}
+                className="!h-12 !rounded-2xl !bg-slate-900 !text-white hover:!bg-black !border-none font-black shadow-lg shadow-slate-200"
+              >
+                <Pencil size={18} strokeWidth={2.5} /> Edit ALL (JSON)
+              </Button>
+            </div>
+          </div>
         )}
       </div>
 
@@ -929,13 +1086,13 @@ export const DeckPage = () => {
                         </div>
                       )}
                       {word.radicalAnalysis && (
-                        <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 rounded-xl p-3">
-                          <span className="text-blue-700 dark:text-blue-400 font-bold text-xs uppercase">
-                            Phân tích bộ thủ (Dũng Mori)
+                        <div className="bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 rounded-xl p-3 relative">
+                          <span className="text-indigo-700 dark:text-indigo-400 font-bold text-xs uppercase flex items-center gap-2">
+                            <Layers size={12} /> Phân tích bộ thủ (Dũng Mori)
                           </span>
-                          <p className="text-sm text-slate-700 dark:text-blue-100 font-bold mt-1">
-                            {word.radicalAnalysis}
-                          </p>
+                          <div className="text-sm text-slate-700 dark:text-indigo-100 font-bold mt-1 leading-relaxed">
+                            {renderRadicalAnalysis(word.radicalAnalysis)}
+                          </div>
                         </div>
                       )}
                       {word.mnemonic && (
@@ -1073,7 +1230,7 @@ export const DeckPage = () => {
           onImportDone={async () => {
             setLoading(true);
             try {
-              const data = await loadDeck(deckId, source);
+              const data = await vocabularyRepository.loadDeck(deckId, source);
               setWords(data);
             } finally {
               setLoading(false);
@@ -1089,6 +1246,70 @@ export const DeckPage = () => {
         kanji={writingKanji?.word}
         meaning={writingKanji?.meaning}
       />
+
+      {/* Radical Spotlight Popover */}
+      <AnimatePresence>
+        {spotlightRadical && spotlightAnchor && (
+          <>
+            <div
+              className="fixed inset-0 z-[250]"
+              onClick={() => {
+                setSpotlightRadical(null);
+                setSpotlightAnchor(null);
+              }}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 10 }}
+              className="fixed z-[260] w-64 bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border-2 border-slate-100 dark:border-slate-700 p-5 overflow-hidden"
+              style={{
+                top: Math.min(
+                  window.innerHeight - 300,
+                  spotlightAnchor.getBoundingClientRect().bottom + 12
+                ),
+                left: Math.max(
+                  12,
+                  Math.min(
+                    window.innerWidth - 268,
+                    spotlightAnchor.getBoundingClientRect().left - 100
+                  )
+                ),
+              }}
+            >
+              <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+                <Layers size={80} />
+              </div>
+              <div className="flex items-start justify-between mb-3">
+                <div className="w-14 h-14 bg-indigo-50 dark:bg-indigo-500/10 rounded-2xl flex items-center justify-center text-3xl font-black text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-500/20">
+                  {spotlightRadical.character}
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest block">
+                    Bộ thủ #{spotlightRadical.radical_number}
+                  </span>
+                  <span className="text-xs font-black text-indigo-500 bg-indigo-50 dark:bg-indigo-500/10 px-2 py-0.5 rounded-lg mt-1 inline-block">
+                    {spotlightRadical.strokes} NÉT
+                  </span>
+                </div>
+              </div>
+              <h4 className="text-lg font-black text-slate-800 dark:text-white uppercase tracking-wider">
+                {spotlightRadical.name_vi}
+              </h4>
+              <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-1 leading-relaxed">
+                {spotlightRadical.meaning_vi}
+              </p>
+              <Button
+                variant="primary"
+                className="w-full mt-4 !py-2 !text-xs !bg-indigo-600"
+                onClick={() => navigate(`/radicals?highlight=${spotlightRadical.character}`)}
+              >
+                Xem chi tiết 214 bộ thủ
+              </Button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* JSON Import Modal - Dũng Mori Style */}
       <AnimatePresence>
@@ -1292,6 +1513,107 @@ export const DeckPage = () => {
                     Nhập {jsonPreview.count} từ
                   </button>
                 </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Bulk Edit JSON Modal */}
+      <AnimatePresence>
+        {bulkJsonOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-center justify-center p-4 md:p-10"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              className="bg-white dark:bg-slate-900 w-full max-w-5xl h-[80vh] rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden border-8 border-slate-50 dark:border-slate-800"
+            >
+              <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <div>
+                  <h3 className="text-2xl font-black text-slate-800 dark:text-white">
+                    Chỉnh sửa hàng loạt (JSON)
+                  </h3>
+                  <p className="text-sm text-slate-400 font-bold mt-1">
+                    Cẩn thận: Toàn bộ từ vựng trong bài sẽ được cập nhật theo nội dung bên dưới.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setBulkJsonOpen(false)}
+                  className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                >
+                  <X className="w-6 h-6 text-slate-400" />
+                </button>
+              </div>
+
+              <div className="flex-1 p-8 bg-slate-50 dark:bg-slate-950">
+                <textarea
+                  value={bulkJsonText}
+                  onChange={e => setBulkJsonText(e.target.value)}
+                  placeholder="[{ 'word': '...', 'meaning': '...' }]"
+                  className="w-full h-full p-6 bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-200 dark:border-slate-800 font-mono text-sm outline-none focus:border-indigo-400 transition-all resize-none shadow-inner"
+                />
+              </div>
+
+              <div className="p-8 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-4">
+                <Button
+                  variant="secondary"
+                  onClick={() => setBulkJsonOpen(false)}
+                  className="px-8"
+                >
+                  Hủy
+                </Button>
+                <Button
+                  variant="primary"
+                  loading={bulkJsonSaving}
+                  onClick={async () => {
+                    setBulkJsonSaving(true);
+                    try {
+                      const parsed = JSON.parse(bulkJsonText);
+                      if (!Array.isArray(parsed)) throw new Error("JSON phải là một mảng!");
+
+                      const currentTitle = deckMetadata?.title || DECK_LABELS[deckId] || deckId;
+                      const finalLevel = currentTitle.toUpperCase();
+
+                      // Prepare for bulk upsert
+                      const bucket = parsed.map(item => ({
+                        ...item,
+                        id: item.id || generateUUID(),
+                        level: item.level || finalLevel,
+                        deck_id: deckId,
+                        // Ensure required fields for DB
+                        word: item.word || "",
+                        meaning: item.meaning || "",
+                        furigana: item.reading || item.furigana || "",
+                      }));
+
+                      const res = await nhostService.bulkInsertMyVoca(bucket);
+                      if (res.errors?.length) throw new Error(res.errors[0].message);
+
+                      const affected = res.data?.insert_my_vocabulary?.affected_rows || bucket.length;
+
+                      addToast(`✅ Đã cập nhật thành công ${affected} từ vựng!`, "success");
+                      setBulkJsonOpen(false);
+                      
+                      // Refresh list with cache busting
+                      const data = await vocabularyRepository.loadDeck(deckId, source);
+                      setWords([...data]);
+                    } catch (err) {
+                      console.error("[BulkEdit] Error:", err);
+                      alert("Lỗi: " + err.message);
+                    } finally {
+                      setBulkJsonSaving(false);
+                    }
+                  }}
+                  className="px-10 !bg-indigo-600 !border-indigo-700"
+                >
+                  Lưu thay đổi
+                </Button>
               </div>
             </motion.div>
           </motion.div>

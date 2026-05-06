@@ -1,8 +1,15 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, createContext, useContext, useState } from "react";
 import { useUserStore } from "../store/useUserStore";
 import { useBookmarkStore } from "../store/useBookmarkStore";
 import { nhostService } from "../services/nhostService";
-import { debouncedSync, immediateSync, collectSyncData } from "../services/syncService";
+import { debouncedSync, immediateSync, collectSyncData, saveProgressToNhost } from "../services/syncService";
+
+const SyncContext = createContext({
+  syncing: false,
+  forceRefresh: () => Promise.resolve(),
+});
+
+export const useSync = () => useContext(SyncContext);
 
 /**
  * SyncProvider
@@ -18,6 +25,7 @@ export const SyncProvider = ({ children }) => {
   const prevBookmarksRef = useRef(bookmarks);
   const prevAccountRef = useRef(account);
   const hasLoadedRef = useRef(false);
+  const [syncing, setSyncing] = useState(false);
 
   const fetchAccountFromServer = async username => {
     const query = `query GetAccount($username: String!) {
@@ -37,42 +45,53 @@ export const SyncProvider = ({ children }) => {
       }
     }`;
 
-    const res = await nhostService.fetchGraphQL(query, "GetAccount", { username });
-    const user = res.data?.accounts?.[0];
-    if (!user) return null;
-    const arenaData = user.arena || { history: [], progress: {} };
+    try {
+      const res = await nhostService.fetchGraphQL(query, "GetAccount", { username });
+      const user = res.data?.accounts?.[0];
+      if (!user) return null;
+      const arenaData = user.arena || { history: [], progress: {} };
 
-    return {
-      id: user.id,
-      username: user.username,
-      name: user.name,
-      streak: user.streak || [],
-      lastStudyDate: user.last_study_date,
-      flashcardProgress: user.flashcard_progress || {},
-      quizHistory: user.quiz_history || [],
-      totalQuizzes: parseInt(user.total_quizzes) || 0,
-      bookmarks: user.bookmark || [],
-      srsData: user.srs_data || {},
-      pomodoro: user.pomodoro || {},
-      arenaHistory: arenaData.history || [],
-      arenaProgress: arenaData.progress || {},
-    };
+      return {
+        id: user.id,
+        username: user.username,
+        name: user.name,
+        streak: user.streak || [],
+        lastStudyDate: user.last_study_date,
+        flashcardProgress: user.flashcard_progress || {},
+        quizHistory: user.quiz_history || [],
+        totalQuizzes: parseInt(user.total_quizzes) || 0,
+        bookmarks: user.bookmark || [],
+        srsData: user.srs_data || {},
+        pomodoro: user.pomodoro || {},
+        arenaHistory: arenaData.history || [],
+        arenaProgress: arenaData.progress || {},
+      };
+    } catch (e) {
+      console.error("[Sync] Fetch failed:", e);
+      return null;
+    }
+  };
+
+  const forceRefresh = async () => {
+    if (!isAuthenticated || !account?.username || syncing) return;
+    setSyncing(true);
+    try {
+      const serverAccount = await fetchAccountFromServer(account.username);
+      if (serverAccount) {
+        useUserStore.getState().setAccount(serverAccount);
+        useBookmarkStore.setState({ bookmarks: serverAccount.bookmarks || [] });
+        console.log("[Sync] Data restored from Nhost.");
+      }
+    } finally {
+      setSyncing(false);
+    }
   };
 
   // On login: load fresh account data from Nhost only
   useEffect(() => {
     if (isAuthenticated && account && !hasLoadedRef.current) {
       hasLoadedRef.current = true;
-      const username = account.username;
-      const run = async () => {
-        const serverAccount = await fetchAccountFromServer(username);
-        if (serverAccount) {
-          useUserStore.getState().setAccount(serverAccount);
-          useBookmarkStore.setState({ bookmarks: serverAccount.bookmarks || [] });
-        }
-      };
-
-      run();
+      forceRefresh();
     }
     if (!isAuthenticated) {
       hasLoadedRef.current = false;
@@ -81,16 +100,15 @@ export const SyncProvider = ({ children }) => {
 
   // Auto-sync when bookmarks change
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || syncing || !hasLoadedRef.current) return;
     // Skip initial render
     if (prevBookmarksRef.current === bookmarks) return;
     prevBookmarksRef.current = bookmarks;
 
     // 1. Update the account state (local only, very fast)
-    // This is needed for components that read from account.bookmarks
     useUserStore.getState().syncBookmarksToAccount(bookmarks);
 
-    // 2. Schedule background sync to Google Sheets
+    // 2. Schedule background sync to Nhost
     const data = collectSyncData(useUserStore, useBookmarkStore);
     if (data) {
       debouncedSync(data);
@@ -99,7 +117,7 @@ export const SyncProvider = ({ children }) => {
 
   // Auto-sync when account data changes (streak, quiz, flashcard, SRS)
   useEffect(() => {
-    if (!isAuthenticated || !account) return;
+    if (!isAuthenticated || !account || syncing || !hasLoadedRef.current) return;
 
     // QA: Deep check for meaningful changes to avoid unnecessary syncs
     const prev = prevAccountRef.current;
@@ -109,9 +127,8 @@ export const SyncProvider = ({ children }) => {
     // We only sync if these specific fields changed
     const hasMeaningfulChange =
       !prev ||
-      prev.streak !== account.streak ||
-      prev.quizHistory !== account.quizHistory ||
-      prev.srsData !== account.srsData || // Crucial for SRS
+      JSON.stringify(prev.streak) !== JSON.stringify(account.streak) ||
+      JSON.stringify(prev.srsData) !== JSON.stringify(account.srsData) ||
       prev.totalQuizzes !== account.totalQuizzes ||
       prev.pomodoro !== account.pomodoro;
 
@@ -136,5 +153,9 @@ export const SyncProvider = ({ children }) => {
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, []);
 
-  return <>{children}</>;
+  return (
+    <SyncContext.Provider value={{ syncing, forceRefresh }}>
+      {children}
+    </SyncContext.Provider>
+  );
 };

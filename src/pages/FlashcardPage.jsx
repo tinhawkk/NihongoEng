@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { loadDeck } from "../api/loader";
+import { vocabularyRepository } from "../data/repositories/NhostVocabularyRepository";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
@@ -130,7 +130,7 @@ export const FlashcardPage = () => {
       isUUID || /^n[1-5]$/i.test(deckId) || ["ENG", "IT"].includes(deckId.toUpperCase());
     const source = isAdvancedDecks ? forcedSource || vocaSource : "sheet";
     const filter = params.get("filter") || "all";
-    loadDeck(deckId, source).then(data => {
+    vocabularyRepository.loadDeck(deckId, source).then(data => {
       let filtered = data;
       if (filter === "kanji") {
         filtered = data.filter(w => w.type === "kanji");

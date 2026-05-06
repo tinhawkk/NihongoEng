@@ -1,63 +1,59 @@
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
 export const geminiService = {
-  async generateExplanation(prompt, audioUrl = null) {
-    if (!GEMINI_API_KEY) {
-      throw new Error("Missing Gemini API Key in .env");
+  async generateExplanation(prompt, media = { audioUrl: null, imageUrl: null }) {
+    if (!GROQ_API_KEY) {
+      throw new Error("Missing Groq API Key.");
     }
 
-    const models = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-1.5-pro"];
-    let lastError = null;
+    const { audioUrl } = media || {};
 
-    for (const model of models) {
-      try {
-        const parts = [{ text: prompt }];
-
-        if (audioUrl && audioUrl.startsWith('http')) {
-          try {
-            const res = await fetch(audioUrl);
-            if (res.ok) {
-              const blob = await res.blob();
-              const arrayBuffer = await blob.arrayBuffer();
-              const baseBase64 = btoa(new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), ''));
-              parts.push({
-                inline_data: {
-                  mime_type: blob.type || "audio/mp3",
-                  data: baseBase64
-                }
-              });
+    try {
+      console.log(`[AI] 🚀 Requesting Groq Llama-3.3-70b (Wait for the speed!)...`);
+      
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${GROQ_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          messages: [
+            {
+              role: 'system',
+              content: 'Bạn là chuyên gia luyện thi JLPT. Hãy giải thích câu hỏi người dùng đưa ra một cách chi tiết bằng tiếng Việt, bao gồm bản dịch, phân tích ngữ pháp và mẹo nhớ.'
+            },
+            {
+              role: 'user',
+              content: prompt
             }
-          } catch (e) {
-            console.warn(`[Gemini] Failed to attach audio for model ${model}:`, e.message);
-          }
-        }
+          ],
+          temperature: 0.7,
+          max_tokens: 2048
+        })
+      });
 
-        // Try both v1beta and v1 if needed, but let's start with v1beta for better multimodal support
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            contents: [{ parts }],
-            generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
-          }),
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-          return data.candidates?.[0]?.content?.parts?.[0]?.text;
-        }
-
-        // If quota exceeded or model not found, try next model
-        console.warn(`[Gemini] Model ${model} failed, trying fallback:`, data.error?.message);
-        lastError = data.error?.message || response.statusText;
+      const data = await response.json();
+      
+      if (response.ok) {
+        console.log(`[AI] ✅ Groq Success!`);
+        let aiText = data.choices?.[0]?.message?.content || "";
         
-        // If it's a rate limit (429), maybe wait a bit? But here we just try fallback
-      } catch (error) {
-        console.error(`[Gemini] Exception for model ${model}:`, error);
-        lastError = error.message;
+        if (audioUrl) {
+          aiText += "\n\n📢 **Lưu ý:** Đây là câu hỏi nghe hiểu. Bạn hãy nghe kỹ lại file âm thanh, chúng tôi sẽ cập nhật script nội dung nghe sớm nhất!";
+        }
+        
+        return aiText;
       }
-    }
 
-    throw new Error(`AI Error: ${lastError}`);
-  }
+      const errMsg = data.error?.message || response.statusText;
+      console.error(`[Groq] Error:`, errMsg);
+      throw new Error(errMsg);
+
+    } catch (err) {
+      console.error(`[AI] Groq Request failed:`, err.message);
+      throw new Error(`AI Error (Groq): ${err.message}`);
+    }
+  },
 };

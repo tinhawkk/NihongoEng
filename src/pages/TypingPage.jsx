@@ -5,200 +5,74 @@ import {
   ArrowLeft, Keyboard, CheckCircle2, XCircle, Volume2,
   Star, SkipForward, ChevronRight, Zap, RotateCcw
 } from "lucide-react";
-import { loadDeck } from "../api/loader";
-import { useUserStore } from "../store/useUserStore";
 import { useBookmarkStore } from "../store/useBookmarkStore";
 import { tts } from "../utils/tts";
 import { sounds } from "../utils/sounds";
-import { nhostService } from "../services/nhostService";
-import confetti from "canvas-confetti";
 import { romajiToHiragana } from "../utils/kana";
-
-const DECK_COLORS = {
-  n1: "#FF4B4B", n2: "#FF9600", n3: "#1CB0F6", n4: "#58CC02", n5: "#A855F7",
-  ENG: "#3B82F6", IT: "#10B981",
-};
-
-const DECK_LABELS = {
-  n1: "JLPT N1", n2: "JLPT N2", n3: "JLPT N3", n4: "JLPT N4", n5: "JLPT N5",
-  ENG: "600 TOEIC", IT: "IT Vocab", srs: "SRS Review",
-};
-
-function shuffleArray(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-// Normalize for comparison
-function normalize(str) {
-  if (!str) return "";
-  return str.toLowerCase().trim()
-    .replace(/[\s\u3000]+/g, "") // Remove spaces
-    .replace(/[<>()[\]（）［］【】〜~.．…・]/g, "") // Remove symbols for leniency
-    .replace(/ー/g, ""); // Remove long vowel mark
-}
+import { renderFurigana } from "../utils/furigana";
+import { useTypingGame } from "../hooks/useCases/useTypingGame";
 
 export const TypingPage = () => {
   const { deckId } = useParams();
   const navigate = useNavigate();
-  const [allWords, setAllWords] = useState([]);
-  const [words, setWords] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [currentIdx, setCurrentIdx] = useState(0);
-  const [input, setInput] = useState("");
-  const [result, setResult] = useState(null); // null | 'correct' | 'wrong'
-  const [showAnswer, setShowAnswer] = useState(false);
-  const [score, setScore] = useState({ correct: 0, wrong: 0 });
-  const [isFinished, setIsFinished] = useState(false);
-  const inputRef = useRef(null);
+  const [showFuriganaHint, setShowFuriganaHint] = useState(false);
+  const [autoConvert, setAutoConvert] = useState(true);
+  
+  const {
+    words,
+    loading,
+    currentIdx,
+    input,
+    setInput,
+    result,
+    showAnswer,
+    score,
+    isFinished,
+    inputRef,
+    card,
+    checkAnswer,
+    goNext,
+    skipWord,
+    resetGame,
+  } = useTypingGame(deckId);
 
-  const vocaSource = useUserStore(s => s.vocaSource);
-  const updateSrsItem = useUserStore(s => s.updateSrsItem);
-  const { bookmarks, addBookmark, removeBookmark } = useBookmarkStore();
-  const isBookmarked = word => bookmarks.some(b => b.word === word);
-
-  const color = DECK_COLORS[deckId] || "#58CC02";
-  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(deckId);
-
-  const [deckMetadata, setDeckMetadata] = useState(null);
-
-  // Load Metadata
+  // Force focus when card changes
   useEffect(() => {
-    if (isUUID) {
-      const q = `query GetDeckTitle($id: String!) {
-        decks_by_pk(id: $id) { title }
-      }`;
-      nhostService.fetchGraphQL(q, "GetDeckTitle", { id: deckId }).then(res => {
-        if (res.data?.decks_by_pk) {
-          setDeckMetadata(res.data.decks_by_pk);
-        }
-      });
+    if (!loading && !isFinished && !result) {
+      const timer = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300);
+      return () => clearTimeout(timer);
     }
-  }, [deckId, isUUID]);
+  }, [currentIdx, loading, isFinished, result]);
 
+  // Global key redirection
   useEffect(() => {
-    setLoading(true);
-    const params = new URLSearchParams(window.location.search);
-    const forcedSource = params.get("source");
-    const isAdvanced = isUUID || /^n[1-5]$/i.test(deckId) || ["ENG", "IT"].includes(deckId.toUpperCase());
-    const source = isAdvanced ? forcedSource || vocaSource : "sheet";
-
-    if (deckId === "srs") {
-      // Load SRS due items
-      const srsData = useUserStore.getState().account?.srsData || {};
-      const todayStr = new Date().toLocaleDateString('en-CA');
-      const due = Object.values(srsData).filter(item => {
-        const reviewDate = new Date(item.nextReview).toLocaleDateString('en-CA');
-        return reviewDate <= todayStr;
-      });
-      const shuffled = shuffleArray(due);
-      setAllWords(shuffled);
-      setWords(shuffled);
-      setLoading(false);
-    } else {
-      loadDeck(deckId, source).then(data => {
-        // Normalize: sheet uses 'hiragana' & 'english', Nhost uses 'furigana' & 'word'
-        const normalized = data.map(w => ({
-          ...w,
-          word: w.word || w.english || "",
-          furigana: w.furigana || w.reading || w.hiragana || "",
-          meaning: w.meaning || w.hanViet || w.vietnamese || "",
-          example: w.example || w.explanation || w.example_jp || "",
-        }));
-        // Filter to items that have reading
-        const withReading = normalized.filter(w => w.furigana?.trim());
-        const shuffled = shuffleArray(withReading);
-        setAllWords(shuffled);
-        setWords(shuffled);
-        setLoading(false);
-      });
-    }
-  }, [deckId, vocaSource, isUUID]);
-
-  // Auto-focus input
-  useEffect(() => {
-    if (!loading && words.length > 0 && !isFinished) {
-      setTimeout(() => inputRef.current?.focus(), 100);
-    }
-  }, [currentIdx, loading, isFinished, words]);
-
-  const card = words[currentIdx];
-
-  const checkAnswer = useCallback(() => {
-    if (!card || result) return;
-    
-    const userInput = normalize(input);
-    const correctFurigana = normalize(card.furigana);
-    // Also accept romaji converted to hiragana
-    const userAsHiragana = normalize(romajiToHiragana(input));
-    
-    const isCorrect = userInput === correctFurigana || userAsHiragana === correctFurigana;
-    
-    setResult(isCorrect ? "correct" : "wrong");
-    setShowAnswer(true);
-    
-    if (isCorrect) {
-      setScore(s => ({ ...s, correct: s.correct + 1 }));
-      sounds.playBeep(880, 100, 0.1);
-      tts.playWithFallback(card.audio, card.word);
-      // Update SRS - typing correct = Good
-      updateSrsItem(card.id || card.word, card, 3, {
-        source: "typing",
-        deckId: deckId === "srs" ? (card.deck || card.deckId) : deckId,
-        deckName: deckId === "srs" ? (card.deckName || card.deck) : (deckMetadata?.title || DECK_LABELS[deckId] || deckId),
-      });
-    } else {
-      setScore(s => ({ ...s, wrong: s.wrong + 1 }));
-      sounds.playError();
-      // Update SRS - typing wrong = Again
-      updateSrsItem(card.id || card.word, card, 0, {
-        source: "typing",
-        deckId: deckId === "srs" ? (card.deck || card.deckId) : deckId,
-        deckName: deckId === "srs" ? (card.deckName || card.deck) : (deckMetadata?.title || DECK_LABELS[deckId] || deckId),
-      });
-    }
-  }, [card, input, result, isUUID, deckId, updateSrsItem, deckMetadata]);
-
-  const goNext = useCallback(() => {
-    if (currentIdx >= words.length - 1) {
-      setIsFinished(true);
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-      return;
-    }
-    setCurrentIdx(i => i + 1);
-    setInput("");
-    setResult(null);
-    setShowAnswer(false);
-  }, [currentIdx, words.length]);
-
-  const skipWord = useCallback(() => {
-    setResult("wrong");
-    setShowAnswer(true);
-    setScore(s => ({ ...s, wrong: s.wrong + 1 }));
-  }, []);
-
-  // Keyboard handler
-  useEffect(() => {
-    if (loading || isFinished) return;
-    const handleKey = (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        if (result) {
-          goNext();
-        } else if (input.trim()) {
-          checkAnswer();
-        }
+    const handleGlobalKeyDown = (e) => {
+      // If user is typing and not in any other input/textarea
+      const target = e.target;
+      const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+      
+      if (!isInput && !loading && !isFinished && !result) {
+        // Redirect focus and let the input handle it
+        inputRef.current?.focus();
       }
     };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [loading, isFinished, result, input, goNext, checkAnswer]);
+    
+    window.addEventListener("keydown", handleGlobalKeyDown);
+    return () => window.removeEventListener("keydown", handleGlobalKeyDown);
+  }, [loading, isFinished, result]);
 
   const progress = words.length > 0 ? ((currentIdx + 1) / words.length) * 100 : 0;
+
+  const handleInputChange = (e) => {
+    const val = e.target.value;
+    if (autoConvert) {
+      setInput(romajiToHiragana(val));
+    } else {
+      setInput(val);
+    }
+  };
 
   if (loading) {
     return (
@@ -254,7 +128,7 @@ export const TypingPage = () => {
         </div>
         <div className="flex gap-3 justify-center pt-4">
           <button
-            onClick={() => { setCurrentIdx(0); setIsFinished(false); setScore({ correct: 0, wrong: 0 }); setInput(""); setResult(null); setShowAnswer(false); setWords(shuffleArray(allWords)); }}
+            onClick={resetGame}
             className="px-6 py-3 bg-[#A342FF] text-white rounded-2xl font-black hover:bg-[#8B2FE0] transition-all shadow-lg shadow-purple-200/30 flex items-center gap-2"
           >
             <RotateCcw size={18} /> Làm lại
@@ -307,24 +181,46 @@ export const TypingPage = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -30 }}
-          className="bg-white dark:bg-slate-800 rounded-[2rem] border-2 border-slate-100 dark:border-slate-700 shadow-lg overflow-hidden"
+          onClick={() => inputRef.current?.focus()}
+          className="bg-white dark:bg-slate-800 rounded-[2rem] border-2 border-slate-100 dark:border-slate-700 shadow-lg overflow-hidden cursor-text"
         >
           {/* Question */}
           <div className="p-8 text-center space-y-4">
-            <p className="text-[10px] font-black text-purple-400 uppercase tracking-widest">
-              Nhập cách đọc (Hiragana / Romaji)
-            </p>
-            <div className="flex items-center justify-center gap-3">
-              <h2 className="text-5xl font-black text-slate-800 dark:text-white">{card?.word}</h2>
-              <button
-                onClick={() => tts.playWithFallback(card?.audio, card?.word)}
-                className="p-2 rounded-xl bg-blue-50 text-blue-500 hover:bg-blue-100 transition-all"
+             <div className="flex flex-col items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-3">
+                <div className="flex flex-col items-center">
+                  {showFuriganaHint && (
+                    <motion.p initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="text-xs font-black text-[#A342FF] mb-1">
+                      {card?.furigana}
+                    </motion.p>
+                  )}
+                  <h2 className="text-5xl font-black text-slate-800 dark:text-white leading-tight">{card?.word}</h2>
+                </div>
+                <button
+                  onClick={() => tts.playWithFallback(card?.audio, card?.word)}
+                  className="p-2 rounded-xl bg-blue-50 text-blue-500 hover:bg-blue-100 transition-all"
+                >
+                  <Volume2 size={20} />
+                </button>
+              </div>
+              <button 
+                onClick={() => setShowFuriganaHint(!showFuriganaHint)}
+                className="text-[10px] font-black text-slate-300 uppercase tracking-widest hover:text-[#A342FF] transition-colors"
               >
-                <Volume2 size={20} />
+                {showFuriganaHint ? "Ẩn cách đọc" : "Hiện cách đọc"}
               </button>
             </div>
-            {card?.meaning && (
-              <p className="text-sm text-slate-400 font-bold">{card.meaning}</p>
+            {(card?.meaning || card?.hanViet) && (
+              <div className="space-y-1">
+                {card?.hanViet && (
+                  <p className="text-sm font-black text-indigo-500 uppercase tracking-widest">
+                    Hán Việt: {card.hanViet}
+                  </p>
+                )}
+                {card?.meaning && (
+                  <p className="text-lg text-slate-400 font-bold">{card.meaning}</p>
+                )}
+              </div>
             )}
           </div>
 
@@ -336,9 +232,9 @@ export const TypingPage = () => {
                 ref={inputRef}
                 type="text"
                 value={input}
-                onChange={e => setInput(e.target.value)}
+                onChange={handleInputChange}
                 disabled={result !== null}
-                placeholder="たべる hoặc taberu"
+                placeholder={autoConvert ? "Nhập romaji (osaki...)" : "Nhập hiragana"}
                 autoComplete="off"
                 autoCorrect="off"
                 spellCheck={false}
@@ -350,11 +246,14 @@ export const TypingPage = () => {
                     : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white focus:border-[#A342FF] focus:ring-4 focus:ring-[#A342FF]/10"
                 }`}
               />
-              {input && !result && (
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-300 font-bold">
-                  → {romajiToHiragana(input)}
-                </span>
-              )}
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                 <button 
+                  onClick={() => setAutoConvert(!autoConvert)}
+                  className={`text-[9px] font-black px-2 py-1 rounded-md border transition-all ${autoConvert ? "bg-[#A342FF] text-white border-[#A342FF]" : "bg-white text-slate-300 border-slate-200"}`}
+                 >
+                   {autoConvert ? "Tự động" : "Tắt"}
+                 </button>
+              </div>
             </div>
 
             {/* Result Feedback */}
@@ -382,9 +281,25 @@ export const TypingPage = () => {
                   Đáp án: <span className="text-lg font-black text-slate-800 dark:text-white">{card?.furigana}</span>
                 </p>
                 {card?.example && (
-                   <p className="text-sm text-slate-500 mt-3 font-medium italic font-jp border-l-4 border-purple-200 pl-4 py-1.5 bg-slate-50 dark:bg-slate-900/40 rounded-r-xl">
-                    {card.example}
-                  </p>
+                  <div className="mt-3 space-y-2 text-left">
+                    <div className="flex items-start gap-3 p-5 bg-slate-50 dark:bg-slate-900/40 rounded-2xl border-l-4 border-purple-300">
+                      <p className="flex-1 text-base sm:text-lg text-slate-700 dark:text-slate-200 font-medium italic font-jp leading-relaxed">
+                        {renderFurigana(card.example)}
+                      </p>
+                      <button
+                        onClick={() => tts.playWithFallback(null, card.example)}
+                        className="p-2 rounded-xl bg-white dark:bg-slate-800 text-slate-400 hover:text-blue-500 transition-all shadow-sm"
+                        title="Nghe ví dụ"
+                      >
+                        <Volume2 size={18} />
+                      </button>
+                    </div>
+                    {card?.example_meaning && (
+                      <p className="px-5 text-sm sm:text-base text-slate-500 font-bold leading-relaxed">
+                        {card.example_meaning}
+                      </p>
+                    )}
+                  </div>
                 )}
               </motion.div>
             )}

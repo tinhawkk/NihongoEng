@@ -12,20 +12,10 @@ import {
   XCircle,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { loadDeck } from "../api/loader";
-import confetti from "canvas-confetti";
 import { useUserStore } from "../store/useUserStore";
-import { sounds } from "../utils/sounds";
+import { useSpeedGame } from "../hooks/useCases/useSpeedGame";
 
-// Helper to shuffle arrays properly
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
+
 
 const LEVELS = [
   { id: "n5", label: "N5", color: "bg-[#58CC02]" },
@@ -38,269 +28,31 @@ const LEVELS = [
 
 export const SpeedGamePage = () => {
   const navigate = useNavigate();
-  const [gameState, setGameState] = useState("level_select"); // level_select, loading, playing, finished
-  const [selectedLevel, setSelectedLevel] = useState("n5");
-  const [words, setWords] = useState([]);
-  const [currentWord, setCurrentWord] = useState(null);
-  const [options, setOptions] = useState([]);
-  const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(60);
-  const [feedback, setFeedback] = useState(null); // 'correct', 'wrong'
   const account = useUserStore(s => s.account);
-  const [highScore, setHighScore] = useState(0);
+  
+  const {
+    gameState,
+    setGameState,
+    selectedLevel,
+    score,
+    timeLeft,
+    highScore,
+    countdown,
+    streak,
+    multiplier,
+    powerups,
+    removedOptionId,
+    comboFx,
+    questionText,
+    questionSub,
+    currentWord,
+    options,
+    feedback,
+    startGame,
+    handleAnswer,
+    handleUsePowerup,
+  } = useSpeedGame();
 
-  // Load high score from arenaProgress
-  useEffect(() => {
-    const levelProgress = account?.arenaProgress?.levelScores?.[selectedLevel] || {};
-    const serverHigh = levelProgress.bestScore || 0;
-    setHighScore(serverHigh);
-  }, [selectedLevel, account?.arenaProgress]);
-  const [countdown, setCountdown] = useState(null);
-  const [streak, setStreak] = useState(0);
-  const [multiplier, setMultiplier] = useState(1);
-  const [wrongStreak, setWrongStreak] = useState(0);
-  const [powerups, setPowerups] = useState(0);
-  const [removedOptionId, setRemovedOptionId] = useState(null);
-  const [comboFx, setComboFx] = useState(null);
-  const savedResultRef = React.useRef(false);
-
-  const addArenaResult = useUserStore(s => s.addArenaResult);
-  const updateArenaProgress = useUserStore(s => s.updateArenaProgress);
-
-  const [questionMode, setQuestionMode] = useState("JP_TO_VI"); // JP_TO_VI, VI_TO_JP, VI_TO_READING, HAN_TO_JP, EN_TO_JP
-  const [questionText, setQuestionText] = useState("");
-  const [questionSub, setQuestionSub] = useState("");
-
-  const startGame = async (lv, sourceOverride) => {
-    setSelectedLevel(lv);
-    setGameState("loading");
-    setScore(0);
-    setTimeLeft(60);
-    setStreak(0);
-    setMultiplier(1);
-    savedResultRef.current = false;
-
-    try {
-      // Chỉ truyền đúng JLPT N1-N5 nếu lv là n1-n5
-      let deckId = lv;
-      let source = sourceOverride || "voca";
-      if (["n1", "n2", "n3", "n4", "n5"].includes(lv)) {
-        deckId = `JLPT ${lv.toUpperCase()}`;
-      }
-      const data = await loadDeck(deckId, source);
-      if (!data || data.length < 4) throw new Error("Not enough data");
-      setWords(shuffle(data));
-      // Start 3..2..1 animated countdown
-      setCountdown(3);
-      setGameState("countdown");
-      setTimeout(() => setCountdown(2), 800);
-      setTimeout(() => setCountdown(1), 1600);
-      setTimeout(() => {
-        setCountdown(null);
-        setGameState("playing");
-      }, 2400);
-    } catch (err) {
-      console.error(err);
-      alert("Không đủ dữ liệu cho cấp độ này, vui lòng thử cấp độ khác!");
-      setGameState("level_select");
-    }
-  };
-
-  const nextRound = useCallback(() => {
-    if (words.length === 0) return;
-    const correct = words[Math.floor(Math.random() * words.length)];
-
-    // Determine possible modes based on available fields
-    const possibleModes = ["JP_TO_VI", "VI_TO_JP"];
-    if (correct.reading && correct.reading !== correct.word) possibleModes.push("VI_TO_READING");
-    if (correct.hanViet) possibleModes.push("HAN_TO_JP");
-    if (correct.meaningEn || correct.meaning_en) possibleModes.push("EN_TO_JP");
-
-    const mode = possibleModes[Math.floor(Math.random() * possibleModes.length)];
-    setQuestionMode(mode);
-
-    // Set question text
-    if (mode === "JP_TO_VI") {
-      setQuestionText(correct.word);
-      setQuestionSub(correct.reading || "");
-    } else if (mode === "VI_TO_JP") {
-      setQuestionText(correct.meaning);
-      setQuestionSub("Chọn từ vựng đúng");
-    } else if (mode === "VI_TO_READING") {
-      setQuestionText(correct.meaning);
-      setQuestionSub("Chọn cách đọc đúng");
-    } else if (mode === "HAN_TO_JP") {
-      setQuestionText(correct.hanViet);
-      setQuestionSub("Hán Việt -> Kanji");
-    } else if (mode === "EN_TO_JP") {
-      setQuestionText(correct.meaningEn || correct.meaning_en);
-      setQuestionSub("English -> Kanji");
-    }
-
-    const others = shuffle(words.filter(w => w.id !== correct.id)).slice(0, 3);
-
-    // Prepare choices with mode-specific display text
-    const choices = shuffle([correct, ...others]).map(w => {
-      let display = w.meaning;
-      if (mode === "VI_TO_JP" || mode === "HAN_TO_JP" || mode === "EN_TO_JP") display = w.word;
-      if (mode === "VI_TO_READING") display = w.reading || w.word;
-      return { ...w, display };
-    });
-
-    setCurrentWord(correct);
-    setOptions(choices);
-    setFeedback(null);
-  }, [words]);
-
-  useEffect(() => {
-    if (gameState === "playing") {
-      nextRound();
-      const timer = setInterval(() => {
-        setTimeLeft(prev => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            setGameState("finished");
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  }, [gameState, nextRound]);
-
-  // Separate effect for keyboard support to avoid resetting timer
-  useEffect(() => {
-    if (gameState === "playing") {
-      const handleKeyDown = e => {
-        if (feedback) return;
-        if (e.key === "1") handleAnswer(options[0]?.id);
-        if (e.key === "2") handleAnswer(options[1]?.id);
-        if (e.key === "3") handleAnswer(options[2]?.id);
-        if (e.key === "4") handleAnswer(options[3]?.id);
-        if (e.key === " ") {
-          e.preventDefault();
-          handleUsePowerup();
-        }
-      };
-      window.addEventListener("keydown", handleKeyDown);
-      return () => window.removeEventListener("keydown", handleKeyDown);
-    }
-  }, [gameState, options, feedback, powerups]);
-
-  useEffect(() => {
-    if (gameState === "finished") {
-      const currentServerBest = account?.arenaProgress?.levelScores?.[selectedLevel]?.bestScore || 0;
-      if (score > currentServerBest) {
-        setHighScore(score);
-        confetti({ particleCount: 200, spread: 90, origin: { y: 0.7 } });
-        // celebration sound
-        playBeep(880, 300);
-      }
-      // save arena result once
-      if (!savedResultRef.current) {
-        savedResultRef.current = true;
-        try {
-          addArenaResult({ level: selectedLevel, score, duration: 60, streak });
-          
-          const currentLevelScores = account?.arenaProgress?.levelScores || {};
-          const levelBest = Math.max(score, currentLevelScores[selectedLevel]?.bestScore || 0);
-          const levelBestStreak = Math.max(streak, currentLevelScores[selectedLevel]?.bestStreak || 0);
-
-          updateArenaProgress({
-            bestScore: Math.max(score, account?.arenaProgress?.bestScore || 0), // Global best
-            levelScores: {
-              ...currentLevelScores,
-              [selectedLevel]: {
-                bestScore: levelBest,
-                bestStreak: levelBestStreak
-              }
-            }
-          });
-        } catch (e) {
-          console.error("Failed to save arena result", e);
-        }
-      }
-    }
-  }, [gameState, score, selectedLevel]);
-
-  const handleAnswer = choiceId => {
-    if (feedback) return; // Prevent double clicking
-
-    if (choiceId === currentWord.id) {
-      const newStreak = streak + 1;
-      const newMultiplier = Math.max(1, Math.floor(newStreak / 3) + 1);
-      
-      setStreak(newStreak);
-      setWrongStreak(0);
-      setMultiplier(newMultiplier);
-      setScore(s => s + 10 * newMultiplier);
-      setFeedback("correct");
-      // small confetti + sound for streaks
-      confetti({ particleCount: 30, spread: 45, origin: { y: 0.6 } });
-      playBeep(880, 120);
-      // combo FX
-      setComboFx(`+${newStreak} COMBO!`);
-      setTimeout(() => setComboFx(null), 900);
-      // Award bonuses at thresholds
-      if (newStreak === 5) {
-        // +5 seconds bonus
-        setTimeLeft(t => Math.min(120, t + 5));
-        setPowerups(p => p + 1);
-      }
-      if (newStreak === 10) {
-        // big celebration and extra powerup
-        confetti({ particleCount: 80, spread: 120, origin: { y: 0.6 } });
-        setTimeLeft(t => Math.min(120, t + 10));
-        setPowerups(p => p + 2);
-        playBeep(1200, 250);
-      }
-      setTimeout(() => {
-        setRemovedOptionId(null);
-        nextRound();
-      }, 600);
-    } else {
-      setScore(s => Math.max(0, s - 5));
-      setFeedback("wrong");
-      setStreak(0);
-      setMultiplier(1);
-      setWrongStreak(w => w + 1);
-      playBeep(220, 200);
-      // If user misses several in a row, give a rescue powerup
-      setTimeout(() => {
-        if (wrongStreak + 1 >= 3) {
-          setPowerups(p => p + 1);
-          // visual hint
-          confetti({ particleCount: 20, spread: 30, origin: { y: 0.7 } });
-        }
-        setRemovedOptionId(null);
-        nextRound();
-      }, 1000); // More penalty for wrong
-    }
-  };
-
-  // Use a powerup: either remove one wrong option (if available options >2) or extend time
-  const handleUsePowerup = () => {
-    if (powerups <= 0 || !options || options.length <= 2) return;
-    // consume one
-    setPowerups(p => p - 1);
-    // remove a random wrong option
-    const wrongs = options.filter(o => o.id !== currentWord.id);
-    if (wrongs.length === 0) return;
-    const pick = wrongs[Math.floor(Math.random() * wrongs.length)];
-    setRemovedOptionId(pick.id);
-    // small reward
-    setTimeLeft(t => Math.min(120, t + 3));
-    confetti({ particleCount: 20, spread: 40, origin: { y: 0.7 } });
-    playBeep(980, 120);
-  };
-
-  // Web Audio Context is now managed by sounds utility
-    
-  // Simple WebAudio beep for feedback (no external files) - OPTIMIZED for zero delay
-  function playBeep(freq = 440, duration = 150) {
-     sounds.playBeep(freq, duration);
-  }
 
   return (
     <div className="fixed inset-0 z-[100] bg-slate-50 dark:bg-slate-950 flex flex-col font-sans overflow-hidden">
@@ -635,3 +387,6 @@ export const SpeedGamePage = () => {
     </div>
   );
 };
+
+
+

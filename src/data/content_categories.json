@@ -1,0 +1,372 @@
+[
+  {
+    "id": "cat-mori-n5",
+    "title": "Lộ trình N5 Dũng Mori",
+    "type": "mori",
+    "level": "N5",
+    "description": "Bắt đầu hành trình chinh phục tiếng Nhật.",
+    "color": "#58CC02",
+    "icon_url": "https://dungmori.com/assets/img/logo-mori.png",
+    "root_folder_id": "cb83d4c2-7b08-4b41-99b9-ebb4f2eaeefd",
+    "position": 1,
+    "metadata": {
+      "shortTitle": "DM5",
+      "countLabel": "3 Chặng",
+      "stages": [
+        {
+          "id": "c1",
+          "title": "Chặng 1",
+          "subtitle": "Chữ hán - Từ vựng - Ngữ pháp",
+          "icon": "📝",
+          "folder_id": "c1bf6dc1-9ba8-46c0-b2de-baeaf81fead6"
+        },
+        {
+          "id": "c2",
+          "title": "Chặng 2",
+          "subtitle": "Chữ hán - Từ vựng - Ngữ pháp",
+          "icon": "📖",
+          "folder_id": "0599be8b-c68b-4326-ba83-e4eed5044311"
+        },
+        {
+          "id": "c3",
+          "title": "Chặng 3",
+          "subtitle": "Chữ hán - Từ vựng - Ngữ pháp",
+          "icon": "🎯",
+          "folder_id": "31a2263a-c524-402c-a2fd-ea377c22441c"
+        }
+      ]
+    }
+  },
+  {
+    "id": "cat-mori-n4",
+    "title": "Lộ trình N4 Dũng Mori",
+    "type": "mori",
+    "level": "N4",
+    "description": "Nền tảng vững chắc cùng lộ trình N4 tinh gọn.",
+    "color": "#FF9600",
+    "icon_url": "https://dungmori.com/assets/img/logo-mori.png",
+    "root_folder_id": "4fbc6a26-5806-4779-b432-312d85832849",
+    "position": 2,
+    "metadata": {
+      "shortTitle": "DM4",
+      "countLabel": "3 Chặng",
+      "stages": [
+        {
+          "id": "c1",
+          "title": "Chặng 1",
+          "subtitle": "Chữ hán - Từ vựng - Ngữ pháp",
+          "icon": "📝",
+          "folder_id": "1fcd0766-4133-4e4a-84c9-d739d8a822a2"
+        },
+        {
+          "id": "c2",
+          "title": "Chặng 2",
+          "subtitle": "Chữ hán - Từ vựng - Ngữ pháp",
+          "icon": "📖",
+          "folder_id": "d5081172-0175-4d1f-b8f4-15ca26af1e5c"
+        },
+        {
+          "id": "c3",
+          "title": "Chặng 3",
+          "subtitle": "Chữ hán - Từ vựng - Ngữ pháp",
+          "icon": "🎯",
+          "folder_id": "3d8ac087-82e9-4a52-afcf-738a9cd3c0dd"
+        }
+      ]
+    }
+  },
+  {
+    "id": "cat-mori-n3",
+    "title": "Lộ trình N3 Dũng Mori",
+    "type": "mori",
+    "level": "N3",
+    "description": "Lộ trình chuyên sâu 3 chặng đỗ ngay N3.",
+    "color": "#009245",
+    "icon_url": "https://dungmori.com/assets/img/logo-mori.png",
+    "root_folder_id": "71d834a3-4016-49d5-b5b0-dc1cdbfed7b1",
+    "position": 3,
+    "metadata": {
+      "shortTitle": "DM3",
+      "countLabel": "3 Chặng",
+      "stages": [
+        {
+          "id": "c1",
+          "title": "Chặng 1",
+          "subtitle": "Chữ hán - Từ vựng - Ngữ pháp",
+          "icon": "📝",
+          "folder_id": "df3fbf91-69bb-484e-bd1d-1608110768d4"
+        },
+        {
+          "id": "c2",
+          "title": "Chặng 2",
+          "subtitle": "Chữ hán - Từ vựng - Ngữ pháp",
+          "icon": "📖",
+          "folder_id": "c5e155f8-6c88-4ab4-bb6c-e623b575b0dd"
+        },
+        {
+          "id": "c3",
+          "title": "Chặng 3",
+          "subtitle": "Chữ hán - Từ vựng - Ngữ pháp",
+          "icon": "🎯",
+          "folder_id": "9f5b0caf-6980-40dd-b440-4efdb7d1e3ae"
+        }
+      ]
+    }
+  },
+  {
+    "id": "cat-mori-n2",
+    "title": "Lộ trình N2 Dũng Mori",
+    "type": "mori",
+    "level": "N2",
+    "description": "Đột phá trình độ N2 cùng Sensei Dũng Mori.",
+    "color": "#F7931E",
+    "icon_url": "https://dungmori.com/assets/img/logo-mori.png",
+    "root_folder_id": "3eb589b4-a97c-4015-8f45-624b2f6e0ca7",
+    "position": 4,
+    "metadata": {
+      "shortTitle": "DM2",
+      "countLabel": "3 Chặng",
+      "stages": [
+        {
+          "id": "c1",
+          "title": "Chặng 1",
+          "subtitle": "Chữ hán - Từ vựng - Ngữ pháp",
+          "icon": "📝",
+          "folder_id": "de186b79-5bf5-4356-a153-9ef41f3c4b84"
+        },
+        {
+          "id": "c2",
+          "title": "Chặng 2",
+          "subtitle": "Chữ hán - Từ vựng - Ngữ pháp",
+          "icon": "📖",
+          "folder_id": "602a4b8f-c9ac-4e9f-9472-d907a292c701"
+        },
+        {
+          "id": "c3",
+          "title": "Chặng 3",
+          "subtitle": "Chữ hán - Từ vựng - Ngữ pháp",
+          "icon": "🎯",
+          "folder_id": "444043bb-f36c-4df0-86e0-cc242c1cd17b"
+        }
+      ]
+    }
+  },
+  {
+    "id": "cat-mori-n1",
+    "title": "Lộ trình N1 Dũng Mori",
+    "type": "mori",
+    "level": "N1",
+    "description": "Chinh phục đỉnh cao JLPT N1.",
+    "color": "#37464F",
+    "icon_url": "https://dungmori.com/assets/img/logo-mori.png",
+    "root_folder_id": "eff80139-24de-4ff7-8769-1517063663ba",
+    "position": 5,
+    "metadata": {
+      "shortTitle": "DM1",
+      "countLabel": "3 Chặng",
+      "stages": [
+        {
+          "id": "c1",
+          "title": "Chặng 1",
+          "subtitle": "Chữ hán - Từ vựng - Ngữ pháp",
+          "icon": "📝",
+          "folder_id": "a90933c1-59a7-41e4-9298-7020c5d1a694"
+        },
+        {
+          "id": "c2",
+          "title": "Chặng 2",
+          "subtitle": "Chữ hán - Từ vựng - Ngữ pháp",
+          "icon": "📖",
+          "folder_id": "3d5c9337-b922-41f8-ac7b-3dc5e702454f"
+        },
+        {
+          "id": "c3",
+          "title": "Chặng 3",
+          "subtitle": "Chữ hán - Từ vựng - Ngữ pháp",
+          "icon": "🎯",
+          "folder_id": "656d0c5c-abae-4a7a-a736-e3c839447a6f"
+        }
+      ]
+    }
+  },
+  {
+    "id": "cat-premium-n5",
+    "title": "1000 Từ vựng JLPT N5",
+    "type": "premium",
+    "level": "N5",
+    "description": "Tài liệu học N5",
+    "color": "#58CC02",
+    "icon_url": "https://jtest.net/static/img/cover/n5.jpg",
+    "root_folder_id": "3e5d544a-89a4-49da-a42b-77ada9a9df6b",
+    "position": 10,
+    "metadata": {
+      "shortTitle": "10",
+      "countLabel": "1142"
+    }
+  },
+  {
+    "id": "cat-premium-n4",
+    "title": "1500 Từ vựng JLPT N4",
+    "type": "premium",
+    "level": "N4",
+    "description": "Tài liệu học N4",
+    "color": "#FF9600",
+    "icon_url": "https://jtest.net/static/img/cover/n4.jpg",
+    "root_folder_id": "8d9a601d-ca04-41fb-95c8-7526420cee9b",
+    "position": 11,
+    "metadata": {
+      "shortTitle": "15",
+      "countLabel": "1029"
+    }
+  },
+  {
+    "id": "cat-premium-n3",
+    "title": "2000 Từ vựng JLPT N3",
+    "type": "premium",
+    "level": "N3",
+    "description": "Tài liệu học N3",
+    "color": "#FF4B4B",
+    "icon_url": "https://jtest.net/static/img/cover/n3.jpg",
+    "root_folder_id": "31437931-3cca-454e-92aa-78ced5eb2967",
+    "position": 12,
+    "metadata": {
+      "shortTitle": "20",
+      "countLabel": "1698"
+    }
+  },
+  {
+    "id": "cat-premium-n2",
+    "title": "2500 Từ vựng JLPT N2",
+    "type": "premium",
+    "level": "N2",
+    "description": "Tài liệu học N2",
+    "color": "#A342FF",
+    "icon_url": "https://jtest.net/static/img/cover/n2.jpg",
+    "root_folder_id": "757d6117-4bfa-4e8b-be62-d423cdfd4bbe",
+    "position": 13,
+    "metadata": {
+      "shortTitle": "25",
+      "countLabel": "1931"
+    }
+  },
+  {
+    "id": "cat-premium-n1",
+    "title": "3000 Từ vựng JLPT N1",
+    "type": "premium",
+    "level": "N1",
+    "description": "Tài liệu học N1",
+    "color": "#37464F",
+    "icon_url": "https://jtest.net/static/img/cover/n1.jpg",
+    "root_folder_id": "096e63b0-08c4-49d0-a2e1-44ff9c409c1b",
+    "position": 14,
+    "metadata": {
+      "shortTitle": "30",
+      "countLabel": "2310"
+    }
+  },
+  {
+    "id": "cat-jap-n5",
+    "title": "N5 Japanience Original",
+    "type": "japanience",
+    "level": "N5",
+    "description": "Dữ liệu từ vựng N5 nguyên bản từ Japanience.",
+    "color": "#84CC16",
+    "icon_url": "https://jtest.net/static/img/cover/n5.jpg",
+    "root_folder_id": "f5605ab0-2ca5-499e-8177-27773ec00384",
+    "position": 20,
+    "metadata": {
+      "shortTitle": "J5",
+      "countLabel": "992"
+    }
+  },
+  {
+    "id": "cat-jap-n4",
+    "title": "N4 Japanience Original",
+    "type": "japanience",
+    "level": "N4",
+    "description": "Dữ liệu từ vựng N4 nguyên bản từ Japanience.",
+    "color": "#F97316",
+    "icon_url": "https://jtest.net/static/img/cover/n4.jpg",
+    "root_folder_id": "fc732cc6-f894-4f11-9363-c1d7f13d0032",
+    "position": 21,
+    "metadata": {
+      "shortTitle": "J4",
+      "countLabel": "1093"
+    }
+  },
+  {
+    "id": "cat-jap-n3",
+    "title": "N3 Japanience Original",
+    "type": "japanience",
+    "level": "N3",
+    "description": "Dữ liệu từ vựng N3 nguyên bản từ Japanience.",
+    "color": "#059669",
+    "icon_url": "https://jtest.net/static/img/cover/n3.jpg",
+    "root_folder_id": "d603d0a1-37d0-4b63-a5a3-315819319465",
+    "position": 22,
+    "metadata": {
+      "shortTitle": "J3",
+      "countLabel": "820"
+    }
+  },
+  {
+    "id": "cat-jap-n2",
+    "title": "N2 Japanience Original",
+    "type": "japanience",
+    "level": "N2",
+    "description": "Dữ liệu từ vựng N2 nguyên bản từ Japanience.",
+    "color": "#A342FF",
+    "icon_url": "https://jtest.net/static/img/cover/n2.jpg",
+    "root_folder_id": "5249e7cd-ab56-4241-9fb5-86efd3ad5045",
+    "position": 23,
+    "metadata": {
+      "shortTitle": "J2",
+      "countLabel": "1250"
+    }
+  },
+  {
+    "id": "cat-jap-n1",
+    "title": "N1 Japanience Original",
+    "type": "japanience",
+    "level": "N1",
+    "description": "Dữ liệu từ vựng N1 nguyên bản từ Japanience.",
+    "color": "#334155",
+    "icon_url": "https://jtest.net/static/img/cover/n1.jpg",
+    "root_folder_id": "1b801065-3257-4a9a-92cc-d1a6d68acf88",
+    "position": 24,
+    "metadata": {
+      "shortTitle": "J1",
+      "countLabel": "1121"
+    }
+  },
+  {
+    "id": "cat-it",
+    "title": "Tiếng Nhật IT",
+    "type": "specialty",
+    "level": "IT",
+    "description": "Từ vựng chuyên ngành IT bằng tiếng Nhật.",
+    "color": "#6366F1",
+    "icon_url": null,
+    "root_folder_id": "7d5551b4-0704-419a-b715-0193cc4e8bd5",
+    "position": 30,
+    "metadata": {
+      "shortTitle": "IT",
+      "countLabel": "5 decks"
+    }
+  },
+  {
+    "id": "cat-oxford",
+    "title": "3000 Oxford Vocabulary A1",
+    "type": "english",
+    "level": "A1",
+    "description": "3000 từ Oxford A1",
+    "color": "#1CB0F6",
+    "icon_url": null,
+    "root_folder_id": "3c7a255b-e457-47e7-b5b5-5d0b62ec3475",
+    "position": 40,
+    "metadata": {
+      "shortTitle": "OX",
+      "countLabel": "3000"
+    }
+  }
+]

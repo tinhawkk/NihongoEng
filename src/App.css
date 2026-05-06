@@ -4,6 +4,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Fix: Audio players embedded in JLPT exam question HTML */
+.custom-div-audio-player {
+  margin: 8px 0 12px 0;
+}
+
+audio.custom-audio-player,
+audio {
+  display: block !important;
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+}
+
 
 :root {
   --primary: #58CC02;
@@ -31,7 +44,9 @@ html.dark {
 
 body {
   margin: 0;
-  font-family: 'Nunito', 'Noto Sans JP', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Noto Sans JP', 'Nunito', 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
   background-color: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
@@ -39,6 +54,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
+  font-family: 'Noto Sans JP', 'Nunito', sans-serif;
 }
 
 a {
@@ -84,21 +100,26 @@ button {
 /* Basic prose-like typography for crawled HTML */
 .prose {
   color: #475569;
+  font-size: 1.05em;
+  line-height: 1.8;
+  font-family: 'Noto Sans JP', sans-serif;
 }
 .prose b, .prose strong {
-  font-weight: 800;
-  color: #1a1a1a;
+  font-weight: 700;
+  color: #0f172a;
 }
 .prose rt {
-  color: #94a3b8;
-  font-size: 0.6em;
+  color: #64748b;
+  font-size: 0.65em;
+  font-weight: 600;
 }
 .prose ruby {
-  ruby-align: center;
+  ruby-align: space-around;
+  padding: 0 1px;
 }
 .prose br {
   display: block;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   content: "";
 }
 
@@ -109,5 +130,5 @@ button {
   color: #f8fafc;
 }
 .dark .prose rt {
-  color: #64748b;
+  color: #94a3b8;
 }

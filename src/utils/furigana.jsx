@@ -31,7 +31,7 @@ export function renderFurigana(text) {
     result.push(
       <ruby key={match.index + match[1]}>
         {match[1]}
-        <rt className="text-[0.45em] dark:text-slate-400 font-bold tracking-normal">{match[3]}</rt>
+        <rt className="text-[14px] leading-none dark:text-slate-400 font-bold tracking-normal mb-1">{match[3]}</rt>
       </ruby>
     );
     lastIndex = regex.lastIndex;
@@ -69,7 +69,7 @@ export function combineFurigana(word, reading) {
   return (
     <ruby>
       {word}
-      <rt className="text-[0.45em] dark:text-slate-400 font-bold tracking-normal">{reading}</rt>
+      <rt className="text-[14px] leading-none dark:text-slate-400 font-bold tracking-normal mb-1">{reading}</rt>
     </ruby>
   );
 }
@@ -87,7 +87,7 @@ export function renderMarkdownFurigana(text) {
       result.push(
         <ruby key={`r${i}`}>
           {parts[i + 1]}
-          <rt className="text-[0.4em] font-bold">{parts[i + 2]}</rt>
+          <rt className="text-[14px] leading-none font-bold mb-1">{parts[i + 2]}</rt>
         </ruby>
       );
     }
