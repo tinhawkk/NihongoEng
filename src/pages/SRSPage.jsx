@@ -448,9 +448,9 @@ export const SRSPage = () => {
             {/* Individual deck groups */}
             <div className="space-y-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
               {deckGroups.map(group => {
-                const masteryPct =
+                const progressPct =
                   group.items.length > 0
-                    ? Math.round((group.matureCount / group.items.length) * 100)
+                    ? Math.round(((group.items.length - group.newCount) / group.items.length) * 100)
                     : 0;
                 const isSelected = selectedDeck === group.rawName;
 
@@ -506,12 +506,12 @@ export const SRSPage = () => {
                     <div className="flex items-center gap-3">
                       <div className="h-1.5 flex-1 bg-slate-100 dark:bg-slate-900 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-blue-500 transition-all duration-700"
-                          style={{ width: `${masteryPct}%` }}
+                          className="h-full bg-gradient-to-r from-blue-400 to-indigo-500 transition-all duration-700"
+                          style={{ width: `${progressPct}%` }}
                         />
                       </div>
                       <span className="text-[10px] font-black text-slate-400 shrink-0">
-                        {masteryPct}%
+                        {progressPct}%
                       </span>
                     </div>
                   </button>

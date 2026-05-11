@@ -142,7 +142,7 @@ const QuestionScreen = ({
   const getNextInterval = useUserStore(s => s.getNextInterval);
 
   return (
-    <div className="max-w-lg md:max-w-xl mx-auto space-y-3 md:space-y-4">
+    <div className="max-w-lg md:max-w-xl mx-auto space-y-2 md:space-y-4">
       <div className="flex items-center gap-3">
         <button
           onClick={onExit}
@@ -168,7 +168,7 @@ const QuestionScreen = ({
         key={question.id}
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
-        className="text-center py-3 md:py-4 space-y-2"
+        className="text-center py-2 md:py-4 space-y-1 md:space-y-2"
       >
         <p className="text-sm font-bold text-slate-400 border-b-2 border-slate-100 dark:border-slate-800 pb-1 mb-2 w-max mx-auto px-4 uppercase tracking-widest">
           {question.prompt}
@@ -246,15 +246,15 @@ const QuestionScreen = ({
               whileTap={!answered ? { scale: 0.98 } : undefined}
               disabled={answered}
               onClick={() => onAnswer(i, opt)}
-              className={`w-full h-full p-3 sm:p-4 rounded-xl font-bold text-left transition-all flex items-center justify-start gap-3 ${style}`}
+              className={`w-full h-full p-4 sm:p-5 rounded-2xl font-black text-left transition-all flex items-center justify-start gap-4 text-base sm:text-lg md:text-xl ${style}`}
             >
               <span
-                className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black shrink-0 ${
+                className={`w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-base md:text-lg font-black shrink-0 ${
                   answered && opt === question.correctAnswer
                     ? "bg-[#58CC02] text-white"
                     : answered && i === selectedIdx && opt !== question.correctAnswer
                       ? "bg-[#FF4B4B] text-white"
-                      : "bg-slate-100 text-slate-400"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500"
                 }`}
               >
                 {answered && opt === question.correctAnswer ? (
@@ -265,7 +265,9 @@ const QuestionScreen = ({
                   String.fromCharCode(65 + i)
                 )}
               </span>
-              {opt}
+              <div className="truncate whitespace-nowrap flex-1">
+                {renderRichText(opt)}
+              </div>
             </motion.button>
           );
         })}
@@ -294,11 +296,16 @@ const QuestionScreen = ({
                   <span className="font-bold text-sm text-slate-700 dark:text-slate-300">{question.meaning}</span>
                 </p>
                 {question.example && (
-                  <div className="bg-white/50 dark:bg-slate-900/50 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700/50 mt-2">
+                  <div className="bg-white/50 dark:bg-slate-900/50 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700/50 mt-2 space-y-2">
                     <span className="font-black text-[10px] uppercase text-slate-400 tracking-wider mb-1 block">Ví dụ minh hoạ</span>
-                    <div className="text-sm font-bold text-slate-700 dark:text-slate-300 italic">
+                    <div className="text-base md:text-xl font-bold text-slate-700 dark:text-slate-300 italic">
                       {renderRichText(question.example)}
                     </div>
+                    {question.exampleMeaning && (
+                      <div className="text-xs sm:text-sm text-slate-500 font-medium italic border-t border-slate-100 dark:border-slate-800/50 pt-2">
+                        {question.exampleMeaning}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

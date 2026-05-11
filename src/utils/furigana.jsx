@@ -5,8 +5,11 @@ import React from "react";
  */
 export function removeFurigana(text) {
   if (!text) return "";
-  // Only remove if it looks like furigana: follows Kanji
-  return text.replace(/([\u4E00-\u9FFF])(?:[（\(\[<＜【].*?[）\)\]>＞】])/g, "$1").trim();
+  // 1. Remove standard furigana (Reading) following Kanji
+  let cleaned = text.replace(/([\u4E00-\u9FFF])(?:[（\(\[［【].*?[）\)\]］】])/g, "$1");
+  // 2. Remove angle bracket suffixes like <する> as they are usually for metadata/sorting
+  cleaned = cleaned.replace(/[<＜].*?[>＞]/g, "");
+  return cleaned.trim();
 }
 
 const renderRubyBlock = (base, rt, keyPrefix) => {
@@ -32,9 +35,9 @@ const renderRubyBlock = (base, rt, keyPrefix) => {
 
       if (basePart) {
         pieces.push(
-          <ruby key={`${keyPrefix}-b-${lastBaseIdx}`} style={{ rubyAlign: "center" }}>
+          <ruby key={`${keyPrefix}-b-${lastBaseIdx}`} style={{ rubyAlign: "center" }} className="whitespace-nowrap">
             {basePart}
-            <rt className="text-[0.42em] dark:text-slate-400 font-normal opacity-90 mb-[-0.1em] select-none text-center">
+            <rt className="text-[0.55em] dark:text-slate-400 font-bold opacity-90 mb-[-0.05em] select-none text-center whitespace-nowrap">
               {rtPart}
             </rt>
           </ruby>
@@ -54,14 +57,18 @@ const renderRubyBlock = (base, rt, keyPrefix) => {
     pieces.push(
       <ruby key={`${keyPrefix}-r`} style={{ rubyAlign: "center" }}>
         {baseRemaining}
-        <rt className="text-[0.42em] dark:text-slate-400 font-normal opacity-90 mb-[-0.1em] select-none text-center">
+        <rt className="text-[0.55em] dark:text-slate-400 font-bold opacity-90 mb-[-0.05em] select-none text-center">
           {rtRemaining}
         </rt>
       </ruby>
     );
   }
 
-  return pieces;
+  return (
+    <span className="inline-flex items-baseline whitespace-nowrap">
+      {pieces}
+    </span>
+  );
 };
 
 /**
@@ -70,21 +77,33 @@ const renderRubyBlock = (base, rt, keyPrefix) => {
  */
 export function renderFurigana(text) {
   if (!text) return null;
-  // Regex: matches a block that STARTS and ENDS with Kanji, optionally with kana in between.
-  // e.g. "言い返" matches (starts with 言, ends with 返), but "は注意" does NOT match
-  // because は at the start is kana. This prevents greedy capture of preceding particles.
-  const regex = /([\u4E00-\u9FFF](?:[\u3040-\u30FF]*[\u4E00-\u9FFF])*)([（\(\[<＜【])(.*?)([）\)\]>＞】])/g;
+  
+  // Regex matches:
+  // 1. Kanji block followed by reading in brackets: (Kanji)(Bracket)(Reading)(Bracket)
+  // 2. Angle bracket suffixes: (<...>)
+  const regex = /([\u4E00-\u9FFF](?:[\u3040-\u30FF]*[\u4E00-\u9FFF])*)[（\(\[［【](.*?)[）\)\]］】]|([<＜][^>＞]+[>＞])/g;
+  
   let lastIndex = 0;
   const result = [];
   let match;
 
   while ((match = regex.exec(text)) !== null) {
+    // Add text before the match
     if (match.index > lastIndex) {
       result.push(text.slice(lastIndex, match.index));
     }
     
-    // Use smart splitting for the matched block
-    result.push(...renderRubyBlock(match[1], match[3], `m${match.index}`));
+    if (match[3]) {
+      // It's an angle bracket suffix like <する>
+      result.push(
+        <span key={`s${match.index}`} className="opacity-40 text-[0.7em] ml-0.5 font-medium">
+          {match[3]}
+        </span>
+      );
+    } else {
+      // It's a standard Furigana block
+      result.push(renderRubyBlock(match[1], match[2], `m${match.index}`));
+    }
     
     lastIndex = regex.lastIndex;
   }
@@ -154,7 +173,7 @@ export function renderMarkdownFurigana(text) {
       result.push(
         <ruby key={`r${i}`} style={{ rubyAlign: 'center' }}>
           {parts[i + 2]}
-          <rt className="text-[0.42em] font-normal opacity-90 mb-[-0.1em] select-none text-center">{parts[i + 4]}</rt>
+          <rt className="text-[0.55em] font-bold opacity-90 mb-[-0.05em] select-none text-center">{parts[i + 4]}</rt>
         </ruby>
       );
     }

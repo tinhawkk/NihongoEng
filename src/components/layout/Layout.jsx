@@ -67,7 +67,7 @@ export const Layout = ({ children }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className={`${isExamPage ? 'w-full' : (isSRSPage || isDeckPage) ? 'max-w-[1600px] mx-auto' : 'max-w-5xl mx-auto'} px-5 py-6 lg:px-6 lg:py-16 ${isStudyPage ? 'pb-6' : 'pb-24 lg:pb-16'}`}
+            className={`${isExamPage ? 'w-full' : (isSRSPage || isDeckPage) ? 'max-w-[1600px] mx-auto' : 'max-w-5xl mx-auto'} px-5 py-4 lg:px-6 ${isStudyPage ? 'lg:py-8' : 'lg:py-16'} ${isStudyPage ? 'pb-6' : 'pb-24 lg:pb-16'}`}
           >
             {children}
           </motion.div>

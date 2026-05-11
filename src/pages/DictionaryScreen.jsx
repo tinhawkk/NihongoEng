@@ -268,6 +268,7 @@ const EnglishSearch = ({
                        updateSrsItem(
                          wordId,
                          {
+                           ...selectedWord,
                            word: selectedWord.word,
                            reading: selectedWord.p || "",
                            meaning: selectedWord.m_vi?.[0] || selectedWord.m_en?.[0] || "",
@@ -707,6 +708,7 @@ const JapaneseSearch = ({
                        updateSrsItem(
                          wordId,
                          {
+                           ...selectedWord,
                            word: selectedWord.word,
                            reading: selectedWord.reading || selectedWord.furigana || "",
                            meaning: selectedWord.meaning_vi || selectedWord.meaning || "",

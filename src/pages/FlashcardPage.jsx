@@ -600,7 +600,7 @@ export const FlashcardPage = () => {
 
                   {card?.example && (
                     <div className="mt-4 lg:mt-8 space-y-2 lg:space-y-3 bg-slate-50 dark:bg-slate-900/50 p-4 lg:p-6 rounded-2xl lg:rounded-[30px] border-2 border-white dark:border-slate-800 shadow-inner">
-                      <p className="text-sm lg:text-lg text-slate-700 dark:text-slate-200 font-bold leading-relaxed">
+                      <p className="text-lg lg:text-2xl text-slate-700 dark:text-slate-200 font-bold leading-relaxed">
                         {renderFurigana(card.example)}
                       </p>
                       {card.exampleMeaning && (

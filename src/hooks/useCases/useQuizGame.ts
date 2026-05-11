@@ -37,7 +37,8 @@ function generateQuestions(words: any[], count = 10, globalDistractorPool: any[]
 
   return selected.map(word => {
     const reading = word.reading || word.furigana || "";
-    const example = word.example || word.example_jp || "";
+    const example = word.example || word.example_jp || word.explanation || "";
+    const exampleMeaning = word.exampleMeaning || word.example_vi || word.example_meaning_vi || word.example_meaning || word.vietnamese || word.meaning_vi || "";
     
     const types = ['meaning', 'reverse'];
     if (reading && reading !== word.word) types.push('reading');
@@ -111,6 +112,7 @@ function generateQuestions(words: any[], count = 10, globalDistractorPool: any[]
       audio: word.audio || "",
       meaning: word.meaning,
       example: example,
+      exampleMeaning: exampleMeaning,
       mnemonic: word.mnemonic || "",
       hanViet: word.hanViet || "",
     };
