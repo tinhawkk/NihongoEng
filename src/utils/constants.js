@@ -19,6 +19,9 @@ export const DECK_LABELS = {
   jlpt: "JLPT Tổng hợp",
   grammar: "Ngữ pháp",
   it: "IT Passport",
+  "it-strategy": "IT Strategy",
+  "it-management": "IT Management",
+  "it-technology": "IT Technology",
 };
 
 export const QUIZ_MODES = {

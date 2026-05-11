@@ -290,10 +290,10 @@ const MUTATIONS = {
       returning { id word }
     }
   }`,
-  UPDATE_MY_VOCA: `mutation UpdateMY_VOCA($id: String!, $set: my_vocabulary_set_input!) {
+  UPDATE_MY_VOCA: `mutation UpdateMY_VOCA($id: uuid!, $set: my_vocabulary_set_input!) {
     update_my_vocabulary_by_pk(pk_columns: {id: $id}, _set: $set) { id word }
   }`,
-  DELETE_MY_VOCA: `mutation DeleteMY_VOCA($id: String!) {
+  DELETE_MY_VOCA: `mutation DeleteMY_VOCA($id: uuid!) {
     delete_my_vocabulary_by_pk(id: $id) { id }
   }`,
 
@@ -301,10 +301,10 @@ const MUTATIONS = {
   INSERT_JAP_VOCA: `mutation InsertJAP_VOCA($obj: japience_voca_insert_input!) {
     insert_japience_voca_one(object: $obj) { id word }
   }`,
-  UPDATE_JAP_VOCA: `mutation UpdateJAP_VOCA($id: String!, $set: japience_voca_set_input!) {
+  UPDATE_JAP_VOCA: `mutation UpdateJAP_VOCA($id: uuid!, $set: japience_voca_set_input!) {
     update_japience_voca_by_pk(pk_columns: {id: $id}, _set: $set) { id word }
   }`,
-  DELETE_JAP_VOCA: `mutation DeleteJAP_VOCA($id: String!) {
+  DELETE_JAP_VOCA: `mutation DeleteJAP_VOCA($id: uuid!) {
     delete_japience_voca_by_pk(id: $id) { id }
   }`,
 
@@ -312,10 +312,10 @@ const MUTATIONS = {
   INSERT_JAP_KANJI: `mutation InsertJAP_KANJI($obj: japience_kanji_insert_input!) {
     insert_japience_kanji_one(object: $obj) { id kanji }
   }`,
-  UPDATE_JAP_KANJI: `mutation UpdateJAP_KANJI($id: String!, $set: japience_kanji_set_input!) {
+  UPDATE_JAP_KANJI: `mutation UpdateJAP_KANJI($id: uuid!, $set: japience_kanji_set_input!) {
     update_japience_kanji_by_pk(pk_columns: {id: $id}, _set: $set) { id kanji }
   }`,
-  DELETE_JAP_KANJI: `mutation DeleteJAP_KANJI($id: String!) {
+  DELETE_JAP_KANJI: `mutation DeleteJAP_KANJI($id: uuid!) {
     delete_japience_kanji_by_pk(id: $id) { id }
   }`,
 
@@ -323,10 +323,10 @@ const MUTATIONS = {
   INSERT_GRAMMAR_LEVEL: `mutation InsertGRAMMAR_LEVEL($obj: grammar_levels_insert_input!) {
     insert_grammar_levels_one(object: $obj) { id title }
   }`,
-  UPDATE_GRAMMAR_LEVEL: `mutation UpdateGRAMMAR_LEVEL($id: String!, $set: grammar_levels_set_input!) {
+  UPDATE_GRAMMAR_LEVEL: `mutation UpdateGRAMMAR_LEVEL($id: uuid!, $set: grammar_levels_set_input!) {
     update_grammar_levels_by_pk(pk_columns: {id: $id}, _set: $set) { id title }
   }`,
-  DELETE_GRAMMAR_LEVEL: `mutation DeleteGRAMMAR_LEVEL($id: String!) {
+  DELETE_GRAMMAR_LEVEL: `mutation DeleteGRAMMAR_LEVEL($id: uuid!) {
     delete_grammar_levels_by_pk(id: $id) { id }
   }`,
 
@@ -334,10 +334,10 @@ const MUTATIONS = {
   INSERT_GRAMMAR_LESSON: `mutation InsertGRAMMAR_LESSON($obj: grammar_lessons_insert_input!) {
     insert_grammar_lessons_one(object: $obj) { id title }
   }`,
-  UPDATE_GRAMMAR_LESSON: `mutation UpdateGRAMMAR_LESSON($id: String!, $set: grammar_lessons_set_input!) {
+  UPDATE_GRAMMAR_LESSON: `mutation UpdateGRAMMAR_LESSON($id: uuid!, $set: grammar_lessons_set_input!) {
     update_grammar_lessons_by_pk(pk_columns: {id: $id}, _set: $set) { id title }
   }`,
-  DELETE_GRAMMAR_LESSON: `mutation DeleteGRAMMAR_LESSON($id: String!) {
+  DELETE_GRAMMAR_LESSON: `mutation DeleteGRAMMAR_LESSON($id: uuid!) {
     delete_grammar_lessons_by_pk(id: $id) { id }
   }`,
 
@@ -345,10 +345,10 @@ const MUTATIONS = {
   INSERT_GRAMMAR_POINT: `mutation InsertGRAMMAR_ENTRY($obj: grammar_entries_insert_input!) {
     insert_grammar_entries_one(object: $obj) { id title }
   }`,
-  UPDATE_GRAMMAR_POINT: `mutation UpdateGRAMMAR_ENTRY($id: String!, $set: grammar_entries_set_input!) {
+  UPDATE_GRAMMAR_POINT: `mutation UpdateGRAMMAR_ENTRY($id: uuid!, $set: grammar_entries_set_input!) {
     update_grammar_entries_by_pk(pk_columns: {id: $id}, _set: $set) { id title }
   }`,
-  DELETE_GRAMMAR_POINT: `mutation DeleteGRAMMAR_ENTRY($id: String!) {
+  DELETE_GRAMMAR_POINT: `mutation DeleteGRAMMAR_ENTRY($id: uuid!) {
     delete_grammar_entries_by_pk(id: $id) { id }
   }`,
 
@@ -378,10 +378,10 @@ const MUTATIONS = {
   INSERT_DECK: `mutation InsertDeck($obj: decks_insert_input!) {
     insert_decks_one(object: $obj) { id title description community_folder_id custom_columns }
   }`,
-  UPDATE_DECK: `mutation UpdateDeck($id: String!, $title: String!) {
+  UPDATE_DECK: `mutation UpdateDeck($id: uuid!, $title: String!) {
     update_decks_by_pk(pk_columns: {id: $id}, _set: {title: $title}) { id title }
   }`,
-  DELETE_DECK: `mutation DeleteDeck($id: String!) {
+  DELETE_DECK: `mutation DeleteDeck($id: uuid!) {
     delete_decks_by_pk(id: $id) { id }
   }`,
 
@@ -389,10 +389,10 @@ const MUTATIONS = {
   INSERT_FOLDER: `mutation InsertFolder($obj: folders_insert_input!) {
     insert_folders_one(object: $obj) { id title parent_id }
   }`,
-  UPDATE_FOLDER: `mutation UpdateFolder($id: String!, $title: String!) {
+  UPDATE_FOLDER: `mutation UpdateFolder($id: uuid!, $title: String!) {
     update_folders_by_pk(pk_columns: {id: $id}, _set: {title: $title}) { id title }
   }`,
-  DELETE_FOLDER: `mutation DeleteFolder($id: String!) {
+  DELETE_FOLDER: `mutation DeleteFolder($id: uuid!) {
     delete_folders_by_pk(id: $id) { id }
   }`,
 
@@ -405,7 +405,7 @@ const MUTATIONS = {
 };
 
 MUTATIONS.CREATE_COMMUNITY_ROOT = `
-  mutation CreateCommunityRoot($id: String!, $title: String!, $description: String) {
+  mutation CreateCommunityRoot($id: uuid!, $title: String!, $description: String) {
     insert_folders_one(object: { id: $id, title: $title, description: $description }) {
       id
       title
@@ -908,9 +908,8 @@ export const nhostService = {
     // Fallback: attempt dynamic update_by_pk with 'id' as primary key
     try {
       const safeTable = table.replace(/[^a-zA-Z0-9_]/g, "");
-      const pkName = cfg?.pkName || "id";
-      const opName = `Update_${safeTable}`;
-      const q = `mutation ${opName}($${pkName}: String!, $set: ${safeTable}_set_input!) { update_${safeTable}_by_pk(pk_columns: {${pkName}: $${pkName}}, _set: $set) { ${pkName} } }`;
+      const pkType = pkName === "id" ? "uuid!" : "String!";
+      const q = `mutation ${opName}($${pkName}: ${pkType}, $set: ${safeTable}_set_input!) { update_${safeTable}_by_pk(pk_columns: {${pkName}: $${pkName}}, _set: $set) { ${pkName} } }`;
       return fetchGraphQL(q, opName, { [pkName]: pk, set: finalSet });
     } catch (e) {
       return { data: null, errors: [{ message: `Unknown table: ${table}` }] };
@@ -937,9 +936,8 @@ export const nhostService = {
     // Fallback: attempt dynamic delete_by_pk with 'id' as primary key
     try {
       const safeTable = table.replace(/[^a-zA-Z0-9_]/g, "");
-      const pkName = "id";
-      const opName = `Delete_${safeTable}`;
-      const q = `mutation ${opName}($${pkName}: String!) { delete_${safeTable}_by_pk(${pkName}: $${pkName}) { ${pkName} } }`;
+      const pkType = pkName === "id" ? "uuid!" : "String!";
+      const q = `mutation ${opName}($${pkName}: ${pkType}) { delete_${safeTable}_by_pk(${pkName}: $${pkName}) { ${pkName} } }`;
       return fetchGraphQL(q, opName, { [pkName]: pk });
     } catch (e) {
       return { data: null, errors: [{ message: `Unknown table: ${table}` }] };

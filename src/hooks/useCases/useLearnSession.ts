@@ -56,7 +56,7 @@ export const useLearnSession = (deckId: string, filterType: string) => {
 
         if (isUUID) {
           try {
-            const q = `query GetDeckTitle($id: String!) { decks_by_pk(id: $id) { title } }`;
+            const q = `query GetDeckTitle($id: uuid!) { decks_by_pk(id: $id) { title } }`;
             const res = await nhostService.fetchGraphQL(q, "GetDeckTitle", { id: deckId });
             if (res.data?.decks_by_pk?.title) {
               setDeckTitle(res.data.decks_by_pk.title);
@@ -174,13 +174,15 @@ export const useLearnSession = (deckId: string, filterType: string) => {
         return;
       }
 
-      const cleanTarget = (text: string) =>
-        (text || "")
+      const cleanTarget = (t: string) => {
+        if (!t) return "";
+        // Strip all types of brackets and their content: (), （）, [], ［］, <>, ＜＞, 【】
+        return t
+          .replace(/\(.*?\)|（.*?）|\[.*?\]|［.*?］|<.*?>|＜.*?＞|【.*?】/g, "")
           .replace(/[〜\s・]/g, "")
-          .replace(/（[^）]*）/g, "")
-          .replace(/\([^)]*\)/g, "")
           .toLowerCase()
           .trim();
+      };
 
       const targetKana = cleanTarget(step.word.reading || "");
       const targetKanji = cleanTarget(step.word.word || "");
@@ -207,6 +209,7 @@ export const useLearnSession = (deckId: string, filterType: string) => {
       setIsCorrect(null);
       setShowFeedback(false);
     } else {
+      useUserStore.getState().updateStreak();
       setIsFinished(true);
     }
   }, [currentIdx, steps.length]);

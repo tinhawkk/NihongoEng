@@ -21,12 +21,8 @@ import { useUserStore } from "../store/useUserStore";
 import { useQuizGame } from "../hooks/useCases/useQuizGame";
 import { ConfirmModal } from "../components/ui/ConfirmModal";
 import { renderMarkdownFurigana, renderFurigana } from "../utils/furigana";
-
-;
-
-
-
-
+import { DECK_LABELS } from "../utils/constants";
+import { tts } from "../utils/tts";
 
 // ─── Setup Screen ────────────────────────────────────────────
 const SetupScreen = ({ deckId, wordCount, onStart }) => {
@@ -52,7 +48,7 @@ const SetupScreen = ({ deckId, wordCount, onStart }) => {
         </label>
         <div className="grid grid-cols-3 gap-2 text-center">
           {options
-            .filter(o => o < wordCount) // Change <= to < to avoid duplicates with "All"
+            .filter(o => o < wordCount) 
             .map(o => (
               <button
                 key={o}
@@ -79,7 +75,6 @@ const SetupScreen = ({ deckId, wordCount, onStart }) => {
         </div>
       </div>
 
-      {/* Mode toggle */}
       <div className="space-y-3">
         <label className="text-xs font-black text-slate-400 uppercase tracking-widest">
           Chế độ
@@ -148,7 +143,6 @@ const QuestionScreen = ({
 
   return (
     <div className="max-w-lg md:max-w-xl mx-auto space-y-3 md:space-y-4">
-      {/* Progress bar + exit */}
       <div className="flex items-center gap-3">
         <button
           onClick={onExit}
@@ -170,7 +164,6 @@ const QuestionScreen = ({
         </span>
       </div>
 
-      {/* Question */}
       <motion.div
         key={question.id}
         initial={{ opacity: 0, x: 50 }}
@@ -233,7 +226,6 @@ const QuestionScreen = ({
         </AnimatePresence>
       </motion.div>
 
-      {/* Options */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
         {question.options.map((opt, i) => {
           let style =
@@ -279,7 +271,6 @@ const QuestionScreen = ({
         })}
       </div>
 
-      {/* SRS Rating Buttons (Show after answering) */}
       <AnimatePresence>
         {answered && mode === "pause" && (
           <motion.div
@@ -484,5 +475,3 @@ export const QuizPage = () => {
     </div>
   );
 };
-
-

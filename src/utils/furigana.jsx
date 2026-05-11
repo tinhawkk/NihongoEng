@@ -1,16 +1,68 @@
 import React from "react";
 
 /**
- * Removes furigana patterns from text (Supports: （）, (), [], <>)
+ * Removes furigana patterns from text (Supports: （）, (), [], ［］, <>, ＜＞, 【】)
  */
 export function removeFurigana(text) {
   if (!text) return "";
-  return text
-    .replace(/（.*?）/g, "")
-    .replace(/\(.*?\)/g, "")
-    .replace(/\[.*?\]/g, "")
-    .replace(/<.*?>/g, "");
+  // Only remove if it looks like furigana: follows Kanji
+  return text.replace(/([\u4E00-\u9FFF])(?:[（\(\[<＜【].*?[）\)\]>＞】])/g, "$1").trim();
 }
+
+const renderRubyBlock = (base, rt, keyPrefix) => {
+  const kanaRegex = /[\u3040-\u30FF]+/g;
+  let match;
+  const pieces = [];
+  let lastBaseIdx = 0;
+  let lastRtIdx = 0;
+
+  while ((match = kanaRegex.exec(base)) !== null) {
+    const kana = match[0];
+    const baseIdx = match.index;
+    
+    // Look for this kana in the reading, ensuring there's space for preceding Kanji's reading
+    // if there was Kanji before this kana.
+    const minRtIdx = (baseIdx > lastBaseIdx) ? lastRtIdx + 1 : lastRtIdx;
+    const rtIdx = rt.indexOf(kana, minRtIdx);
+
+    if (rtIdx !== -1) {
+      // We found a split point!
+      const basePart = base.slice(lastBaseIdx, baseIdx);
+      const rtPart = rt.slice(lastRtIdx, rtIdx);
+
+      if (basePart) {
+        pieces.push(
+          <ruby key={`${keyPrefix}-b-${lastBaseIdx}`} style={{ rubyAlign: "center" }}>
+            {basePart}
+            <rt className="text-[0.42em] dark:text-slate-400 font-normal opacity-90 mb-[-0.1em] select-none text-center">
+              {rtPart}
+            </rt>
+          </ruby>
+        );
+      }
+
+      pieces.push(<span key={`${keyPrefix}-k-${baseIdx}`}>{kana}</span>);
+
+      lastBaseIdx = baseIdx + kana.length;
+      lastRtIdx = rtIdx + kana.length;
+    }
+  }
+
+  const baseRemaining = base.slice(lastBaseIdx);
+  const rtRemaining = rt.slice(lastRtIdx);
+  if (baseRemaining) {
+    pieces.push(
+      <ruby key={`${keyPrefix}-r`} style={{ rubyAlign: "center" }}>
+        {baseRemaining}
+        <rt className="text-[0.42em] dark:text-slate-400 font-normal opacity-90 mb-[-0.1em] select-none text-center">
+          {rtRemaining}
+        </rt>
+      </ruby>
+    );
+  }
+
+  return pieces;
+};
 
 /**
  * Renders Japanese text with Furigana using <ruby> tags.
@@ -18,22 +70,22 @@ export function removeFurigana(text) {
  */
 export function renderFurigana(text) {
   if (!text) return null;
-  // Regex: matches Kanji blocks/Kanas/Latin blocks immediately followed by any parens/brackets
-  const regex = /((?:[\u4E00-\u9FFF]+[\u3040-\u30FF]*)|[\u3040-\u30FF]+|[A-Za-z0-9]+)([（\(\[<])(.*?)([）\)\]>])/g;
+  // Regex: matches a block that STARTS and ENDS with Kanji, optionally with kana in between.
+  // e.g. "言い返" matches (starts with 言, ends with 返), but "は注意" does NOT match
+  // because は at the start is kana. This prevents greedy capture of preceding particles.
+  const regex = /([\u4E00-\u9FFF](?:[\u3040-\u30FF]*[\u4E00-\u9FFF])*)([（\(\[<＜【])(.*?)([）\)\]>＞】])/g;
   let lastIndex = 0;
   const result = [];
   let match;
-  
+
   while ((match = regex.exec(text)) !== null) {
     if (match.index > lastIndex) {
       result.push(text.slice(lastIndex, match.index));
     }
-    result.push(
-      <ruby key={match.index + match[1]}>
-        {match[1]}
-        <rt className="text-[14px] leading-none dark:text-slate-400 font-bold tracking-normal mb-1">{match[3]}</rt>
-      </ruby>
-    );
+    
+    // Use smart splitting for the matched block
+    result.push(...renderRubyBlock(match[1], match[3], `m${match.index}`));
+    
     lastIndex = regex.lastIndex;
   }
   
@@ -51,7 +103,24 @@ export function renderFurigana(text) {
 export function combineFurigana(word, reading) {
   if (!word) return null;
   
-  const hasBrackets = /[（\(\[<]/.test(word);
+  // 1. Smart Suffix Alignment (Handle grammatical markers like <する>, [な])
+  // If both word and reading end with the same bracketed suffix, preserve it outside ruby
+  const suffixRegex = /([（\(\[<＜【][^）\)\]>＞】]+[）\)\]>＞])$/;
+  const wordSuffix = word.match(suffixRegex);
+  const readingSuffix = reading ? reading.match(suffixRegex) : null;
+
+  if (wordSuffix && readingSuffix && wordSuffix[0] === readingSuffix[0]) {
+    const baseWord = word.slice(0, -wordSuffix[0].length);
+    const baseReading = reading.slice(0, -readingSuffix[0].length);
+    return (
+      <span className="inline-flex items-baseline whitespace-nowrap">
+        {combineFurigana(baseWord, baseReading)}
+        <span className="opacity-60 font-medium ml-0.5">{wordSuffix[0]}</span>
+      </span>
+    );
+  }
+
+  const hasBrackets = /[（\(\[<＜【]/.test(word);
   if (hasBrackets) {
     return renderFurigana(word);
   }
@@ -66,12 +135,8 @@ export function combineFurigana(word, reading) {
     return word;
   }
   
-  return (
-    <ruby>
-      {word}
-      <rt className="text-[14px] leading-none dark:text-slate-400 font-bold tracking-normal mb-1">{reading}</rt>
-    </ruby>
-  );
+  // Use smart splitting to handle mixed Kanji/Kana words correctly
+  return renderRubyBlock(word, reading, "comb");
 }
 
 /**
@@ -79,15 +144,17 @@ export function combineFurigana(word, reading) {
  */
 export function renderMarkdownFurigana(text) {
   if (!text) return "";
-  const parts = text.split(/\[([^\]]+)\]\(([^)]+)\)/g);
+  const rubyRegex = /([\[［【<＜]([^\]］】>＞]+)[\]］】>＞])([(（<＜]([^)）>＞]+)[)）>＞])/g;
+  const parts = text.split(rubyRegex);
   const result = [];
-  for (let i = 0; i < parts.length; i += 3) {
+  
+  for (let i = 0; i < parts.length; i += 5) {
     if (parts[i]) result.push(<span key={`t${i}`}>{parts[i]}</span>);
-    if (parts[i + 1]) {
+    if (parts[i + 2]) {
       result.push(
-        <ruby key={`r${i}`}>
-          {parts[i + 1]}
-          <rt className="text-[14px] leading-none font-bold mb-1">{parts[i + 2]}</rt>
+        <ruby key={`r${i}`} style={{ rubyAlign: 'center' }}>
+          {parts[i + 2]}
+          <rt className="text-[0.42em] font-normal opacity-90 mb-[-0.1em] select-none text-center">{parts[i + 4]}</rt>
         </ruby>
       );
     }

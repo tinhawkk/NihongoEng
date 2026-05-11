@@ -13,8 +13,10 @@ import {
   AlertTriangle,
   Info,
   BookOpen,
+  Flame,
 } from "lucide-react";
 import { useUserStore } from "../store/useUserStore";
+import { calculateCurrentStreak } from "../utils/streakUtils";
 import { tts } from "../utils/tts";
 import { renderFurigana, removeFurigana, combineFurigana } from "../utils/furigana";
 import { Button } from "../components/ui/Button";
@@ -107,7 +109,7 @@ const ChoiceStep = ({ word, allWords, showFeedback, userAnswer, checkAnswer, typ
     return () => window.removeEventListener("keydown", handleNum);
   }, [options, showFeedback, checkAnswer]);
 
-  const cleanDisplay = text => text?.toString().replace(/[<>()[\]（）［］【】]/g, "") || "";
+  const cleanDisplay = text => text?.toString().replace(/[〜~.．…・]/g, "") || "";
 
   return (
     <motion.div
@@ -120,7 +122,7 @@ const ChoiceStep = ({ word, allWords, showFeedback, userAnswer, checkAnswer, typ
           <Target size={16} /> {type === "choice" ? "Chọn nghĩa đúng" : "Chọn Kanji đúng"}
         </p>
         {type === "choice" ? (
-          <h2 className="text-6xl md:text-7xl font-black text-slate-800 dark:text-white tracking-tight">
+          <h2 className="text-6xl md:text-7xl font-black text-slate-800 dark:text-white tracking-tight whitespace-nowrap flex justify-center">
             {cleanDisplay(word.word)}
           </h2>
         ) : (
@@ -511,6 +513,10 @@ export const LearnPage = () => {
           <h2 className="text-5xl font-black text-slate-800 dark:text-white tracking-tight">
             Tuyệt vời!
           </h2>
+          <div className="flex items-center justify-center gap-2 text-orange-500 font-black text-2xl">
+            <Flame size={28} fill="currentColor" />
+            <span>{calculateCurrentStreak(useUserStore.getState().account?.streak)} n</span>
+          </div>
           <p className="text-slate-500 font-bold text-lg max-w-sm mx-auto">
             {remainingWords.length > 0 
               ? "Bạn đã hoàn thành đợt học này." 
@@ -550,7 +556,8 @@ export const LearnPage = () => {
   // Helper để làm sạch hiển thị (Xóa các loại ngoặc)
   const cleanDisplay = text => {
     if (!text) return "";
-    return text.toString().replace(/[<>()[\]（）［］【】〜~.．…・]/g, "");
+    // Keep brackets as they might contain grammatical info like <する>
+    return text.toString().replace(/[〜~.．…・]/g, "");
   };
 
   return (
@@ -592,11 +599,11 @@ export const LearnPage = () => {
                   <div className="relative inline-block w-full text-center">
                     <h2
                       onClick={playStepAudio}
-                      className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black text-slate-800 dark:text-white tracking-tighter group-active:scale-95 transition-transform duration-300 drop-shadow-sm cursor-pointer break-words leading-tight w-full px-4"
+                      className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black text-slate-800 dark:text-white tracking-tighter group-active:scale-95 transition-transform duration-300 drop-shadow-sm cursor-pointer leading-tight w-full px-4 flex justify-center"
                     >
                       {combineFurigana(
-                        cleanDisplay(step.word.word),
-                        cleanDisplay(step.word.reading)
+                        step.word.word,
+                        step.word.reading
                       )}
                     </h2>
                     <button
@@ -660,7 +667,7 @@ export const LearnPage = () => {
                                 {p.label.includes("A") ? "A" : "B"}
                               </span>
                             )}
-                            <p className="text-2xl font-bold text-slate-700 dark:text-slate-100 leading-snug">
+                            <p lang="ja" className="text-2xl font-bold text-slate-700 dark:text-slate-100 leading-[1.8]">
                               {renderFurigana(p.content)}
                             </p>
                           </div>
@@ -725,7 +732,7 @@ export const LearnPage = () => {
                   <p className="text-slate-400 font-black uppercase text-xs tracking-[0.2em] flex items-center justify-center gap-2">
                     <Keyboard size={16} /> Nhập cách đọc
                   </p>
-                  <h2 className="text-7xl font-black text-slate-800 dark:text-white tracking-tight">
+                  <h2 className="text-4xl md:text-6xl font-black text-slate-800 dark:text-white tracking-tighter whitespace-nowrap flex justify-center">
                     {cleanDisplay(step.word.word)}
                   </h2>
                   <p className="text-2xl font-bold text-blue-500 bg-blue-50 dark:bg-blue-900/40 py-3 px-8 rounded-3xl inline-block shadow-sm">

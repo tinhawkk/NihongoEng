@@ -26,8 +26,10 @@ import {
 import { Button } from "../components/ui/Button";
 import { ConfirmModal } from "../components/ui/ConfirmModal";
 import { getDueItems, getCardCategory, CATEGORY_LABELS, formatInterval } from "../utils/srsUtils";
-import { nhostService } from "../services/nhostService";
 import { useSync } from "../components/SyncProvider";
+import { nhostService } from "../services/nhostService";
+import { StudyHeatmap } from "../components/ui/StudyHeatmap";
+import { calculateCurrentStreak } from "../utils/streakUtils";
 
 const IS_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -40,66 +42,6 @@ const formatDeckName = (name, deckTitleMap = {}) => {
   if (["n1", "n2", "n3", "n4", "n5", "it", "eng"].includes(name.toLowerCase()))
     return `JLPT ${name.toUpperCase()}`;
   return name;
-};
-
-const StudyHeatmap = ({ streak = [] }) => {
-  const days = useMemo(() => {
-    const result = [];
-    const today = new Date();
-    // 35 days (5 full weeks)
-    for (let i = 34; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(today.getDate() - i);
-      const ds = d.toLocaleDateString("en-CA");
-      result.push({ 
-        date: ds, 
-        active: streak.includes(ds),
-        label: d.toLocaleDateString("vi-VN", { day: 'numeric', month: 'numeric' })
-      });
-    }
-    return result;
-  }, [streak]);
-
-  const currentMonth = new Date().toLocaleString("vi-VN", { month: "long" });
-
-  return (
-    <div className="flex flex-col items-start bg-white/5 p-4 rounded-2xl border border-white/10">
-      <div className="flex items-center gap-2 mb-3">
-        <Calendar size={12} className="text-emerald-400" />
-        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">
-          Lịch học {currentMonth}
-        </p>
-      </div>
-      <div className="grid grid-cols-7 gap-1.5">
-        {days.map((d, i) => (
-          <div
-            key={i}
-            title={`${d.label}: ${d.active ? "Đã học" : "Chưa học"}`}
-            className={`w-4 h-4 rounded-[2px] transition-all relative group ${
-              d.active 
-                ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]" 
-                : "bg-white/5 border border-white/5"
-            }`}
-          >
-            {/* Tooltip on hover */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-800 text-white text-[8px] font-bold rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
-              {d.label}: {d.active ? "✅ Đã học" : "❌ Chưa học"}
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="mt-3 flex items-center gap-2">
-        <span className="text-[8px] font-bold text-slate-500 uppercase">Ít</span>
-        <div className="flex gap-1">
-          <div className="w-2 h-2 rounded-[1px] bg-white/5 border border-white/5" />
-          <div className="w-2 h-2 rounded-[1px] bg-emerald-500/30" />
-          <div className="w-2 h-2 rounded-[1px] bg-emerald-500/60" />
-          <div className="w-2 h-2 rounded-[1px] bg-emerald-500" />
-        </div>
-        <span className="text-[8px] font-bold text-slate-500 uppercase">Nhiều</span>
-      </div>
-    </div>
-  );
 };
 
 // SRS Stats Bar showing New/Learning/Due distribution
@@ -241,21 +183,7 @@ export const SRSPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account?.srsData]);
 
-  const streakCount = useMemo(() => {
-    const today = new Date().toLocaleDateString("en-CA");
-    let count = 0;
-    const d = new Date();
-    while (true) {
-      const ds = d.toLocaleDateString("en-CA");
-      if (streak.includes(ds)) {
-        count++;
-        d.setDate(d.getDate() - 1);
-      } else if (ds === today) {
-        d.setDate(d.getDate() - 1);
-      } else break;
-    }
-    return count;
-  }, [streak]);
+  const streakCount = useMemo(() => calculateCurrentStreak(streak), [streak]);
 
   // Items due today + items in learning phase (they have short intervals in minutes)
   const dueTodayCount = dueItems.length;
@@ -357,7 +285,7 @@ export const SRSPage = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto space-y-4 lg:space-y-8 pb-32 px-4 lg:px-0">
+    <div className="max-w-[1600px] mx-auto space-y-4 lg:space-y-8 pb-32 px-4 lg:px-8">
       {/* Premium Header Dashboard */}
       <div className="bg-[#1a1b1e] rounded-[2rem] lg:rounded-[2.5rem] p-5 lg:p-8 shadow-2xl relative overflow-hidden border border-white/5">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
@@ -599,29 +527,29 @@ export const SRSPage = () => {
             {/* Header / Actions */}
             <div className="p-8 border-b border-slate-100 dark:border-slate-800 space-y-6 bg-slate-50/50 dark:bg-slate-800/30">
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                <div>
-                  <h2 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight truncate">
                     {selectedDeck === "all"
                       ? "Toàn bộ mục ôn tập"
                       : formatDeckName(selectedDeck, deckTitleMap)}
                   </h2>
-                  <div className="flex items-center gap-3 mt-1.5">
-                    <span className="text-xs font-black text-slate-400 uppercase tracking-widest">
+                  <div className="flex items-center gap-3 mt-1.5 overflow-x-auto no-scrollbar">
+                    <span className="text-xs font-black text-slate-400 uppercase tracking-widest shrink-0">
                       {filteredItems.length} từ vựng
                     </span>
                     {selectedDueDeck.length > 0 && (
-                      <span className="text-xs font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded-lg flex items-center gap-1">
+                      <span className="text-xs font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded-lg flex items-center gap-1 shrink-0">
                         <Zap size={10} fill="currentColor" /> {selectedDueDeck.length} cần ôn ngay
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div className="flex gap-3 w-full md:w-auto">
+                <div className="flex gap-3 w-full md:w-auto shrink-0">
                   {selectedDueDeck.length > 0 && (
                     <Button
                       onClick={() => navigate(`/quiz/srs?deck=${selectedDeck}`)}
-                      className="flex-1 md:flex-none py-3.5 px-6 rounded-2xl bg-orange-500 text-white hover:bg-orange-600 shadow-lg shadow-orange-500/30 font-black text-sm gap-2"
+                      className="flex-1 md:flex-none py-3.5 px-6 rounded-2xl bg-orange-500 text-white hover:bg-orange-600 shadow-lg shadow-orange-500/30 font-black text-sm gap-2 whitespace-nowrap"
                     >
                       BẮT ĐẦU ÔN <Play size={16} fill="currentColor" />
                     </Button>
@@ -629,7 +557,7 @@ export const SRSPage = () => {
                   <Button
                     onClick={() => navigate(`/quiz/srs?deck=${selectedDeck}&mode=all`)}
                     disabled={filteredItems.length === 0}
-                    className="flex-1 md:flex-none py-3.5 px-6 rounded-2xl bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 hover:brightness-110 font-black text-sm gap-2"
+                    className="flex-1 md:flex-none py-3.5 px-6 rounded-2xl bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 hover:brightness-110 font-black text-sm gap-2 whitespace-nowrap"
                   >
                     LUYỆN TẬP <Zap size={16} />
                   </Button>

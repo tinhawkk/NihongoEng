@@ -12,6 +12,8 @@ export const Layout = ({ children }) => {
   const [showScrollTop, setShowScrollTop] = useState(false);
   
   const isExamPage = location.pathname.startsWith('/jlpt-exams/');
+  const isSRSPage = location.pathname === '/srs';
+  const isDeckPage = location.pathname.startsWith('/deck/');
   const isStudyPage = location.pathname.startsWith('/learn/') || 
                       location.pathname.startsWith('/flashcard/') ||
                       location.pathname.startsWith('/quiz/');
@@ -65,7 +67,7 @@ export const Layout = ({ children }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className={`${isExamPage ? 'w-full' : 'max-w-5xl mx-auto'} px-5 py-6 lg:px-6 lg:py-16 ${isStudyPage ? 'pb-6' : 'pb-24 lg:pb-16'}`}
+            className={`${isExamPage ? 'w-full' : (isSRSPage || isDeckPage) ? 'max-w-[1600px] mx-auto' : 'max-w-5xl mx-auto'} px-5 py-6 lg:px-6 lg:py-16 ${isStudyPage ? 'pb-6' : 'pb-24 lg:pb-16'}`}
           >
             {children}
           </motion.div>

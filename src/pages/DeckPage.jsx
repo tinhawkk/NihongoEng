@@ -36,26 +36,13 @@ import { useBookmarkStore } from "../store/useBookmarkStore";
 import { useUserStore } from "../store/useUserStore";
 import { useToastStore } from "../store/useToastStore";
 import { nhostService } from "../services/nhostService";
+import { DECK_LABELS } from "../utils/constants";
 import { tts } from "../utils/tts";
 import { KanjiWriter } from "../components/ui/KanjiWriter";
 import { KanjiWriterModal } from "../components/ui/KanjiWriterModal";
 import { examGeneratorService } from "../services/examGeneratorService";
 import { examRepository } from "../data/repositories/NhostExamRepository";
 
-const DECK_LABELS = {
-  eng: "Tiếng Anh 600",
-  n5: "JLPT N5",
-  n4: "JLPT N4",
-  n3: "JLPT N3",
-  n2: "JLPT N2",
-  n1: "JLPT N1",
-  jlpt: "JLPT Tổng hợp",
-  grammar: "Ngữ pháp",
-  it: "IT Passport",
-  "it-strategy": "IT Strategy",
-  "it-management": "IT Management",
-  "it-technology": "IT Technology",
-};
 
 const DECK_COLORS = {
   eng: "#CE82FF",
@@ -428,7 +415,7 @@ export const DeckPage = () => {
   // Fetch Metadata for Nhost decks
   useEffect(() => {
     if (isUUID) {
-      const q = `query GetDeckTitle($id: String!) {
+      const q = `query GetDeckTitle($id: uuid!) {
         decks_by_pk(id: $id) {
           title
         }
@@ -1580,27 +1567,98 @@ export const DeckPage = () => {
                       const currentTitle = deckMetadata?.title || DECK_LABELS[deckId] || deckId;
                       const finalLevel = currentTitle.toUpperCase();
 
-                      // Prepare for bulk upsert
-                      const bucket = parsed.map(item => ({
-                        ...item,
-                        id: item.id || generateUUID(),
-                        level: item.level || finalLevel,
-                        deck_id: deckId,
-                        // Ensure required fields for DB
-                        word: item.word || "",
-                        meaning: item.meaning || "",
-                        furigana: item.reading || item.furigana || "",
-                      }));
+                      // Phân loại: Update (có id và tồn tại) và Insert (tạo mới)
+                      const updates = [];
+                      const inserts = [];
 
-                      const res = await nhostService.bulkInsertMyVoca(bucket);
-                      if (res.errors?.length) throw new Error(res.errors[0].message);
+                      parsed.forEach(item => {
+                        const existing = words.find(w => w.id === item.id);
+                        if (existing) {
+                           // Xác định đúng table của từ này
+                           let table = "my_vocabulary";
+                           if (existing.source === "personal") {
+                             table = "my_vocabulary";
+                           } else if (existing.source === "grammar" || existing.level === "GRAMMAR") {
+                             table = "grammar_entries";
+                           } else {
+                             table = existing.type === "kanji" ? "japience_kanji" : "japience_voca";
+                           }
+                           
+                           // Lấy ra các trường có cập nhật
+                           const setFields = {};
+                           if (item.word !== undefined) setFields.word = item.word;
+                           if (item.meaning !== undefined) setFields.meaning = item.meaning;
+                           if (item.reading !== undefined) setFields.furigana = item.reading;
+                           if (item.furigana !== undefined) setFields.furigana = item.furigana;
+                           if (item.mnemonic !== undefined) setFields.mnemonic = item.mnemonic;
+                           if (item.han_viet !== undefined) setFields.han_viet = item.han_viet;
+                           if (item.hanViet !== undefined) setFields.han_viet = item.hanViet;
+                           if (item.romaji !== undefined) setFields.romaji = item.romaji;
+                           if (item.example_jp !== undefined) setFields.example_jp = item.example_jp;
+                           if (item.example_vi !== undefined) setFields.example_vi = item.example_vi;
+                           
+                           // Map tên cột cho japience
+                           if (table === "japience_voca") {
+                              if (setFields.furigana !== undefined) {
+                                setFields.reading = setFields.furigana;
+                                delete setFields.furigana;
+                              }
+                              if (setFields.example_jp !== undefined) {
+                                setFields.example = setFields.example_jp;
+                                delete setFields.example_jp;
+                              }
+                              if (setFields.example_vi !== undefined) {
+                                setFields.example_meaning = setFields.example_vi;
+                                delete setFields.example_vi;
+                              }
+                           } else if (table === "japience_kanji") {
+                              if (setFields.word !== undefined) {
+                                setFields.kanji = setFields.word;
+                                delete setFields.word;
+                              }
+                           }
 
-                      const affected = res.data?.insert_my_vocabulary?.affected_rows || bucket.length;
+                           if (Object.keys(setFields).length > 0) {
+                             updates.push({ table, id: existing.id, setFields });
+                           }
+                        } else {
+                           // Insert
+                           inserts.push({
+                             ...item,
+                             id: item.id || generateUUID(),
+                             level: item.level || finalLevel,
+                             deck_id: deckId,
+                             word: item.word || "",
+                             meaning: item.meaning || "",
+                             furigana: item.reading || item.furigana || "",
+                           });
+                        }
+                      });
 
-                      addToast(`✅ Đã cập nhật thành công ${affected} từ vựng!`, "success");
+                      // Thực thi updates
+                      if (updates.length > 0) {
+                         const promises = updates.map(u => nhostService.updateRow(u.table, u.id, u.setFields));
+                         const results = await Promise.all(promises);
+                         // Kiểm tra xem có lỗi nào bị ẩn đi không
+                         const errors = results.filter(r => r?.errors?.length > 0);
+                         if (errors.length > 0) {
+                            console.error("Chi tiết lỗi update:", errors[0].errors);
+                            throw new Error("Lỗi DB khi cập nhật: " + errors[0].errors[0].message);
+                         }
+                      }
+
+                      // Thực thi inserts
+                      let affected = updates.length;
+                      if (inserts.length > 0) {
+                         const res = await nhostService.bulkInsertMyVoca(inserts);
+                         if (res.errors?.length) throw new Error(res.errors[0].message);
+                         affected += (res.data?.insert_my_vocabulary?.affected_rows || inserts.length);
+                      }
+
+                      addToast(`✅ Đã cập nhật thành công ${affected} mục!`, "success");
                       setBulkJsonOpen(false);
                       
-                      // Refresh list with cache busting
+                      // Refresh list
                       const data = await vocabularyRepository.loadDeck(deckId, source);
                       setWords([...data]);
                     } catch (err) {

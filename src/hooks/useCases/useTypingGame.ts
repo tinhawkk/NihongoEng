@@ -145,6 +145,7 @@ export const useTypingGame = (deckId: string | undefined) => {
 
   const goNext = useCallback(() => {
     if (currentIdx >= words.length - 1) {
+      useUserStore.getState().updateStreak();
       setIsFinished(true);
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
       return;

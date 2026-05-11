@@ -30,6 +30,7 @@ import { nhostService } from "../services/nhostService";
 import { useBookmarkStore } from "../store/useBookmarkStore";
 import { useUserStore } from "../store/useUserStore";
 import { useSync } from "../components/SyncProvider";
+import { calculateCurrentStreak } from "../utils/streakUtils";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { CrudModal } from "../components/ui/CrudModal";
@@ -1815,7 +1816,7 @@ export const HomePage = () => {
                 Chuỗi
               </span>
               <span className="text-lg font-black text-slate-800 dark:text-white">
-                {account?.streak?.length || 0} n
+                {calculateCurrentStreak(account?.streak)} n
               </span>
             </motion.div>
             <motion.div

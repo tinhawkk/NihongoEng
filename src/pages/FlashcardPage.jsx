@@ -14,29 +14,18 @@ import {
   Sparkles,
   Volume2,
   Star,
+  Trophy,
+  Flame,
 } from "lucide-react";
+import { calculateCurrentStreak } from "../utils/streakUtils";
 import { Button } from "../components/ui/Button";
 import { useUserStore } from "../store/useUserStore";
 import { useBookmarkStore } from "../store/useBookmarkStore";
 import { tts } from "../utils/tts";
 import { nhostService } from "../services/nhostService";
 import { renderFurigana, removeFurigana } from "../utils/furigana";
+import { DECK_LABELS } from "../utils/constants";
 import confetti from "canvas-confetti";
-
-const DECK_LABELS = {
-  eng: "Tiếng Anh",
-  n5: "JLPT N5",
-  n4: "JLPT N4",
-  n3: "JLPT N3",
-  n2: "JLPT N2",
-  n1: "JLPT N1",
-  jlpt: "JLPT Tổng hợp",
-  grammar: "Ngữ pháp",
-  it: "IT Passport",
-  "it-strategy": "IT Strategy",
-  "it-management": "IT Management",
-  "it-technology": "IT Technology",
-};
 
 const DECK_COLORS = {
   eng: "#1CB0F6",
@@ -90,7 +79,7 @@ export const FlashcardPage = () => {
   // Lấy Metadata cho bài học từ DB
   useEffect(() => {
     if (isUUID) {
-      const q = `query GetDeckTitle($id: String!) {
+      const q = `query GetDeckTitle($id: uuid!) {
         decks_by_pk(id: $id) {
           title
         }
@@ -205,6 +194,7 @@ export const FlashcardPage = () => {
 
   const goNext = useCallback(() => {
     if (currentIdx >= words.length - 1) {
+      useUserStore.getState().updateStreak();
       setIsFinished(true);
       return;
     }
@@ -431,8 +421,14 @@ export const FlashcardPage = () => {
         </button>
         <div className="flex items-center gap-2 lg:gap-4">
           <div className="flex items-center gap-1 bg-orange-100 dark:bg-orange-500/10 px-2 lg:px-3 py-1 rounded-full">
-            <Zap size={14} className="lg:w-4 lg:h-4 text-orange-500 fill-orange-500" />
+            <Flame size={14} className="lg:w-4 lg:h-4 text-orange-500 fill-orange-500" />
             <span className="text-[10px] lg:text-sm font-black text-orange-600 dark:text-orange-400">
+              {calculateCurrentStreak(account?.streak)}
+            </span>
+          </div>
+          <div className="flex items-center gap-1 bg-blue-100 dark:bg-blue-500/10 px-2 lg:px-3 py-1 rounded-full">
+            <Zap size={14} className="lg:w-4 lg:h-4 text-blue-500 fill-blue-500" />
+            <span className="text-[10px] lg:text-sm font-black text-blue-600 dark:text-blue-400">
               {Math.floor(currentIdx / 5)}
             </span>
           </div>

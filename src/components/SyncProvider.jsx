@@ -129,6 +129,8 @@ export const SyncProvider = ({ children }) => {
       !prev ||
       JSON.stringify(prev.streak) !== JSON.stringify(account.streak) ||
       JSON.stringify(prev.srsData) !== JSON.stringify(account.srsData) ||
+      JSON.stringify(prev.arenaHistory) !== JSON.stringify(account.arenaHistory) ||
+      JSON.stringify(prev.arenaProgress) !== JSON.stringify(account.arenaProgress) ||
       prev.totalQuizzes !== account.totalQuizzes ||
       prev.pomodoro !== account.pomodoro;
 

@@ -44,7 +44,10 @@ export const useUserStore = create<UserState>()(
             activeDate = new Date().toLocaleDateString("en-CA");
           }
 
-          const newStreak = [...new Set([...(state.account.streak || []), activeDate])];
+          const existingStreak = state.account.streak || [];
+          if (existingStreak.includes(activeDate)) return state;
+
+          const newStreak = [...new Set([...existingStreak, activeDate])];
           return {
             account: {
               ...state.account,
@@ -74,6 +77,7 @@ export const useUserStore = create<UserState>()(
       addQuizResult: (result) =>
         set((state) => {
           if (!state.account) return state;
+          const today = new Date().toLocaleDateString("en-CA");
           const history = [
             ...(state.account.quizHistory || []),
             {
@@ -81,11 +85,19 @@ export const useUserStore = create<UserState>()(
               date: new Date().toISOString(),
             },
           ].slice(-50);
+
+          const existingStreak = state.account.streak || [];
+          const newStreak = existingStreak.includes(today)
+            ? existingStreak
+            : [...existingStreak, today];
+
           return {
             account: {
               ...state.account,
+              streak: newStreak,
               quizHistory: history,
               totalQuizzes: (state.account.totalQuizzes || 0) + 1,
+              lastStudyDate: new Date().toISOString(),
             },
           };
         }),
@@ -93,6 +105,7 @@ export const useUserStore = create<UserState>()(
       addArenaResult: (result) =>
         set((state) => {
           if (!state.account) return state;
+          const today = new Date().toLocaleDateString("en-CA");
           const history = [
             ...(state.account.arenaHistory || []),
             {
@@ -100,14 +113,22 @@ export const useUserStore = create<UserState>()(
               date: new Date().toISOString(),
             },
           ].slice(-100);
+
+          const existingStreak = state.account.streak || [];
+          const newStreak = existingStreak.includes(today)
+            ? existingStreak
+            : [...existingStreak, today];
+
           return {
             account: {
               ...state.account,
+              streak: newStreak,
               arenaHistory: history,
               arenaProgress: {
                 ...(state.account.arenaProgress || {}),
                 totalArenaRuns: (state.account.arenaProgress?.totalArenaRuns || 0) + 1,
               },
+              lastStudyDate: new Date().toISOString(),
             },
           };
         }),
@@ -131,7 +152,8 @@ export const useUserStore = create<UserState>()(
         set((state) => {
           if (!state.account) return state;
           const currentSrs = state.account.srsData || {};
-          
+          const today = new Date().toLocaleDateString("en-CA");
+
           const wordStr = wordData.word || wordData.english || "";
           const stableId = wordId || wordData.id || wordStr;
 
@@ -143,7 +165,9 @@ export const useUserStore = create<UserState>()(
           const nextState = calculateNextSrs(existing, rating);
 
           const isUUID = (val: string) =>
+            /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val) ||
             /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val);
+
           const providedName = meta?.deckName;
           const finalDeckName =
             providedName && !isUUID(providedName)
@@ -151,9 +175,16 @@ export const useUserStore = create<UserState>()(
               : existing?.deckName ||
                 (wordData.deckName && !isUUID(wordData.deckName) ? wordData.deckName : "");
 
+          const existingStreak = state.account.streak || [];
+          const newStreak = existingStreak.includes(today)
+            ? existingStreak
+            : [...existingStreak, today];
+
           return {
             account: {
               ...state.account,
+              streak: newStreak,
+              lastStudyDate: new Date().toISOString(),
               srsData: {
                 ...currentSrs,
                 [stableId]: {
@@ -281,6 +312,12 @@ export const useUserStore = create<UserState>()(
               id: state.account.id,
               username: state.account.username,
               name: state.account.name,
+              streak: state.account.streak || [],
+              srsData: state.account.srsData || {},
+              flashcardProgress: state.account.flashcardProgress || {},
+              totalQuizzes: state.account.totalQuizzes || 0,
+              arenaProgress: state.account.arenaProgress || {},
+              pomodoro: state.account.pomodoro || {},
             }
           : null,
       }),
