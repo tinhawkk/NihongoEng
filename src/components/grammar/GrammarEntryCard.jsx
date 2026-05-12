@@ -1,9 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { BookOpen, Pencil, Trash2, Star, Volume2 } from "lucide-react";
+import { BookOpen, Pencil, Trash2, Star, Volume2, Code2 } from "lucide-react";
 import { tts } from "../../utils/tts";
+import { renderFurigana, renderFuriganaAsHTML } from "../../utils/furigana";
 import { PedagogicalText } from "../ui/GrammarFormItem";
 import { SmartText } from "../../utils/grammarFormatter";
+import { marked } from "marked";
 
 const sectionColors = [
   {
@@ -43,6 +45,7 @@ export const GrammarEntryCard = ({
   idx,
   openCrud,
   entryFields,
+  entryJsonFields,
   structureOnlyFields,
   meaningOnlyFields,
   noteOnlyFields,
@@ -119,8 +122,21 @@ export const GrammarEntryCard = ({
               })
             }
             className="p-1.5 text-slate-300 hover:text-[#1CB0F6] transition-colors"
+            title="Sửa từng field"
           >
             <Pencil size={16} />
+          </button>
+          <button
+            onClick={() =>
+              openCrud("grammar_entries", "edit", entryJsonFields, "Edit by JSON", {
+                ...entry,
+                lesson_id: id,
+              })
+            }
+            className="p-1.5 text-slate-300 hover:text-emerald-500 transition-colors"
+            title="Edit by JSON"
+          >
+            <Code2 size={16} />
           </button>
           <button
             onClick={() =>
@@ -159,123 +175,136 @@ export const GrammarEntryCard = ({
           </button>
         </header>
 
-        {entry.structure && !isPlaceholderStructure && (
-          <div className="relative group/struct overflow-hidden">
-            <div className="absolute top-0 left-0 w-1 h-full bg-[#FF9600] rounded-full" />
-            <div className="pl-6 bg-slate-50/50 dark:bg-slate-900/40 p-6 rounded-3xl border border-slate-100 dark:border-slate-800">
-               <span className="text-[10px] font-black text-[#FF9600] uppercase tracking-[0.2em] mb-3 block">Cấu trúc</span>
-               <div 
-                className="text-xl md:text-2xl font-black text-slate-700 dark:text-slate-100 tracking-tight"
-                dangerouslySetInnerHTML={{ __html: entry.structure }}
-              />
-            </div>
+        {entry.full_html ? (
+          <div className="markdown-content-wrapper">
+            <div 
+              className="markdown-content"
+              dangerouslySetInnerHTML={{ 
+                __html: marked.parse(renderFuriganaAsHTML(entry.full_html)) 
+              }} 
+            />
           </div>
-        )}
-
-        {entry.conjugation && (
-          <div className="bg-blue-50/50 dark:bg-blue-500/5 p-6 rounded-[32px] border border-blue-100 dark:border-blue-500/20">
-            <h5 className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" /> Cách kết hợp
-            </h5>
-            <div className="text-slate-700 dark:text-slate-300 font-bold leading-relaxed">
-              {entry.conjugation.includes('<') && entry.conjugation.includes('>') ? (
-                <div 
-                  className="prose-html-formula"
-                  dangerouslySetInnerHTML={{ __html: entry.conjugation }} 
-                />
-              ) : (
-                <PedagogicalText text={entry.conjugation} mode="list" />
-              )}
-            </div>
-          </div>
-        )}
-
-        {entry.sections && entry.sections.length > 0 && (
-          <div className="space-y-8">
-            {entry.sections.map((section, si) => {
-              const colorTheme = isPhanBiet ? sectionColors[si % sectionColors.length] : null;
-              const hasHeader = section.header && section.header.trim().length > 0;
-              const displayHeader = hasHeader ? section.header : (isPhanBiet ? `Mục ${si + 1}` : null);
-
-              return (
-                <div key={si} className="space-y-4">
-                  {displayHeader && (
-                    <h5 className={`text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 ${
-                      isPhanBiet && colorTheme ? colorTheme.accent : "text-slate-400"
-                    }`}>
-                       {isPhanBiet && colorTheme && <div className={`w-2 h-2 rounded-full ${colorTheme.dot}`} />}
-                       {displayHeader}
-                    </h5>
-                  )}
-                  <div className={`rounded-3xl p-7 border transition-all ${
-                    isPhanBiet && colorTheme
-                      ? `${colorTheme.bg} ${colorTheme.border} shadow-sm`
-                      : "bg-white dark:bg-slate-900/20 border-slate-100 dark:border-slate-800"
-                  }`}>
-                    {section.content_html ? (
-                      <div 
-                        className="prose-html-section max-w-none text-slate-800 dark:text-slate-100 font-medium"
-                        dangerouslySetInnerHTML={{ __html: section.content_html }} 
-                      />
-                    ) : (
-                      <div className="text-slate-700 dark:text-slate-200 font-bold leading-relaxed">
-                        <PedagogicalText text={section.content_text || ""} mode="list" title={entry.title} />
-                      </div>
-                    )}
-                  </div>
+        ) : (
+          <>
+            {entry.structure && !isPlaceholderStructure && (
+              <div className="relative group/struct overflow-hidden">
+                <div className="absolute top-0 left-0 w-1 h-full bg-[#FF9600] rounded-full" />
+                <div className="pl-6 bg-slate-50/50 dark:bg-slate-900/40 p-6 rounded-3xl border border-slate-100 dark:border-slate-800">
+                  <span className="text-[10px] font-black text-[#FF9600] uppercase tracking-[0.2em] mb-3 block">Cấu trúc</span>
+                  <div 
+                    className="text-xl md:text-2xl font-black text-slate-700 dark:text-slate-100 tracking-tight"
+                    dangerouslySetInnerHTML={{ __html: entry.structure }}
+                  />
                 </div>
-              );
-            })}
-          </div>
-        )}
-
-        {(entry.examples || entry.caution || entry.note) && (
-          <div className="pt-4 border-t border-slate-50 dark:border-slate-800 space-y-8">
-            {entry.examples && entry.examples.length > 0 && (
-              <div className="space-y-4">
-                 <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                   Ví dụ tham khảo
-                 </h5>
-                 <div className="space-y-3">
-                   {entry.examples.map((ex, ei) => (
-                     <div key={ei} className="bg-slate-50/50 dark:bg-slate-900/40 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 group/ex relative">
-                        <div className="absolute top-1/2 -left-1 hidden group-hover:block w-2 h-2 bg-[#58CC02] rounded-full -translate-y-1/2" />
-                        <div className="flex flex-col gap-1">
-                          <SmartText text={ex.japanese} className="text-lg font-bold text-slate-700 dark:text-slate-200 leading-[1.8]" />
-                          {ex.vietnamese && <p className="text-sm font-bold text-slate-400">{ex.vietnamese}</p>}
-                        </div>
-                        <button 
-                          onClick={() => handleSpeak(ex.japanese)}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-xl hover:bg-[#58CC02]/10 text-slate-300 hover:text-[#58CC02] opacity-0 group-hover/ex:opacity-100 transition-all font-bold"
-                        >
-                          <Volume2 size={16} />
-                        </button>
-                     </div>
-                   ))}
-                 </div>
               </div>
             )}
 
-            {entry.caution && (
-              <div className="bg-amber-50/50 dark:bg-amber-500/5 p-6 rounded-3xl border-l-4 border-amber-400 border-y border-r border-amber-100 dark:border-amber-500/20">
-                <h5 className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-2 flex items-center gap-2 underline underline-offset-4 decoration-2 decoration-amber-200">
-                  ⚡ Chú ý Cẩn trọng
+            {entry.conjugation && (
+              <div className="bg-blue-50/50 dark:bg-blue-500/5 p-6 rounded-[32px] border border-blue-100 dark:border-blue-500/20">
+                <h5 className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" /> Cách kết hợp
                 </h5>
-                <div className="text-slate-700 dark:text-slate-200 font-bold">
-                  <PedagogicalText text={entry.caution} mode="list" />
+                <div className="text-slate-700 dark:text-slate-300 font-bold leading-relaxed">
+                  {entry.conjugation.includes('<') && entry.conjugation.includes('>') ? (
+                    <div 
+                      className="prose-html-formula"
+                      dangerouslySetInnerHTML={{ __html: entry.conjugation }} 
+                    />
+                  ) : (
+                    <PedagogicalText text={entry.conjugation} mode="list" />
+                  )}
                 </div>
               </div>
             )}
 
-             {entry.note && (
-              <div className="bg-slate-50/80 dark:bg-slate-900/80 p-6 rounded-3xl border border-slate-100 dark:border-slate-800">
-                <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">💡 Ghi chú thêm</h5>
-                <div className="text-slate-600 dark:text-slate-400 font-bold text-sm leading-relaxed">
-                  <PedagogicalText text={entry.note} mode="list" />
-                </div>
+            {entry.sections && entry.sections.length > 0 && (
+              <div className="space-y-8">
+                {entry.sections.map((section, si) => {
+                  const colorTheme = isPhanBiet ? sectionColors[si % sectionColors.length] : null;
+                  const hasHeader = section.header && section.header.trim().length > 0;
+                  const displayHeader = hasHeader ? section.header : (isPhanBiet ? `Mục ${si + 1}` : null);
+
+                  return (
+                    <div key={si} className="space-y-4">
+                      {displayHeader && (
+                        <h5 className={`text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 ${
+                          isPhanBiet && colorTheme ? colorTheme.accent : "text-slate-400"
+                        }`}>
+                          {isPhanBiet && colorTheme && <div className={`w-2 h-2 rounded-full ${colorTheme.dot}`} />}
+                          {displayHeader}
+                        </h5>
+                      )}
+                      <div className={`rounded-3xl p-7 border transition-all ${
+                        isPhanBiet && colorTheme
+                          ? `${colorTheme.bg} ${colorTheme.border} shadow-sm`
+                          : "bg-white dark:bg-slate-900/20 border-slate-100 dark:border-slate-800"
+                      }`}>
+                        {section.content_html ? (
+                          <div 
+                            className="prose-html-section max-w-none text-slate-800 dark:text-slate-100 font-medium"
+                            dangerouslySetInnerHTML={{ __html: section.content_html }} 
+                          />
+                        ) : (
+                          <div className="text-slate-700 dark:text-slate-200 font-bold leading-relaxed">
+                            <PedagogicalText text={section.content_text || ""} mode="list" title={entry.title} />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
-          </div>
+
+            {(entry.examples || entry.caution || entry.note) && (
+              <div className="pt-4 border-t border-slate-50 dark:border-slate-800 space-y-8">
+                {entry.examples && entry.examples.length > 0 && (
+                  <div className="space-y-4">
+                    <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                      Ví dụ tham khảo
+                    </h5>
+                    <div className="space-y-3">
+                      {entry.examples.map((ex, ei) => (
+                        <div key={ei} className="bg-slate-50/50 dark:bg-slate-900/40 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 group/ex relative">
+                          <div className="absolute top-1/2 -left-1 hidden group-hover:block w-2 h-2 bg-[#58CC02] rounded-full -translate-y-1/2" />
+                          <div className="flex flex-col gap-1">
+                            <SmartText text={ex.japanese} className="text-lg font-bold text-slate-700 dark:text-slate-200 leading-[1.8]" />
+                            {ex.vietnamese && <p className="text-sm font-bold text-slate-400">{ex.vietnamese}</p>}
+                          </div>
+                          <button 
+                            onClick={() => handleSpeak(ex.japanese)}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-xl hover:bg-[#58CC02]/10 text-slate-300 hover:text-[#58CC02] opacity-0 group-hover/ex:opacity-100 transition-all font-bold"
+                          >
+                            <Volume2 size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {entry.caution && (
+                  <div className="bg-amber-50/50 dark:bg-amber-500/5 p-6 rounded-3xl border-l-4 border-amber-400 border-y border-r border-amber-100 dark:border-amber-500/20">
+                    <h5 className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-2 flex items-center gap-2 underline underline-offset-4 decoration-2 decoration-amber-200">
+                      ⚡ Chú ý Cẩn trọng
+                    </h5>
+                    <div className="text-slate-700 dark:text-slate-200 font-bold">
+                      <PedagogicalText text={entry.caution} mode="list" />
+                    </div>
+                  </div>
+                )}
+
+                {entry.note && (
+                  <div className="bg-slate-50/80 dark:bg-slate-900/80 p-6 rounded-3xl border border-slate-100 dark:border-slate-800">
+                    <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">💡 Ghi chú thêm</h5>
+                    <div className="text-slate-600 dark:text-slate-400 font-bold text-sm leading-relaxed">
+                      <PedagogicalText text={entry.note} mode="list" />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </>
         )}
       </div>
     </motion.div>

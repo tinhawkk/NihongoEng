@@ -94,7 +94,17 @@ export const useTypingGame = (deckId: string | undefined) => {
           example: w.example || w.explanation || w.example_jp || "",
           example_meaning: [w.example_meaning, w.example_vn, w.example_vi, w.example_en, w.example_viet, w.example_english].filter(Boolean).join(" / "),
         }));
-        const withReading = normalized.filter(w => w.furigana?.trim());
+        const withReading = normalized.map(w => {
+          // Fix for data where 'reading' field contains the example sentence instead of the word reading
+          const isWordKana = /^[\u3040-\u30FF\s]+$/.test(w.word);
+          const furiganaContainsPunctuation = w.furigana.includes("。") || w.furigana.includes("、");
+          const furiganaIsTooLong = w.furigana.length > w.word.length * 3 && w.furigana.length > 10;
+          
+          if (isWordKana && (furiganaContainsPunctuation || furiganaIsTooLong)) {
+            return { ...w, furigana: w.word };
+          }
+          return w;
+        }).filter(w => w.furigana?.trim());
         const shuffled = shuffleArray(withReading);
         setAllWords(shuffled);
         setWords(shuffled);
@@ -116,9 +126,15 @@ export const useTypingGame = (deckId: string | undefined) => {
     
     const userInput = normalize(input);
     const correctFurigana = normalize(card.furigana);
+    const correctWord = normalize(card.word);
     const userAsHiragana = normalize(romajiToHiragana(input));
     
-    const isCorrect = userInput === correctFurigana || userAsHiragana === correctFurigana;
+    // Accept answer if it matches the reading OR the word itself (if word is kana)
+    const isCorrect = 
+      userInput === correctFurigana || 
+      userAsHiragana === correctFurigana ||
+      (userInput === correctWord && /^[\u3040-\u30FF]+$/.test(correctWord)) ||
+      (userAsHiragana === correctWord && /^[\u3040-\u30FF]+$/.test(correctWord));
     
     setResult(isCorrect ? "correct" : "wrong");
     setShowAnswer(true);

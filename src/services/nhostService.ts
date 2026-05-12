@@ -279,7 +279,7 @@ function sanitizeMyVoca(obj) {
 
 // ── CRUD Mutations ──────────────────────────────────────────────────
 
-const MUTATIONS = {
+export const MUTATIONS = {
   // ─ my_vocabulary ─
   INSERT_MY_VOCA: `mutation InsertMY_VOCA($obj: my_vocabulary_insert_input!) {
     insert_my_vocabulary_one(object: $obj) { id word }
@@ -350,6 +350,20 @@ const MUTATIONS = {
   }`,
   DELETE_GRAMMAR_POINT: `mutation DeleteGRAMMAR_ENTRY($id: uuid!) {
     delete_grammar_entries_by_pk(id: $id) { id }
+  }`,
+
+  // ─ grammar_extras ─
+  DELETE_SECTIONS_BY_ENTRY: `mutation DeleteSections($entryId: String!) {
+    delete_grammar_sections(where: {entry_id: {_eq: $entryId}}) { affected_rows }
+  }`,
+  INSERT_SECTIONS: `mutation InsertSections($objects: [grammar_sections_insert_input!]!) {
+    insert_grammar_sections(objects: $objects) { affected_rows }
+  }`,
+  DELETE_EXAMPLES_BY_ENTRY: `mutation DeleteExamples($entryId: String!) {
+    delete_grammar_examples(where: {entry_id: {_eq: $entryId}}) { affected_rows }
+  }`,
+  INSERT_EXAMPLES: `mutation InsertExamples($objects: [grammar_examples_insert_input!]!) {
+    insert_grammar_examples(objects: $objects) { affected_rows }
   }`,
 
   // ─ dictionary ─
@@ -981,4 +995,6 @@ export const nhostService = {
     const sanitized = objects.map(obj => sanitizeMyVoca(obj));
     return fetchGraphQL(MUTATIONS.BULK_INSERT_MY_VOCA, "BulkInsertMyVoca", { objects: sanitized });
   },
+
+  MUTATIONS, // Expose for custom queries like sections/examples
 };

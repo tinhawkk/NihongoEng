@@ -145,7 +145,9 @@ export const PomodoroPage = () => {
   // Restore values from global store (Sync behavior)
   const [mode, setMode] = useState(initialPomodoro.mode || "focus");
   const [isActive, setIsActive] = useState(initialPomodoro.isActive || false);
-  const [turnTimeLeft, setTurnTimeLeft] = useState(initialPomodoro.timeLeft || 25 * 60);
+  const [turnTimeLeft, setTurnTimeLeft] = useState(
+    initialPomodoro.timeLeft || MODES[initialPomodoro.mode || "focus"]?.time || 25 * 60
+  );
 
   // Sync with global store (PomodoroMini does the background work)
   useEffect(() => {
@@ -237,7 +239,7 @@ export const PomodoroPage = () => {
       // We don't auto-resume timer from Nhost to avoid jumpy behavior if synced from another tab
       // But we set proper initial time if it exists
       if (p.timeLeft !== undefined) setTurnTimeLeft(p.timeLeft);
-      else setTurnTimeLeft(p.targetGoal ? (p.targetGoal > 180 ? 50 * 60 : 25 * 60) : 25 * 60);
+      else setTurnTimeLeft(MODES[p.mode || "focus"]?.time || 25 * 60);
       
       hasInitedRef.current = true;
     }

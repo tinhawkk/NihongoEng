@@ -13,7 +13,7 @@ export const GrammarSidebar = ({
   // Lesson view: show entries in this lesson
   if (view === "lesson" && data?.entries) {
     return (
-      <aside className="w-72 sticky top-24 h-[calc(100vh-8rem)] hidden lg:block overflow-y-auto pr-4 custom-scrollbar">
+      <aside className="sticky top-24 h-[calc(100vh-8rem)] hidden lg:block overflow-y-auto pr-4 custom-scrollbar">
         <div className="bg-white dark:bg-slate-800/50 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-6 text-slate-800 dark:text-white">
             <List size={18} className="text-[#58CC02]" />

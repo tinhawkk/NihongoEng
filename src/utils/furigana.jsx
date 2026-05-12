@@ -180,3 +180,23 @@ export function renderMarkdownFurigana(text) {
   }
   return result;
 }
+/**
+ * Renders Japanese text with Furigana using <ruby> tags as a STRING.
+ * Useful for pre-processing text that will be passed to dangerousSetInnerHTML or a Markdown parser.
+ */
+export function renderFuriganaAsHTML(text) {
+  if (!text) return "";
+  
+  const regex = /([\u4E00-\u9FFF](?:[\u3040-\u30FF]*[\u4E00-\u9FFF])*)[（\(\[［【](.*?)[）\)\]］】]|([<＜][^>＞]+[>＞])/g;
+  
+  return text.replace(regex, (match, kanji, reading, suffix) => {
+    if (suffix) {
+      return `<span class="opacity-40 text-[0.7em] ml-0.5 font-medium">${suffix}</span>`;
+    }
+    
+    // Simple version of ruby split for HTML string
+    // We can't easily do the smart split here without complex logic, 
+    // so we just do a basic ruby wrap.
+    return `<ruby style="ruby-align: center;">${kanji}<rt class="text-[0.6em] font-bold opacity-90">${reading}</rt></ruby>`;
+  });
+}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { nhostService } from "../services/nhostService";
+import { nhostService, MUTATIONS } from "../services/nhostService";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft,
@@ -75,20 +75,120 @@ export const GrammarPage = () => {
     setCrudOpen(true);
   };
 
+  // Columns that actually exist in grammar_entries table (used to strip out sections/examples/sources from JSON editor)
+  const ENTRY_COLUMNS = ["title", "meaning", "structure", "caution", "conjugation", "note", "url", "position", "full_html", "lesson_id"];
+  // Keys that should never be sent to any table (nested data from JSON editor)
+  const STRIP_KEYS = ["sections", "examples", "sources", "_all", "__typename"];
+
+  const cleanFormData = (formData) => {
+    if (crudTable === "grammar_entries") {
+      // For grammar_entries: only pick known valid columns
+      const obj = {};
+      ENTRY_COLUMNS.forEach(col => {
+        if (formData[col] !== undefined) obj[col] = formData[col];
+      });
+      return obj;
+    }
+    // For other tables: pass everything except known bad keys
+    const obj = { ...formData };
+    STRIP_KEYS.forEach(k => delete obj[k]);
+    delete obj.id; // id is handled separately
+    return obj;
+  };
+
+  const genId = () => `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
   const handleCrudSave = async (formData) => {
     setCrudSaving(true);
     try {
+      // Separate nested arrays from entry-level columns
+      const sections = formData.sections;
+      const examples = formData.examples;
+
+      console.log("[GrammarSave] formData keys:", Object.keys(formData));
+      console.log("[GrammarSave] sections:", sections);
+      console.log("[GrammarSave] examples:", examples);
+
       if (crudMode === "create") {
-        const obj = { ...formData };
-        if (!obj.id)
-          obj.id = `${crudTable}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        const obj = cleanFormData(formData);
+        obj.id = formData.id || `${crudTable}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
         await nhostService.createRow(crudTable, obj);
       } else {
-        const { id: _, ...setFields } = formData;
+        const setFields = cleanFormData(formData);
+        console.log("[GrammarSave] updateRow setFields:", setFields);
         await nhostService.updateRow(crudTable, crudItem.id, setFields);
       }
+
+      // Sync sections/examples for grammar_entries (only when arrays are explicitly provided)
+      if (crudTable === "grammar_entries") {
+        const entryId = crudMode === "create" 
+          ? (formData.id || crudItem?.id) 
+          : crudItem.id;
+
+        if (Array.isArray(sections) && sections.length > 0) {
+          try {
+            // Clean section objects: only keep valid DB columns + generate id
+            const cleanSections = sections.map((s, i) => ({
+              id: s.id || genId(),
+              entry_id: entryId,
+              header: s.header || "",
+              content_text: s.content_text || "",
+              content_html: s.content_html || "",
+              position: s.position ?? i,
+            }));
+            console.log("[GrammarSave] Deleting old sections for:", entryId);
+            await nhostService.fetchGraphQL(
+              MUTATIONS.DELETE_SECTIONS_BY_ENTRY, "DeleteSections", { entryId }
+            );
+            console.log("[GrammarSave] Inserting", cleanSections.length, "sections");
+            const secRes = await nhostService.fetchGraphQL(
+              MUTATIONS.INSERT_SECTIONS, "InsertSections", { objects: cleanSections }
+            );
+            if (secRes.errors) {
+              console.error("[GrammarSave] Section insert errors:", secRes.errors);
+              alert("⚠️ Lỗi khi chèn Sections: " + secRes.errors[0]?.message);
+            } else {
+              console.log("[GrammarSave] Sections inserted OK:", secRes.data);
+            }
+          } catch (secErr) {
+            console.error("Sections sync error:", secErr);
+            alert("⚠️ Lỗi khi đồng bộ Sections: " + secErr.message);
+          }
+        } else {
+          console.log("[GrammarSave] No sections to sync (empty or not array)");
+        }
+
+        if (Array.isArray(examples) && examples.length > 0) {
+          try {
+            const cleanExamples = examples.map((ex, i) => ({
+              id: ex.id || genId(),
+              entry_id: entryId,
+              japanese: ex.japanese || "",
+              vietnamese: ex.vietnamese || "",
+              position: ex.position ?? i,
+            }));
+            await nhostService.fetchGraphQL(
+              MUTATIONS.DELETE_EXAMPLES_BY_ENTRY, "DeleteExamples", { entryId }
+            );
+            const exRes = await nhostService.fetchGraphQL(
+              MUTATIONS.INSERT_EXAMPLES, "InsertExamples", { objects: cleanExamples }
+            );
+            if (exRes.errors) {
+              console.error("[GrammarSave] Example insert errors:", exRes.errors);
+              alert("⚠️ Lỗi khi chèn Examples: " + exRes.errors[0]?.message);
+            }
+          } catch (exErr) {
+            console.error("Examples sync error:", exErr);
+            alert("⚠️ Lỗi khi đồng bộ Examples: " + exErr.message);
+          }
+        }
+      }
+
       setCrudOpen(false);
       fetchData();
+    } catch (err) {
+      console.error("CRUD Save error:", err);
+      alert("Lỗi khi lưu dữ liệu: " + err.message);
     } finally {
       setCrudSaving(false);
     }
@@ -128,12 +228,19 @@ export const GrammarPage = () => {
 
   const entryFields = [
     { key: "title", label: "Cấu trúc ngữ pháp", required: true },
-    { key: "meaning", label: "Ý nghĩa", required: true },
+    { key: "meaning", label: "Ý nghĩa", required: true, type: "textarea", rows: 4 },
     { key: "structure", label: "Cấu trúc", type: "textarea" },
-    { key: "conjugation", label: "Cách chia", type: "json-groups" },
+    { key: "conjugation", label: "Cách chia", type: "textarea", rows: 3 },
     { key: "caution", label: "Lưu ý", type: "textarea" },
     { key: "note", label: "Ghi chú thêm", type: "textarea" },
+    { key: "full_html", label: "Nội dung Markdown (Thay thế tự động)", type: "textarea", rows: 20 },
+    { key: "_all", label: "Dữ liệu JSON thô (Nâng cao)", type: "json", rows: 15 },
     { key: "lesson_id", label: "Bài học", required: true, type: "select", options: lessonOptions },
+  ];
+
+  // JSON-only edit: just the raw JSON editor, full height
+  const entryJsonFields = [
+    { key: "_all", label: "Chỉnh sửa toàn bộ dữ liệu bằng JSON", type: "json", rows: 35 },
   ];
 
   const fetchData = async () => {
@@ -187,7 +294,7 @@ export const GrammarPage = () => {
         const q = `query GetLessonData($lsnId: String!) {
           lesson: grammar_lessons(where: {id: {_eq: $lsnId}}, limit: 1) { id title level_id }
           entries: grammar_entries(where: {lesson_id: {_eq: $lsnId}}, order_by: {position: asc_nulls_last, created_at: asc}) {
-            id title meaning structure caution conjugation note url position
+            id title meaning structure caution conjugation note url position full_html
           }
         }`;
         const { data: res } = await nhostService.fetchGraphQL(q, "GetLessonData", { lsnId: id });
@@ -258,14 +365,14 @@ export const GrammarPage = () => {
   if (error) return <div className="p-20 text-center font-bold text-red-400">{error}</div>;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
+    <div className="max-w-none w-full px-4 lg:px-6 py-8">
       <GrammarBreadcrumbs 
         currentLevel={view === "level" ? data : (view === "lesson" ? data?.level : null)} 
         currentLesson={view === "lesson" ? data : null} 
       />
 
-      <div className="flex flex-col lg:flex-row gap-10">
-        <div className="flex-1 space-y-10 min-w-0">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div className="lg:col-span-8 space-y-10 min-w-0">
           {!view ? (
              // HOME VIEW
              <div className="space-y-10">
@@ -338,6 +445,7 @@ export const GrammarPage = () => {
                     idx={idx} 
                     openCrud={openCrud}
                     entryFields={entryFields}
+                    entryJsonFields={entryJsonFields}
                     structureOnlyFields={[]} // Optional refined fields
                     meaningOnlyFields={[]}
                     noteOnlyFields={[]}
@@ -353,13 +461,15 @@ export const GrammarPage = () => {
           )}
         </div>
 
-        <GrammarSidebar 
-          view={view} 
-          data={data} 
-          id={id} 
-          selectedEntryId={selectedEntryId} 
-          onEntryClick={scrollToEntry} 
-        />
+        <div className="lg:col-span-4">
+          <GrammarSidebar 
+            view={view} 
+            data={data} 
+            id={id} 
+            selectedEntryId={selectedEntryId} 
+            onEntryClick={scrollToEntry} 
+          />
+        </div>
       </div>
 
       <CrudModal

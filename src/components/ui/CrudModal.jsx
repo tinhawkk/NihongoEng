@@ -117,6 +117,10 @@ export const CrudModal = ({
           }
           init[f.key] =
             parsed.length > 0 ? parsed : [{ groupName: "", rules: [{ label: "", example: "" }] }];
+        } else if (f.type === "json") {
+          // If key is "_all", we provide the whole initialData as JSON
+          const targetData = f.key === "_all" ? initialData : initialData[f.key];
+          init[f.key] = targetData ? JSON.stringify(targetData, null, 2) : "";
         } else {
           init[f.key] = initialData[f.key] ?? "";
         }
@@ -262,6 +266,20 @@ export const CrudModal = ({
           }))
           .filter(g => g.groupName?.trim() || g.rules.length > 0);
         out[f.key] = JSON.stringify(cleaned);
+      } else if (f.type === "json") {
+        try {
+          const parsed = JSON.parse(out[f.key]);
+          if (f.key === "_all") {
+            // Merge the parsed JSON into the root output object
+            Object.assign(out, parsed);
+            delete out._all;
+          } else {
+            out[f.key] = parsed;
+          }
+        } catch (e) {
+          setError(`Lỗi định dạng JSON trong trường "${f.label}"`);
+          return;
+        }
       }
     });
     try {
@@ -298,7 +316,7 @@ export const CrudModal = ({
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
             transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
-            className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border-2 border-slate-100 dark:border-slate-700 w-full max-w-lg max-h-[85vh] flex flex-col overflow-hidden"
+            className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border-2 border-slate-100 dark:border-slate-700 w-full max-w-lg md:max-w-2xl lg:max-w-4xl max-h-[90vh] flex flex-col overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             {/* Header */}
@@ -494,6 +512,14 @@ export const CrudModal = ({
                       placeholder={field.placeholder || ""}
                       rows={field.rows || 3}
                       className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium outline-none focus:border-[#1CB0F6] transition-all resize-none dark:text-white dark:placeholder:text-slate-500"
+                    />
+                  ) : field.type === "json" ? (
+                    <textarea
+                      value={form[field.key] || ""}
+                      onChange={e => handleChange(field.key, e.target.value)}
+                      placeholder={field.placeholder || ""}
+                      rows={field.rows || 10}
+                      className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-200 dark:border-slate-700 rounded-xl text-xs font-mono outline-none focus:border-[#1CB0F6] transition-all resize-none dark:text-white dark:placeholder:text-slate-500"
                     />
                   ) : field.type === "tags" ? (
                     <div>

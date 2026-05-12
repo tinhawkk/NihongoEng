@@ -10,12 +10,12 @@ import {
   Lightbulb,
   Zap,
   Shuffle,
-  Home,
   Sparkles,
   Volume2,
   Star,
   Trophy,
   Flame,
+  Play,
 } from "lucide-react";
 import { calculateCurrentStreak } from "../utils/streakUtils";
 import { Button } from "../components/ui/Button";
@@ -66,6 +66,7 @@ export const FlashcardPage = () => {
   const updateSrsItem = useUserStore(s => s.updateSrsItem);
   const getNextInterval = useUserStore(s => s.getNextInterval);
   const savedProgress = useUserStore(s => s.account?.flashcardProgress?.[deckId]);
+  const account = useUserStore(s => s.account);
   const vocaSource = useUserStore(s => s.vocaSource);
 
   const { bookmarks, addBookmark, removeBookmark } = useBookmarkStore();
@@ -416,7 +417,7 @@ export const FlashcardPage = () => {
           <ArrowLeft size={20} className="lg:w-6 lg:h-6" strokeWidth={3} />{" "}
           <span className="text-xs lg:text-base truncate max-w-[120px] lg:max-w-none">
             {new URLSearchParams(window.location.search).get("filter") === "kanji" ? "Hán tự" : ""}{" "}
-            {DECK_LABELS[deckId] || deckId?.toUpperCase()}
+            {deckMetadata?.title || DECK_LABELS[deckId] || (isUUID ? "Bộ thẻ" : deckId?.toUpperCase())}
           </span>
         </button>
         <div className="flex items-center gap-2 lg:gap-4">

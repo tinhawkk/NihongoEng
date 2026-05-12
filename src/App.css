@@ -97,6 +97,105 @@ button {
   background: #E2E8F0;
 }
 
+/* Premium Markdown Content Styling */
+.markdown-content {
+  color: var(--text);
+  font-size: 1.1rem;
+  line-height: 1.8;
+  font-family: 'Noto Sans JP', 'Nunito', sans-serif;
+}
+
+.markdown-content h1, 
+.markdown-content h2, 
+.markdown-content h3 {
+  font-weight: 900;
+  color: #1e293b;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.dark .markdown-content h1, 
+.dark .markdown-content h2, 
+.dark .markdown-content h3 {
+  color: #f8fafc;
+}
+
+.markdown-content h2 { font-size: 1.5rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 0.5rem; }
+.dark .markdown-content h2 { border-color: #334155; }
+
+.markdown-content p {
+  margin-bottom: 1.25rem;
+}
+
+.markdown-content ul, 
+.markdown-content ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1.5rem;
+  list-style-type: none;
+}
+
+.markdown-content li {
+  position: relative;
+  margin-bottom: 0.75rem;
+  padding-left: 0.5rem;
+}
+
+.markdown-content ul li::before {
+  content: "•";
+  color: #1CB0F6;
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
+.markdown-content blockquote {
+  border-left: 4px solid #FFC800;
+  background-color: #fffbeb;
+  padding: 1rem 1.5rem;
+  border-radius: 0 1rem 1rem 0;
+  margin: 1.5rem 0;
+  font-weight: 500;
+  color: #92400e;
+}
+
+.dark .markdown-content blockquote {
+  background-color: rgba(251, 191, 36, 0.05);
+  color: #fbbf24;
+}
+
+.markdown-content code {
+  background-color: #f1f5f9;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.4rem;
+  font-size: 0.9em;
+  color: #ef4444;
+  font-family: monospace;
+}
+
+.dark .markdown-content code {
+  background-color: #1e293b;
+  color: #f87171;
+}
+
+.markdown-content strong {
+  color: #1CB0F6;
+  font-weight: 800;
+}
+
+/* Handle Furigana in Markdown */
+.markdown-content rt {
+  color: #94a3b8;
+  font-size: 0.6em;
+  font-weight: 600;
+  user-select: none;
+}
+
+.markdown-content ruby {
+  ruby-align: center;
+}
+
 /* Basic prose-like typography for crawled HTML */
 .prose {
   color: #475569;
@@ -132,3 +231,4 @@ button {
 .dark .prose rt {
   color: #94a3b8;
 }
+
