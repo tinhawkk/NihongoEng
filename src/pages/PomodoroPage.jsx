@@ -25,6 +25,8 @@ import { useUserStore } from "../store/useUserStore";
 import { useBookmarkStore } from "../store/useBookmarkStore";
 import { debouncedSync, collectSyncData } from "../services/syncService";
 import { StudyBuddy, PixelOffice, FloatingBooks } from "../components/pomodoro/PomodoroCat";
+import { ConfettiBurst } from "../components/ui/ConfettiBurst";
+import { WaterReminderToast } from "../components/WaterReminderProvider";
 
 import { sounds } from "../utils/sounds";
 

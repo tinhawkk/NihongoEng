@@ -392,10 +392,10 @@ export const MUTATIONS = {
   INSERT_DECK: `mutation InsertDeck($obj: decks_insert_input!) {
     insert_decks_one(object: $obj) { id title description community_folder_id custom_columns }
   }`,
-  UPDATE_DECK: `mutation UpdateDeck($id: uuid!, $title: String!) {
+  UPDATE_DECK: `mutation UpdateDeck($id: String!, $title: String!) {
     update_decks_by_pk(pk_columns: {id: $id}, _set: {title: $title}) { id title }
   }`,
-  DELETE_DECK: `mutation DeleteDeck($id: uuid!) {
+  DELETE_DECK: `mutation DeleteDeck($id: String!) {
     delete_decks_by_pk(id: $id) { id }
   }`,
 
@@ -403,10 +403,10 @@ export const MUTATIONS = {
   INSERT_FOLDER: `mutation InsertFolder($obj: folders_insert_input!) {
     insert_folders_one(object: $obj) { id title parent_id }
   }`,
-  UPDATE_FOLDER: `mutation UpdateFolder($id: uuid!, $title: String!) {
+  UPDATE_FOLDER: `mutation UpdateFolder($id: String!, $title: String!) {
     update_folders_by_pk(pk_columns: {id: $id}, _set: {title: $title}) { id title }
   }`,
-  DELETE_FOLDER: `mutation DeleteFolder($id: uuid!) {
+  DELETE_FOLDER: `mutation DeleteFolder($id: String!) {
     delete_folders_by_pk(id: $id) { id }
   }`,
 
@@ -419,7 +419,7 @@ export const MUTATIONS = {
 };
 
 MUTATIONS.CREATE_COMMUNITY_ROOT = `
-  mutation CreateCommunityRoot($id: uuid!, $title: String!, $description: String) {
+  mutation CreateCommunityRoot($id: String!, $title: String!, $description: String) {
     insert_folders_one(object: { id: $id, title: $title, description: $description }) {
       id
       title
@@ -904,6 +904,8 @@ export const nhostService = {
       grammar_entries: { key: "UPDATE_GRAMMAR_POINT", pkName: "id" },
       dictionary: { key: "UPDATE_DICTIONARY", pkName: "word" },
       general_kanji: { key: "UPDATE_GENERAL_KANJI", pkName: "kanji" },
+      decks: { key: "UPDATE_DECK", pkName: "id" },
+      folders: { key: "UPDATE_FOLDER", pkName: "id" },
     };
     const cfg = mutMap[table];
     
@@ -940,6 +942,8 @@ export const nhostService = {
       grammar_entries: { key: "DELETE_GRAMMAR_POINT", pkName: "id" },
       dictionary: { key: "DELETE_DICTIONARY", pkName: "word" },
       general_kanji: { key: "DELETE_GENERAL_KANJI", pkName: "kanji" },
+      decks: { key: "DELETE_DECK", pkName: "id" },
+      folders: { key: "DELETE_FOLDER", pkName: "id" },
     };
     const cfg = mutMap[table];
     if (cfg)

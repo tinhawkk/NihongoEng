@@ -507,19 +507,27 @@ export const PixelOfficeCanvas = ({ mode, isActive }) => {
   }, [render]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      width={CW}
-      height={CH}
+    <div
       style={{
-        width: CW + "px",
-        height: CH + "px",
-        imageRendering: "pixelated",
-        borderRadius: "16px",
-        boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
-        border: "4px solid #1A2222",
-        background: "#1A2222",
+        width: "100%",
+        maxWidth: CW + "px",
+        aspectRatio: `${CW} / ${CH}`,
       }}
-    />
+    >
+      <canvas
+        ref={canvasRef}
+        width={CW}
+        height={CH}
+        style={{
+          width: "100%",
+          height: "100%",
+          imageRendering: "pixelated",
+          borderRadius: "16px",
+          boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+          border: "4px solid #1A2222",
+          background: "#1A2222",
+        }}
+      />
+    </div>
   );
 };

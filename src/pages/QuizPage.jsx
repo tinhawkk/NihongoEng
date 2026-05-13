@@ -200,27 +200,29 @@ const QuestionScreen = ({
 
         <AnimatePresence>
           {showHint && (
-            <motion.div 
+            <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="space-y-3 overflow-hidden"
+              className="relative left-1/2 right-1/2 w-screen -ml-[50vw] -mr-[50vw] overflow-hidden"
             >
-              {(question.reading || question.hanViet) && (
-                <div className="flex flex-wrap justify-center gap-2">
-                  {question.reading && (
-                    <p className="text-xl text-slate-400 dark:text-slate-300 font-black uppercase tracking-widest">{question.reading}</p>
-                  )}
-                  {question.hanViet && (
-                    <p className="text-xl text-amber-500 font-black uppercase tracking-widest">({question.hanViet})</p>
-                  )}
-                </div>
-              )}
-              {question.mnemonic && (
-                <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-2xl border-2 border-amber-100 dark:border-amber-900/30">
-                  <p className="text-amber-800 dark:text-amber-200 italic font-medium">💡 {question.mnemonic}</p>
-                </div>
-              )}
+              <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-2 space-y-3">
+                {(question.reading || question.hanViet) && (
+                  <div className="flex flex-wrap justify-center gap-2">
+                    {question.reading && (
+                      <p className="text-xl text-slate-400 dark:text-slate-300 font-black uppercase tracking-widest">{question.reading}</p>
+                    )}
+                    {question.hanViet && (
+                      <p className="text-xl text-amber-500 font-black uppercase tracking-widest">({question.hanViet})</p>
+                    )}
+                  </div>
+                )}
+                {question.mnemonic && (
+                  <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-2xl border-2 border-amber-100 dark:border-amber-900/30">
+                    <p className="text-amber-800 dark:text-amber-200 italic font-medium">💡 {question.mnemonic}</p>
+                  </div>
+                )}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -265,7 +267,7 @@ const QuestionScreen = ({
                   String.fromCharCode(65 + i)
                 )}
               </span>
-              <div className="truncate whitespace-nowrap flex-1">
+              <div className="flex-1 whitespace-normal break-words">
                 {renderRichText(opt)}
               </div>
             </motion.button>

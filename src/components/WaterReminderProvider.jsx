@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-const WaterReminderToast = ({ onDismiss }) => (
+export const WaterReminderToast = ({ onDismiss }) => (
   <motion.div
     className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-4 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-2 border-blue-200 dark:border-blue-500/40 shadow-2xl rounded-3xl px-6 py-4"
     initial={{ y: 100, opacity: 0, scale: 0.85 }}

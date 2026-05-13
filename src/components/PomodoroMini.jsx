@@ -5,6 +5,26 @@ import { Play, Pause, Coffee, ArrowRight, Focus, Sparkles, GripVertical } from "
 import { useNavigate, useLocation } from "react-router-dom";
 import { sounds } from "../utils/sounds";
 
+const getDefaultTurnDuration = goalMinutes => (goalMinutes > 180 ? 50 * 60 : 25 * 60);
+
+const buildTurns = (goalMinutes, focusDuration) => {
+    const totalSeconds = Math.max(0, Number(goalMinutes) || 0) * 60;
+    const duration = Math.max(1, Number(focusDuration) || 25 * 60);
+    const numTurns = Math.max(1, Math.ceil(totalSeconds / duration));
+    return Array.from({ length: numTurns }, (_, i) => {
+        const remain = totalSeconds - i * duration;
+        return remain >= duration ? duration : Math.max(1, remain);
+    });
+};
+
+const getSmartDuration = (m, goalMinutes, focusDuration) => {
+    const isLongGoal = Number(goalMinutes) >= 180;
+    if (m === "focus") return focusDuration;
+    if (m === "shortBreak") return (isLongGoal ? 10 : 5) * 60;
+    if (m === "longBreak") return (isLongGoal ? 30 : 15) * 60;
+    return focusDuration;
+};
+
 export const PomodoroMini = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -16,6 +36,7 @@ export const PomodoroMini = () => {
     const [isHovered, setIsHovered] = useState(false);
     const dragControls = useDragControls();
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+    const completionGuardRef = useRef(false);
     
     // Initial load from store for dragOffset if it existed
     useEffect(() => {
@@ -65,18 +86,92 @@ export const PomodoroMini = () => {
                 if (elapsedSeconds >= 1) {
                     lastMiniTickRef.current = now;
                     setTimeLeft(prev => {
-                        const next = Math.max(0, prev - elapsedSeconds);
-                        if (next === 0 && prev > 0) {
-                            setIsActive(false);
-                            sounds.playNotification();
-                        }
-                        return next;
+                        return Math.max(0, prev - elapsedSeconds);
                     });
                 }
             }, 1000);
         }
         return () => clearInterval(interval);
     }, [isActive, timeLeft]);
+
+    useEffect(() => {
+        if (!isActive || timeLeft !== 0 || completionGuardRef.current) return;
+        completionGuardRef.current = true;
+
+        sounds.playNotification();
+
+        const state = useUserStore.getState();
+        const p = state.account?.pomodoro || {};
+        const currentMode = p.mode || mode;
+        const autoCycle = p.autoCycle ?? true;
+        const goalMinutes = Number(p.targetGoal ?? 120);
+        const focusDuration = Number(p.turnDuration ?? getDefaultTurnDuration(goalMinutes));
+        const turns = buildTurns(goalMinutes, focusDuration);
+        const currentTurnIdx = Number.isFinite(p.currentTurnIdx) ? p.currentTurnIdx : 0;
+        const safeTurnIdx = Math.max(0, Math.min(currentTurnIdx, turns.length - 1));
+        const finishedDuration = turns[safeTurnIdx] || focusDuration;
+        const finishedMinutes = Math.round(finishedDuration / 60);
+
+        if (currentMode === "focus") {
+            const currentSessions = Number(p.totalSessions ?? 0) || 0;
+            const currentTotal = Number(p.totalFocusMinutes ?? 0) || 0;
+            const currentFood = Number(p.foodStock ?? 0) || 0;
+            const baseHappiness = typeof p.happiness === "number" ? p.happiness : 80;
+            const nextHappiness = Math.min(100, baseHappiness + 10);
+
+            const commonUpdate = {
+                totalSessions: currentSessions + 1,
+                totalFocusMinutes: currentTotal + finishedMinutes,
+                foodStock: currentFood + 1,
+                happiness: nextHappiness,
+                lastSessionDate: new Date().toISOString(),
+            };
+
+            if (autoCycle) {
+                const isLongBreak = (currentSessions + 1) % 4 === 0;
+                const nextMode = isLongBreak ? "longBreak" : "shortBreak";
+                const nextDuration = getSmartDuration(nextMode, goalMinutes, focusDuration);
+                setMode(nextMode);
+                setTimeLeft(nextDuration);
+                setIsActive(true);
+                updatePomodoroData({
+                    ...commonUpdate,
+                    mode: nextMode,
+                    timeLeft: nextDuration,
+                    isActive: true,
+                    currentTurnIdx: safeTurnIdx,
+                });
+            } else {
+                setIsActive(false);
+                updatePomodoroData({
+                    ...commonUpdate,
+                    isActive: false,
+                    timeLeft: 0,
+                });
+            }
+        } else {
+            if (autoCycle && safeTurnIdx + 1 < turns.length) {
+                const nextIdx = safeTurnIdx + 1;
+                const nextDuration = turns[nextIdx] || focusDuration;
+                setMode("focus");
+                setTimeLeft(nextDuration);
+                setIsActive(true);
+                updatePomodoroData({
+                    mode: "focus",
+                    timeLeft: nextDuration,
+                    isActive: true,
+                    currentTurnIdx: nextIdx,
+                });
+            } else {
+                setIsActive(false);
+                updatePomodoroData({ isActive: false, timeLeft: 0 });
+            }
+        }
+
+        setTimeout(() => {
+            completionGuardRef.current = false;
+        }, 0);
+    }, [isActive, timeLeft, mode, updatePomodoroData]);
 
     // 3. ĐỒNG BỘ NHANH (LocalStorage & Store): Dùng để khôi phục khi F5/Crash
     useEffect(() => {
