@@ -20,7 +20,7 @@ export const useExamList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [uploading, setUploading] = useState(false);
-  const quizHistory = useUserStore(s => s.account?.quizHistory || []);
+  const quizHistory = useUserStore(s => s.account?.quizHistory) || [];
 
   const fetchExams = async () => {
     try {
@@ -52,7 +52,20 @@ export const useExamList = () => {
     setUploading(true);
     try {
       const text = await file.text();
-      const examData = JSON.parse(text);
+      await handleJsonImport(text);
+      event.target.value = null;
+    } catch (err: any) {
+      console.error("Upload failed", err);
+      alert("Lỗi khi thêm đề: " + err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleJsonImport = async (jsonString: string) => {
+    setUploading(true);
+    try {
+      const examData = JSON.parse(jsonString);
       
       if (!examData.level) examData.level = activeTab;
       
@@ -60,10 +73,10 @@ export const useExamList = () => {
       
       alert(`Đã thêm thành công đề thi ${examData.title}!`);
       await fetchExams();
-      event.target.value = null;
     } catch (err: any) {
-      console.error("Upload failed", err);
+      console.error("Import failed", err);
       alert("Lỗi khi thêm đề: " + err.message);
+      throw err;
     } finally {
       setUploading(false);
     }
@@ -115,6 +128,7 @@ export const useExamList = () => {
     loading,
     uploading,
     handleFileUpload,
+    handleJsonImport,
     getExamResult,
   };
 };

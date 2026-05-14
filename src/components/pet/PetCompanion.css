@@ -214,6 +214,10 @@
   background: linear-gradient(90deg, #38bdf8, #1cb0f6);
 }
 
+.pet-bar-fill.energy {
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+}
+
 /* ===== Action buttons ===== */
 .pet-actions {
   display: flex;

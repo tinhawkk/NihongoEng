@@ -42,10 +42,17 @@ const getMood = (hunger) => {
   return "happy";
 };
 
+const isNightTime = () => {
+  const h = new Date().getHours();
+  return h >= 22 || h < 6;
+};
+
 const loadState = () => {
   const now = Date.now();
   const fallback = {
     hunger: 80,
+    energy: 100,
+    isResting: false,
     xp: 0,
     level: 1,
     bornAt: now,
@@ -66,10 +73,27 @@ const loadState = () => {
       0,
       100
     );
+
+    let energy = typeof saved.energy === "number" ? saved.energy : fallback.energy;
+    let isResting = typeof saved.isResting === "boolean" ? saved.isResting : fallback.isResting;
+    
+    if (isNightTime()) {
+       energy = clamp(energy + elapsed * 2, 0, 100);
+       isResting = false;
+    } else if (isResting) {
+       energy = clamp(energy + elapsed * 2, 0, 100);
+       if (energy >= 100) isResting = false;
+    } else {
+       energy = clamp(energy - elapsed * 0.5, 0, 100);
+       if (energy <= 0) isResting = true;
+    }
+
     const stats = {
       ...fallback,
       ...saved,
       hunger,
+      energy,
+      isResting,
       lastTick: now,
       bornAt: typeof saved.bornAt === "number" ? saved.bornAt : fallback.bornAt,
     };
@@ -115,6 +139,8 @@ export const PetCompanion = () => {
           while (xp >= XP_PER_LEVEL) { xp -= XP_PER_LEVEL; level++; }
           return { ...s, hunger: clamp(s.hunger + 40, 0, 100), xp, level, lastTick: Date.now() };
         });
+        spriteRef.current = "run";
+        lastSpriteSwitch.current = performance.now();
         setSpriteState("run");
         setStatus("Yeah! No bụng rồi!");
         sounds?.playCorrect?.();
@@ -145,17 +171,25 @@ export const PetCompanion = () => {
   useEffect(() => { statsRef.current = stats; }, [stats]);
 
   const mood = getMood(stats.hunger);
+  const isSleeping = isNightTime() || stats.isResting;
   const hungerPct = clamp(Math.round(stats.hunger), 0, 100);
   const xpPct = clamp(Math.round((stats.xp / XP_PER_LEVEL) * 100), 0, 100);
+  const energyPct = clamp(Math.round(stats.energy ?? 100), 0, 100);
   
-  const streakArr = userStore.account?.streak || [];
-  const totalStudyDays = streakArr.length;
-  const currentStreak = calculateCurrentStreak(streakArr);
-  const ageDisplay = `${totalStudyDays}d (🔥${currentStreak})`;
+  const ageMs = Date.now() - stats.bornAt;
+  const ageInDays = Math.floor(ageMs / (1000 * 60 * 60 * 24));
+  const ageInHours = Math.floor(ageMs / (1000 * 60 * 60));
+  const ageInMins = Math.floor(ageMs / (1000 * 60));
+  const ageDisplay = ageInDays > 0 ? `${ageInDays}d` : ageInHours > 0 ? `${ageInHours}h` : `${ageInMins}m`;
 
-  const bubble =
-    status ||
-    (mood === "starving" ? "😿 Feed me!" : mood === "hungry" ? "🍖 Hungry!" : "");
+  let bubble = status;
+  if (!bubble) {
+    if (isSleeping) {
+      if (Math.random() < 0.05) bubble = "Khò khò... zZz";
+    } else {
+      bubble = mood === "starving" ? "😿 Feed me!" : mood === "hungry" ? "🍖 Hungry!" : "";
+    }
+  }
 
   const persist = (s, pos) => {
     if (typeof window === "undefined") return;
@@ -224,19 +258,42 @@ export const PetCompanion = () => {
 
   const toggleWander = () => {
     const next = !statsRef.current.isWandering;
+    statsRef.current = { ...statsRef.current, isWandering: next };
     setStats((prev) => ({ ...prev, isWandering: next }));
     if (!next) {
-      const s = Math.random() < 0.5 ? "lie" : "idle";
-      spriteRef.current = s; setSpriteState(s);
+      const s = "lie";
+      spriteRef.current = s; 
+      lastSpriteSwitch.current = lastT.current || performance.now();
+      setSpriteState(s);
       showStatus("😴 Staying...");
     } else {
       showStatus("🐾 Wandering!");
+      walkState.current = { mode: "idle", waitTill: 0, target: null, idleSprite: "idle" };
     }
   };
 
   const handlePetClick = () => {
     if (!showHud) setShowHud(true);
+    
+    const isSleepingNow = isNightTime() || statsRef.current.isResting;
+    if (isSleepingNow) {
+      showStatus("Khò khò... zZz...");
+      return;
+    }
+
     showStatus("❤️ Yêu bạn!");
+    
+    if (statsRef.current.isWandering) {
+      walkState.current = { 
+        mode: "idle", 
+        waitTill: (lastT.current || performance.now()) + 2000, 
+        target: null, 
+        idleSprite: "with_ball" 
+      };
+    }
+    
+    spriteRef.current = "with_ball";
+    lastSpriteSwitch.current = performance.now();
     setSpriteState("with_ball");
     playMeow();
   };
@@ -244,7 +301,7 @@ export const PetCompanion = () => {
   // ── Drag ─────────────────────────────────────────────────
   const onPointerMove = (e) => {
     if (!dragRef.current.active) return;
-    if (Math.hypot(e.clientX - dragRef.current.startX, e.clientY - dragRef.current.startY) > 3)
+    if (Math.hypot(e.clientX - dragRef.current.startX, e.clientY - dragRef.current.startY) > 5)
       dragRef.current.moved = true;
     const b = getBounds();
     posRef.current = {
@@ -262,7 +319,13 @@ export const PetCompanion = () => {
     document.body.classList.remove("pet-dragging");
     laneYRef.current = posRef.current.y;
     window.removeEventListener("pointermove", onPointerMove);
-    if (!dragRef.current.moved) handlePetClick();
+    if (!dragRef.current.moved) {
+      handlePetClick();
+    } else {
+      if (statsRef.current.isWandering) {
+        walkState.current = { mode: "idle", waitTill: (lastT.current || performance.now()) + 2000, target: null, idleSprite: "idle" };
+      }
+    }
     persist(statsRef.current, posRef.current);
   };
 
@@ -305,7 +368,27 @@ export const PetCompanion = () => {
         const now = Date.now();
         const elapsed = Math.max(0, (now - (prev.lastTick || now)) / 60000);
         if (elapsed <= 0) return prev;
-        return { ...prev, hunger: clamp(prev.hunger - elapsed * HUNGER_DECAY_PER_MIN, 0, 100), lastTick: now };
+        
+        let newEnergy = prev.energy ?? 100;
+        let resting = prev.isResting ?? false;
+
+        if (isNightTime()) {
+           newEnergy = clamp(newEnergy + elapsed * 2, 0, 100);
+        } else if (resting) {
+           newEnergy = clamp(newEnergy + elapsed * 2, 0, 100);
+           if (newEnergy >= 100) resting = false;
+        } else {
+           newEnergy = clamp(newEnergy - elapsed * 0.5, 0, 100);
+           if (newEnergy <= 0) resting = true;
+        }
+        
+        return { 
+          ...prev, 
+          hunger: clamp(prev.hunger - elapsed * HUNGER_DECAY_PER_MIN, 0, 100), 
+          energy: newEnergy, 
+          isResting: resting, 
+          lastTick: now 
+        };
       });
     }, TICK_INTERVAL_MS);
     return () => clearInterval(id);
@@ -320,16 +403,32 @@ export const PetCompanion = () => {
       const dt = Math.min(32, now - lastT.current);
       lastT.current = now;
 
+      const isNightTimeLoop = new Date().getHours() >= 22 || new Date().getHours() < 6;
+      const isSleepingLoop = isNightTimeLoop || statsRef.current.isResting;
+
+      if (!dragRef.current.active && isSleepingLoop) {
+        bobRef.current = 0;
+        if (spriteRef.current !== "lie") {
+          spriteRef.current = "lie"; 
+          lastSpriteSwitch.current = now; 
+          setSpriteState("lie");
+        }
+        applyTransform();
+        raf = requestAnimationFrame(step);
+        return;
+      }
+
       if (!dragRef.current.active && statsRef.current.isWandering) {
         const hunger = statsRef.current.hunger ?? 0;
         
         if (hunger <= 0) {
           bobRef.current = 0;
-          if (now - lastSpriteSwitch.current > 7000) {
+          if (now - lastSpriteSwitch.current > 5000) {
             const rand = Math.random();
             let s = "idle";
-            if (rand < 0.3) s = "lie";
-            else if (rand < 0.6) s = "swipe";
+            if (rand < 0.25) s = "lie";
+            else if (rand < 0.5) s = "swipe";
+            else if (rand < 0.6) s = "with_ball";
             if (s !== spriteRef.current) {
               spriteRef.current = s; lastSpriteSwitch.current = now; setSpriteState(s);
             }
@@ -346,10 +445,27 @@ export const PetCompanion = () => {
         if (walkState.current.mode === "idle") {
           if (now > walkState.current.waitTill) {
             walkState.current.mode = "moving";
-            walkState.current.target = {
-              x: b.minX + Math.random() * (b.maxX - b.minX),
-              y: b.minY + Math.random() * (b.maxY - b.minY),
-            };
+            const b = getBounds();
+            const randMode = Math.random();
+            
+            let nextX = posRef.current.x;
+            let nextY = posRef.current.y;
+
+            if (randMode < 0.6) {
+              // Mostly horizontal move
+              nextX = b.minX + Math.random() * (b.maxX - b.minX);
+              nextY = clamp(posRef.current.y + (Math.random() - 0.5) * 100, b.minY, b.maxY);
+            } else if (randMode < 0.8) {
+              // Small lane shift (mostly vertical)
+              nextX = clamp(posRef.current.x + (Math.random() - 0.5) * 150, b.minX, b.maxX);
+              nextY = b.minY + Math.random() * (b.maxY - b.minY);
+            } else {
+              // Full random
+              nextX = b.minX + Math.random() * (b.maxX - b.minX);
+              nextY = b.minY + Math.random() * (b.maxY - b.minY);
+            }
+
+            walkState.current.target = { x: nextX, y: nextY };
           } else {
             bobRef.current = 0;
             if (spriteRef.current !== walkState.current.idleSprite) {
@@ -368,7 +484,10 @@ export const PetCompanion = () => {
             walkState.current.waitTill = now + 1500 + Math.random() * 4000;
             // pick a random idle behavior
             const rand = Math.random();
-            walkState.current.idleSprite = rand < 0.2 ? "lie" : rand < 0.3 ? "swipe" : "idle";
+            if (rand < 0.15) walkState.current.idleSprite = "lie";
+            else if (rand < 0.3) walkState.current.idleSprite = "swipe";
+            else if (rand < 0.4) walkState.current.idleSprite = "with_ball";
+            else walkState.current.idleSprite = "idle";
             
             // Randomly say SRS reminder
             if (srsCountRef.current > 0 && Math.random() > 0.5) {
@@ -491,15 +610,23 @@ export const PetCompanion = () => {
               <div className="pet-bar-fill xp" style={{ width: `${xpPct}%` }} />
             </div>
           </div>
+          <div className="pet-bar-row">
+            <div className="pet-bar-label">Energy</div>
+            <div className="pet-bar-track">
+              <div className="pet-bar-fill energy" style={{ width: `${energyPct}%` }} />
+            </div>
+          </div>
         </div>
 
         <div className="pet-actions">
           <button className="pet-btn" onClick={handleFeed} type="button">
             📚 Đi Học Kiếm Ăn
           </button>
-          <button className="pet-btn ghost" onClick={toggleWander} type="button">
-            {stats.isWandering ? "🛑 Sit" : "🐾 Walk"}
-          </button>
+          {!isSleeping && (
+            <button className="pet-btn ghost" onClick={toggleWander} type="button">
+              {stats.isWandering ? "🛑 Sit" : "🐾 Walk"}
+            </button>
+          )}
         </div>
       </div>
     </>

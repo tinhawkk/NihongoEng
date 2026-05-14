@@ -13,7 +13,32 @@ import {
   ChevronLeft,
   Headphones,
   UploadCloud,
+  FileJson,
+  X,
+  Copy,
 } from "lucide-react";
+
+const JSON_TEMPLATE = {
+  title: "Đề thi mẫu N5",
+  level: "n5",
+  Type: "REAL_EXAM",
+  is_listening: false,
+  mondais: [
+    {
+      mondai_number: 1,
+      title: "Từ vựng (Vocabulary)",
+      instruction_text: "Chọn cách đọc đúng cho từ gạch chân.",
+      questions: [
+        {
+          question_text: "昨日、**学校**へ行きました。",
+          options: ["がっこう", "かくご", "がくご", "かっこう"],
+          correct_index: 0,
+          explanation: "学校 (Gakkou) means School."
+        }
+      ]
+    }
+  ]
+};
 
 const EXAMS_PER_PAGE = 12;
 
@@ -51,8 +76,28 @@ export const JLPTExamsListPage = () => {
     loading,
     uploading,
     handleFileUpload,
+    handleJsonImport,
     getExamResult,
   } = useExamList();
+
+  const [isPasteModalOpen, setIsPasteModalOpen] = useState(false);
+  const [pasteValue, setPasteValue] = useState("");
+
+  const handlePasteImportAction = async () => {
+    if (!pasteValue.trim()) return;
+    try {
+      await handleJsonImport(pasteValue);
+      setIsPasteModalOpen(false);
+      setPasteValue("");
+    } catch (err) {
+      // alert handled in hook
+    }
+  };
+
+  const copyTemplate = () => {
+    navigator.clipboard.writeText(JSON.stringify(JSON_TEMPLATE, null, 2));
+    alert("Đã sao chép mẫu JSON vào Clipboard!");
+  };
 
   if (loading) {
     return (
@@ -82,17 +127,24 @@ export const JLPTExamsListPage = () => {
               Kho đề thi phong phú giúp bạn quen với nhịp độ thi JLPT thực tế.
             </p>
           </div>
-          <div className="flex shrink-0">
+          <div className="flex flex-wrap justify-center md:justify-end gap-3 shrink-0">
             <input type="file" id="exam-upload" accept=".json" onChange={handleFileUpload} className="hidden" />
             <button
                disabled={uploading}
                onClick={() => document.getElementById("exam-upload").click()}
                className="flex items-center gap-2 px-4 py-3 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-2xl font-black text-slate-500 dark:text-slate-300 transition-all border-2 border-slate-200 dark:border-slate-600 active:scale-95 disabled:opacity-50"
+               title="Tải lên file .json"
             >
                <UploadCloud size={20} className={uploading ? "animate-bounce text-[#1CB0F6]" : ""} />
-               <span className="hidden sm:inline">
-                 {uploading ? "ĐANG TẢI..." : `THÊM BẰNG JSON`}
-               </span>
+               <span className="hidden sm:inline">FILE JSON</span>
+            </button>
+            <button
+               disabled={uploading}
+               onClick={() => setIsPasteModalOpen(true)}
+               className="flex items-center gap-2 px-4 py-3 bg-[#1CB0F6] hover:bg-[#1899D6] rounded-2xl font-black text-white transition-all shadow-[0_4px_0_0_#1899D6] active:shadow-none active:translate-y-1 disabled:opacity-50"
+            >
+               <FileJson size={20} />
+               <span className="hidden sm:inline">DÁN JSON</span>
             </button>
           </div>
         </div>
@@ -326,6 +378,63 @@ export const JLPTExamsListPage = () => {
           <p className="text-slate-400 font-black">Chưa có dữ liệu cho trình độ này.</p>
         </div>
       )}
+
+      {/* Paste Modal */}
+      <AnimatePresence>
+        {isPasteModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-white dark:bg-slate-800 w-full max-w-2xl rounded-[2.5rem] p-6 lg:p-10 border-4 border-slate-100 dark:border-slate-700 shadow-2xl relative overflow-hidden"
+            >
+              <button 
+                onClick={() => setIsPasteModalOpen(false)}
+                className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
+              >
+                <X size={28} />
+              </button>
+
+              <div className="mb-6">
+                <h2 className="text-3xl font-black text-slate-800 dark:text-white mb-2">Thêm đề bằng JSON</h2>
+                <p className="text-slate-400 font-bold">Dán mã JSON của đề thi vào khung dưới đây.</p>
+              </div>
+
+              <div className="relative mb-6">
+                <textarea
+                  value={pasteValue}
+                  onChange={(e) => setPasteValue(e.target.value)}
+                  placeholder='{ "title": "...", "mondais": [...] }'
+                  className="w-full h-64 p-6 rounded-3xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-700 font-mono text-xs focus:outline-none focus:border-[#1CB0F6] transition-all resize-none"
+                />
+                <button
+                  onClick={copyTemplate}
+                  className="absolute bottom-4 right-4 flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-100 rounded-xl text-[10px] font-black text-[#1CB0F6] border-2 border-slate-100 dark:border-slate-700 shadow-sm transition-all active:scale-95"
+                >
+                  <Copy size={12} /> XEM MẪU JSON
+                </button>
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setIsPasteModalOpen(false)}
+                  className="flex-1 py-4 rounded-2xl font-black text-slate-500 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 transition-all active:scale-95"
+                >
+                  HỦY
+                </button>
+                <button
+                  disabled={uploading || !pasteValue.trim()}
+                  onClick={handlePasteImportAction}
+                  className="flex-[2] py-4 rounded-2xl font-black text-white bg-[#58CC02] hover:bg-[#46A801] shadow-[0_6px_0_0_#3d9301] active:shadow-none active:translate-y-1 transition-all disabled:opacity-50"
+                >
+                  {uploading ? "ĐANG XỬ LÝ..." : "NHẬP ĐỀ THI"}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
