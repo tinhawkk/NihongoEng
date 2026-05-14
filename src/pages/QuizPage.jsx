@@ -37,7 +37,7 @@ const SetupScreen = ({ deckId, wordCount, onStart }) => {
           <Zap size={40} className="text-white" />
         </div>
         <h2 className="text-3xl font-black text-slate-800">
-          Quiz {new URLSearchParams(window.location.search).get("filter") === "kanji" ? "Hán tự" : ""} {DECK_LABELS[deckId] || deckId.toUpperCase()}
+          Quiz {new URLSearchParams(window.location.search).get("filter") === "kanji" ? "Hán tự" : ""} {(deckId?.toUpperCase() === 'ENG' || deckId?.includes('ENG')) ? "English" : DECK_LABELS[deckId] || deckId.toUpperCase()}
         </h2>
         <p className="text-slate-400 font-bold">{wordCount} từ vựng</p>
       </div>
@@ -133,6 +133,7 @@ const QuestionScreen = ({
   mode,
   onNext,
   onExit,
+  deckId,
 }) => {
   const [showHint, setShowHint] = useState(false);
   const progress = (index / total) * 100;
@@ -171,7 +172,7 @@ const QuestionScreen = ({
         className="text-center py-2 md:py-4 space-y-1 md:space-y-2"
       >
         <p className="text-sm font-bold text-slate-400 border-b-2 border-slate-100 dark:border-slate-800 pb-1 mb-2 w-max mx-auto px-4 uppercase tracking-widest">
-          {question.prompt}
+          {question.prompt.replace("Tiếng Nhật", (deckId?.toUpperCase() === 'ENG' || deckId?.includes('ENG')) ? "Tiếng Anh" : "Tiếng Nhật")}
         </p>
         <div className="flex items-center justify-center gap-4 px-2">
           <div className={`${question.qType === 'context' ? 'text-xl md:text-2xl text-center leading-norma' : 'text-3xl md:text-5xl leading-tight text-center'} font-black text-slate-800 dark:text-white`}>
@@ -459,6 +460,7 @@ export const QuizPage = () => {
           mode={mode}
           onNext={goToNext}
           onExit={() => setExitConfirmOpen(true)}
+          deckId={deckId}
         />
       )}
 

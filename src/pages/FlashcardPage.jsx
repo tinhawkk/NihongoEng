@@ -194,6 +194,8 @@ export const FlashcardPage = () => {
     });
   }, [color]);
 
+  const isWordEnglish = deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng') || (card?.word && !/[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(card?.word));
+
   const goNext = useCallback(() => {
     if (currentIdx >= words.length - 1) {
       useUserStore.getState().updateStreak();
@@ -478,8 +480,8 @@ export const FlashcardPage = () => {
               }}
             >
               {/* FRONT SIDE */}
-              <div className="absolute inset-0 backface-hidden bg-white dark:bg-slate-800 rounded-[2rem] lg:rounded-[40px] border-4 border-slate-100 dark:border-slate-700 shadow-[0_20px_50px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center p-6 lg:p-10 overflow-hidden group-hover:border-slate-200 dark:group-hover:border-slate-600 transition-colors">
-                <div className="absolute top-0 right-0 p-3 lg:p-6 flex lg:flex-col gap-2">
+              <div className="absolute inset-0 backface-hidden bg-white dark:bg-slate-800 rounded-[2rem] lg:rounded-[40px] border-4 border-slate-100 dark:border-slate-700 shadow-[0_20px_50px_rgba(0,0,0,0.08)] overflow-hidden group-hover:border-slate-200 dark:group-hover:border-slate-600 transition-colors">
+                <div className="absolute top-0 right-0 p-3 lg:p-6 flex lg:flex-col gap-2 z-10">
                   <button
                     onClick={e => {
                       e.stopPropagation();
@@ -522,121 +524,137 @@ export const FlashcardPage = () => {
                   </button>
                 </div>
 
-                <div className="space-y-4 lg:space-y-6 text-center w-full">
-                  <motion.h1
-                    className="text-5xl lg:text-8xl font-black text-slate-800 dark:text-white tracking-tight break-words lg:break-normal"
-                    initial={{ scale: 0.9 }}
-                    animate={{ scale: 1 }}
-                  >
-                    {renderFurigana(card?.word)}
-                  </motion.h1>
-                  <AnimatePresence>
-                    {showMnemonic && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        className="mt-4 lg:mt-8 space-y-3 lg:space-y-4"
-                      >
-                        {(card?.reading || card?.hanViet) && (
-                          <div className="space-y-1 lg:space-y-2">
-                            {card?.reading && (
-                              <p className="text-xl lg:text-2xl text-slate-400 dark:text-slate-300 font-bold">
-                                {card.reading}
-                              </p>
-                            )}
-                            {card?.hanViet && (
-                              <div className="bg-slate-50 dark:bg-slate-700/50 px-3 py-1 rounded-lg inline-block border border-slate-100 dark:border-slate-700">
-                                <p className="text-xs lg:text-md text-slate-400 dark:text-slate-300 font-black uppercase tracking-widest">
-                                  Hán Việt: {card.hanViet}
+                <div className="absolute inset-0 p-4 lg:p-8 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] flex flex-col items-center">
+                  <div className="flex-grow shrink-0 min-h-[2rem]"></div>
+                  
+                  <div className="space-y-4 lg:space-y-6 text-center w-full max-w-md shrink-0">
+                    <motion.h1
+                      className={`${(card?.word?.length > 30) ? 'text-2xl lg:text-4xl' : (card?.word?.length > 15) ? 'text-3xl lg:text-5xl' : (card?.word?.length > 10) ? 'text-4xl lg:text-6xl' : 'text-5xl lg:text-8xl'} font-black text-slate-800 dark:text-white tracking-tight break-words whitespace-normal leading-tight text-center px-4`}
+                      initial={{ scale: 0.9 }}
+                      animate={{ scale: 1 }}
+                    >
+                      {renderFurigana(card?.word)}
+                    </motion.h1>
+                    <AnimatePresence>
+                      {showMnemonic && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          className="mt-4 lg:mt-8 space-y-3 lg:space-y-4"
+                        >
+                          {(card?.reading || card?.hanViet) && (
+                            <div className="space-y-1 lg:space-y-2">
+                              {card?.reading && (
+                                <p className="text-xl lg:text-2xl text-slate-400 dark:text-slate-300 font-bold">
+                                  {isWordEnglish ? `/${card.reading}/` : card.reading}
                                 </p>
-                              </div>
-                            )}
-                          </div>
-                        )}
+                              )}
+                              {card?.hanViet && !isWordEnglish && (
+                                <div className="bg-slate-50 dark:bg-slate-700/50 px-3 py-1 rounded-lg inline-block border border-slate-100 dark:border-slate-700">
+                                  <p className="text-xs lg:text-md text-slate-400 dark:text-slate-300 font-black uppercase tracking-widest">
+                                    Hán Việt: {card.hanViet}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          )}
 
-                        {card?.mnemonic && (
-                          <div className="p-3 lg:p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl lg:rounded-2xl border-2 border-yellow-100 dark:border-yellow-900/30 max-w-sm mx-auto">
-                            <p className="text-xs lg:text-sm text-yellow-700 dark:text-yellow-200 italic font-medium leading-relaxed">
-                              💡 {card.mnemonic}
-                            </p>
-                          </div>
-                        )}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                          {card?.mnemonic && (
+                            <div className="p-3 lg:p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl lg:rounded-2xl border-2 border-yellow-100 dark:border-yellow-900/30 max-w-sm mx-auto">
+                              <p className="text-xs lg:text-sm text-yellow-700 dark:text-yellow-200 italic font-medium leading-relaxed">
+                                💡 {card.mnemonic}
+                              </p>
+                            </div>
+                          )}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  <div className="flex-grow shrink-0 min-h-[4rem]"></div>
                 </div>
 
-                <div className="absolute bottom-6 lg:bottom-8 text-slate-300 font-bold text-[10px] uppercase tracking-[0.2em] animate-bounce">
-                  Nhấn thẻ để lật
+                <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-6 pointer-events-none flex justify-center bg-gradient-to-t from-white dark:from-slate-800 via-white/80 dark:via-slate-800/80 to-transparent">
+                  <span className="text-slate-300 font-bold text-[10px] uppercase tracking-[0.2em] animate-pulse">
+                    Nhấn thẻ để lật
+                  </span>
                 </div>
               </div>
 
               {/* BACK SIDE */}
               <div
-                className="absolute inset-0 backface-hidden bg-white dark:bg-slate-800 rounded-[2rem] lg:rounded-[40px] border-4 shadow-xl flex flex-col items-center justify-center p-6 lg:p-10 overflow-hidden"
+                className="absolute inset-0 backface-hidden bg-white dark:bg-slate-800 rounded-[2rem] lg:rounded-[40px] border-4 shadow-xl overflow-hidden"
                 style={{
                   borderColor: color,
                   transform: "rotateY(180deg)",
                 }}
               >
                 <div
-                  className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                  className="absolute inset-0 opacity-[0.03] pointer-events-none rounded-[inherit]"
                   style={{ backgroundColor: color }}
                 />
 
-                <div className="space-y-4 lg:space-y-6 text-center max-w-md w-full">
-                  <Sparkles size={24} className="mx-auto lg:w-8 lg:h-8" style={{ color }} />
-                  <h2 className="text-2xl lg:text-4xl font-black leading-tight break-words lg:break-normal" style={{ color }}>
-                    {card?.meaning}
-                  </h2>
+                <div className="absolute inset-0 p-4 lg:p-8 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] flex flex-col items-center">
+                  <div className="flex-grow shrink-0 min-h-[2rem]"></div>
+                  
+                  <div className="space-y-4 lg:space-y-5 text-center max-w-md w-full shrink-0">
+                    <Sparkles size={24} className="mx-auto lg:w-8 lg:h-8" style={{ color }} />
+                    <h2 className={`${(card?.meaning?.length > 60) ? 'text-lg lg:text-xl' : (card?.meaning?.length > 40) ? 'text-xl lg:text-3xl' : 'text-2xl lg:text-4xl'} font-black leading-tight break-words whitespace-normal px-4`} style={{ color }}>
+                      {card?.meaning}
+                    </h2>
 
-                  {card?.partOfSpeech && (
-                    <div
-                      className="inline-block px-2.5 py-0.5 rounded-lg text-white font-black text-[10px] uppercase"
-                      style={{ backgroundColor: color }}
-                    >
-                      {card.partOfSpeech}
-                    </div>
-                  )}
+                    {card?.partOfSpeech && (
+                      <div
+                        className="inline-block px-2.5 py-0.5 rounded-lg text-white font-black text-[10px] uppercase"
+                        style={{ backgroundColor: color }}
+                      >
+                        {card.partOfSpeech}
+                      </div>
+                    )}
 
-                  {card?.example && (
-                    <div className="mt-4 lg:mt-8 space-y-2 lg:space-y-3 bg-slate-50 dark:bg-slate-900/50 p-4 lg:p-6 rounded-2xl lg:rounded-[30px] border-2 border-white dark:border-slate-800 shadow-inner">
-                      <p className="text-lg lg:text-2xl text-slate-700 dark:text-slate-200 font-bold leading-relaxed">
-                        {renderFurigana(card.example)}
-                      </p>
-                      {card.exampleMeaning && (
-                        <p className="text-[11px] lg:text-sm text-slate-400 font-medium">{card.exampleMeaning}</p>
-                      )}
-                    </div>
-                  )}
-
-                  {(card?.definitionEn || card?.definitionVi) && (
-                    <div className="mt-4 lg:mt-6 bg-slate-50 dark:bg-slate-900/50 p-3 lg:p-4 rounded-xl text-left border-l-4" style={{ borderColor: color }}>
-                      {card.definitionEn && (
-                        <p className="text-sm lg:text-md text-slate-600 dark:text-slate-300 font-medium whitespace-pre-wrap">
-                           {card.definitionEn}
+                    {card?.example && (
+                      <div className="mt-3 lg:mt-6 space-y-2 lg:space-y-3 bg-slate-50 dark:bg-slate-900/50 p-4 lg:p-6 rounded-2xl lg:rounded-[30px] border-2 border-white dark:border-slate-800 shadow-inner">
+                        <p className="text-[1rem] lg:text-xl text-slate-700 dark:text-slate-200 font-bold leading-relaxed">
+                          {renderFurigana(card.example)}
                         </p>
-                      )}
-                      {card.definitionVi && (
-                        <p className="text-xs lg:text-sm text-slate-400 font-medium italic mt-1 whitespace-pre-wrap">
-                           {card.definitionVi}
-                        </p>
-                      )}
-                    </div>
-                  )}
+                        {card.exampleMeaning && (
+                          <p className="text-[11px] lg:text-sm text-slate-400 font-medium">{card.exampleMeaning}</p>
+                        )}
+                      </div>
+                    )}
 
-                  {card?.synonyms && (
-                    <div className="mt-4 lg:mt-6 bg-purple-50 dark:bg-purple-900/20 p-3 lg:p-4 rounded-xl text-left border-l-4 border-purple-400">
-                      <p className="text-xs lg:text-sm text-purple-600 dark:text-purple-300 font-bold flex flex-wrap items-center gap-1">
-                        Từ đồng nghĩa: <span className="font-medium text-slate-600 dark:text-slate-300">{card.synonyms}</span>
-                      </p>
-                    </div>
-                  )}
+                    {(card?.definitionEn || card?.definitionVi) && (
+                      <div className="mt-3 lg:mt-5 bg-slate-50 dark:bg-slate-900/50 p-3 lg:p-5 rounded-2xl text-left border-l-[6px] shadow-sm" style={{ borderColor: color }}>
+                        {card.definitionEn && (
+                          <p className="text-[13px] lg:text-[15px] text-slate-700 dark:text-slate-200 font-bold whitespace-pre-wrap mb-2">
+                             {card.definitionEn}
+                          </p>
+                        )}
+                        {card.definitionVi && (
+                          <p className="text-[11px] lg:text-xs text-slate-400 font-medium italic mt-1 whitespace-pre-wrap">
+                             {card.definitionVi}
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {card?.synonyms && (
+                      <div className="mt-3 lg:mt-5 bg-purple-50 dark:bg-purple-900/20 p-3 lg:p-4 rounded-xl text-left border-l-4 border-purple-400">
+                        <p className="text-xs lg:text-sm text-purple-600 dark:text-purple-300 font-bold flex flex-wrap items-center gap-1">
+                          Liên quan: <span className="font-medium text-slate-600 dark:text-slate-300 break-words flex-1 leading-snug">{card.synonyms}</span>
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex-grow shrink-0 min-h-[4rem]"></div>
                 </div>
 
-                <div className="absolute bottom-6 lg:bottom-8 text-slate-300 font-bold text-[10px] uppercase tracking-[0.2em]">
-                   Chạm để lật lại
+                <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-6 pointer-events-none flex justify-center bg-gradient-to-t from-white dark:from-slate-800 via-white/80 dark:via-slate-800/80 to-transparent z-10">
+                  <span className="text-slate-300 font-bold text-[10px] uppercase tracking-[0.2em] animate-pulse">
+                     Chạm để lật lại
+                  </span>
                 </div>
               </div>
             </div>

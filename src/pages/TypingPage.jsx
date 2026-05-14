@@ -82,9 +82,11 @@ export const TypingPage = () => {
 
   const progress = words.length > 0 ? ((currentIdx + 1) / words.length) * 100 : 0;
 
+  const isEnglish = deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng') || (card?.word && !/[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(card?.word));
+
   const handleInputChange = (e) => {
     const val = e.target.value;
-    if (autoConvert) {
+    if (autoConvert && !isEnglish) {
       setInput(romajiToHiragana(val));
     } else {
       setInput(val);
@@ -107,7 +109,7 @@ export const TypingPage = () => {
           <Keyboard size={40} className="text-slate-300" />
         </div>
         <h2 className="text-xl font-black text-slate-600 dark:text-slate-300">Chưa có dữ liệu!</h2>
-        <p className="text-sm text-slate-400 font-bold">Không tìm thấy từ vựng có furigana để luyện gõ.</p>
+        <p className="text-sm text-slate-400 font-bold">Không tìm thấy từ vựng phù hợp để luyện gõ.</p>
         <button
           onClick={() => navigate(-1)}
           className="px-6 py-3 bg-[#A342FF] text-white rounded-2xl font-black hover:bg-[#8B2FE0] transition-all shadow-lg shadow-purple-200/30"
@@ -312,7 +314,7 @@ export const TypingPage = () => {
                   onClick={() => setShowFuriganaHint(!showFuriganaHint)}
                   className="text-[10px] font-black text-slate-300 uppercase tracking-widest hover:text-[#A342FF] transition-colors"
                 >
-                  {showFuriganaHint ? "Ẩn gợi ý" : "Hiện gợi ý"}
+                  {showFuriganaHint ? (isEnglish ? "Ẩn phát âm" : "Ẩn gợi ý") : (isEnglish ? "Hiện phát âm" : "Hiện gợi ý")}
                 </button>
               </div>
             ) : (
@@ -343,7 +345,7 @@ export const TypingPage = () => {
                   onClick={() => setShowFuriganaHint(!showFuriganaHint)}
                   className="text-[10px] font-black text-slate-300 uppercase tracking-widest hover:text-[#A342FF] transition-colors"
                 >
-                  {showFuriganaHint ? "Ẩn cách đọc" : "Hiện cách đọc"}
+                  {showFuriganaHint ? (isEnglish ? "Ẩn phát âm" : "Ẩn cách đọc") : (isEnglish ? "Hiện phát âm" : "Hiện cách đọc")}
                 </button>
               </div>
             )}
@@ -374,10 +376,12 @@ export const TypingPage = () => {
                 disabled={result !== null}
                 placeholder={
                   isRecallMode
-                    ? "Gõ từ tiếng Nhật (kanji hoặc hiragana)"
-                    : autoConvert
-                      ? "Nhập romaji (osaki...)"
-                      : "Nhập hiragana"
+                    ? (deckId?.toUpperCase().includes('ENG') ? "Nhập từ tiếng Anh" : "Nhập từ tiếng Nhật")
+                    : isEnglish
+                      ? "Nhập nghĩa tiếng Việt"
+                      : autoConvert
+                        ? "Nhập romaji (osaki...)"
+                        : "Nhập kết quả"
                 }
                 autoComplete="off"
                 autoCorrect="off"
@@ -390,14 +394,16 @@ export const TypingPage = () => {
                     : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white focus:border-[#A342FF] focus:ring-4 focus:ring-[#A342FF]/10"
                 }`}
               />
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                 <button 
-                  onClick={() => setAutoConvert(!autoConvert)}
-                  className={`text-[9px] font-black px-2 py-1 rounded-md border transition-all ${autoConvert ? "bg-[#A342FF] text-white border-[#A342FF]" : "bg-white text-slate-300 border-slate-200"}`}
-                 >
-                   {autoConvert ? "Tự động" : "Tắt"}
-                 </button>
-              </div>
+              {!isEnglish && (
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                   <button 
+                    onClick={() => setAutoConvert(!autoConvert)}
+                    className={`text-[9px] font-black px-2 py-1 rounded-md border transition-all ${autoConvert ? "bg-[#A342FF] text-white border-[#A342FF]" : "bg-white text-slate-300 border-slate-200"}`}
+                   >
+                     {autoConvert ? "Tự động" : "Tắt"}
+                   </button>
+                </div>
+              )}
             </div>
 
             {/* Result Feedback */}
@@ -428,13 +434,16 @@ export const TypingPage = () => {
                       <span className="text-lg font-black text-slate-800 dark:text-white">
                         {card?.word}
                       </span>
-                      {card?.furigana && (
+                      {card?.furigana && !isEnglish && (
                         <span className="ml-2 text-sm font-black text-slate-400">({card.furigana})</span>
+                      )}
+                      {card?.furigana && isEnglish && (
+                        <span className="ml-2 text-sm font-black text-slate-400">/{card.furigana}/</span>
                       )}
                     </>
                   ) : (
                     <span className="text-lg font-black text-slate-800 dark:text-white">
-                      {card?.furigana}
+                      {isEnglish ? card?.meaning : card?.furigana}
                     </span>
                   )}
                 </p>

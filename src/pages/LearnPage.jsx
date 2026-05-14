@@ -87,7 +87,8 @@ function generateLessonSteps(words) {
   return steps;
 }
 
-const ChoiceStep = ({ word, allWords, showFeedback, userAnswer, checkAnswer, type = "choice" }) => {
+const ChoiceStep = ({ word, allWords, showFeedback, userAnswer, checkAnswer, type = "choice", deckId }) => {
+  const isEnglish = deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng');
   const options = useMemo(
     () =>
       shuffleArray([
@@ -99,6 +100,7 @@ const ChoiceStep = ({ word, allWords, showFeedback, userAnswer, checkAnswer, typ
       ]),
     [word, allWords]
   );
+
   useEffect(() => {
     const handleNum = e => {
       if (!showFeedback && ["1", "2", "3", "4"].includes(e.key)) {
@@ -119,7 +121,7 @@ const ChoiceStep = ({ word, allWords, showFeedback, userAnswer, checkAnswer, typ
     >
       <div className="text-center space-y-4">
         <p className="text-slate-400 font-black uppercase text-xs tracking-[0.2em] flex items-center justify-center gap-2">
-          <Target size={16} /> {type === "choice" ? "Chọn nghĩa đúng" : "Chọn Kanji đúng"}
+          <Target size={16} /> {word.type === "kanji" || (!word.type && !isEnglish) ? "Chọn Kanji đúng" : "Chọn từ đúng"}
         </p>
         {type === "choice" ? (
           <h2 className="text-6xl md:text-7xl font-black text-slate-800 dark:text-white tracking-tight whitespace-nowrap flex justify-center">
@@ -145,7 +147,7 @@ const ChoiceStep = ({ word, allWords, showFeedback, userAnswer, checkAnswer, typ
               <span className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-xs font-black text-slate-400 group-hover:bg-blue-100 group-hover:text-blue-500 transition-colors uppercase">
                 {i + 1}
               </span>
-              <span className="text-xl">
+              <span className="text-xl md:text-2xl break-words whitespace-normal leading-tight">
                 {type === "choice" ? opt.meaning : cleanDisplay(opt.word)}
               </span>
             </div>
@@ -221,7 +223,8 @@ const ListenStep = ({ word, allWords, showFeedback, userAnswer, checkAnswer, cle
   );
 };
 
-const MatchingStep = ({ words, onComplete }) => {
+const MatchingStep = ({ words, onComplete, deckId }) => {
+  const isEnglish = deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng');
   const pairs = useMemo(
     () =>
       words.map(w => ({
@@ -328,7 +331,7 @@ const MatchingStep = ({ words, onComplete }) => {
           <span
             className={`shrink-0 w-7 h-7 lg:w-10 lg:h-10 rounded-full text-[8px] lg:text-[10px] flex items-center justify-center uppercase tracking-widest shadow-sm transition-colors ${badge}`}
           >
-            {side === "left" ? "JP" : "VN"}
+            {side === "left" ? (isEnglish ? "EN" : "JP") : "VN"}
           </span>
           <div className="space-y-0 flex-1 pr-1 lg:pr-2 min-w-0">
             <div className="text-xl md:text-2xl font-black leading-tight break-words">
@@ -634,7 +637,7 @@ export const LearnPage = () => {
                       <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">
                         Ý nghĩa
                       </h4>
-                      <p className="text-2xl sm:text-3xl md:text-4xl font-black text-[#A342FF] tracking-tight truncate whitespace-nowrap px-4">
+                      <p className="text-2xl sm:text-3xl md:text-4xl font-black text-[#A342FF] tracking-tight leading-tight px-4 break-words whitespace-normal">
                         {step.word.meaning}
                       </p>
                     </div>
@@ -738,6 +741,7 @@ export const LearnPage = () => {
                 userAnswer={userAnswer}
                 checkAnswer={checkAnswer}
                 type={step.type}
+                deckId={deckId}
               />
             )}
             {step.type === "listen" && (
@@ -750,14 +754,20 @@ export const LearnPage = () => {
                 cleanDisplay={cleanDisplay}
               />
             )}
-            {step.type === "matching" && <MatchingStep words={step.words} onComplete={goToNext} />}
+            {step.type === "matching" && (
+              <MatchingStep
+                words={step.words}
+                onComplete={goToNext}
+                deckId={deckId}
+              />
+            )}
             {step.type === "typing" && (
               <div className="space-y-12 text-center">
                 <div className="space-y-6">
                   <p className="text-slate-400 font-black uppercase text-xs tracking-[0.2em] flex items-center justify-center gap-2">
                     <Keyboard size={16} /> Nhập cách đọc
                   </p>
-                  <h2 className="text-4xl md:text-6xl font-black text-slate-800 dark:text-white tracking-tighter whitespace-nowrap flex justify-center">
+                  <h2 className="text-4xl md:text-6xl font-black text-slate-800 dark:text-white tracking-tighter flex justify-center break-words whitespace-normal px-4">
                     {cleanDisplay(step.word.word)}
                   </h2>
                   <p className="text-2xl font-bold text-blue-500 bg-blue-50 dark:bg-blue-900/40 py-3 px-8 rounded-3xl inline-block shadow-sm">
@@ -770,7 +780,10 @@ export const LearnPage = () => {
                     autoFocus
                     disabled={showFeedback}
                     value={typeof userAnswer === "string" ? userAnswer : ""}
-                    onChange={e => setUserAnswer(romajiToHiragana(e.target.value))}
+                    onChange={e => {
+                      const isEnglishMode = deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng');
+                      setUserAnswer(isEnglishMode ? e.target.value : romajiToHiragana(e.target.value));
+                    }}
                     onKeyDown={e => {
                       if (e.key === "Enter" && userAnswer) {
                         e.preventDefault();
@@ -879,11 +892,16 @@ export const LearnPage = () => {
                     >
                       {isCorrect ? "Tuyệt vời!" : "Chưa đúng rồi..."}
                     </p>
-                    {isCorrect && step.type !== "intro" && step.word.example && (
-                      <div className="hidden lg:block truncate">
-                        <p className="text-base font-bold text-green-800 italic opacity-80">
-                          {removeFurigana(step.word.example)}
+                    {isCorrect && step.type !== "intro" && (
+                      <div className="hidden lg:block max-w-md">
+                        <p className="text-sm font-black text-green-700 mb-0.5">
+                          {step.word.meaning}
                         </p>
+                        {step.word.example && (
+                          <p className="text-base font-bold text-green-800 italic opacity-80 leading-snug">
+                            {removeFurigana(step.word.example)}
+                          </p>
+                        )}
                       </div>
                     )}
                   </div>

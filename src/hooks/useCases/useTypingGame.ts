@@ -130,27 +130,32 @@ export const useTypingGame = (deckId: string | undefined) => {
       setRecallStreaks({});
       setLoading(false);
     } else {
-      vocabularyRepository.loadDeck(deckId, source).then(data => {
-        const normalized = data.map(w => ({
-          ...w,
-          word: w.word || w.english || "",
-          furigana: w.furigana || w.reading || w.hiragana || "",
-          meaning: w.meaning || w.vietnamese || "",
-          hanViet: w.han_viet || w.hanViet || "",
-          example: w.example || w.explanation || w.example_jp || "",
-          example_meaning: [w.example_meaning, w.example_vn, w.example_vi, w.example_en, w.example_viet, w.example_english].filter(Boolean).join(" / "),
-        }));
+        vocabularyRepository.loadDeck(deckId, source).then(data => {
+          const normalized = data.map((w: any) => ({
+            ...w,
+            word: w.word || w.english || "",
+            furigana: w.furigana || w.reading || w.hiragana || "",
+            meaning: w.meaning || w.vietnamese || "",
+            hanViet: w.han_viet || w.hanViet || "",
+            example: w.example || w.explanation || w.example_jp || "",
+            example_meaning: [w.example_meaning, w.example_vn, w.example_vi, w.example_en, w.example_viet, w.example_english].filter(Boolean).join(" / "),
+          }));
+        const isEnglishDeck = deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng');
         const withReading = normalized.map(w => {
           // Fix for data where 'reading' field contains the example sentence instead of the word reading
           const isWordKana = /^[\u3040-\u30FF\s]+$/.test(w.word);
-          const furiganaContainsPunctuation = w.furigana.includes("。") || w.furigana.includes("、");
-          const furiganaIsTooLong = w.furigana.length > w.word.length * 3 && w.furigana.length > 10;
+          const furiganaContainsPunctuation = w.furigana?.includes("。") || w.furigana?.includes("、") || false;
+          const furiganaIsTooLong = (w.furigana?.length || 0) > w.word.length * 3 && (w.furigana?.length || 0) > 10;
           
           if (isWordKana && (furiganaContainsPunctuation || furiganaIsTooLong)) {
             return { ...w, furigana: w.word };
           }
+          // For English, if no furigana (IPA), use the word itself as the target
+          if (isEnglishDeck && !w.furigana?.trim()) {
+            return { ...w, furigana: w.word };
+          }
           return w;
-        }).filter(w => w.furigana?.trim());
+        }).filter(w => isEnglishDeck || w.furigana?.trim());
         const shuffled = shuffleArray(withReading);
         if (isMasteryMode) {
           const plan: Record<string, string[]> = {};
@@ -192,17 +197,22 @@ export const useTypingGame = (deckId: string | undefined) => {
     const userAsHiragana = normalize(romajiToHiragana(input));
     const stableId = card.id || card.word;
     const taskType = card.taskType || (isRecallMode ? "recall" : "reading");
+    const isEnglishDeck = deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng');
 
     const isRecallTask = taskType === "recall" || taskType === "dictation" || taskType === "cloze";
+    const isWordEnglish = isEnglishDeck || (card.word && !/[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(card.word));
+
     const isCorrect = isRecallTask
       ? userInput === correctWord ||
         userAsHiragana === correctWord ||
         userInput === correctFurigana ||
-        userAsHiragana === correctFurigana
+        userAsHiragana === correctFurigana ||
+        (isWordEnglish && userInput === normalize(card.meaning))
       : userInput === correctFurigana ||
         userAsHiragana === correctFurigana ||
         (userInput === correctWord && /^[\u3040-\u30FF]+$/.test(correctWord)) ||
-        (userAsHiragana === correctWord && /^[\u3040-\u30FF]+$/.test(correctWord));
+        (userAsHiragana === correctWord && /^[\u3040-\u30FF]+$/.test(correctWord)) ||
+        (isWordEnglish && (userInput === correctWord || userInput === normalize(card.meaning)));
     
     setResult(isCorrect ? "correct" : "wrong");
     setShowAnswer(true);
