@@ -189,6 +189,24 @@ export const DeckPage = () => {
       placeholder: "Mỗi ngày tôi ăn cơm",
     },
     {
+      key: "definition_en",
+      label: "Định nghĩa (EN)",
+      type: "textarea",
+      placeholder: "Giải nghĩa bằng tiếng anh...",
+    },
+    {
+      key: "definition_vi",
+      label: "Định nghĩa (VI)",
+      type: "textarea",
+      placeholder: "Giải nghĩa bằng tiếng việt...",
+    },
+    {
+      key: "synonyms",
+      label: "Từ đồng nghĩa",
+      type: "textarea",
+      placeholder: "VD: abandon, leave...",
+    },
+    {
       key: "mnemonic",
       label: "Mẹo nhớ (Mnemonic)",
       type: "textarea",
@@ -239,6 +257,9 @@ export const DeckPage = () => {
       romaji: word.romaji || "",
       example_jp: word.example || "",
       example_vi: word.exampleMeaning || "",
+      definition_en: word.definitionEn || "",
+      definition_vi: word.definitionVi || "",
+      synonyms: word.synonyms || "",
       mnemonic: word.mnemonic || "",
       radical_analysis: word.radicalAnalysis || "",
       related_voca:
@@ -415,15 +436,20 @@ export const DeckPage = () => {
   // Fetch Metadata for Nhost decks
   useEffect(() => {
     if (isUUID) {
-      const q = `query GetDeckTitle($id: uuid!) {
+      const q = `query GetDeckTitle($id: String!) {
         decks_by_pk(id: $id) {
           title
         }
       }`;
-      nhostService.fetchGraphQL(q, "GetDeckTitle", { id: deckId }).then(res => {
+      const normalizedId = deckId.toLowerCase();
+      nhostService.fetchGraphQL(q, "GetDeckTitle", { id: normalizedId }).then(res => {
         if (res.data?.decks_by_pk) {
           setDeckMetadata(res.data.decks_by_pk);
+        } else {
+          console.error("[DeckPage] GetDeckTitle failed or null:", res);
         }
+      }).catch(err => {
+        console.error("[DeckPage] GetDeckTitle exception:", err);
       });
     }
   }, [deckId, isUUID]);
@@ -572,10 +598,14 @@ export const DeckPage = () => {
           <ArrowLeft className="w-6 h-6 text-slate-400" />
         </button>
         <div>
-          <h2 className="text-2xl font-black text-slate-800 dark:text-white">
+          <h2 className="text-2xl font-black text-slate-800 dark:text-white flex items-center gap-2">
             {deckId === "srs"
               ? "Thư viện Ôn tập thông minh"
-              : deckMetadata?.title || DECK_LABELS[deckId] || deckId.toUpperCase()}
+              : deckMetadata?.title 
+                ? deckMetadata.title 
+                : DECK_LABELS[deckId?.toLowerCase()] 
+                  ? DECK_LABELS[deckId?.toLowerCase()] 
+                  : (isUUID && !deckMetadata ? "Đang tải tên bài..." : deckId.toUpperCase())}
           </h2>
           <div className="flex flex-wrap items-center gap-3 mt-1">
             <div className="flex items-center gap-2">
@@ -762,8 +792,8 @@ export const DeckPage = () => {
               <Button
                 variant="secondary"
                 onClick={() => {
-                  const exportable = words.map(({ id, word, reading, furigana, meaning, hanViet, han_viet, romaji, example, example_jp, exampleMeaning, example_vi, mnemonic, onyomi, kunyomi, type }) => ({
-                    id, word: word || "", reading: reading || furigana || "", meaning: meaning || "", han_viet: han_viet || hanViet || "", romaji: romaji || "", example_jp: example_jp || example || "", example_vi: example_vi || exampleMeaning || "", mnemonic: mnemonic || "", onyomi: onyomi || "", kunyomi: kunyomi || "", type: type || "voca"
+                  const exportable = words.map(({ id, word, reading, furigana, meaning, hanViet, han_viet, romaji, example, example_jp, exampleMeaning, example_vi, mnemonic, onyomi, kunyomi, type, definitionEn, definitionVi, definition_en, definition_vi, synonyms }) => ({
+                    id, word: word || "", reading: reading || furigana || "", meaning: meaning || "", han_viet: han_viet || hanViet || "", romaji: romaji || "", example_jp: example_jp || example || "", example_vi: example_vi || exampleMeaning || "", definition_en: definition_en || definitionEn || "", definition_vi: definition_vi || definitionVi || "", synonyms: synonyms || "", mnemonic: mnemonic || "", onyomi: onyomi || "", kunyomi: kunyomi || "", type: type || "voca"
                   }));
                   setBulkJsonText(JSON.stringify(exportable, null, 2));
                   setBulkJsonOpen(true);
@@ -1375,6 +1405,9 @@ export const DeckPage = () => {
                               meaning: "từ bỏ",
                               example_jp: "He abandoned the plan.",
                               example_vi: "Anh ấy từ bỏ kế hoạch.",
+                              definition_en: "To leave a place, thing, or person, usually for ever",
+                              definition_vi: "Rời khỏi hoặc bỏ lại ai đó/vật gì đó, thường là mãi mãi",
+                              synonyms: "leave, quit",
                               mnemonic: "a + bandon -> bỏ đi",
                             },
                           ],
@@ -1403,7 +1436,10 @@ export const DeckPage = () => {
   "furigana": "əˈbæn.dən",
   "meaning": "từ bỏ",
   "example_jp": "He abandoned the plan.",
-  "example_vi": "Anh ấy đã từ bỏ kế hoạch."
+  "example_vi": "Anh ấy đã từ bỏ kế hoạch.",
+  "definition_en": "To leave a place, thing, or person",
+  "definition_vi": "rời khỏi hoặc bỏ lại ai đó/vật gì đó",
+  "synonyms": "leave, quit"
 }]`}
                   </pre>
                   <p className="text-[10px] text-slate-400 mt-2 font-bold">
@@ -1415,6 +1451,9 @@ export const DeckPage = () => {
                     <code className="text-emerald-500">kunyomi</code>,{" "}
                     <code className="text-emerald-500">example_jp</code>,{" "}
                     <code className="text-emerald-500">example_vi</code>,{" "}
+                    <code className="text-emerald-500">definition_en</code>,{" "}
+                    <code className="text-emerald-500">definition_vi</code>,{" "}
+                    <code className="text-emerald-500">synonyms</code>,{" "}
                     <code className="text-emerald-500">mnemonic</code>,{" "}
                     <code className="text-emerald-500">radical_analysis</code>. Với tiếng Anh, dùng{" "}
                     <code className="text-emerald-500">furigana</code> cho phiên âm.

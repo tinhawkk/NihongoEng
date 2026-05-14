@@ -1,7 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
 
 export const ConfettiBurst = ({ onDone }) => {
+  const onDoneRef = useRef(onDone);
+
+  useEffect(() => {
+    onDoneRef.current = onDone;
+  }, [onDone]);
+
   useEffect(() => {
     const durationMs = 1200;
     const end = Date.now() + durationMs;
@@ -17,11 +23,11 @@ export const ConfettiBurst = ({ onDone }) => {
     }
 
     const timer = setTimeout(() => {
-      if (typeof onDone === "function") onDone();
+      if (typeof onDoneRef.current === "function") onDoneRef.current();
     }, durationMs + 100);
 
     return () => clearTimeout(timer);
-  }, [onDone]);
+  }, []);
 
   return null;
 };

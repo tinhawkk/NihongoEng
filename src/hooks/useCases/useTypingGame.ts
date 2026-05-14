@@ -49,6 +49,17 @@ export const useTypingGame = (deckId: string | undefined) => {
   const vocaSource = useUserStore(s => s.vocaSource);
   const updateSrsItem = useUserStore(s => s.updateSrsItem);
 
+  const searchParams = new URLSearchParams(window.location.search);
+  const practiceMode = searchParams.get("practice") || "typing";
+  const scope = searchParams.get("scope") || "due";
+  const targetDeck = searchParams.get("deck");
+  const isRecallMode = practiceMode === "recall";
+  const isMasteryMode = practiceMode === "mastery";
+  const recallRequired = isRecallMode ? 2 : 1;
+  const [recallStreaks, setRecallStreaks] = useState<Record<string, number>>({});
+  const [masteryPlan, setMasteryPlan] = useState<Record<string, string[]>>({});
+  const [masteryDone, setMasteryDone] = useState<Record<string, string[]>>({});
+
   const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(deckId || "");
 
   useEffect(() => {
@@ -67,21 +78,56 @@ export const useTypingGame = (deckId: string | undefined) => {
   useEffect(() => {
     if (!deckId) return;
     setLoading(true);
-    const params = new URLSearchParams(window.location.search);
-    const forcedSource = params.get("source");
+    const forcedSource = searchParams.get("source");
     const isAdvanced = isUUID || /^n[1-5]$/i.test(deckId) || ["ENG", "IT"].includes(deckId.toUpperCase());
     const source = (isAdvanced ? forcedSource || vocaSource : "sheet") as "sheet" | "voca";
 
     if (deckId === "srs") {
       const srsData = useUserStore.getState().account?.srsData || {};
-      const todayStr = new Date().toLocaleDateString('en-CA');
-      const due = Object.values(srsData).filter((item: any) => {
-        const reviewDate = new Date(item.nextReview).toLocaleDateString('en-CA');
-        return reviewDate <= todayStr;
-      });
-      const shuffled = shuffleArray(due);
-      setAllWords(shuffled);
-      setWords(shuffled);
+      let list = Object.values(srsData);
+      if (targetDeck && targetDeck !== "all") {
+        list = list.filter((item: any) => {
+          if (targetDeck === "DICTIONARY_SOURCE" || targetDeck === "Từ điển & Tìm kiếm") {
+            return item.source === "search";
+          }
+          return item.deckName === targetDeck || item.deck === targetDeck || item.deckId === targetDeck;
+        });
+      }
+
+      if (scope !== "all") {
+        const today = new Date();
+        list = list.filter((item: any) => item.nextReview && new Date(item.nextReview) <= today);
+      }
+
+      const normalized = list.map((item: any) => ({
+        ...item,
+        word: item.word || item.english || "",
+        furigana: item.furigana || item.reading || item.hiragana || "",
+        meaning: item.meaning || item.vietnamese || "",
+        hanViet: item.hanViet || item.han_viet || "",
+        example: item.example || item.example_jp || "",
+        example_meaning: item.example_meaning || item.example_vi || "",
+      }));
+
+      const shuffled = shuffleArray(normalized);
+      if (isMasteryMode) {
+        const plan: Record<string, string[]> = {};
+        const queue = shuffled.flatMap(w => {
+          const tasks = ["recall", "dictation"];
+          if (w.example && w.example.includes(w.word)) tasks.push("cloze");
+          const stableId = w.id || w.word;
+          plan[stableId] = tasks;
+          return tasks.map(taskType => ({ ...w, taskType }));
+        });
+        setMasteryPlan(plan);
+        setMasteryDone({});
+        setAllWords(queue);
+        setWords(queue);
+      } else {
+        setAllWords(shuffled);
+        setWords(shuffled);
+      }
+      setRecallStreaks({});
       setLoading(false);
     } else {
       vocabularyRepository.loadDeck(deckId, source).then(data => {
@@ -106,12 +152,28 @@ export const useTypingGame = (deckId: string | undefined) => {
           return w;
         }).filter(w => w.furigana?.trim());
         const shuffled = shuffleArray(withReading);
-        setAllWords(shuffled);
-        setWords(shuffled);
+        if (isMasteryMode) {
+          const plan: Record<string, string[]> = {};
+          const queue = shuffled.flatMap(w => {
+            const tasks = ["recall", "dictation"];
+            if (w.example && w.example.includes(w.word)) tasks.push("cloze");
+            const stableId = w.id || w.word;
+            plan[stableId] = tasks;
+            return tasks.map(taskType => ({ ...w, taskType }));
+          });
+          setMasteryPlan(plan);
+          setMasteryDone({});
+          setAllWords(queue);
+          setWords(queue);
+        } else {
+          setAllWords(shuffled);
+          setWords(shuffled);
+        }
+        setRecallStreaks({});
         setLoading(false);
       });
     }
-  }, [deckId, vocaSource, isUUID]);
+  }, [deckId, vocaSource, isUUID, practiceMode, scope, targetDeck, isMasteryMode]);
 
   useEffect(() => {
     if (!loading && words.length > 0 && !isFinished) {
@@ -128,17 +190,97 @@ export const useTypingGame = (deckId: string | undefined) => {
     const correctFurigana = normalize(card.furigana);
     const correctWord = normalize(card.word);
     const userAsHiragana = normalize(romajiToHiragana(input));
-    
-    // Accept answer if it matches the reading OR the word itself (if word is kana)
-    const isCorrect = 
-      userInput === correctFurigana || 
-      userAsHiragana === correctFurigana ||
-      (userInput === correctWord && /^[\u3040-\u30FF]+$/.test(correctWord)) ||
-      (userAsHiragana === correctWord && /^[\u3040-\u30FF]+$/.test(correctWord));
+    const stableId = card.id || card.word;
+    const taskType = card.taskType || (isRecallMode ? "recall" : "reading");
+
+    const isRecallTask = taskType === "recall" || taskType === "dictation" || taskType === "cloze";
+    const isCorrect = isRecallTask
+      ? userInput === correctWord ||
+        userAsHiragana === correctWord ||
+        userInput === correctFurigana ||
+        userAsHiragana === correctFurigana
+      : userInput === correctFurigana ||
+        userAsHiragana === correctFurigana ||
+        (userInput === correctWord && /^[\u3040-\u30FF]+$/.test(correctWord)) ||
+        (userAsHiragana === correctWord && /^[\u3040-\u30FF]+$/.test(correctWord));
     
     setResult(isCorrect ? "correct" : "wrong");
     setShowAnswer(true);
     
+    if (isMasteryMode) {
+      const plan = masteryPlan[stableId] || ["recall", "dictation", "cloze"];
+      const completed = masteryDone[stableId] || [];
+      if (isCorrect) {
+        const nextCompleted = completed.includes(taskType)
+          ? completed
+          : [...completed, taskType];
+        setMasteryDone(prev => ({ ...prev, [stableId]: nextCompleted }));
+        setScore(s => ({ ...s, correct: s.correct + 1 }));
+        sounds.playBeep(880, 100, 0.1);
+        tts.playWithFallback(card.audio, card.word);
+
+        if (nextCompleted.length >= plan.length) {
+          updateSrsItem(stableId, card, 2, {
+            source: "mastery",
+            deckId: deckId === "srs" ? (card.deck || card.deckId) : deckId,
+            deckName:
+              deckId === "srs"
+                ? (card.deckName || card.deck)
+                : deckMetadata?.title || DECK_LABELS[deckId!] || deckId,
+          });
+        }
+      } else {
+        setScore(s => ({ ...s, wrong: s.wrong + 1 }));
+        sounds.playError();
+        setWords(prev => [...prev, { ...card }]);
+        updateSrsItem(stableId, card, 0, {
+          source: "mastery",
+          deckId: deckId === "srs" ? (card.deck || card.deckId) : deckId,
+          deckName:
+            deckId === "srs"
+              ? (card.deckName || card.deck)
+              : deckMetadata?.title || DECK_LABELS[deckId!] || deckId,
+        });
+      }
+      return;
+    }
+
+    if (isRecallMode) {
+      if (isCorrect) {
+        const nextStreak = (recallStreaks[stableId] || 0) + 1;
+        setRecallStreaks(prev => ({ ...prev, [stableId]: nextStreak }));
+        setScore(s => ({ ...s, correct: s.correct + 1 }));
+        sounds.playBeep(880, 100, 0.1);
+        tts.playWithFallback(card.audio, card.word);
+        if (nextStreak < recallRequired) {
+          setWords(prev => [...prev, { ...card }]);
+        } else {
+          updateSrsItem(stableId, card, 2, {
+            source: "recall",
+            deckId: deckId === "srs" ? (card.deck || card.deckId) : deckId,
+            deckName:
+              deckId === "srs"
+                ? (card.deckName || card.deck)
+                : deckMetadata?.title || DECK_LABELS[deckId!] || deckId,
+          });
+        }
+      } else {
+        setRecallStreaks(prev => ({ ...prev, [stableId]: 0 }));
+        setScore(s => ({ ...s, wrong: s.wrong + 1 }));
+        sounds.playError();
+        setWords(prev => [...prev, { ...card }]);
+        updateSrsItem(stableId, card, 0, {
+          source: "recall",
+          deckId: deckId === "srs" ? (card.deck || card.deckId) : deckId,
+          deckName:
+            deckId === "srs"
+              ? (card.deckName || card.deck)
+              : deckMetadata?.title || DECK_LABELS[deckId!] || deckId,
+        });
+      }
+      return;
+    }
+
     if (isCorrect) {
       setScore(s => ({ ...s, correct: s.correct + 1 }));
       sounds.playBeep(880, 100, 0.1);
@@ -157,7 +299,20 @@ export const useTypingGame = (deckId: string | undefined) => {
         deckName: deckId === "srs" ? (card.deckName || card.deck) : (deckMetadata?.title || DECK_LABELS[deckId!] || deckId),
       });
     }
-  }, [card, input, result, isUUID, deckId, updateSrsItem, deckMetadata]);
+  }, [
+    card,
+    input,
+    result,
+    isRecallMode,
+    isMasteryMode,
+    recallRequired,
+    recallStreaks,
+    masteryPlan,
+    masteryDone,
+    deckId,
+    updateSrsItem,
+    deckMetadata,
+  ]);
 
   const goNext = useCallback(() => {
     if (currentIdx >= words.length - 1) {
@@ -173,10 +328,36 @@ export const useTypingGame = (deckId: string | undefined) => {
   }, [currentIdx, words.length]);
 
   const skipWord = useCallback(() => {
+    if (!card || result) return;
     setResult("wrong");
     setShowAnswer(true);
     setScore(s => ({ ...s, wrong: s.wrong + 1 }));
-  }, []);
+    if (isMasteryMode) {
+      setWords(prev => [...prev, { ...card }]);
+      updateSrsItem(card.id || card.word, card, 0, {
+        source: "mastery",
+        deckId: deckId === "srs" ? (card.deck || card.deckId) : deckId,
+        deckName:
+          deckId === "srs"
+            ? (card.deckName || card.deck)
+            : deckMetadata?.title || DECK_LABELS[deckId!] || deckId,
+      });
+      return;
+    }
+    if (isRecallMode) {
+      const stableId = card.id || card.word;
+      setRecallStreaks(prev => ({ ...prev, [stableId]: 0 }));
+      setWords(prev => [...prev, { ...card }]);
+      updateSrsItem(stableId, card, 0, {
+        source: "recall",
+        deckId: deckId === "srs" ? (card.deck || card.deckId) : deckId,
+        deckName:
+          deckId === "srs"
+            ? (card.deckName || card.deck)
+            : deckMetadata?.title || DECK_LABELS[deckId!] || deckId,
+      });
+    }
+  }, [card, result, isRecallMode, isMasteryMode, deckId, updateSrsItem, deckMetadata]);
 
   const resetGame = () => {
     setCurrentIdx(0); 
@@ -186,6 +367,8 @@ export const useTypingGame = (deckId: string | undefined) => {
     setResult(null); 
     setShowAnswer(false); 
     setWords(shuffleArray(allWords));
+    setRecallStreaks({});
+    setMasteryDone({});
   };
 
   useEffect(() => {
@@ -226,7 +409,15 @@ export const useTypingGame = (deckId: string | undefined) => {
     goNext,
     skipWord,
     resetGame,
-    deckMetadata
+    deckMetadata,
+    practiceMode,
+    isRecallMode,
+    isMasteryMode,
+    recallRequired,
+    recallStreak: card ? (recallStreaks[card.id || card.word] || 0) : 0,
+    taskType: card?.taskType || (isRecallMode ? "recall" : "reading"),
+    masteryTotal: card ? (masteryPlan[card.id || card.word]?.length || 0) : 0,
+    masteryDone: card ? (masteryDone[card.id || card.word]?.length || 0) : 0,
   };
 };
 

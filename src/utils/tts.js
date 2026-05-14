@@ -18,6 +18,17 @@ class TTSProvider {
     this.loadVoices();
   }
 
+  detectLang(text) {
+    if (!text) return "ja-JP";
+    const hasJapanese = /[\u3040-\u30FF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]/.test(text);
+    return hasJapanese ? "ja-JP" : "en-US";
+  }
+
+  resolveLang(text, lang) {
+    if (!lang || lang === "auto") return this.detectLang(text);
+    return lang;
+  }
+
   loadVoices() {
     const voices = this.synth.getVoices();
     // Japanese
@@ -56,23 +67,25 @@ class TTSProvider {
 
   async speak(text, options = {}) {
     if (!text) return;
-    const { lang = 'ja-JP', rate = 1.0, pitch = 1.0 } = options;
+    const { lang = "auto", rate = 1.0, pitch = 1.0 } = options;
     const cleanText = text.replace(/[\[\(\{（].*?[\]\)\}）]/g, '').trim();
     const currentId = this.stop();
 
-    const voice = lang.startsWith('ja') ? this.jaVoice : this.enVoice;
+    const resolvedLang = this.resolveLang(cleanText, lang);
+    const voice = resolvedLang.startsWith("ja") ? this.jaVoice : this.enVoice;
 
     // Prefer High Quality Local Voice (INSTANT)
     if (voice && rate >= 0.9 && pitch === 1.0) {
-      this.speakOffline(cleanText, { lang, rate, pitch, voice });
+      this.speakOffline(cleanText, { lang: resolvedLang, rate, pitch, voice });
       return;
     }
 
-    // Fallback to Google TTS (only for Japanese for now as it was prioritized)
-    if (lang.startsWith('ja')) {
+    // Fallback to Google TTS when local voice is unavailable or not ideal
+    if (resolvedLang.startsWith("ja") || resolvedLang.startsWith("en")) {
       try {
         const speed = rate < 1 ? 0.45 : 1; 
-        const googleTtsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q=${encodeURIComponent(cleanText)}&ttsspeed=${speed}`;
+        const tldLang = resolvedLang.startsWith("ja") ? "ja" : "en";
+        const googleTtsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${tldLang}&client=tw-ob&q=${encodeURIComponent(cleanText)}&ttsspeed=${speed}`;
         
         const audio = new Audio(googleTtsUrl);
         this.currentAudio = audio;
@@ -89,7 +102,7 @@ class TTSProvider {
     }
 
     if (this.playbackId === currentId) {
-        this.speakOffline(cleanText, { lang, rate, pitch, voice });
+      this.speakOffline(cleanText, { lang: resolvedLang, rate, pitch, voice });
     }
   }
 
@@ -118,11 +131,11 @@ class TTSProvider {
   }
 
   playWithFallback(url, text, options = {}) {
-    const { lang = 'ja-JP', rate = 1.0 } = options;
+    const { lang = "auto", rate = 1.0 } = options;
     const currentId = this.stop();
 
     if (!url) {
-      this.speak(text, options);
+      this.speak(text, { ...options, lang });
       return;
     }
 
@@ -134,7 +147,7 @@ class TTSProvider {
       if (this.playbackId !== currentId) return;
       audio.pause();
       audio.src = "";
-      this.speak(text, options);
+      this.speak(text, { ...options, lang });
     }, 2500); // Reduced timeout for snappier fallback
 
     audio.onplay = () => {
@@ -149,14 +162,14 @@ class TTSProvider {
     audio.onerror = () => {
       clearTimeout(timeout);
       if (this.playbackId === currentId) {
-          this.speak(text, options);
+          this.speak(text, { ...options, lang });
       }
     };
 
     audio.play().catch(() => {
       clearTimeout(timeout);
       if (this.playbackId === currentId) {
-          this.speak(text, options);
+          this.speak(text, { ...options, lang });
       }
     });
   }
@@ -180,20 +193,23 @@ class TTSProvider {
             this.resolveCurrent = null;
             resolve(); 
           };
-          audio.onerror = () => {
+           audio.onerror = () => {
              if (this.playbackId !== currentId) return resolve();
-             this.speakOffline(item.text, { rate: rate * 0.9, pitch: item.pitch || 1.0 });
+             const lang = this.resolveLang(item.text, item.lang);
+             this.speakOffline(item.text, { lang, rate: rate * 0.9, pitch: item.pitch || 1.0 });
              setTimeout(resolve, (1500 + item.text.length * 50) / rate);
           };
           
           audio.play().catch(() => {
              if (this.playbackId !== currentId) return resolve();
-             this.speakOffline(item.text, { rate: rate * 0.9, pitch: item.pitch || 1.0 });
+             const lang = this.resolveLang(item.text, item.lang);
+             this.speakOffline(item.text, { lang, rate: rate * 0.9, pitch: item.pitch || 1.0 });
              setTimeout(resolve, (1500 + item.text.length * 50) / rate);
           });
         } else {
           if (this.playbackId !== currentId) return resolve();
-          this.speakOffline(item.text, { rate: rate * 1.0, pitch: item.pitch || 1.0 });
+           const lang = this.resolveLang(item.text, item.lang);
+           this.speakOffline(item.text, { lang, rate: rate * 1.0, pitch: item.pitch || 1.0 });
           setTimeout(() => {
               this.resolveCurrent = null;
               resolve();

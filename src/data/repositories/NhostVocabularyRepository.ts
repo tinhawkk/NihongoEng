@@ -72,7 +72,7 @@ const loadDeckInternal = async (
             id kanji han_viet onyomi kunyomi meaning mnemonic deck_id level
           }
           userVoca: my_vocabulary(where: {_or: [{level: {_in: $levels}}, {deck_id: {_in: $levels}}]}, order_by: {word: asc}) {
-            id word furigana meaning han_viet example_jp example_vi romaji level mnemonic type onyomi kunyomi deck_id
+            id word furigana meaning han_viet example_jp example_vi romaji level mnemonic type onyomi kunyomi deck_id definition_en definition_vi synonyms
           }
         }`;
 
@@ -94,6 +94,9 @@ const loadDeckInternal = async (
           example: uv.example_jp || "",
           exampleMeaning: uv.example_vi || "",
           mnemonic: uv.mnemonic || "",
+          definitionEn: uv.definition_en || "",
+          definitionVi: uv.definition_vi || "",
+          synonyms: uv.synonyms || "",
           type: uv.type || "voca",
           onyomi: uv.onyomi || "",
           kunyomi: uv.kunyomi || "",
@@ -110,6 +113,9 @@ const loadDeckInternal = async (
           reading: v.reading || v.furigana || v.kana || "",
           meaning: v.meaning || v.meaning_en || v.meaning_vi || v.vietnamese || "",
           mnemonic: v.mnemonic || "",
+          definitionEn: "",
+          definitionVi: "",
+          synonyms: "",
           example: v.example || "",
           exampleMeaning: v.example_meaning || "",
           type: "voca",
@@ -239,7 +245,7 @@ const loadDeckInternal = async (
             vocaByDeck: japience_voca(where: {deck_id: {_in: $ids}}, order_by: {word: asc}) { id word reading meaning example example_meaning mnemonic level deck_id }
             kanjiByDeck: japience_kanji(where: {deck_id: {_in: $ids}}, order_by: {kanji: asc}) { id kanji han_viet onyomi kunyomi meaning mnemonic level deck_id }
             ${grammarSelection}
-            userVocaByLevel: my_vocabulary(where: {_or: [{level: {_in: $legacyLevels}}, {deck_id: {_in: $ids}}]}, order_by: {word: asc}) { id word furigana meaning han_viet example_jp example_vi romaji level mnemonic type onyomi kunyomi deck_id }
+            userVocaByLevel: my_vocabulary(where: {_or: [{level: {_in: $legacyLevels}}, {deck_id: {_in: $ids}}]}, order_by: {word: asc}) { id word furigana meaning han_viet example_jp example_vi romaji level mnemonic type onyomi kunyomi deck_id definition_en definition_vi synonyms }
           }`;
 
           const { data } = await fetchFromNhost(qCombined, {
@@ -264,6 +270,7 @@ const loadDeckInternal = async (
         const vocaModels = voca.map((v: any) => ({
           id: v.id, word: v.word || v.kanji || "", reading: v.reading || v.furigana || "",
           meaning: v.meaning || "", example: v.example || "", exampleMeaning: v.example_meaning || "",
+          definitionEn: "", definitionVi: "", synonyms: "",
           mnemonic: v.mnemonic || "", type: "voca", level: v.level, deck: v.deck_id || deckId
         }));
         const kanjiModels = kanji.map((k: any) => ({
@@ -275,6 +282,7 @@ const loadDeckInternal = async (
           id: uv.id, word: uv.word, reading: uv.furigana || "", meaning: uv.meaning || "",
           hanViet: uv.han_viet || "", romaji: uv.romaji || "", example: uv.example_jp || "",
           exampleMeaning: uv.example_vi || "", mnemonic: uv.mnemonic || "",
+          definitionEn: uv.definition_en || "", definitionVi: uv.definition_vi || "", synonyms: uv.synonyms || "",
           type: uv.type || "voca", onyomi: uv.onyomi || "", kunyomi: uv.kunyomi || "",
           level: uv.level, deck: deckId, source: "personal"
         }));
@@ -311,7 +319,11 @@ const loadDeckInternal = async (
             meaning: item.vietnamese || item.meaning || "",
             hanViet: item.hanViet || "",
             partOfSpeech: item.hint || "",
-            example: item.explanation || "",
+            example: item.explanation || item.example_jp || item.example || "",
+            exampleMeaning: item.example_vi || item.exampleMeaning || "",
+            definitionEn: item.definition_en || item.definitionEn || "",
+            definitionVi: item.definition_vi || item.definitionVi || "",
+            synonyms: item.synonyms || "",
             level: item.level || deckUpper,
             deck: deckId,
             mnemonic: item.mnemonic || "",
@@ -325,7 +337,7 @@ const loadDeckInternal = async (
       try {
         const qUser = `query GetUserVocaByDeck($deckId: String!) {
           my_vocabulary(where: {deck_id: {_eq: $deckId}}) {
-            id word furigana meaning han_viet example_jp example_vi romaji level mnemonic type onyomi kunyomi deck_id
+            id word furigana meaning han_viet example_jp example_vi romaji level mnemonic type onyomi kunyomi deck_id definition_en definition_vi synonyms
           }
         }`;
         const { data } = await fetchFromNhost(qUser, { deckId });
@@ -333,6 +345,7 @@ const loadDeckInternal = async (
           id: uv.id, word: uv.word, reading: uv.furigana || "", meaning: uv.meaning || "",
           hanViet: uv.han_viet || "", romaji: uv.romaji || "", example: uv.example_jp || "",
           exampleMeaning: uv.example_vi || "", mnemonic: uv.mnemonic || "",
+          definitionEn: uv.definition_en || "", definitionVi: uv.definition_vi || "", synonyms: uv.synonyms || "",
           type: uv.type || "voca", onyomi: uv.onyomi || "", kunyomi: uv.kunyomi || "",
           level: uv.level || deckUpper, deck: deckId, source: "personal"
         }));

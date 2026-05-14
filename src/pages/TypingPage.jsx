@@ -34,7 +34,24 @@ export const TypingPage = () => {
     goNext,
     skipWord,
     resetGame,
+    isRecallMode,
+    isMasteryMode,
+    recallRequired,
+    recallStreak,
+    taskType,
+    masteryTotal,
+    masteryDone: masteryDoneCount,
   } = useTypingGame(deckId);
+
+  const getClozeText = (example, word) => {
+    if (!example || !word) return "";
+    const safeWord = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    let text = example;
+    text = text.replace(new RegExp(`\\[${safeWord}\\]\\([^)]*\\)`, "g"), "____");
+    text = text.replace(new RegExp(`${safeWord}[（\\(\\[<][^）\\)\\]>]+[）\\)\\]>]`, "g"), "____");
+    text = text.replace(new RegExp(safeWord, "g"), "____");
+    return text;
+  };
 
   // Force focus when card changes
   useEffect(() => {
@@ -167,6 +184,14 @@ export const TypingPage = () => {
         </span>
       </div>
 
+      {(isRecallMode || isMasteryMode) && (
+        <div className="flex justify-center">
+          <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
+            {isMasteryMode ? "Mastery Loop" : "Active Recall"}
+          </span>
+        </div>
+      )}
+
       {/* Score Bar */}
       <div className="flex items-center justify-center gap-6 text-sm font-black">
         <span className="text-emerald-500 flex items-center gap-1"><CheckCircle2 size={16} /> {score.correct}</span>
@@ -186,31 +211,144 @@ export const TypingPage = () => {
         >
           {/* Question */}
           <div className="p-8 text-center space-y-4">
-             <div className="flex flex-col items-center justify-center gap-2">
-              <div className="flex items-center justify-center gap-3">
-                <div className="flex flex-col items-center">
+            {isMasteryMode ? (
+              <div className="flex flex-col items-center justify-center gap-3">
+                {taskType === "dictation" && (
+                  <>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                      Nghe va go lai tu
+                    </p>
+                    <button
+                      onClick={() => tts.playWithFallback(card?.audio, card?.word)}
+                      className="w-20 h-20 rounded-3xl bg-blue-50 text-blue-500 hover:bg-blue-100 transition-all flex items-center justify-center"
+                    >
+                      <Volume2 size={28} />
+                    </button>
+                  </>
+                )}
+                {taskType === "cloze" && (
+                  <>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                      Dien tu vao cau
+                    </p>
+                    <div className="text-xl md:text-2xl font-black text-slate-800 dark:text-white leading-snug">
+                      {renderFurigana(getClozeText(card?.example, card?.word))}
+                    </div>
+                    {card?.example_meaning && (
+                      <p className="text-sm text-slate-400 font-bold">{card.example_meaning}</p>
+                    )}
+                  </>
+                )}
+                {taskType === "recall" && (
+                  <>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                      Goi y nghia
+                    </p>
+                    <h2 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white leading-tight">
+                      {card?.meaning || "(Chua co nghia)"}
+                    </h2>
+                  </>
+                )}
+
+                {card?.hanViet && (
+                  <p className="text-sm font-black text-indigo-500 uppercase tracking-widest">
+                    Han Viet: {card.hanViet}
+                  </p>
+                )}
+                <div className="flex items-center justify-center gap-3">
                   {showFuriganaHint && (
-                    <motion.p initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="text-xs font-black text-[#A342FF] mb-1">
+                    <motion.p
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-xs font-black text-[#A342FF]"
+                    >
                       {card?.furigana}
                     </motion.p>
                   )}
-                  <h2 className="text-5xl font-black text-slate-800 dark:text-white leading-tight">{card?.word}</h2>
                 </div>
                 <button
-                  onClick={() => tts.playWithFallback(card?.audio, card?.word)}
-                  className="p-2 rounded-xl bg-blue-50 text-blue-500 hover:bg-blue-100 transition-all"
+                  onClick={() => setShowFuriganaHint(!showFuriganaHint)}
+                  className="text-[10px] font-black text-slate-300 uppercase tracking-widest hover:text-[#A342FF] transition-colors"
                 >
-                  <Volume2 size={20} />
+                  {showFuriganaHint ? "An goi y" : "Hien goi y"}
+                </button>
+                {masteryTotal > 0 && (
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    Tien do tu nay: {Math.min(masteryDoneCount, masteryTotal)}/{masteryTotal}
+                  </p>
+                )}
+              </div>
+            ) : isRecallMode ? (
+              <div className="flex flex-col items-center justify-center gap-3">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                  Gợi ý nghĩa
+                </p>
+                <h2 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white leading-tight">
+                  {card?.meaning || "(Chưa có nghĩa)"}
+                </h2>
+                {card?.hanViet && (
+                  <p className="text-sm font-black text-indigo-500 uppercase tracking-widest">
+                    Hán Việt: {card.hanViet}
+                  </p>
+                )}
+                <div className="flex items-center justify-center gap-3">
+                  {showFuriganaHint && (
+                    <motion.p
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-xs font-black text-[#A342FF]"
+                    >
+                      {card?.furigana}
+                    </motion.p>
+                  )}
+                  <button
+                    onClick={() => tts.playWithFallback(card?.audio, card?.word)}
+                    className="p-2 rounded-xl bg-blue-50 text-blue-500 hover:bg-blue-100 transition-all"
+                  >
+                    <Volume2 size={20} />
+                  </button>
+                </div>
+                <button
+                  onClick={() => setShowFuriganaHint(!showFuriganaHint)}
+                  className="text-[10px] font-black text-slate-300 uppercase tracking-widest hover:text-[#A342FF] transition-colors"
+                >
+                  {showFuriganaHint ? "Ẩn gợi ý" : "Hiện gợi ý"}
                 </button>
               </div>
-              <button 
-                onClick={() => setShowFuriganaHint(!showFuriganaHint)}
-                className="text-[10px] font-black text-slate-300 uppercase tracking-widest hover:text-[#A342FF] transition-colors"
-              >
-                {showFuriganaHint ? "Ẩn cách đọc" : "Hiện cách đọc"}
-              </button>
-            </div>
-            {(card?.meaning || card?.hanViet) && (
+            ) : (
+              <div className="flex flex-col items-center justify-center gap-2">
+                <div className="flex items-center justify-center gap-3">
+                  <div className="flex flex-col items-center">
+                    {showFuriganaHint && (
+                      <motion.p
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-xs font-black text-[#A342FF] mb-1"
+                      >
+                        {card?.furigana}
+                      </motion.p>
+                    )}
+                    <h2 className="text-5xl font-black text-slate-800 dark:text-white leading-tight">
+                      {card?.word}
+                    </h2>
+                  </div>
+                  <button
+                    onClick={() => tts.playWithFallback(card?.audio, card?.word)}
+                    className="p-2 rounded-xl bg-blue-50 text-blue-500 hover:bg-blue-100 transition-all"
+                  >
+                    <Volume2 size={20} />
+                  </button>
+                </div>
+                <button
+                  onClick={() => setShowFuriganaHint(!showFuriganaHint)}
+                  className="text-[10px] font-black text-slate-300 uppercase tracking-widest hover:text-[#A342FF] transition-colors"
+                >
+                  {showFuriganaHint ? "Ẩn cách đọc" : "Hiện cách đọc"}
+                </button>
+              </div>
+            )}
+
+            {!isRecallMode && (card?.meaning || card?.hanViet) && (
               <div className="space-y-1">
                 {card?.hanViet && (
                   <p className="text-sm font-black text-indigo-500 uppercase tracking-widest">
@@ -234,7 +372,13 @@ export const TypingPage = () => {
                 value={input}
                 onChange={handleInputChange}
                 disabled={result !== null}
-                placeholder={autoConvert ? "Nhập romaji (osaki...)" : "Nhập hiragana"}
+                placeholder={
+                  isRecallMode
+                    ? "Gõ từ tiếng Nhật (kanji hoặc hiragana)"
+                    : autoConvert
+                      ? "Nhập romaji (osaki...)"
+                      : "Nhập hiragana"
+                }
                 autoComplete="off"
                 autoCorrect="off"
                 spellCheck={false}
@@ -278,8 +422,27 @@ export const TypingPage = () => {
                   </span>
                 </div>
                 <p className="text-sm font-bold text-slate-600 dark:text-slate-400">
-                  Đáp án: <span className="text-lg font-black text-slate-800 dark:text-white">{card?.furigana}</span>
+                  Đáp án:{" "}
+                  {isRecallMode || isMasteryMode ? (
+                    <>
+                      <span className="text-lg font-black text-slate-800 dark:text-white">
+                        {card?.word}
+                      </span>
+                      {card?.furigana && (
+                        <span className="ml-2 text-sm font-black text-slate-400">({card.furigana})</span>
+                      )}
+                    </>
+                  ) : (
+                    <span className="text-lg font-black text-slate-800 dark:text-white">
+                      {card?.furigana}
+                    </span>
+                  )}
                 </p>
+                {isRecallMode && (
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">
+                    Đúng liên tiếp: {Math.min(recallStreak, recallRequired)}/{recallRequired}
+                  </p>
+                )}
                 {card?.example && (
                   <div className="mt-3 space-y-2 text-left">
                     <div className="flex items-start gap-3 p-5 bg-slate-50 dark:bg-slate-900/40 rounded-2xl border-l-4 border-purple-300">

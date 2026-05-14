@@ -1,0 +1,330 @@
+/* ===========================
+   PET COMPANION — SPRITE EDITION
+   (vscode-pets style)
+   =========================== */
+
+.pet-companion {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  z-index: 70;
+  pointer-events: auto;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
+
+.pet-companion.is-dragging {
+  cursor: grabbing;
+}
+
+/* ===== Sprite image ===== */
+.pet-sprite-img {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  object-fit: contain;
+  /* flip when walking left */
+  transform: scaleX(var(--pet-flip, 1));
+  transition: none;
+  /* tiny bounce bob */
+  animation: pet-bob 0.6s ease-in-out infinite;
+}
+
+.pet-companion.is-wandering .pet-sprite-img {
+  animation: none; /* walk GIF already animates */
+}
+
+/* ===== Shadow ===== */
+.pet-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  width: 70px;
+  height: 14px;
+  background: rgba(15, 23, 42, 0.2);
+  border-radius: 50%;
+  filter: blur(4px);
+  transform: translateX(-50%);
+  opacity: 0.6;
+}
+
+/* ===== Speech bubble ===== */
+.pet-bubble {
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  transform: translate(-50%, -100%);
+  background: rgba(255, 255, 255, 0.96);
+  border: 2px solid #e2e8f0;
+  color: #0f172a;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+  z-index: 2;
+}
+
+.pet-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 7px solid rgba(255, 255, 255, 0.96);
+}
+
+/* ===========================
+   PET HUD / CONTROL PANEL
+   =========================== */
+
+.pet-hud {
+  position: fixed;
+  right: 16px;
+  bottom: 92px;
+  width: 220px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1.5px solid rgba(226, 232, 240, 0.8);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.14), 0 2px 8px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(12px);
+  z-index: 80;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), pointer-events 0s;
+  transform-origin: bottom right;
+  font-family: inherit;
+}
+
+.pet-hud.hidden {
+  opacity: 0;
+  transform: scale(0.9) translateY(10px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease, pointer-events 0s 0.2s;
+}
+
+.pet-hud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.pet-hud-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pet-name {
+  font-weight: 800;
+  font-size: 13px;
+  color: #0f172a;
+}
+
+.pet-level {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #1cb0f6, #0e8ecc);
+  color: #fff;
+  letter-spacing: 0.2px;
+}
+
+/* Sound toggle — compact icon button */
+.pet-icon-btn {
+  font-size: 16px;
+  line-height: 1;
+  padding: 3px 6px;
+  border-radius: 8px;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.pet-icon-btn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+/* Mood + Age row */
+.pet-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* ===== Stat bars ===== */
+.pet-bars {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 10px;
+}
+
+.pet-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pet-bar-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  width: 38px;
+  flex-shrink: 0;
+}
+
+.pet-bar-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.pet-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4ade80, #58cc02);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+  min-width: 2px;
+}
+
+.pet-bar-fill.xp {
+  background: linear-gradient(90deg, #38bdf8, #1cb0f6);
+}
+
+/* ===== Action buttons ===== */
+.pet-actions {
+  display: flex;
+  gap: 7px;
+}
+
+.pet-btn {
+  flex: 1;
+  padding: 7px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, #58cc02, #46a801);
+  border: none;
+  cursor: pointer;
+  transition: filter 0.12s, transform 0.1s;
+  box-shadow: 0 3px 0 #3d9301;
+}
+
+.pet-btn:hover {
+  filter: brightness(1.08);
+}
+
+.pet-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #3d9301;
+}
+
+.pet-btn.ghost {
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  color: #334155;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 2px 0 #cbd5e1;
+}
+
+.pet-btn.ghost:hover {
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+}
+
+.pet-btn.ghost:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #cbd5e1;
+}
+
+/* ===== Drag cursor ===== */
+body.pet-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* ===== Dark mode ===== */
+html.dark .pet-hud {
+  background: rgba(15, 23, 42, 0.97);
+  border-color: #334155;
+}
+
+html.dark .pet-name { color: #f1f5f9; }
+html.dark .pet-meta { color: #475569; }
+html.dark .pet-bar-label { color: #475569; }
+html.dark .pet-bar-track { background: #1e293b; }
+
+html.dark .pet-icon-btn {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: #334155;
+}
+
+html.dark .pet-icon-btn:hover {
+  background: rgba(51, 65, 85, 0.9);
+}
+
+html.dark .pet-btn.ghost {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: #334155;
+  color: #e2e8f0;
+  box-shadow: 0 2px 0 #1e293b;
+}
+
+html.dark .pet-bubble {
+  background: rgba(15, 23, 42, 0.97);
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+html.dark .pet-bubble::after {
+  border-top-color: rgba(15, 23, 42, 0.97);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 640px) {
+  .pet-companion {
+    width: 80px;
+    height: 80px;
+  }
+
+  .pet-hud {
+    right: 10px;
+    bottom: 112px;
+    width: 190px;
+  }
+}
+
+/* ===========================
+   KEYFRAME ANIMATIONS
+   =========================== */
+
+@keyframes pet-bob {
+  0%, 100% { transform: scaleX(var(--pet-flip, 1)) translateY(0); }
+  50%       { transform: scaleX(var(--pet-flip, 1)) translateY(-3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pet-sprite-img { animation: none; }
+}

@@ -80,12 +80,13 @@ export const FlashcardPage = () => {
   // Lấy Metadata cho bài học từ DB
   useEffect(() => {
     if (isUUID) {
-      const q = `query GetDeckTitle($id: uuid!) {
+      const q = `query GetDeckTitle($id: String!) {
         decks_by_pk(id: $id) {
           title
         }
       }`;
-      nhostService.fetchGraphQL(q, "GetDeckTitle", { id: deckId }).then(res => {
+      const normalizedId = deckId.toLowerCase();
+      nhostService.fetchGraphQL(q, "GetDeckTitle", { id: normalizedId }).then(res => {
         if (res.data?.decks_by_pk) {
           setDeckMetadata(res.data.decks_by_pk);
         }
@@ -607,6 +608,29 @@ export const FlashcardPage = () => {
                       {card.exampleMeaning && (
                         <p className="text-[11px] lg:text-sm text-slate-400 font-medium">{card.exampleMeaning}</p>
                       )}
+                    </div>
+                  )}
+
+                  {(card?.definitionEn || card?.definitionVi) && (
+                    <div className="mt-4 lg:mt-6 bg-slate-50 dark:bg-slate-900/50 p-3 lg:p-4 rounded-xl text-left border-l-4" style={{ borderColor: color }}>
+                      {card.definitionEn && (
+                        <p className="text-sm lg:text-md text-slate-600 dark:text-slate-300 font-medium whitespace-pre-wrap">
+                           {card.definitionEn}
+                        </p>
+                      )}
+                      {card.definitionVi && (
+                        <p className="text-xs lg:text-sm text-slate-400 font-medium italic mt-1 whitespace-pre-wrap">
+                           {card.definitionVi}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {card?.synonyms && (
+                    <div className="mt-4 lg:mt-6 bg-purple-50 dark:bg-purple-900/20 p-3 lg:p-4 rounded-xl text-left border-l-4 border-purple-400">
+                      <p className="text-xs lg:text-sm text-purple-600 dark:text-purple-300 font-bold flex flex-wrap items-center gap-1">
+                        Từ đồng nghĩa: <span className="font-medium text-slate-600 dark:text-slate-300">{card.synonyms}</span>
+                      </p>
                     </div>
                   )}
                 </div>

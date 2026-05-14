@@ -679,6 +679,7 @@ export const PomodoroPage = () => {
         persistTimerState(true, freshTime, mode);
         setShowBell(true);
         const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
+        audio.volume = 1;
         audio.play().catch(() => {});
         setTimeout(() => setShowBell(false), 1200);
       }
@@ -818,7 +819,7 @@ export const PomodoroPage = () => {
                     transition={{ duration: 1.2 }}
                     className="absolute left-1/2 -translate-x-1/2 top-0 z-50"
                   >
-                    <span className="text-4xl">🔔</span>
+                    <span className="text-6xl sm:text-7xl">🔔</span>
                   </motion.div>
                 )}
                 {/* Tổng số Pomodoro đã hoàn thành */}

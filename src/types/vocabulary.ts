@@ -22,6 +22,9 @@ export interface WordCard {
   audio?: string; // Optional TTS audio URL
   details?: any[]; // Grammar details array
   sections?: any[]; // Grammar sections array
+  definitionEn?: string; // English definition
+  definitionVi?: string; // Vietnamese definition
+  synonyms?: string; // Synonyms
 }
 
 export interface QuizQuestion {

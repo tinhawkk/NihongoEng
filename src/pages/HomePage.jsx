@@ -348,6 +348,12 @@ export const HomePage = () => {
   const bookmarks = useBookmarkStore(state => state.bookmarks);
   const { account, vocaSource, setVocaSource } = useUserStore();
   const { syncing, forceRefresh } = useSync();
+  const [showSrsBanner, setShowSrsBanner] = useState(true);
+
+  useEffect(() => {
+    const t = setTimeout(() => setShowSrsBanner(false), 5000);
+    return () => clearTimeout(t);
+  }, []);
 
   const [moveDeckTarget, setMoveDeckTarget] = useState(null);
 
@@ -1623,10 +1629,14 @@ export const HomePage = () => {
 
       {/* 1. Combined SRS & Hero Banner */}
       <motion.div variants={itemVars} className="space-y-4">
-        {dueItems.length > 0 ? (
-          <div
+        <AnimatePresence>
+        {dueItems.length > 0 && showSrsBanner ? (
+          <motion.div
+            initial={{ opacity: 1, scale: 1, height: "auto" }}
+            exit={{ opacity: 0, scale: 0.95, height: 0, overflow: "hidden" }}
+            transition={{ duration: 0.5 }}
             onClick={() => navigate("/quiz/srs")}
-            className="relative rounded-[32px] md:rounded-[40px] p-6 md:p-10 bg-gradient-to-br from-indigo-600 to-indigo-500 text-white shadow-2xl shadow-indigo-200/20 overflow-hidden cursor-pointer group"
+            className="relative rounded-[32px] md:rounded-[40px] p-6 md:p-10 bg-gradient-to-br from-indigo-600 to-indigo-500 text-white shadow-2xl shadow-indigo-200/20 cursor-pointer group"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl pointer-events-none" />
             <div className="relative z-10 flex items-center justify-between">
@@ -1644,7 +1654,7 @@ export const HomePage = () => {
                 className="text-white/50 group-hover:translate-x-1 transition-transform"
               />
             </div>
-          </div>
+          </motion.div>
         ) : (
           event && (
             <div
@@ -1665,6 +1675,7 @@ export const HomePage = () => {
             </div>
           )
         )}
+        </AnimatePresence>
       </motion.div>
 
       {/* 2. Compact Source Switcher */}

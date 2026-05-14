@@ -638,6 +638,31 @@ export const LearnPage = () => {
                         {step.word.meaning}
                       </p>
                     </div>
+
+                    {(step.word.definitionEn || step.word.definitionVi) && (
+                      <div className="bg-indigo-50 dark:bg-indigo-900/20 text-left border-l-4 border-indigo-400 rounded-r-2xl p-4 mt-4 max-w-lg mx-auto shadow-sm">
+                        {step.word.definitionEn && (
+                          <p className="text-sm font-bold text-slate-700 dark:text-slate-300 leading-relaxed font-serif">
+                            {step.word.definitionEn}
+                          </p>
+                        )}
+                        {step.word.definitionVi && (
+                          <p className="text-xs font-medium text-slate-500 italic mt-1">
+                            {step.word.definitionVi}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                    {step.word.synonyms && (
+                      <div className="bg-purple-50 dark:bg-purple-900/20 text-left border-l-4 border-purple-400 rounded-r-2xl p-4 mt-4 max-w-lg mx-auto shadow-sm">
+                        <p className="text-xs font-black text-purple-500 uppercase tracking-widest mb-1 flex items-center gap-1">
+                          Từ đồng nghĩa
+                        </p>
+                        <p className="text-sm font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
+                          {step.word.synonyms}
+                        </p>
+                      </div>
+                    )}
                     {step.word.mnemonic && (
                       <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-2xl p-4 mt-4 text-center max-w-lg mx-auto shadow-sm">
                         <p className="text-xs font-black text-amber-500 uppercase tracking-widest mb-2 flex items-center justify-center gap-1">

@@ -5,6 +5,7 @@ import { Flame, Trophy, Home, Book, Search, User, Timer, Bookmark, Headphones, B
 import { NavLink, useLocation } from "react-router-dom";
 import { getDueItems } from "../../utils/srsUtils";
 import { motion, AnimatePresence } from "framer-motion";
+import { PetCompanion } from "../pet/PetCompanion";
 
 export const Layout = ({ children }) => {
   const account = useUserStore(state => state.account);
@@ -166,6 +167,9 @@ export const Layout = ({ children }) => {
           </motion.button>
         )}
       </AnimatePresence>
+
+      {/* Pet Companion - floats above everything */}
+      <PetCompanion />
     </div>
   );
 };

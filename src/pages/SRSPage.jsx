@@ -11,6 +11,7 @@ import {
   Zap,
   TrendingUp,
   BookOpen,
+  Keyboard,
   BarChart3,
   Flame,
   Target,
@@ -283,6 +284,7 @@ export const SRSPage = () => {
     () => getDueItems(Object.fromEntries(selectedDeckItems.map(i => [i.id || i.word, i]))),
     [selectedDeckItems]
   );
+  const recallScope = selectedDueDeck.length > 0 ? "due" : "all";
 
   return (
     <div className="max-w-[1600px] mx-auto space-y-4 lg:space-y-8 pb-32 px-4 lg:px-8">
@@ -450,7 +452,7 @@ export const SRSPage = () => {
               {deckGroups.map(group => {
                 const progressPct =
                   group.items.length > 0
-                    ? Math.round(((group.items.length - group.newCount) / group.items.length) * 100)
+                    ? Math.round((group.matureCount / group.items.length) * 100)
                     : 0;
                 const isSelected = selectedDeck === group.rawName;
 
@@ -560,6 +562,15 @@ export const SRSPage = () => {
                     className="flex-1 md:flex-none py-3.5 px-6 rounded-2xl bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 hover:brightness-110 font-black text-sm gap-2 whitespace-nowrap"
                   >
                     LUYỆN TẬP <Zap size={16} />
+                  </Button>
+                  <Button
+                    onClick={() =>
+                      navigate(`/typing/srs?practice=mastery&deck=${selectedDeck}&scope=${recallScope}`)
+                    }
+                    disabled={filteredItems.length === 0}
+                    className="flex-1 md:flex-none py-3.5 px-6 rounded-2xl bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-500/30 font-black text-sm gap-2 whitespace-nowrap"
+                  >
+                    THUỘC THẬT <Keyboard size={16} />
                   </Button>
                 </div>
               </div>
