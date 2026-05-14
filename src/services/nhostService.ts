@@ -246,10 +246,10 @@ function sanitizeMyVoca(obj) {
   const VALID_COLS = [
     "id", "word", "furigana", "meaning", "han_viet", "romaji",
     "example_jp", "example_vi", "level", "mnemonic", "type",
-    "onyomi", "kunyomi", "deck_id"
+    "onyomi", "kunyomi", "deck_id", "definition_en", "definition_vi", "synonyms"
   ];
   
-  const clean = {};
+  const clean: any = {};
 
   // Extract values with fallbacks
   const word = String(obj.word || obj.word_en || obj.english || obj.kanji || "").trim();
@@ -285,7 +285,7 @@ export const MUTATIONS = {
     insert_my_vocabulary_one(object: $obj) { id word }
   }`,
   BULK_INSERT_MY_VOCA: `mutation BulkInsertMyVoca($objects: [my_vocabulary_insert_input!]!) {
-    insert_my_vocabulary(objects: $objects, on_conflict: {constraint: my_vocabulary_pkey, update_columns: [word, furigana, meaning, han_viet, romaji, example_jp, example_vi, level, mnemonic, type, onyomi, kunyomi, deck_id]}) {
+    insert_my_vocabulary(objects: $objects, on_conflict: {constraint: my_vocabulary_pkey, update_columns: [word, furigana, meaning, han_viet, romaji, example_jp, example_vi, level, mnemonic, type, onyomi, kunyomi, deck_id, definition_en, definition_vi, synonyms]}) {
       affected_rows
       returning { id word }
     }
@@ -416,18 +416,19 @@ export const MUTATIONS = {
       affected_rows
     }
   }`,
+  CREATE_COMMUNITY_ROOT: `
+    mutation CreateCommunityRoot($id: String!, $title: String!, $description: String) {
+      insert_folders_one(object: { id: $id, title: $title, description: $description }) {
+        id
+        title
+        description
+        created_at
+      }
+    }
+  `,
 };
 
-MUTATIONS.CREATE_COMMUNITY_ROOT = `
-  mutation CreateCommunityRoot($id: String!, $title: String!, $description: String) {
-    insert_folders_one(object: { id: $id, title: $title, description: $description }) {
-      id
-      title
-      description
-      created_at
-    }
-  }
-`;
+// CREATE_COMMUNITY_ROOT is now inside MUTATIONS
 
 async function createCommunityRoot({ title, description }) {
   let uuid;
@@ -879,16 +880,7 @@ export const nhostService = {
     }
   },
 
-  async bulkInsertMyVoca(objects) {
-    console.log("[Nhost] Attempting bulk insert of", objects.length, "items");
-    const sanitized = objects.map(obj => sanitizeMyVoca(obj));
-    
-    const res = await fetchGraphQL(MUTATIONS.BULK_INSERT_MY_VOCA, "BulkInsertMyVoca", {
-      objects: sanitized,
-    });
-    if (!res.errors) clearAllCaches();
-    return res;
-  },
+  // Removed duplicate bulkInsertMyVoca from here (it is inside nhostService object)
 
   async insertMyVoca(object) {
     return this.createRow("my_vocabulary", object);
@@ -924,6 +916,8 @@ export const nhostService = {
     // Fallback: attempt dynamic update_by_pk with 'id' as primary key
     try {
       const safeTable = table.replace(/[^a-zA-Z0-9_]/g, "");
+      const pkName = cfg?.pkName || "id";
+      const opName = `Update_${safeTable}`;
       const pkType = pkName === "id" ? "uuid!" : "String!";
       const q = `mutation ${opName}($${pkName}: ${pkType}, $set: ${safeTable}_set_input!) { update_${safeTable}_by_pk(pk_columns: {${pkName}: $${pkName}}, _set: $set) { ${pkName} } }`;
       return fetchGraphQL(q, opName, { [pkName]: pk, set: finalSet });
@@ -954,6 +948,8 @@ export const nhostService = {
     // Fallback: attempt dynamic delete_by_pk with 'id' as primary key
     try {
       const safeTable = table.replace(/[^a-zA-Z0-9_]/g, "");
+      const pkName = cfg?.pkName || "id";
+      const opName = `Delete_${safeTable}`;
       const pkType = pkName === "id" ? "uuid!" : "String!";
       const q = `mutation ${opName}($${pkName}: ${pkType}) { delete_${safeTable}_by_pk(${pkName}: $${pkName}) { ${pkName} } }`;
       return fetchGraphQL(q, opName, { [pkName]: pk });
@@ -997,6 +993,7 @@ export const nhostService = {
   async bulkInsertMyVoca(objects) {
     // Sanitize all objects before insertion
     const sanitized = objects.map(obj => sanitizeMyVoca(obj));
+    console.debug("[Nhost] Sanitized bulk insert items:", sanitized);
     return fetchGraphQL(MUTATIONS.BULK_INSERT_MY_VOCA, "BulkInsertMyVoca", { objects: sanitized });
   },
 

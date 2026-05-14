@@ -1102,6 +1102,30 @@ export const DeckPage = () => {
                           )}
                         </div>
                       )}
+                      {(word.definitionEn || word.definitionVi) && (
+                        <div className="bg-indigo-50 dark:bg-indigo-500/10 border-l-4 border-indigo-400 rounded-r-xl p-3">
+                          {word.definitionEn && (
+                            <p className="text-sm text-slate-700 dark:text-slate-300 font-bold leading-relaxed">
+                              {word.definitionEn}
+                            </p>
+                          )}
+                          {word.definitionVi && (
+                            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium italic mt-1">
+                              {word.definitionVi}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                      {word.synonyms && (
+                        <div className="bg-purple-50 dark:bg-purple-500/10 border-l-4 border-purple-400 rounded-r-xl p-3">
+                          <p className="text-xs font-black text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-1">
+                            Từ đồng nghĩa
+                          </p>
+                          <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                            {word.synonyms}
+                          </p>
+                        </div>
+                      )}
                       {word.radicalAnalysis && (
                         <div className="bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 rounded-xl p-3 relative">
                           <span className="text-indigo-700 dark:text-indigo-400 font-bold text-xs uppercase flex items-center gap-2">
@@ -1635,6 +1659,9 @@ export const DeckPage = () => {
                            if (item.romaji !== undefined) setFields.romaji = item.romaji;
                            if (item.example_jp !== undefined) setFields.example_jp = item.example_jp;
                            if (item.example_vi !== undefined) setFields.example_vi = item.example_vi;
+                           if (item.definition_en !== undefined) setFields.definition_en = item.definition_en;
+                           if (item.definition_vi !== undefined) setFields.definition_vi = item.definition_vi;
+                           if (item.synonyms !== undefined) setFields.synonyms = item.synonyms;
                            
                            // Map tên cột cho japience
                            if (table === "japience_voca") {
