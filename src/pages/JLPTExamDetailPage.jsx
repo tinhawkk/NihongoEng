@@ -84,8 +84,8 @@ export const JLPTExamDetailPage = () => {
           <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
           <span className="font-bold text-sm uppercase tracking-wider">Quay lại</span>
         </Link>
-        <h1 className="text-3xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">Đề thi JLPT {exam.title}</h1>
-        <p className="text-slate-500 dark:text-slate-400 text-sm max-w-2xl leading-relaxed">Đề thi mô phỏng JLPT - {exam.level}. Chúc bạn làm bài tốt!</p>
+        <h1 className="text-3xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">{exam.title}</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm max-w-2xl leading-relaxed">Đề thi mô phỏng {/A1|A2|B1|B2|C1|C2|IELTS|TOEIC|ENG/i.test(exam.level) ? "Tiếng Anh Quốc Tế" : "JLPT"} - {exam.level}. Chúc bạn làm bài tốt!</p>
       </div>
 
       <div className="flex flex-col xl:flex-row gap-16 items-start pb-20">

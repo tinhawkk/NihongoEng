@@ -23,7 +23,23 @@ async function callGroq(prompt, level, maxTokens = 4096, retryCount = 0) {
       messages: [
         {
           role: "system",
-          content: `
+          content: /A1|A2|B1|B2|C1|C2|IELTS|TOEIC|ENG/i.test(level) ? `
+Bạn là chuyên gia giảng dạy và kiểm tra kỳ thi Tiếng Anh (IELTS, TOEIC, CEFR) chuyên nghiệp tuyến đầu.
+
+Mục tiêu:
+- Tự động thay thế/chuyển đổi nội dung tạo đề thi thành bài kiểm tra Tiếng Anh (English test) tương đương format yêu cầu (Đồng nghĩa, Từ vựng, Ngữ pháp, Đọc hiểu).
+- Cung cấp đề giống đề IELTS/CEFR thật.
+
+Quy tắc:
+1. Trả về đúng định dạng JSON yêu cầu. TUYỆT ĐỐI KHÔNG dùng ký tự xuống dòng (Enter) hoặc Tab thực tế bên trong chuỗi JSON. Dùng kí tự escape (ví dụ: \\n, \\t).
+2. Mỗi câu hỏi đi kèm 4 đáp án (1 đúng, 3 sai nhưng đánh lừa hợp lý). Đáp án sai phải cùng loại từ, dễ nhầm.
+3. TOÀN BỘ ĐỀ THI (Đoạn văn, Câu hỏi, Đáp án) PHẢI VIẾT BẰNG TIẾNG ANH 100%. Tựa đề bài và instruction_text cũng là Tiếng Anh. TUYỆT ĐỐI KHÔNG DÙNG TIẾNG NHẬT HOẶC TIẾNG VIỆT TRONG DATA TRẢ VỀ.
+4. Ưu tiên bám sát danh sách từ vựng Tiếng Anh được cung cấp.
+
+Level ${level}:
+- Dùng từ vựng và ngữ pháp Tiếng Anh nâng cao tương đương trình độ ${level}.
+- Phân bổ độ khó: 30% dễ, 50% trung bình, 20% khó.
+` : `
 Bạn là người ra đề JLPT chuyên nghiệp.
 
 Mục tiêu:
@@ -386,6 +402,63 @@ Yêu cầu:
 ${PASSAGE_JSON}
 `;
 
+// ================= ENGLISH PROMPTS =================
+const buildEngVocab = (w, type = "synonym") => `
+Generate ${w.length || 5} English ${type} questions in a JSON array.
+Format:
+[
+  {
+    "question_text": "He decided to **abandon** his car.",
+    "options": ["leave behind", "repair", "sell", "paint"],
+    "correct_index": 0
+  }
+]
+Requirements:
+1. Write natural English sentences.
+2. In each sentence, choose one word to test and bold it using Markdown **word**.
+3. Incorrect options must be plausible but wrong in context.
+4. Output ONLY valid JSON array.
+${w.length > 0 ? `Use these words as the target test words:\n${formatWordList(w)}` : ''}
+`;
+
+const buildEngGrammar = (w, count = 6) => `
+Generate ${count} English grammar fill-in-the-blank questions in a JSON array.
+Format:
+[
+  {
+    "question_text": "She has been living here (____) 2010.",
+    "options": ["since", "for", "in", "from"],
+    "correct_index": 0
+  }
+]
+Requirements:
+1. The sentence must have a blank indicated by (____).
+2. Options must test tenses, prepositions, gerunds, or complex grammar structures appropriate for the level.
+3. Output ONLY valid JSON array.
+${w.length > 0 ? `(Optional) Try incorporating these words functionally if possible:\n${formatWordList(w)}` : ''}
+`;
+
+const buildEngPassage = (type = "Short Reading") => `
+Generate an English reading comprehension test in JSON format.
+You MUST output EXACTLY ONE JSON object with "title", "passage", and "questions" properties.
+Format:
+{
+  "title": "Passage Title",
+  "passage": "Passage content here... (approx 200-500 words depending on type: ${type})",
+  "questions": [
+    {
+      "question_text": "What is the main idea of the passage?",
+      "options": ["...", "...", "...", "..."],
+      "correct_index": 0
+    }
+  ]
+}
+Requirements:
+1. Provide exactly 3 high-quality questions for the passage within the "questions" array.
+2. Questions should test main ideas, specific details, inferences, and vocabulary in context.
+3. Output ONLY the raw JSON object. Do not use Markdown formatting for the JSON. Do not write \`\`\`json.
+`;
+
 // ================= MAIN =================
 
 export const examGeneratorService = {
@@ -395,38 +468,48 @@ export const examGeneratorService = {
     const allWords = shuffleArray(words);
 
     const run = async (num, title, inst, builder, isPassage = false) => {
-      if (num > 1) await delay(DELAY_BETWEEN_CALLS_MS);
-      onProgress?.(num, 12);
-      const raw = await callGroq(builder(allWords, level), level, isPassage ? 5000 : 4096);
-      
-      if (isPassage) {
-        const d = Array.isArray(raw) ? raw[0] : raw;
-        // Combine title and passage
-        const combinedText = d.title ? `### ${d.title}\n\n${d.passage}` : d.passage;
-        mondais.push({
-          mondai_number: num, title, instruction_text: inst, sort_order: num,
-          questions: [{ question_text: combinedText, is_mondai_header: true }, ...d.questions]
-        });
-      } else {
-        mondais.push({ mondai_number: num, title, instruction_text: inst, sort_order: num, questions: raw });
+      try {
+        if (num > 1) await delay(DELAY_BETWEEN_CALLS_MS);
+        onProgress?.(num, 12);
+        const raw = await callGroq(builder(allWords, level), level, isPassage ? 5000 : 4096);
+        
+        if (isPassage) {
+          const d = Array.isArray(raw) ? raw[0] : (raw || {});
+          // Combine title and passage
+          const combinedText = d.title ? `### ${d.title}\n\n${d.passage || ""}` : (d.passage || "");
+          const qs = Array.isArray(d.questions) ? d.questions : [];
+          mondais.push({
+            mondai_number: num, title, instruction_text: inst, sort_order: num,
+            questions: [{ question_text: combinedText, is_mondai_header: true }, ...qs]
+          });
+        } else {
+          const qs = Array.isArray(raw) ? raw : (raw?.questions && Array.isArray(raw.questions) ? raw.questions : []);
+          if (qs.length > 0) {
+            mondais.push({ mondai_number: num, title, instruction_text: inst, sort_order: num, questions: qs });
+          }
+        }
+      } catch (err) {
+        console.warn(`[ExamGen] Failed to generate part ${num}: ${err.message}`);
       }
     };
 
-    await run(1, "問題1", "＿＿＿の言葉の読み方として最もよいものを、１・２・３・４から一つ選びなさい。", (w, lvl) => buildM1(w.slice(0, 6), lvl, 6));
-    await run(2, "問題2", "＿＿＿の言葉を漢字で書くとき、最もよいものを、１・２・３・４から一つ選びなさい。", (w, lvl) => buildM2(w.slice(6, 12), lvl, 6));
-    await run(3, "問題3", "（　　）に入れるのに最もよいものを、１・２・３・４から一つ選びなさい。", (w, lvl) => buildM3(w.slice(12, 19), lvl, 7));
-    await run(4, "問題4", "＿＿＿の言葉に意味が最も近いものを、１・２・３・４から一つ選びなさい。", (w, lvl) => buildM4(w.slice(19, 25), lvl, 6));
-    await run(5, "問題5", "次の言葉の使い方として最もよいものを、１・２・３・４から一つ選びなさい。", (w, lvl) => buildM5(w.slice(25, 30), lvl, 5));
-    await run(6, "問題6", "次の文の（　　）に入れるのに最もよいものを、１・２・３・４から一つ選びなさい。", buildM6);
-    await run(7, "問題7", "次の文の＿★＿に入る最もよいものを、１・２・３・４から一つ選びなさい。", buildM7);
-    await run(8, "問題8", "次の文章を読んで、文章全体の趣旨を踏まえて、（　　）の中に入る最もよいものを、１・２・３・４から一つ選びなさい。", buildM8, true);
-    await run(9, "問題9", "次の文章を読んで、後の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", buildM9, true);
-    await run(10, "問題10", "次の文章を読んで、後の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", buildM10, true);
-    await run(11, "問題11", "次の文章を読んで、後の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", buildM11, true);
-    await run(12, "問題12", "次のページを見て、下の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", buildM12, true);
+    const isEng = /A1|A2|B1|B2|C1|C2|IELTS|TOEIC|ENG/i.test(level);
+
+    await run(1, isEng ? "Part 1" : "問題1", isEng ? "Choose the synonym or meaning that best matches the given word." : "＿＿＿の言葉の読み方として最もよいものを、１・２・３・４から一つ選びなさい。", (w, lvl) => isEng ? buildEngVocab(w.slice(0, 6), "synonym") : buildM1(w.slice(0, 6), lvl, 6));
+    await run(2, isEng ? "Part 2" : "問題2", isEng ? "Choose the correct spelling or word usage for the blank." : "＿＿＿の言葉を漢字で書くとき、最もよいものを、１・２・３・４から一つ選びなさい。", (w, lvl) => isEng ? buildEngVocab(w.slice(6, 12), "definition") : buildM2(w.slice(6, 12), lvl, 6));
+    await run(3, isEng ? "Part 3" : "問題3", isEng ? "Choose the word that best completes the sentence." : "（　　）に入れるのに最もよいものを、１・２・３・４から一つ選びなさい。", (w, lvl) => isEng ? buildEngGrammar(w.slice(12, 19), 7) : buildM3(w.slice(12, 19), lvl, 7));
+    await run(4, isEng ? "Part 4" : "問題4", isEng ? "Choose the option closest in meaning to the highlighted word." : "＿＿＿の言葉に意味が最も近いものを、１・２・３・４から一つ選びなさい。", (w, lvl) => isEng ? buildEngVocab(w.slice(19, 25), "closest meaning") : buildM4(w.slice(19, 25), lvl, 6));
+    await run(5, isEng ? "Part 5" : "問題5", isEng ? "Choose the sentence where the highlighted word is used correctly." : "次の言葉の使い方として最もよいものを、１・２・３・４から一つ選びなさい。", (w, lvl) => isEng ? buildEngVocab(w.slice(25, 30), "correct usage") : buildM5(w.slice(25, 30), lvl, 5));
+    await run(6, isEng ? "Part 6" : "問題6", isEng ? "Choose the best grammar or word option for the blank." : "次の文の（　　）に入れるのに最もよいものを、１・２・３・４から一つ選びなさい。", (w, lvl) => isEng ? buildEngGrammar([], 5) : buildM6(w, lvl));
+    await run(7, isEng ? "Part 7" : "問題7", isEng ? "Arrange the words in the correct order to form a sentence." : "次の文の＿★＿に入る最もよいものを、１・２・３・４から一つ選びなさい。", (w, lvl) => isEng ? buildEngGrammar([], 3) : buildM7(w, lvl));
+    await run(8, isEng ? "Part 8" : "問題8", isEng ? "Read the passage and choose the best word to fill in the blank." : "次の文章を読んで、文章全体の趣旨を踏まえて、（　　）の中に入る最もよいものを、１・２・３・４から一つ選びなさい。", (w, lvl) => isEng ? buildEngPassage("Reading Fill Blank") : buildM8(w, lvl), true);
+    await run(9, isEng ? "Part 9" : "問題9", isEng ? "Read the text and answer the questions below." : "次の文章を読んで、後の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", (w, lvl) => isEng ? buildEngPassage("Short Reading Comprehension") : buildM9(w, lvl), true);
+    await run(10, isEng ? "Part 10" : "問題10", isEng ? "Read the text and answer the questions below." : "次の文章を読んで、後の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", (w, lvl) => isEng ? buildEngPassage("Medium Reading Comprehension") : buildM10(w, lvl), true);
+    await run(11, isEng ? "Part 11" : "問題11", isEng ? "Read the text and answer the questions below." : "次の文章を読んで、後の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", (w, lvl) => isEng ? buildEngPassage("Long Reading Comprehension") : buildM11(w, lvl), true);
+    await run(12, isEng ? "Part 12" : "問題12", isEng ? "Read the information page and answer the questions based on it." : "次のページを見て、下の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", (w, lvl) => isEng ? buildEngPassage("Information Retrieval/Practical Reading") : buildM12(w, lvl), true);
 
     return { 
-      title: `Đề thi JLPT ${level} Đề từ vựng - ${meta.deckTitle}`, 
+      title: isEng ? `MOCK TEST ${level.toUpperCase()} - ${meta.deckTitle}` : `Đề thi JLPT ${level} Đề từ vựng - ${meta.deckTitle}`, 
       level, 
       source_deck_id: meta.deckId,
       mondais 
@@ -440,39 +523,48 @@ export const examGeneratorService = {
     const newMondais = [];
     const allWords = shuffleArray(words);
 
+    const isEng = /A1|A2|B1|B2|C1|C2|IELTS|TOEIC|ENG/i.test(level);
     const MONDAI_MAP = {
-      1: { title: "問題1", inst: "＿＿＿の言葉の読み方として最もよいものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => buildM1(w.slice(0, 6), lvl, 6) },
-      2: { title: "問題2", inst: "＿＿＿の言葉を漢字で書くとき、最もよいものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => buildM2(w.slice(6, 12), lvl, 6) },
-      3: { title: "問題3", inst: "（　　）に入れるのに最もよいものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => buildM3(w.slice(12, 19), lvl, 7) },
-      4: { title: "問題4", inst: "＿＿＿の言葉に意味が最も近いものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => buildM4(w.slice(19, 25), lvl, 6) },
-      5: { title: "問題5", inst: "次の言葉の使い方として最もよいものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => buildM5(w.slice(25, 30), lvl, 5) },
-      6: { title: "問題6", inst: "次の文の（　　）に入れるのに最もよいものを、１・２・３・４から一つ選びなさい。", builder: buildM6 },
-      7: { title: "問題7", inst: "次の文の＿★＿に入る最もよいものを、１・２・３・４から一つ選びなさい。", builder: buildM7 },
-      8: { title: "問題8", inst: "次の文章を読んで、文章全体の趣旨を踏まえて、（　　）の中に入る最もよいものを、１・２・３・４から一つ選びなさい。", builder: buildM8, p: true },
-      9: { title: "問題9", inst: "次の文章を読んで、後の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", builder: buildM9, p: true },
-      10: { title: "問題10", inst: "次の文章を読んで、後の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", builder: buildM10, p: true },
-      11: { title: "問題11", inst: "次の文章を読んで、後の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", builder: buildM11, p: true },
-      12: { title: "問題12", inst: "次のページを見て、下の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", builder: buildM12, p: true },
+      1: { title: isEng ? "Part 1" : "問題1", inst: isEng ? "Choose the synonym or meaning that best matches the given word." : "＿＿＿の言葉の読み方として最もよいものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => isEng ? buildEngVocab(w.slice(0, 6), "synonym") : buildM1(w.slice(0, 6), lvl, 6) },
+      2: { title: isEng ? "Part 2" : "問題2", inst: isEng ? "Choose the correct spelling or word usage for the blank." : "＿＿＿の言葉を漢字で書くとき、最もよいものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => isEng ? buildEngVocab(w.slice(6, 12), "definition") : buildM2(w.slice(6, 12), lvl, 6) },
+      3: { title: isEng ? "Part 3" : "問題3", inst: isEng ? "Choose the word that best completes the sentence." : "（　　）に入れるのに最もよいものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => isEng ? buildEngGrammar(w.slice(12, 19), 7) : buildM3(w.slice(12, 19), lvl, 7) },
+      4: { title: isEng ? "Part 4" : "問題4", inst: isEng ? "Choose the option closest in meaning to the highlighted word." : "＿＿＿の言葉に意味が最も近いものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => isEng ? buildEngVocab(w.slice(19, 25), "closest meaning") : buildM4(w.slice(19, 25), lvl, 6) },
+      5: { title: isEng ? "Part 5" : "問題5", inst: isEng ? "Choose the sentence where the highlighted word is used correctly." : "次の言葉の使い方として最もよいものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => isEng ? buildEngVocab(w.slice(25, 30), "correct usage") : buildM5(w.slice(25, 30), lvl, 5) },
+      6: { title: isEng ? "Part 6" : "問題6", inst: isEng ? "Choose the best grammar or word option for the blank." : "次の文の（　　）に入れるのに最もよいものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => isEng ? buildEngGrammar([], 5) : buildM6(w, lvl) },
+      7: { title: isEng ? "Part 7" : "問題7", inst: isEng ? "Arrange the words in the correct order to form a sentence." : "次の文の＿★＿に入る最もよいものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => isEng ? buildEngGrammar([], 3) : buildM7(w, lvl) },
+      8: { title: isEng ? "Part 8" : "問題8", inst: isEng ? "Read the passage and choose the best word to fill in the blank." : "次の文章を読んで、文章全体の趣旨を踏まえて、（　　）の中に入る最もよいものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => isEng ? buildEngPassage("Reading Fill Blank") : buildM8(w, lvl), p: true },
+      9: { title: isEng ? "Part 9" : "問題9", inst: isEng ? "Read the text and answer the questions below." : "次の文章を読んで、後の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => isEng ? buildEngPassage("Short Reading Comprehension") : buildM9(w, lvl), p: true },
+      10: { title: isEng ? "Part 10" : "問題10", inst: isEng ? "Read the text and answer the questions below." : "次の文章を読んで、後の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => isEng ? buildEngPassage("Medium Reading Comprehension") : buildM10(w, lvl), p: true },
+      11: { title: isEng ? "Part 11" : "問題11", inst: isEng ? "Read the text and answer the questions below." : "次の文章を読んで、後の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => isEng ? buildEngPassage("Long Reading Comprehension") : buildM11(w, lvl), p: true },
+      12: { title: isEng ? "Part 12" : "問題12", inst: isEng ? "Read the information page and answer the questions based on it." : "次のページを見て、下の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。", builder: (w, lvl) => isEng ? buildEngPassage("Information Retrieval/Practical Reading") : buildM12(w, lvl), p: true },
     };
 
     let step = 0;
     for (const num of missing) {
-      if (step > 0) await delay(DELAY_BETWEEN_CALLS_MS);
-      step++;
-      onProgress?.(step, missing.length);
-      const cfg = MONDAI_MAP[num];
-      const raw = await callGroq(cfg.builder(allWords, level), level, cfg.p ? 5000 : 4096);
-      
-      if (cfg.p) {
-        const d = Array.isArray(raw) ? raw[0] : raw;
-        // Combine title and passage
-        const combinedText = d.title ? `### ${d.title}\n\n${d.passage}` : d.passage;
-        newMondais.push({
-          mondai_number: num, title: cfg.title, instruction_text: cfg.inst, sort_order: num,
-          questions: [{ question_text: combinedText, is_mondai_header: true }, ...d.questions]
-        });
-      } else {
-        newMondais.push({ mondai_number: num, title: cfg.title, instruction_text: cfg.inst, sort_order: num, questions: raw });
+      try {
+        if (step > 0) await delay(DELAY_BETWEEN_CALLS_MS);
+        step++;
+        onProgress?.(step, missing.length);
+        const cfg = MONDAI_MAP[num];
+        const raw = await callGroq(cfg.builder(allWords, level), level, cfg.p ? 5000 : 4096);
+        
+        if (cfg.p) {
+          const d = Array.isArray(raw) ? raw[0] : (raw || {});
+          // Combine title and passage
+          const combinedText = d.title ? `### ${d.title}\n\n${d.passage || ""}` : (d.passage || "");
+          const qs = Array.isArray(d.questions) ? d.questions : [];
+          newMondais.push({
+            mondai_number: num, title: cfg.title, instruction_text: cfg.inst, sort_order: num,
+            questions: [{ question_text: combinedText, is_mondai_header: true }, ...qs]
+          });
+        } else {
+          const qs = Array.isArray(raw) ? raw : (raw?.questions && Array.isArray(raw.questions) ? raw.questions : []);
+          if (qs.length > 0) {
+            newMondais.push({ mondai_number: num, title: cfg.title, instruction_text: cfg.inst, sort_order: num, questions: qs });
+          }
+        }
+      } catch (err) {
+        console.warn(`[ExamGen] Failed to generate missing part ${num}: ${err.message}`);
       }
     }
     return newMondais;

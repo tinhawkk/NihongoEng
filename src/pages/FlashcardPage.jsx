@@ -527,7 +527,7 @@ export const FlashcardPage = () => {
                 <div className="absolute inset-0 p-4 lg:p-8 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] flex flex-col items-center">
                   <div className="flex-grow shrink-0 min-h-[2rem]"></div>
                   
-                  <div className="space-y-4 lg:space-y-6 text-center w-full max-w-md shrink-0">
+                  <div className="space-y-4 lg:space-y-6 text-center w-full max-w-xl shrink-0 px-2 lg:px-4">
                     <motion.h1
                       className={`${(card?.word?.length > 30) ? 'text-2xl lg:text-4xl' : (card?.word?.length > 15) ? 'text-3xl lg:text-5xl' : (card?.word?.length > 10) ? 'text-4xl lg:text-6xl' : 'text-5xl lg:text-8xl'} font-black text-slate-800 dark:text-white tracking-tight break-words whitespace-normal leading-tight text-center px-4`}
                       initial={{ scale: 0.9 }}
@@ -561,7 +561,7 @@ export const FlashcardPage = () => {
                           )}
 
                           {card?.mnemonic && (
-                            <div className="p-3 lg:p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl lg:rounded-2xl border-2 border-yellow-100 dark:border-yellow-900/30 max-w-sm mx-auto">
+                            <div className="p-3 lg:p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl lg:rounded-2xl border-2 border-yellow-100 dark:border-yellow-900/30 max-w-lg mx-auto">
                               <p className="text-xs lg:text-sm text-yellow-700 dark:text-yellow-200 italic font-medium leading-relaxed">
                                 💡 {card.mnemonic}
                               </p>
@@ -598,7 +598,7 @@ export const FlashcardPage = () => {
                 <div className="absolute inset-0 p-4 lg:p-8 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] flex flex-col items-center">
                   <div className="flex-grow shrink-0 min-h-[2rem]"></div>
                   
-                  <div className="space-y-4 lg:space-y-5 text-center max-w-md w-full shrink-0">
+                  <div className="space-y-4 lg:space-y-5 text-center max-w-xl w-full shrink-0 px-2 lg:px-4">
                     <Sparkles size={24} className="mx-auto lg:w-8 lg:h-8" style={{ color }} />
                     <h2 className={`${(card?.meaning?.length > 60) ? 'text-lg lg:text-xl' : (card?.meaning?.length > 40) ? 'text-xl lg:text-3xl' : 'text-2xl lg:text-4xl'} font-black leading-tight break-words whitespace-normal px-4`} style={{ color }}>
                       {card?.meaning}

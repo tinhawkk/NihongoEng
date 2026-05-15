@@ -722,12 +722,6 @@ export const DeckPage = () => {
                   try {
                     const deckTitle = deckMetadata?.title || DECK_LABELS[deckId] || deckId;
                     const level = selectedLevel.toLowerCase();
-                    
-                    if (['a1', 'a2', 'b1', 'b2', 'c1'].includes(level)) {
-                       addToast("Tạo đề cho Tiếng Anh đang rèn AI! Tính năng sẽ sớm mở nha!", "info");
-                       setExamGenerating(false);
-                       return;
-                    }
 
                     const existing = await examRepository.getExamByDeckId(deckId);
                     if (existing?.id) {
