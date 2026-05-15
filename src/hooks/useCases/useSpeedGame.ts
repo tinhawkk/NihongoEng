@@ -34,6 +34,7 @@ export const useSpeedGame = () => {
   const [questionMode, setQuestionMode] = useState("JP_TO_VI");
   const [questionText, setQuestionText] = useState("");
   const [questionSub, setQuestionSub] = useState("");
+  const [ttsEnabled, setTtsEnabled] = useState(true);
 
   const account = useUserStore(s => s.account);
   const addArenaResult = useUserStore(s => s.addArenaResult);
@@ -48,6 +49,49 @@ export const useSpeedGame = () => {
 
   function playBeep(freq = 440, duration = 150) {
     sounds.playBeep(freq, duration);
+  }
+
+  // Helper to get a voice matching the language code
+  function getVoice(lang: string) {
+    if (typeof window === "undefined" || !window.speechSynthesis) return null;
+    const voices = window.speechSynthesis.getVoices();
+    // Try exact match first
+    let voice = voices.find(v => v.lang === lang);
+    if (!voice) {
+      // Try prefix match (e.g. 'ja' for 'ja-JP')
+      voice = voices.find(v => v.lang.startsWith(lang.split('-')[0]));
+    }
+    // Prefer Google voices if multiple available
+    if (voice && voices.find(v => v.lang.startsWith(lang.split('-')[0]) && v.name.includes("Google"))) {
+      voice = voices.find(v => v.lang.startsWith(lang.split('-')[0]) && v.name.includes("Google"));
+    }
+    return voice || null;
+  }
+
+  // TTS: speak the correct word aloud
+  function speakWord(word: any) {
+    if (!ttsEnabled || !word || typeof window === "undefined" || !window.speechSynthesis) return;
+    const text = word.reading || word.word || "";
+    if (!text) return;
+    
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Detect language: if text contains CJK characters → Japanese, else English
+    const isJapanese = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(text);
+    const lang = isJapanese ? "ja-JP" : "en-US";
+    utterance.lang = lang;
+    
+    const voice = getVoice(lang);
+    if (voice) utterance.voice = voice;
+    
+    utterance.rate = isJapanese ? 0.85 : 1.0;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    
+    // Small delay to let the beep sound play first
+    setTimeout(() => window.speechSynthesis.speak(utterance), 100);
   }
 
   const startGame = async (lv: string, sourceOverride?: string) => {
@@ -65,7 +109,7 @@ export const useSpeedGame = () => {
       if (["n1", "n2", "n3", "n4", "n5"].includes(lv)) {
         deckId = `JLPT ${lv.toUpperCase()}`;
       }
-      const data = await vocabularyRepository.loadDeck(deckId, source);
+      const data = await vocabularyRepository.loadDeck(deckId, source as "sheet" | "voca");
       if (!data || data.length < 4) throw new Error("Not enough data");
       setWords(shuffle(data));
       
@@ -80,6 +124,43 @@ export const useSpeedGame = () => {
     } catch (err) {
       console.error(err);
       alert("Không đủ dữ liệu cho cấp độ này, vui lòng thử cấp độ khác!");
+      setGameState("level_select");
+    }
+  };
+
+  // Load ALL decks from a category at once
+  const startGameMulti = async (label: string, deckIds: string[], sourceOverride?: string) => {
+    setSelectedLevel(label);
+    setGameState("loading");
+    setScore(0);
+    setTimeLeft(60);
+    setStreak(0);
+    setMultiplier(1);
+    savedResultRef.current = false;
+
+    try {
+      const source = sourceOverride || "voca";
+      const results = await Promise.allSettled(
+        deckIds.map(id => vocabularyRepository.loadDeck(id, source as "sheet" | "voca"))
+      );
+      const allWords: any[] = [];
+      results.forEach(r => {
+        if (r.status === "fulfilled" && r.value) allWords.push(...r.value);
+      });
+      if (allWords.length < 4) throw new Error("Not enough data");
+      setWords(shuffle(allWords));
+
+      setCountdown(3);
+      setGameState("countdown");
+      setTimeout(() => setCountdown(2), 800);
+      setTimeout(() => setCountdown(1), 1600);
+      setTimeout(() => {
+        setCountdown(null);
+        setGameState("playing");
+      }, 2400);
+    } catch (err) {
+      console.error(err);
+      alert("Không đủ dữ liệu cho đề mục này, vui lòng thử đề mục khác!");
       setGameState("level_select");
     }
   };
@@ -202,6 +283,7 @@ export const useSpeedGame = () => {
       setMultiplier(newMultiplier);
       setScore(s => s + 10 * newMultiplier);
       setFeedback("correct");
+      speakWord(currentWord);
       
       confetti({ particleCount: 30, spread: 45, origin: { y: 0.6 } });
       playBeep(880, 120);
@@ -226,6 +308,7 @@ export const useSpeedGame = () => {
     } else {
       setScore(s => Math.max(0, s - 5));
       setFeedback("wrong");
+      speakWord(currentWord);
       setStreak(0);
       setMultiplier(1);
       setWrongStreak(w => w + 1);
@@ -279,8 +362,11 @@ export const useSpeedGame = () => {
     options,
     feedback,
     startGame,
+    startGameMulti,
     handleAnswer,
     handleUsePowerup,
+    ttsEnabled,
+    setTtsEnabled,
   };
 };
 

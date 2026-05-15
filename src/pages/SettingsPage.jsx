@@ -115,7 +115,7 @@ export const SettingsPage = () => {
                 Vocab Quiz
               </span>
               <span className="px-2 py-0.5 bg-sky-50 dark:bg-sky-500/10 text-[#1CB0F6] text-[9px] font-black rounded-lg">
-                V1.2.0
+                V2.1.1
               </span>
             </div>
             <div className="w-[1px] h-3 bg-slate-200 dark:bg-slate-700" />
@@ -126,6 +126,7 @@ export const SettingsPage = () => {
               <span className="text-[#58CC02] text-[10px] font-black uppercase tracking-widest animate-pulse">
                 TinHT
               </span>
+              <span className="text-xs text-slate-400 font-bold">Project này duy trì phi lợi nhuận</span>
             </div>
           </div>
         </div>

@@ -38,6 +38,7 @@ import { useToastStore } from "../store/useToastStore";
 import { nhostService } from "../services/nhostService";
 import { DECK_LABELS } from "../utils/constants";
 import { tts } from "../utils/tts";
+import { detectDeckLanguage } from "../utils/helpers";
 import { KanjiWriter } from "../components/ui/KanjiWriter";
 import { KanjiWriterModal } from "../components/ui/KanjiWriterModal";
 import { examGeneratorService } from "../services/examGeneratorService";
@@ -646,7 +647,7 @@ export const DeckPage = () => {
           <div className="flex items-center justify-between px-1">
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Luyện tập & Kiểm tra</span>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <Button
               variant="primary"
               onClick={() => navigate(`/learn/${deckId}${filterType !== "all" ? "?filter=" + filterType : ""}`)}
@@ -687,10 +688,18 @@ export const DeckPage = () => {
               <Keyboard size={20} strokeWidth={2.5} className="text-purple-500" /> <span className="text-purple-600 font-black">Gõ</span>
             </Button>
 
+            <Button
+              variant="secondary"
+              onClick={() => navigate(`/game/speed-60s?deckId=${deckId}&source=${source}&title=${encodeURIComponent(deckMetadata?.title || DECK_LABELS[deckId] || deckId)}`)}
+              className="!h-14 !rounded-2xl !bg-white dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-rose-400/30 shadow-sm"
+            >
+              <Zap size={20} strokeWidth={2.5} className="text-rose-500" /> <span className="text-rose-600 font-black">60s</span>
+            </Button>
+
             {/* Exam Button with Level Picker */}
             <div className="flex flex-col gap-1.5">
               <div className="flex gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700 h-6">
-                {['N5', 'N4', 'N3', 'N2', 'N1'].map(lvl => (
+                {(detectDeckLanguage(deckId, deckMetadata?.title || DECK_LABELS[deckId]) === "english" ? ['A1', 'A2', 'B1', 'B2', 'C1'] : ['N5', 'N4', 'N3', 'N2', 'N1']).map(lvl => (
                   <button
                     key={lvl}
                     onClick={() => setSelectedLevel(lvl)}
@@ -713,6 +722,13 @@ export const DeckPage = () => {
                   try {
                     const deckTitle = deckMetadata?.title || DECK_LABELS[deckId] || deckId;
                     const level = selectedLevel.toLowerCase();
+                    
+                    if (['a1', 'a2', 'b1', 'b2', 'c1'].includes(level)) {
+                       addToast("Tạo đề cho Tiếng Anh đang rèn AI! Tính năng sẽ sớm mở nha!", "info");
+                       setExamGenerating(false);
+                       return;
+                    }
+
                     const existing = await examRepository.getExamByDeckId(deckId);
                     if (existing?.id) {
                       const existingNums = existing.existingMondais || [];

@@ -42,9 +42,11 @@ const getMood = (hunger) => {
   return "happy";
 };
 
-const isNightTime = () => {
+// Cáo là loài crepuscular (hoạt động mạnh lúc chạng vạng và bình minh).
+// Chúng ngủ thường xuyên vào buổi trưa và giữa đêm, kèm những giấc ngủ ngắn.
+const isFoxSleepTime = () => {
   const h = new Date().getHours();
-  return h >= 22 || h < 6;
+  return (h >= 11 && h < 14) || (h >= 1 && h < 4);
 };
 
 const loadState = () => {
@@ -77,7 +79,7 @@ const loadState = () => {
     let energy = typeof saved.energy === "number" ? saved.energy : fallback.energy;
     let isResting = typeof saved.isResting === "boolean" ? saved.isResting : fallback.isResting;
     
-    if (isNightTime()) {
+    if (isFoxSleepTime()) {
        energy = clamp(energy + elapsed * 2, 0, 100);
        isResting = false;
     } else if (isResting) {
@@ -130,6 +132,27 @@ export const PetCompanion = () => {
     srsCountRef.current = getDueItems(userStore.account?.srsData || {}).length;
   }, [userStore.account?.srsData]);
 
+  // Handle Age Reset when Streak drops to 0 (i.e. missed a day)
+  useEffect(() => {
+    const dates = userStore.account?.activityLog || [];
+    const currentStreak = calculateCurrentStreak(dates);
+    const now = Date.now();
+    
+    // If streak is broken AND the pet is older than 24 hours, Reset it!
+    if (currentStreak === 0 && now - stats.bornAt > 24 * 60 * 60 * 1000) {
+      setStats(s => ({
+        ...s,
+        bornAt: now,
+        level: 1,
+        xp: 0,
+        hunger: 80,
+        energy: 100,
+        lastTick: now
+      }));
+      setStatus("Tôi đã được tái sinh vì bạn lười biếng bỏ học! 😭");
+    }
+  }, [userStore.account?.activityLog, stats.bornAt]);
+
   useEffect(() => {
     const currentQuizzes = userStore.account?.totalQuizzes || 0;
     if (currentQuizzes > prevQuizzes.current) {
@@ -148,6 +171,30 @@ export const PetCompanion = () => {
     }
   }, [userStore.account?.totalQuizzes]);
 
+  // Proactive Study Reminders
+  useEffect(() => {
+    const tipInterval = setInterval(() => {
+      const isSleepingNow = isFoxSleepTime() || statsRef.current?.isResting;
+      const moodNow = getMood(statsRef.current?.hunger ?? 100);
+      
+      // Only remind if awake, not starving, and currently no status bubble
+      if (!isSleepingNow && moodNow !== "starving" && moodNow !== "hungry" && !statusTimer.current) {
+        const srsCount = srsCountRef.current || 0;
+        const tips = [
+          "Eh, ôn từ vựng thẻ Flashcard đi nè! 🦊",
+          "Vô Đấu Trường 60s cày point đi!",
+          srsCount > 0 ? `Ê, đang có ${srsCount} từ chờ ôn trong mục Flashcards kìa!` : "Hôm nay bạn học thêm từ tập nào chưa?",
+          "Lướt qua lướt lại hoài, lo click vô bài học đi!",
+          "Tui đang sung sức nè, vô học kiếm XP đi bạn êi!"
+        ];
+        const tip = tips[Math.floor(Math.random() * tips.length)];
+        setStatus(tip);
+        statusTimer.current = setTimeout(() => setStatus(""), 5000);
+      }
+    }, 25000); // Trigger every 25 seconds
+    return () => clearInterval(tipInterval);
+  }, []);
+
   const petRef = useRef(null);
   const posRef = useRef({ x: 120, y: 140 });
   const walkState = useRef({ mode: "idle", waitTill: 0, target: null, idleSprite: "idle" });
@@ -159,6 +206,7 @@ export const PetCompanion = () => {
   const ptrOffset = useRef({ x: 0, y: 0 });
   const lastT = useRef(0);
   const nextTurn = useRef(0);
+  const wakeUntilRef = useRef(0);
   const petSize = useRef({ w: 100, h: 100 });
   const vp = useRef({
     w: typeof window !== "undefined" ? window.innerWidth : 1024,
@@ -171,7 +219,7 @@ export const PetCompanion = () => {
   useEffect(() => { statsRef.current = stats; }, [stats]);
 
   const mood = getMood(stats.hunger);
-  const isSleeping = isNightTime() || stats.isResting;
+  const isSleeping = isFoxSleepTime() || stats.isResting;
   const hungerPct = clamp(Math.round(stats.hunger), 0, 100);
   const xpPct = clamp(Math.round((stats.xp / XP_PER_LEVEL) * 100), 0, 100);
   const energyPct = clamp(Math.round(stats.energy ?? 100), 0, 100);
@@ -185,9 +233,13 @@ export const PetCompanion = () => {
   let bubble = status;
   if (!bubble) {
     if (isSleeping) {
-      if (Math.random() < 0.05) bubble = "Khò khò... zZz";
+      if (mood === "starving" || mood === "hungry") {
+        bubble = "Làm quiz đi... tui đói quá 😭";
+      } else if (Math.random() < 0.05) {
+        bubble = "Khò khò... zZz";
+      }
     } else {
-      bubble = mood === "starving" ? "😿 Feed me!" : mood === "hungry" ? "🍖 Hungry!" : "";
+      bubble = mood === "starving" ? "😿 Đói lả! Làm bài đi!" : mood === "hungry" ? "🍖 Đói bụng! Vào quiz ngay!" : "";
     }
   }
 
@@ -198,11 +250,11 @@ export const PetCompanion = () => {
 
   useEffect(() => { persist(stats, posRef.current); }, [stats]);
 
-  const showStatus = (text) => {
+  const showStatus = (text, duration = 1500) => {
     if (!text) return;
     setStatus(text);
     if (statusTimer.current) clearTimeout(statusTimer.current);
-    statusTimer.current = setTimeout(() => setStatus(""), 1500);
+    statusTimer.current = setTimeout(() => setStatus(""), duration);
   };
 
   const playMeow = () => {
@@ -275,9 +327,14 @@ export const PetCompanion = () => {
   const handlePetClick = () => {
     if (!showHud) setShowHud(true);
     
-    const isSleepingNow = isNightTime() || statsRef.current.isResting;
+    const isSleepingNow = isFoxSleepTime() || statsRef.current.isResting;
     if (isSleepingNow) {
-      showStatus("Khò khò... zZz...");
+      if (!isFoxSleepTime()) {
+        setStats(s => ({ ...s, isResting: false, energy: Math.max(s.energy || 0, 30) }));
+        showStatus("Tỉnh rồi! Làm bài đi cha nội ơi ngủ xíu cũng hông yên 😭", 3000);
+      } else {
+        showStatus("Khò khò... zZz...");
+      }
       return;
     }
 
@@ -326,6 +383,22 @@ export const PetCompanion = () => {
         walkState.current = { mode: "idle", waitTill: (lastT.current || performance.now()) + 2000, target: null, idleSprite: "idle" };
       }
     }
+    
+    // Set wake timer for 4 seconds if dropping while it should be sleeping
+    const isSleepingNow = isFoxSleepTime() || statsRef.current.isResting;
+    if (isSleepingNow) {
+      wakeUntilRef.current = performance.now() + 4000;
+      spriteRef.current = "idle";
+      lastSpriteSwitch.current = performance.now();
+      setSpriteState("idle");
+      showStatus("Ngó gì mà ngó? Qua kia làm bài liền đi!! 😾", 4000);
+      
+      // If it's just exhausted (not real sleep time), aggressively wake it up
+      if (!isFoxSleepTime()) {
+        setStats(s => ({ ...s, isResting: false, energy: Math.max(s.energy || 0, 30) }));
+      }
+    }
+
     persist(statsRef.current, posRef.current);
   };
 
@@ -339,6 +412,18 @@ export const PetCompanion = () => {
     ptrOffset.current = { x: e.clientX - r.left, y: e.clientY - r.top };
     setIsDragging(true);
     document.body.classList.add("pet-dragging");
+    
+    // Unconditionally change sprite to swipe when grabbed
+    spriteRef.current = "swipe";
+    lastSpriteSwitch.current = performance.now();
+    setSpriteState("swipe");
+    
+    // Scold if dragged while sleeping
+    const isSleepingNow = isFoxSleepTime() || statsRef.current.isResting;
+    if (isSleepingNow) {
+      showStatus("Phá giấc tui làm gì? Rảnh thì đi học bài đi! 😡", 4000);
+    }
+
     if (el.setPointerCapture) el.setPointerCapture(e.pointerId);
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", onPointerUp, { once: true });
@@ -372,7 +457,7 @@ export const PetCompanion = () => {
         let newEnergy = prev.energy ?? 100;
         let resting = prev.isResting ?? false;
 
-        if (isNightTime()) {
+        if (isFoxSleepTime()) {
            newEnergy = clamp(newEnergy + elapsed * 2, 0, 100);
         } else if (resting) {
            newEnergy = clamp(newEnergy + elapsed * 2, 0, 100);
@@ -403,10 +488,19 @@ export const PetCompanion = () => {
       const dt = Math.min(32, now - lastT.current);
       lastT.current = now;
 
-      const isNightTimeLoop = new Date().getHours() >= 22 || new Date().getHours() < 6;
-      const isSleepingLoop = isNightTimeLoop || statsRef.current.isResting;
+      const h = new Date().getHours();
+      const isFoxSleepTimeLoop = (h >= 11 && h < 14) || (h >= 1 && h < 4);
+      const isSleepingLoop = isFoxSleepTimeLoop || statsRef.current.isResting;
 
       if (!dragRef.current.active && isSleepingLoop) {
+        if (now < wakeUntilRef.current) {
+          // Temporarily awake, just do idle logic here
+          bobRef.current = 0;
+          applyTransform();
+          raf = requestAnimationFrame(step);
+          return;
+        }
+
         bobRef.current = 0;
         if (spriteRef.current !== "lie") {
           spriteRef.current = "lie"; 

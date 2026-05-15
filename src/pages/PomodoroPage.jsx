@@ -406,7 +406,7 @@ export const PomodoroPage = () => {
 
   // YT player setup
   const setupPlayer = React.useCallback(
-    async id => {
+    async (id, listId = null) => {
       await loadYouTubeAPI();
       const elId = "yt-player-container";
       let container = document.getElementById(elId);
@@ -416,58 +416,55 @@ export const PomodoroPage = () => {
         container.style.display = "none";
         document.body.appendChild(container);
       }
-      if (ytPlayerRef.current?.getVideoData && ytPlayerRef.current.getVideoData().video_id !== id) {
+      // Always destroy and recreate to ensure playlist/single video config is clean
+      if (ytPlayerRef.current) {
         try {
           ytPlayerRef.current.destroy();
-        } catch (e) {
-          // ignore error on destroy
-        }
+        } catch (e) {}
         ytPlayerRef.current = null;
       }
-      if (!ytPlayerRef.current) {
-        return new Promise(resolve => {
-          ytPlayerRef.current = new window.YT.Player(elId, {
-            videoId: id,
-            host: "https://www.youtube-nocookie.com",
-            playerVars: {
-              autoplay: 1,
-              controls: 0,
-              loop: 1,
-              playlist: id,
-              modestbranding: 1,
-              rel: 0,
-              enablejsapi: 1,
-            },
-            events: {
-              onReady: e => {
-                try {
-                  e.target.setVolume(Math.round(volume * 100));
+      
+      return new Promise(resolve => {
+        ytPlayerRef.current = new window.YT.Player(elId, {
+          ...(listId ? {} : { videoId: id }),
+          host: "https://www.youtube-nocookie.com",
+          playerVars: {
+            autoplay: 1,
+            controls: 0,
+            loop: 1,
+            ...(listId ? { listType: "playlist", list: listId } : { playlist: id }),
+            modestbranding: 1,
+            rel: 0,
+            enablejsapi: 1,
+          },
+          events: {
+            onReady: e => {
+              try {
+                e.target.setVolume(Math.round(volume * 100));
+                if (listId) {
+                  e.target.loadPlaylist({ list: listId, listType: "playlist", index: 0 });
+                } else {
                   e.target.playVideo();
-                  const data = e.target.getVideoData();
-                  if (data?.title) setActiveTrackTitle(data.title);
-                } catch (e) {
-                  // ignore yt ready error
                 }
-                resolve();
-              },
-              onStateChange: e => {
-                if (e.data === window.YT.PlayerState.ENDED) e.target.playVideo();
-                if (e.data === window.YT.PlayerState.PLAYING) {
-                  const data = e.target.getVideoData();
-                  if (data?.title) setActiveTrackTitle(data.title);
-                }
-              },
-              onError: () => resolve(),
+                const data = e.target.getVideoData();
+                if (data?.title) setActiveTrackTitle(data.title);
+              } catch (err) {}
+              resolve();
             },
-          });
+            onStateChange: e => {
+              if (e.data === window.YT.PlayerState.ENDED) {
+                // If it's a playlist we might not need explicit playVideo but it's safe
+                try { e.target.playVideo(); } catch(err) {} 
+              }
+              if (e.data === window.YT.PlayerState.PLAYING) {
+                const data = e.target.getVideoData();
+                if (data?.title) setActiveTrackTitle(data.title);
+              }
+            },
+            onError: () => resolve(),
+          },
         });
-      } else {
-        try {
-          ytPlayerRef.current.loadVideoById(id);
-        } catch (e) {
-          // ignore load error
-        }
-      }
+      });
     },
     [loadYouTubeAPI, volume]
   );
@@ -476,9 +473,9 @@ export const PomodoroPage = () => {
 
   // Handle YouTube Playback Trigger
   useEffect(() => {
-    if (soundConfig.type === "youtube" && soundConfig.id) {
-      setupPlayer(soundConfig.id);
-    } else if (!soundConfig.id && ytPlayerRef.current?.pauseVideo) {
+    if (soundConfig.type === "youtube" && (soundConfig.id || soundConfig.listId)) {
+      setupPlayer(soundConfig.id, soundConfig.listId);
+    } else if (!soundConfig.id && !soundConfig.listId && ytPlayerRef.current?.pauseVideo) {
       try { ytPlayerRef.current.pauseVideo(); } catch (e) {}
       setActiveTrackTitle("");
     }
@@ -576,15 +573,17 @@ export const PomodoroPage = () => {
         }
         // 2. If it was BREAK mode, go back to FOCUS
         else {
-          if (autoCycle && currentTurnIdx + 1 < turns.length) {
-            const nextDuration = turns[currentTurnIdx + 1].duration;
-            setCurrentTurnIdx(idx => idx + 1);
+          if (autoCycle) {
+            const nextIdx = currentTurnIdx + 1 < turns.length ? currentTurnIdx + 1 : 0;
+            const nextDuration = turns[nextIdx]?.duration || getSmartDuration("focus");
+            
+            setCurrentTurnIdx(nextIdx);
             setMode("focus");
             setTurnTimeLeft(nextDuration);
             updatePomodoroData({
                mode: "focus",
                timeLeft: nextDuration,
-               currentTurnIdx: currentTurnIdx + 1,
+               currentTurnIdx: nextIdx,
                isActive: true
             });
           } else {
@@ -606,12 +605,9 @@ export const PomodoroPage = () => {
         const syncData = collectSyncData(useUserStore, useBookmarkStore);
         if (syncData) debouncedSync(syncData);
       }, 0);
-
-      if (ytPlayerRef.current?.pauseVideo) {
-        try {
-          ytPlayerRef.current.pauseVideo();
-        } catch (e) {}
-      }
+      
+      // Removed ytPlayerRef.current.pauseVideo() so music continues seamlessly 
+      // across focus and break transitions.
     }
   }, [isActive, turnTimeLeft, mode, autoCycle, turns, currentTurnIdx]);
 
@@ -627,24 +623,29 @@ export const PomodoroPage = () => {
     }
   };
 
-  const toggleYoutube = id => {
+  const toggleYoutube = (id, listId = null) => {
     setActiveTrackTitle("Đang tải...");
     setAudioEnabled(true);
     setSoundConfig(p =>
-      p.type === "youtube" && p.id === id ? { type: null, id: null } : { type: "youtube", id }
+      p.type === "youtube" && p.id === id && p.listId === listId ? { type: null, id: null, listId: null } : { type: "youtube", id, listId }
     );
   };
 
   const handleImportYoutube = e => {
     e.preventDefault();
     if (!customYtUrl.trim()) return;
+
+    const listMatch = customYtUrl.match(/[?&]list=([^&]+)/i);
+    const listId = listMatch ? listMatch[1] : null;
+
     const re =
       /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/i;
     const m = customYtUrl.match(re);
     const id = m ? m[1] : customYtUrl.length === 11 ? customYtUrl : null;
-    if (id) {
+    
+    if (id || listId) {
       setAudioEnabled(true);
-      toggleYoutube(id);
+      toggleYoutube(id, listId);
       setCustomYtUrl("");
     } else alert("Link YouTube không hợp lệ!");
   };
@@ -1173,7 +1174,7 @@ export const PomodoroPage = () => {
 
             {/* Now Playing */}
             <AnimatePresence>
-              {soundConfig.id && activeTrackTitle && (
+              {(soundConfig.id || soundConfig.listId) && activeTrackTitle && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}

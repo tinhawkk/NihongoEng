@@ -230,7 +230,7 @@ export const SRSPage = () => {
           dueCount: 0,
           matureCount: 0,
           newCount: 0,
-          level: (item.level || "").toUpperCase(),
+          level: IS_UUID.test(item.level || "") ? "" : (item.level || "").toUpperCase(),
         };
       }
       groups[rawName].items.push(item);
@@ -660,7 +660,7 @@ export const SRSPage = () => {
                                   {item.reading || item.furigana}
                                 </span>
                               )}
-                              {item.level && (
+                              {item.level && !IS_UUID.test(item.level) && (
                                 <span className="text-[9px] lg:text-[10px] font-black uppercase bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 px-1.5 py-0.5 rounded shadow-sm">
                                   {item.level}
                                 </span>

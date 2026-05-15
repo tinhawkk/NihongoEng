@@ -34,3 +34,13 @@ export function getPercentage(value, total) {
 export function generateId() {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 }
+
+export function detectDeckLanguage(deckId, title = "") {
+  if (!deckId && !title) return "japanese";
+  const combined = `${deckId} ${title}`.toLowerCase();
+  
+  if (/(eng|ielts|toeic|toefl|cefr|english)/i.test(combined)) {
+    return "english";
+  }
+  return "japanese";
+}
