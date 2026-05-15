@@ -287,7 +287,7 @@ export const DeckPage = () => {
           if (Array.isArray(parsed)) {
             const bucket = parsed.map(item => ({
               ...item,
-              id: generateUUID(),
+              id: item.id || generateUUID(),
               level: finalLevel,
               deck_id: deckId,
             }));
@@ -405,7 +405,7 @@ export const DeckPage = () => {
         const { radical_analysis, related_voca, ...rest } = item;
         return {
           ...rest,
-          id: generateUUID(),
+          id: item.id || generateUUID(),
           level: finalLevel,
           deck_id: deckId,
           type: item.onyomi || item.kunyomi ? "kanji" : "voca",

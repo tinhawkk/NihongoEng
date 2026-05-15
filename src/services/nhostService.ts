@@ -983,7 +983,12 @@ export const nhostService = {
   },
 
   async deleteDeck(id) {
-    return this.deleteRow("decks", id);
+    const q = `mutation DeleteDeckCascade($id: String!) {
+      delete_jlpt_practice_exams(where: {source_deck_id: {_eq: $id}}) { affected_rows }
+      delete_my_vocabulary(where: {deck_id: {_eq: $id}}) { affected_rows }
+      delete_decks_by_pk(id: $id) { id }
+    }`;
+    return fetchGraphQL(q, "DeleteDeckCascade", { id });
   },
 
   async bulkInsertRadicals(objects) {

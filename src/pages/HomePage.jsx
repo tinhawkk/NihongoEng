@@ -440,7 +440,7 @@ export const HomePage = () => {
         if (Array.isArray(parsed)) {
           const bulkObjects = parsed.map(item => ({
             ...item,
-            id: generateUUID(),
+            id: item.id || generateUUID(),
             level: finalLevel,
           }));
           const { data, errors } = await nhostService.bulkInsertMyVoca(bulkObjects);
