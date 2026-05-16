@@ -57,22 +57,22 @@ const CatHead = ({ showHachimaki, happiness, isActive }) => (
       {/* Bandana (Hachimaki) - Only in FOCUS mode */}
       {showHachimaki && (
         <g>
-          {/* The ribbon tails (flowing) */}
-          <motion.path
-            d="M18 78 Q5 70 8 60"
-            stroke="#ff4b4b"
-            strokeWidth="6"
-            fill="none"
-            strokeLinecap="round"
+          {/* Flowing Tails (Animated) */}
+          <motion.g 
+            style={{ transformOrigin: "20px 65px" }}
             animate={{ rotate: [-5, 10, -5] }}
             transition={{ duration: 1.5, repeat: Infinity }}
-          />
-          <motion.path
-            d="M142 78 Q155 70 152 60"
-            stroke="#ff4b4b"
-            strokeWidth="6"
-            fill="none"
-            strokeLinecap="round"
+          >
+            <path
+              d="M18 78 Q5 70 8 60"
+              stroke="#ff4b4b"
+              strokeWidth="6"
+              fill="none"
+              strokeLinecap="round"
+            />
+          </motion.g>
+          <motion.g 
+            style={{ transformOrigin: "142px 65px" }}
             animate={{ rotate: [5, -10, 5] }}
             transition={{ duration: 1.8, repeat: Infinity }}
           />
@@ -163,8 +163,8 @@ const CatFaceBase = ({ mode, isActive, isFeeding, happiness, idleAction }) => {
                       stroke="white"
                       strokeWidth="11"
                       fill="none"
-                      animate={{ opacity: [0, 0.7, 0.7, 0] }}
-                      transition={{ duration: 5, repeat: Infinity, repeatDelay: 6, times: [0, 0.2, 0.6, 0.8] }}
+                      animate={{ opacity: [0, 0.7, 0.7, 0, 0] }}
+                      transition={{ duration: 5, repeat: Infinity, repeatDelay: 6, times: [0, 0.2, 0.6, 0.8, 1.0] }}
                     />
                   )}
                   {/* Blinking */}
@@ -249,9 +249,10 @@ const CatFaceBase = ({ mode, isActive, isFeeding, happiness, idleAction }) => {
         {/* Tongue - Slanted to lick the paw at (70, 110) */}
         {!isActive && !isFeeding && idleAction === 0 && (
           <motion.path
+            d="M72 104 Q80 108 88 104"
             initial={{ opacity: 0, d: "M72 104 Q80 108 88 104" }}
             animate={{
-              opacity: [0, 1, 1, 1, 0, 1, 1, 1, 0],
+              opacity: [0, 1, 1, 1, 0, 1, 1, 1, 0, 0],
               d: [
                 "M72 104 Q80 108 88 104",  // hidden
                 "M72 104 Q62 120 72 114",  // rapid lap 1
@@ -261,21 +262,20 @@ const CatFaceBase = ({ mode, isActive, isFeeding, happiness, idleAction }) => {
                 "M72 104 Q60 122 70 116",  // long draw lick
                 "M72 104 Q60 122 70 116",  // dwell
                 "M72 104 Q72 110 75 106",  // in
-                "M72 104 Q80 108 88 104"   // hidden
+                "M72 104 Q80 108 88 104",  // hidden
+                "M72 104 Q80 108 88 104"   // hidden (padded)
               ]
             }}
             transition={{
               duration: 10,
               repeat: Infinity,
-              times: [0, 0.1, 0.15, 0.2, 0.3, 0.45, 0.6, 0.7, 0.8],
+              times: [0, 0.1, 0.15, 0.2, 0.3, 0.45, 0.6, 0.7, 0.8, 1.0],
             }}
             fill="#ff4d6d"
             stroke="#432c23"
             strokeWidth="1.5"
           />
         )}
-
-        {/* Purr Text Visual */}
         {happiness > 85 && !isActive && (
           <motion.text
             x="115"
@@ -399,33 +399,35 @@ const IdleProps = () => (
         <motion.g
           style={{ transformOrigin: "65px 145px", zIndex: 10 }}
           animate={{ 
-            rotate: [0, -84, -78, -84, 0, 0, -82, -82, 0], 
-            scaleX: [1, 1, 1.05, 1, 1, 1, 1.05, 1, 1] 
+            rotate: [0, -84, -78, -84, 0, 0, -82, -82, 0, 0], 
+            scaleX: [1, 1, 1.05, 1, 1, 1, 1.05, 1, 1, 1] 
           }}
-          transition={{ duration: 10, repeat: Infinity, times: [0, 0.1, 0.15, 0.2, 0.3, 0.45, 0.5, 0.7, 0.8] }}
+          transition={{ duration: 10, repeat: Infinity, times: [0, 0.1, 0.15, 0.2, 0.3, 0.45, 0.5, 0.7, 0.8, 1.0] }}
         >
           <circle cx="65" cy="145" r="45" fill="transparent" pointerEvents="none" />
           {/* Licking paw - Morphing path with elastic feel */}
           <motion.path 
-            initial={{ d: "M 65 145 Q 65 174 75 174 Q 85 174 85 145" }}
+            d="M 65 145 Q 65 174 72 174 Q 75 174 78 174 Q 85 174 85 145"
+            initial={{ d: "M 65 145 Q 65 174 72 174 Q 75 174 78 174 Q 85 174 85 145" }}
             animate={{ 
               d: [
-                "M 65 145 Q 65 174 75 174 Q 85 174 85 145", // Resting U
+                "M 65 145 Q 65 174 72 174 Q 75 174 78 174 Q 85 174 85 145", // Resting U
                 "M 65 145 Q 60 130 80 120 Q 95 110 95 95 Q 85 92 82 105", // Reaching mouth (Stretched but U-tip)
                 "M 65 145 Q 60 130 80 120 Q 92 112 92 102 Q 82 100 82 108", // Licking contact (Chubby tip)
-                "M 65 145 Q 65 174 75 174 Q 85 174 85 145"  // Return to U
+                "M 65 145 Q 65 174 72 174 Q 75 174 78 174 Q 85 174 85 145", // Return to U
+                "M 65 145 Q 65 174 72 174 Q 75 174 78 174 Q 85 174 85 145"  // Return to U (padded)
               ]
             }}
-            transition={{ duration: 5, repeat: Infinity, repeatDelay: 6, times: [0, 0.2, 0.4, 0.8] }}
+            transition={{ duration: 5, repeat: Infinity, repeatDelay: 6, times: [0, 0.2, 0.4, 0.8, 1.0] }}
             stroke="#432c23" strokeWidth="3.5" fill="white" strokeLinecap="round" 
           />
           <motion.g
             animate={{ 
-              x: [0, 16, 14, 0], 
-              y: [0, -58, -52, 0],
-              rotate: [0, -30, -25, 0] 
+              x: [0, 16, 14, 0, 0], 
+              y: [0, -58, -52, 0, 0],
+              rotate: [0, -30, -25, 0, 0] 
             }}
-            transition={{ duration: 5, repeat: Infinity, repeatDelay: 6, times: [0, 0.2, 0.4, 0.8] }}
+            transition={{ duration: 5, repeat: Infinity, repeatDelay: 6, times: [0, 0.2, 0.4, 0.8, 1.0] }}
           >
             <circle cx="75" cy="164" r="2.2" fill="#ffb7b7" />
             <line x1="75" y1="160" x2="75" y2="168" stroke="#432c23" strokeWidth="2" strokeLinecap="round" opacity="0.4" />
@@ -436,8 +438,8 @@ const IdleProps = () => (
     {/* Tongue - synchronized with chubby paw contact */}
     <motion.circle 
        cx="80" cy="108" r="4.5" fill="#ffb7b7" 
-       animate={{ opacity: [0, 0.4, 1, 1, 0], scale: [0.5, 1, 1.3, 1, 0.5] }}
-       transition={{ duration: 5, repeat: Infinity, repeatDelay: 6, times: [0, 0.2, 0.3, 0.6, 0.8] }}
+       animate={{ opacity: [0, 0.4, 1, 1, 0, 0], scale: [0.5, 1, 1.3, 1, 0.5, 0.5] }}
+       transition={{ duration: 5, repeat: Infinity, repeatDelay: 6, times: [0, 0.2, 0.3, 0.6, 0.8, 1.0] }}
     />
     <motion.g animate={{ opacity: [0, 1, 0], y: [-30, -55, -80], x: [80, 75, 90] }} transition={{ duration: 4, repeat: Infinity, repeatDelay: 8, delay: 0.2 }}>
       <text x="0" y="0" fontSize="18">💕</text>
@@ -453,7 +455,7 @@ const SleepProps = () => (
       <text x="0" y="0" fontSize="24" fontWeight="bold" fill="#60a5fa">Zz</text>
     </motion.g>
     {/* Snot bubble */}
-    <motion.circle cx="83" cy="98" fill="#bae6fd" stroke="#38bdf8" strokeWidth="1.5" opacity="0.6" animate={{ r: [3, 9, 3] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }} />
+    <motion.circle cx="83" cy="98" r="4.5" fill="#bae6fd" stroke="#38bdf8" strokeWidth="1.5" opacity="0.6" animate={{ scale: [1, 2.5, 1] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }} style={{ transformOrigin: "83px 98px" }} />
   </>
 );
 
@@ -883,24 +885,20 @@ export const StudyBuddy = ({ mode, isActive, isFeeding, happiness }) => {
             className="drop-shadow-2xl overflow-visible"
           >
             {/* 1. Long, Fluid S-Curve Tail */}
-            <motion.path
-              d="M130 165 C155 160 165 190 150 205 C145 210 155 215 165 212"
-              stroke="#432c23"
-              strokeWidth="4"
-              fill="none"
-              strokeLinecap="round"
-              animate={{ 
-                d: [
-                  "M130 165 C155 160 165 190 150 205 C145 210 155 215 165 212",
-                  "M130 165 C165 170 175 185 155 200 C145 205 165 212 175 215",
-                  "M130 165 C165 170 175 185 155 200 C145 205 165 212 175 215",
-                  "M130 165 C155 160 165 190 150 205 C145 210 155 215 165 212"
-                ],
-                rotate: [0, 5, -5, 0]
-              }}
+            <motion.g
+              initial={{ rotate: 0 }}
+              animate={{ rotate: [0, 8, -4, 0] }}
               style={{ transformOrigin: "130px 165px" }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            />
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <path
+                d="M130 165 C155 160 165 190 150 205 C145 210 155 215 165 212"
+                stroke="#432c23"
+                strokeWidth="4"
+                fill="none"
+                strokeLinecap="round"
+              />
+            </motion.g>
             {/* 2. Body */}
             <CatBody />
             {/* 2.5 Collar and Bell */}
@@ -1212,12 +1210,13 @@ export const FloatingBooks = ({ isActive }) => {
               {isActive && (
                 <motion.g>
                    <motion.path
+                      d="M 88 25 Q 70 22 52 25 L 52 65 Q 70 68 92 65 Z"
                       initial={{ d: "M 88 25 Q 70 22 52 25 L 52 65 Q 70 68 92 65 Z", opacity: 0 }}
                       animate={{
                         d: [
                             "M 88 25 Q 70 22 52 25 L 52 65 Q 70 68 92 65 Z", // Flat Right
                             "M 80 15 Q 70 5 60 15 L 60 70 Q 70 80 85 75 Z",    // Lift
-                            "M 50 10 Q 50 0 50 10 L 50 70 Q 50 80 50 70 Z",    // Peak (S-curve feel)
+                            "M 50 10 Q 52 0 50 10 L 52 70 Q 50 80 52 70 Z",    // Peak (S-curve feel)
                             "M 12 25 Q 30 22 48 25 L 48 65 Q 30 68 8 65 Z",   // Drop Left
                             "M 88 25 Q 70 22 52 25 L 52 65 Q 70 68 92 65 Z"   // Reset
                         ],
@@ -1243,8 +1242,7 @@ export const FloatingBooks = ({ isActive }) => {
               </g>
 
               {/* Magical Particles (Floating towards User) */}
-              <motion.circle 
-                  animate={{ opacity: [0, 1, 0], z: [0, 100], y: [-10, -40], scale: [0.5, 1.5, 0.5] }}
+              <motion.circle initial={{ opacity: 0, y: -10, scale: 0.5 }} animate={{ opacity: [0, 1, 0], y: [-10, -40], scale: [0.5, 1.5, 0.5] }}
                   transition={{ duration: 3, repeat: Infinity, delay: b.delay }}
                   cx="50" cy="40" r="1.5" fill="gold"
               />
@@ -1255,4 +1253,4 @@ export const FloatingBooks = ({ isActive }) => {
     </div>
   );
 };
-
+

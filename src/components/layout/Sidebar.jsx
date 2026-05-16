@@ -75,6 +75,23 @@ export const Sidebar = () => {
     return getDueItems(account?.srsData).length;
   }, [account?.srsData]);
 
+  const todayStr = new Date().toLocaleDateString("en-CA");
+
+  const hasStudiedToday = React.useMemo(() => {
+    return account?.streak?.includes(todayStr) || false;
+  }, [account?.streak, todayStr]);
+
+  const hasDoneQuizToday = React.useMemo(() => {
+    if (!account?.quizHistory) return false;
+    return account.quizHistory.some((q) => {
+      try {
+        return new Date(q.date).toLocaleDateString("en-CA") === todayStr;
+      } catch (e) {
+        return false;
+      }
+    });
+  }, [account?.quizHistory, todayStr]);
+
   return (
     <div className="fixed left-0 top-0 h-full w-64 border-r-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-6 flex flex-col hidden lg:flex overflow-y-auto scrollbar-hide">
       <div className="mb-8 px-4 flex items-center justify-between">
@@ -174,7 +191,10 @@ export const Sidebar = () => {
         <div className="bg-slate-50 dark:bg-slate-800/50 rounded-3xl p-4 border-2 border-slate-100 dark:border-slate-800/50">
           <div className="flex items-center justify-around">
             <div className="flex flex-col items-center gap-1">
-              <Flame className="w-6 h-6 text-[#FF9600]" fill="#FF9600" />
+              <Flame 
+                className={hasStudiedToday ? "w-6 h-6 text-[#FF9600]" : "w-6 h-6 text-slate-300 dark:text-slate-600"} 
+                fill={hasStudiedToday ? "#FF9600" : "currentColor"} 
+              />
               <span className="text-sm font-black text-slate-700 dark:text-slate-200">
                 {account?.streak?.length || 0}
               </span>
@@ -182,7 +202,10 @@ export const Sidebar = () => {
             </div>
             <div className="w-px h-8 bg-slate-200 dark:bg-slate-700" />
             <div className="flex flex-col items-center gap-1">
-              <Trophy className="w-6 h-6 text-[#FFC800]" fill="#FFC800" />
+              <Trophy 
+                className={hasDoneQuizToday ? "w-6 h-6 text-[#FFC800]" : "w-6 h-6 text-slate-300 dark:text-slate-600"} 
+                fill={hasDoneQuizToday ? "#FFC800" : "currentColor"} 
+              />
               <span className="text-sm font-black text-slate-700 dark:text-slate-200">
                 {account?.totalQuizzes || 0}
               </span>

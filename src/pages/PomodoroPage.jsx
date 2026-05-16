@@ -177,9 +177,14 @@ export const PomodoroPage = () => {
 
   // Gamification & Target - MERGED STATE (from Nhost if possible)
   const [sessions, setSessions] = useState(initialPomodoro.totalSessions ?? 0);
-  // Focus Today chỉ tăng khi hoàn thành Pomodoro
+  const [todaySessions, setTodaySessions] = useState(initialPomodoro.todaySessions ?? 0);
+  // Focus Today
   const [totalFocusMinutes, setTotalFocusMinutes] = useState(
     initialPomodoro.totalFocusMinutes ?? 0
+  );
+  // Lifetime focus
+  const [lifetimeFocusMinutes, setLifetimeFocusMinutes] = useState(
+    initialPomodoro.lifetimeMinutes ?? 0
   );
   const [targetGoal, setTargetGoal] = useState(initialPomodoro.targetGoal ?? 120); // Default 2h
   // Tính toán mặc định turnDuration theo targetGoal
@@ -228,7 +233,9 @@ export const PomodoroPage = () => {
     if (account?.pomodoro && !hasInitedRef.current) {
       const p = account.pomodoro;
       if (p.totalSessions !== undefined) setSessions(p.totalSessions);
+      if (p.todaySessions !== undefined) setTodaySessions(p.todaySessions);
       if (p.totalFocusMinutes !== undefined) setTotalFocusMinutes(p.totalFocusMinutes);
+      if (p.lifetimeMinutes !== undefined) setLifetimeFocusMinutes(p.lifetimeMinutes);
       if (p.targetGoal !== undefined) setTargetGoal(p.targetGoal);
       if (p.happiness !== undefined) setHappiness(p.happiness);
       if (p.foodStock !== undefined) setFoodStock(p.foodStock);
@@ -283,8 +290,10 @@ export const PomodoroPage = () => {
 
     if (lastSessionDate && lastSessionDate !== today) {
       setTotalFocusMinutes(0);
+      setTodaySessions(0);
       updatePomodoroData({
         totalFocusMinutes: 0,
+        todaySessions: 0,
         // We keep totalSessions as it's a lifetime stat
       });
     }
@@ -335,8 +344,10 @@ export const PomodoroPage = () => {
 
       if (lastSessionDate && lastSessionDate !== today) {
         setTotalFocusMinutes(0);
+        setTodaySessions(0);
         updatePomodoroData({
           totalFocusMinutes: 0,
+          todaySessions: 0,
           lastSessionDate: new Date().toISOString(),
         });
       }
@@ -534,7 +545,9 @@ export const PomodoroPage = () => {
           const finishedMinutes = Math.round(finishedDuration / 60);
 
           setSessions(s => s + 1);
+          setTodaySessions(s => s + 1);
           setTotalFocusMinutes(prev => prev + finishedMinutes);
+          setLifetimeFocusMinutes(prev => prev + finishedMinutes);
           setFoodStock(s => s + 1);
           setHappiness(h => Math.min(100, h + 10));
           setShowConfetti(true);
@@ -542,11 +555,15 @@ export const PomodoroPage = () => {
           // Use latest store data to avoid stale initialPomodoro bug
           const currentTotal = useUserStore.getState().account?.pomodoro?.totalFocusMinutes || 0;
           const currentSessions = useUserStore.getState().account?.pomodoro?.totalSessions || 0;
+          const currentTodaySessions = useUserStore.getState().account?.pomodoro?.todaySessions || 0;
+          const currentLifetime = useUserStore.getState().account?.pomodoro?.lifetimeMinutes || 0;
 
           updatePomodoroData({
             totalSessions: currentSessions + 1,
+            todaySessions: currentTodaySessions + 1,
             lastSessionDate: new Date().toISOString(),
             totalFocusMinutes: currentTotal + finishedMinutes,
+            lifetimeMinutes: currentLifetime + finishedMinutes,
             foodStock: foodStock + 1,
             happiness: Math.min(100, happiness + 10),
           });
@@ -823,28 +840,48 @@ export const PomodoroPage = () => {
                     <span className="text-6xl sm:text-7xl">🔔</span>
                   </motion.div>
                 )}
-                {/* Tổng số Pomodoro đã hoàn thành */}
-                <div className="mb-2 flex items-center gap-2 bg-white/80 dark:bg-slate-800/80 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
-                  <Trophy size={14} className="text-amber-500" />
-                  <span className="text-[10px] sm:text-[11px] font-black text-amber-600">
-                    Tổng số Pomodoro: {sessions}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5 bg-slate-100/80 dark:bg-white/5 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border border-slate-200/50 dark:border-white/10 backdrop-blur-sm shadow-sm mb-1">
-                  <Target size={12} className="text-amber-500" />
-                  <div className="flex items-baseline gap-0.5">
-                    <span className="text-sm font-black text-slate-700 dark:text-slate-200">
-                      {`${Math.floor(totalFocusMinutes / 60)}h ${String(totalFocusMinutes % 60).padStart(2, "0")}m`}
-                    </span>
-                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">
-                      /{" "}
-                      {`${Math.floor(targetGoal / 60)}h ${String(targetGoal % 60).padStart(2, "0")}m`}
-                    </span>
+                {/* Status Bar */}
+                <div className="flex flex-col items-center gap-3 w-full">
+                  <div className="grid grid-cols-2 gap-4 w-full">
+                    {/* Today Stats */}
+                    <div className="bg-white/80 dark:bg-slate-800/80 p-4 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col items-center">
+                      <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Hôm nay</span>
+                      <div className="text-2xl font-black text-slate-800 dark:text-white leading-none">
+                        {Math.floor(totalFocusMinutes / 60)}h {String(totalFocusMinutes % 60).padStart(2, "0")}m
+                      </div>
+                      <div className="text-[9px] font-bold text-slate-400 mt-1">
+                        {todaySessions} Pomodoro
+                      </div>
+                    </div>
+
+                    {/* Lifetime Stats */}
+                    <div className="bg-white/80 dark:bg-slate-800/80 p-4 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col items-center">
+                      <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Toàn bộ</span>
+                      <div className="text-2xl font-black text-slate-800 dark:text-white leading-none">
+                        {Math.floor(lifetimeFocusMinutes / 60)}h {String(lifetimeFocusMinutes % 60).padStart(2, "0")}m
+                      </div>
+                      <div className="text-[9px] font-bold text-slate-400 mt-1">
+                        {sessions} Pomodoro
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Daily Goal Progress */}
+                  <div className="w-full bg-slate-100/50 dark:bg-white/5 p-3 rounded-2xl border border-slate-200/50 dark:border-white/10 backdrop-blur-sm shadow-sm flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                       <Target size={14} className="text-amber-500" />
+                       <span className="text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest">Tiến độ mục tiêu</span>
+                    </div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-sm font-black text-amber-500">
+                        {Math.round(Math.min(100, (totalFocusMinutes / targetGoal) * 100))}%
+                      </span>
+                      <span className="text-[9px] font-bold text-slate-400">
+                         ({totalFocusMinutes}/{targetGoal}m)
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <span className="text-[9px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em]">
-                  Focus Today
-                </span>
               </div>
 
               {/* Main Content: Current Turn Timer */}
@@ -913,9 +950,18 @@ export const PomodoroPage = () => {
                         value={turnDuration}
                         onChange={e => {
                             const val = Number(e.target.value);
-                            const diff = val - turnDuration;
                             setTurnDuration(val);
-                            const newTime = Math.max(0, turnTimeLeft + diff);
+                            
+                            // If timer is not active, reset time directly to the new duration
+                            // If active, we adjust by diff (to avoid sudden jumps that break logic)
+                            let newTime;
+                            if (!isActive && mode === "focus") {
+                                newTime = val;
+                            } else {
+                                const diff = val - turnDuration;
+                                newTime = Math.max(0, turnTimeLeft + diff);
+                            }
+                            
                             setTurnTimeLeft(newTime);
                             updatePomodoroData({ turnDuration: val, timeLeft: newTime });
                         }}
