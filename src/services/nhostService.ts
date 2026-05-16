@@ -773,7 +773,7 @@ export const nhostService = {
     const q = `query GetVocabCounts {
       decks {
         id
-        my_vocabularies_aggregate {
+        my_vocabulary_aggregate {
           aggregate {
             count
           }
@@ -784,7 +784,7 @@ export const nhostService = {
     if (errors) return [];
     return (data?.decks || []).map(d => ({
       deck_id: d.id,
-      count: d.my_vocabularies_aggregate?.aggregate?.count || 0
+      count: d.my_vocabulary_aggregate?.aggregate?.count || 0
     }));
   },
 
@@ -918,7 +918,7 @@ export const nhostService = {
       const safeTable = table.replace(/[^a-zA-Z0-9_]/g, "");
       const pkName = cfg?.pkName || "id";
       const opName = `Update_${safeTable}`;
-      const pkType = pkName === "id" ? "uuid!" : "String!";
+      const pkType = (table === "decks" || table === "folders") ? "String!" : (pkName === "id" ? "uuid!" : "String!");
       const q = `mutation ${opName}($${pkName}: ${pkType}, $set: ${safeTable}_set_input!) { update_${safeTable}_by_pk(pk_columns: {${pkName}: $${pkName}}, _set: $set) { ${pkName} } }`;
       return fetchGraphQL(q, opName, { [pkName]: pk, set: finalSet });
     } catch (e) {
@@ -950,7 +950,7 @@ export const nhostService = {
       const safeTable = table.replace(/[^a-zA-Z0-9_]/g, "");
       const pkName = cfg?.pkName || "id";
       const opName = `Delete_${safeTable}`;
-      const pkType = pkName === "id" ? "uuid!" : "String!";
+      const pkType = (table === "decks" || table === "folders") ? "String!" : (pkName === "id" ? "uuid!" : "String!");
       const q = `mutation ${opName}($${pkName}: ${pkType}) { delete_${safeTable}_by_pk(${pkName}: $${pkName}) { ${pkName} } }`;
       return fetchGraphQL(q, opName, { [pkName]: pk });
     } catch (e) {

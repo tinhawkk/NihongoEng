@@ -13,12 +13,12 @@ export class NhostExamRepository implements IExamRepository {
           title
           level
           url
-          Type
+          type
           is_listening
         }
       }
     `;
-    const { data, error } = await nhostService.fetchGraphQL(query, "GetJLPTExams");
+    const { data, error } = await nhostService.fetchGraphQL(query, "GetJLPTExams", {});
     if (error) throw error;
 
     const grouped = (data?.jlpt_practice_exams || []).reduce((acc: Record<string, JLPTExam[]>, exam: any) => {
@@ -167,7 +167,7 @@ export class NhostExamRepository implements IExamRepository {
     const payload = {
       title: examData.title,
       level: examData.level,
-      Type: examData.Type || "VOCAB",
+      type: examData.type || "VOCAB",
       is_listening: examData.is_listening || false,
       source_deck_id: examData.source_deck_id,
       mondais: {
@@ -193,7 +193,7 @@ export class NhostExamRepository implements IExamRepository {
       },
     };
 
-    return this.uploadExam(payload);
+    return this.uploadExam(payload as any);
   }
 
   async deleteExam(examId: string): Promise<{ id: string } | null> {

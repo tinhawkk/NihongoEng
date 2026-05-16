@@ -59,7 +59,7 @@ export const useHomeData = () => {
       decks.forEach(d => {
         const mappedDeck = {
           ...d,
-          total_vocab: d.my_vocabularies_aggregate?.aggregate?.count || d.count || 0
+          total_vocab: d.my_vocabulary_aggregate?.aggregate?.count || d.count || 0
         };
         if (d.community_folder_id && folderMap[d.community_folder_id]) {
           folderMap[d.community_folder_id].decks.push(mappedDeck);

@@ -29,7 +29,7 @@ export interface JLPTExam {
   title: string;
   level: string;
   url?: string;
-  Type?: string;
+  type?: string;
   is_listening?: boolean;
   mondais?: JLPTMondai[];
   source_deck_id?: string;
