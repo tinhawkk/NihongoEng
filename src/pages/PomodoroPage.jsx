@@ -138,6 +138,7 @@ const BREAK_QUOTES = [
 export const PomodoroPage = () => {
   // Global Store Access - MOVED TO TOP to fix ReferenceError
   const updatePomodoroData = useUserStore(s => s.updatePomodoroData);
+  const addCoins = useUserStore(s => s.addCoins);
   const account = useUserStore(s => s.account);
 
   const initialPomodoro = account?.pomodoro || {};
@@ -551,6 +552,7 @@ export const PomodoroPage = () => {
           setFoodStock(s => s + 1);
           setHappiness(h => Math.min(100, h + 10));
           setShowConfetti(true);
+          addCoins(10); // Phase 3.1: Reward 10 coins
 
           // Use latest store data to avoid stale initialPomodoro bug
           const currentTotal = useUserStore.getState().account?.pomodoro?.totalFocusMinutes || 0;
@@ -781,6 +783,10 @@ export const PomodoroPage = () => {
               </span>
               <div className="px-2 py-0.5 rounded-md bg-blue-500 text-[9px] text-white font-black">
                 ACTIVE
+              </div>
+              <div className="flex items-center gap-1.5 ml-2 border-l border-slate-200 dark:border-slate-700 pl-3">
+                <div className="w-5 h-5 bg-amber-400 rounded-full flex items-center justify-center text-[10px] shadow-[0_2px_0_#b45309]">🪙</div>
+                <span className="text-xs font-black text-amber-600 dark:text-amber-500">{account?.coins || 0}</span>
               </div>
             </div>
           ) : (

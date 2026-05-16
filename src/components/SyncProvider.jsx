@@ -78,9 +78,64 @@ export const SyncProvider = ({ children }) => {
     try {
       const serverAccount = await fetchAccountFromServer(account.username);
       if (serverAccount) {
-        useUserStore.getState().setAccount(serverAccount);
+        // Smart merge: don't blindly overwrite local data with cloud
+        const localAccount = useUserStore.getState().account || {};
+
+        // Merge srsData: keep whichever version has the more recent lastReview
+        const localSrs = localAccount.srsData || {};
+        const cloudSrs = serverAccount.srsData || {};
+        const mergedSrs = { ...cloudSrs };
+        Object.keys(localSrs).forEach(key => {
+          const local = localSrs[key];
+          const cloud = cloudSrs[key];
+          if (!cloud) {
+            // Local-only item (new progress not yet synced)
+            mergedSrs[key] = local;
+          } else {
+            // Both exist: keep whichever was reviewed more recently
+            const localTime = new Date(local.lastReview || 0).getTime();
+            const cloudTime = new Date(cloud.lastReview || 0).getTime();
+            if (localTime > cloudTime) {
+              mergedSrs[key] = local;
+            }
+          }
+        });
+
+        // Merge streak: union of both arrays
+        const localStreak = localAccount.streak || [];
+        const cloudStreak = serverAccount.streak || [];
+        const mergedStreak = [...new Set([...localStreak, ...cloudStreak])].sort();
+
+        // Merge flashcardProgress: keep most recent per deck
+        const localFP = localAccount.flashcardProgress || {};
+        const cloudFP = serverAccount.flashcardProgress || {};
+        const mergedFP = { ...cloudFP };
+        Object.keys(localFP).forEach(key => {
+          if (!cloudFP[key]) {
+            mergedFP[key] = localFP[key];
+          } else {
+            const lt = new Date(localFP[key]?.lastStudied || 0).getTime();
+            const ct = new Date(cloudFP[key]?.lastStudied || 0).getTime();
+            if (lt > ct) mergedFP[key] = localFP[key];
+          }
+        });
+
+        const mergedAccount = {
+          ...serverAccount,
+          srsData: mergedSrs,
+          streak: mergedStreak,
+          flashcardProgress: mergedFP,
+          totalQuizzes: Math.max(localAccount.totalQuizzes || 0, serverAccount.totalQuizzes || 0),
+          coins: Math.max(localAccount.coins || 0, serverAccount.coins || 0),
+        };
+
+        useUserStore.getState().setAccount(mergedAccount);
         useBookmarkStore.setState({ bookmarks: serverAccount.bookmarks || [] });
-        console.log("[Sync] Data restored from Nhost.");
+        console.log("[Sync] Data merged (local + Nhost). srsData:", Object.keys(mergedSrs).length, "items");
+
+        // Push merged data back to cloud so it stays in sync
+        const data = collectSyncData(useUserStore, useBookmarkStore);
+        if (data) saveProgressToNhost(data).catch(() => {});
       }
     } finally {
       setSyncing(false);

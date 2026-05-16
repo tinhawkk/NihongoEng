@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useUserStore } from "../../store/useUserStore";
+import { getDueItems } from "../../utils/srsUtils";
 import { PixelOfficeCanvas } from "../PixelOfficeCanvas";
 
 
@@ -785,8 +787,18 @@ const EatingProps = () => (
   </>
 );
 
-export const StudyBuddy = ({ mode, isActive, isFeeding, happiness }) => {
-  const glow = mode === "focus" ? "#FF4B4B" : mode === "shortBreak" ? "#58CC02" : "#1CB0F6";
+export const StudyBuddy = ({ mode, isActive, isFeeding, happiness: baseHappiness }) => {
+  const srsData = useUserStore(s => s.account?.srsData);
+  const dueCount = useMemo(() => getDueItems(srsData).length, [srsData]);
+  
+  // Mood modifier: Each due card reduces happiness by 0.5% (capped at 50% reduction)
+  const happiness = useMemo(() => {
+    const penalty = Math.min(50, dueCount * 0.5);
+    return Math.max(5, baseHappiness - penalty);
+  }, [baseHappiness, dueCount]);
+
+  const isSick = dueCount > 50;
+  const glow = isSick ? "#94a3b8" : mode === "focus" ? "#FF4B4B" : mode === "shortBreak" ? "#58CC02" : "#1CB0F6";
 
   const [idleAction, setIdleAction] = useState(0);
 
@@ -1014,6 +1026,11 @@ export const StudyBuddy = ({ mode, isActive, isFeeding, happiness }) => {
           />
         </div>
         <span className="text-[10px] font-black text-slate-400">{Math.round(happiness)}%</span>
+        {isSick && (
+          <div className="flex items-center gap-1.5 ml-2 px-2 py-0.5 bg-red-100 rounded-lg animate-pulse">
+            <span className="text-[10px] font-black text-red-600 uppercase tracking-tighter">Buddy bị ốm 🤒</span>
+          </div>
+        )}
       </div>
     </div>
   );

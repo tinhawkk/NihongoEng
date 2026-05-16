@@ -14,6 +14,9 @@ import {
   Info,
   BookOpen,
   Flame,
+  Mic,
+  MicOff,
+  Layers,
 } from "lucide-react";
 import { useUserStore } from "../store/useUserStore";
 import { calculateCurrentStreak } from "../utils/streakUtils";
@@ -23,11 +26,19 @@ import { Button } from "../components/ui/Button";
 import confetti from "canvas-confetti";
 import { shuffleArray, getRandomItems } from "../utils/helpers";
 import { romajiToHiragana } from "../utils/kana";
+import { isTypo } from "../utils/textUtils";
 import { nhostService } from "../services/nhostService";
 import { examGeneratorService } from "../services/examGeneratorService";
 import { useLearnSession } from "../hooks/useCases/useLearnSession";
+import { createRecognition } from "../utils/speechUtils";
+import { getLevenshteinDistance } from "../utils/textUtils";
 
-import { DECK_LABELS } from "../utils/constants";
+const DECK_LABELS = {
+  n1: "JLPT N1", n2: "JLPT N2", n3: "JLPT N3", n4: "JLPT N4", n5: "JLPT N5",
+  ENG: "600 TOEIC", IT: "IT Vocab",
+};
+
+const normalize = str => str?.toLowerCase().trim().replace(/[〜\s・ー]/g, "") || "";
 
 function parseDialog(text) {
   if (!text) return [];
@@ -219,6 +230,251 @@ const ListenStep = ({ word, allWords, showFeedback, userAnswer, checkAnswer, cle
           </button>
         ))}
       </div>
+    </motion.div>
+  );
+};
+
+const ClozeStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId }) => {
+  const isEnglish = deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng');
+
+  const { displayExample } = useMemo(() => {
+    const rawExample = removeFurigana(word.example || "");
+    const target = removeFurigana(word.word);
+    const regex = new RegExp(target, 'g');
+    const display = rawExample.replace(regex, '[ ____ ]');
+    return { displayExample: display };
+  }, [word]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="w-full max-w-xl mx-auto space-y-12 text-center"
+    >
+      <div className="space-y-6">
+        <p className="text-slate-400 font-black uppercase text-xs tracking-[0.2em] flex items-center justify-center gap-2">
+          <BookOpen size={16} /> Điền từ vào câu
+        </p>
+        <div className="p-8 bg-white dark:bg-slate-800 rounded-[2.5rem] border-4 border-slate-50 dark:border-slate-700 shadow-md">
+          <h3 className="text-2xl md:text-3xl font-bold text-slate-700 dark:text-slate-100 leading-relaxed">
+            {displayExample}
+          </h3>
+        </div>
+        <p className="text-2xl font-bold text-[#A342FF] bg-purple-50 dark:bg-purple-900/40 py-3 px-8 rounded-3xl inline-block shadow-sm">
+          {word.meaning}
+        </p>
+      </div>
+
+      <div className="relative max-w-lg mx-auto w-full">
+        {userAnswer && !showFeedback && (
+          isTypo(normalize(userAnswer), normalize(word.word)) ||
+          isTypo(normalize(userAnswer), normalize(word.reading)) ||
+          isTypo(normalize(userAnswer), normalize(word.romaji))
+        ) && (
+          <motion.p 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute -top-10 left-0 right-0 text-amber-500 font-bold text-sm"
+          >
+            ⚠️ Hình như bạn gõ nhầm một chút?
+          </motion.p>
+        )}
+        <input
+          autoFocus
+           disabled={showFeedback}
+          value={typeof userAnswer === "string" ? userAnswer : ""}
+          onChange={e => {
+            const isEnglishMode = deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng');
+            checkAnswer(isEnglishMode ? e.target.value : romajiToHiragana(e.target.value), false);
+          }}
+          onKeyDown={e => {
+            if (e.key === "Enter" && userAnswer) {
+              e.preventDefault();
+              e.stopPropagation();
+              checkAnswer(userAnswer);
+            }
+          }}
+          placeholder="Nhập vào đây..."
+          className={`w-full p-8 pr-20 bg-slate-50 dark:bg-slate-800 border-4 rounded-[2.5rem] text-center text-3xl font-black outline-none transition-all shadow-inner ${showFeedback ? (userAnswer.toLowerCase() === word.word.toLowerCase() ? "border-green-500 bg-green-50 text-green-700" : "border-red-500 bg-red-50 text-red-700") : "border-slate-100 focus:border-blue-400 focus:bg-white"}`}
+        />
+      </div>
+    </motion.div>
+  );
+};
+
+const SpeakingStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId }) => {
+  const [isListening, setIsListening] = useState(false);
+  const [transcript, setTranscript] = useState("");
+  const [error, setError] = useState(null);
+  const recognitionRef = useRef(null);
+
+  const targetLang = useMemo(() => {
+    const isEnglish = deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng');
+    return isEnglish ? "en-US" : "ja-JP";
+  }, [deckId]);
+
+  useEffect(() => {
+    recognitionRef.current = createRecognition(targetLang);
+    recognitionRef.current.onResult = (text, isFinal) => {
+      setTranscript(text);
+      if (isFinal) {
+        setIsListening(false);
+        // Manual trigger if it looks correct
+        const dist = getLevenshteinDistance(normalize(text), normalize(word.word));
+        const distReading = getLevenshteinDistance(normalize(text), normalize(word.reading));
+        if (dist <= 1 || distReading <= 1) {
+           checkAnswer(text);
+        }
+      }
+    };
+    recognitionRef.current.onError = (err) => {
+      setError(err);
+      setIsListening(false);
+    };
+    recognitionRef.current.onEnd = () => setIsListening(false);
+
+    return () => recognitionRef.current?.stop();
+  }, [word, targetLang]);
+
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current.stop();
+    } else {
+      setTranscript("");
+      setError(null);
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="w-full max-w-xl mx-auto space-y-12 text-center"
+    >
+      <div className="space-y-6">
+        <p className="text-slate-400 font-black uppercase text-xs tracking-[0.2em] flex items-center justify-center gap-2">
+           <Mic size={16} /> Luyện phát âm
+        </p>
+        <div className="space-y-2">
+           <h2 className="text-6xl md:text-7xl font-black text-slate-800 dark:text-white tracking-tighter">
+             {word.word}
+           </h2>
+           <p className="text-xl text-slate-400 font-bold tracking-widest uppercase">{word.reading}</p>
+        </div>
+      </div>
+
+      <div className="flex flex-col items-center gap-8">
+        <button
+          onClick={toggleListening}
+          disabled={showFeedback}
+          className={`w-32 h-32 rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 relative ${isListening ? "bg-red-500 scale-110" : "bg-blue-500 hover:scale-105 active:scale-95"}`}
+        >
+          {isListening ? (
+            <>
+              <motion.div 
+                animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.1, 0.3] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="absolute inset-0 bg-red-500 rounded-full"
+              />
+              <MicOff size={48} className="text-white relative z-10" />
+            </>
+          ) : (
+            <Mic size={48} className="text-white" />
+          )}
+        </button>
+
+        <div className="w-full min-h-[100px] p-6 bg-slate-50 dark:bg-slate-800 rounded-3xl border-4 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center gap-2">
+           {transcript ? (
+             <p className="text-2xl font-black text-slate-700 dark:text-slate-200 animate-in fade-in">{transcript}</p>
+           ) : isListening ? (
+             <p className="text-slate-400 font-bold italic animate-pulse">Đang lắng nghe...</p>
+           ) : (
+             <p className="text-slate-300 font-bold uppercase tracking-widest text-xs">Phát âm ngay để tiếp tục</p>
+           )}
+           {error && <p className="text-xs text-red-500 font-bold mt-2">Lỗi: {error}</p>}
+        </div>
+
+        <div className="w-full flex flex-col gap-4">
+          {transcript && !showFeedback ? (
+            <Button onClick={() => checkAnswer(transcript)} className="w-full py-4 text-sm font-black uppercase">
+              XÁC NHẬN
+            </Button>
+          ) : (
+            <button
+              onClick={goToNext}
+              className="text-slate-400 hover:text-slate-600 font-bold text-sm uppercase tracking-widest transition-colors py-2"
+            >
+              Bỏ qua luyện nói
+            </button>
+          )}
+        </div>
+        
+        {!recognitionRef.current?.supported && (
+          <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
+             <p className="text-xs text-amber-600 font-bold">
+               Trình duyệt của bạn không hỗ trợ nhận diện giọng nói hoặc bạn chưa cấp quyền Mic. Hãy nhấn "Bỏ qua" để tiếp tục.
+             </p>
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+};
+
+const KanjiBreakdownStep = ({ word, goToNext }) => {
+  const kanjiList = useMemo(() => {
+    const kanjis = word.word.match(/[\u4e00-\u9faf]/g) || [];
+    const meanings = word.hanViet ? word.hanViet.split(/[\/\s・,]+/).filter(Boolean) : [];
+    return kanjis.map((k, i) => ({ char: k, hanViet: meanings[i] || "" }));
+  }, [word]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="w-full max-w-xl mx-auto space-y-12 text-center"
+    >
+      <div className="space-y-4">
+        <p className="text-slate-400 font-black uppercase text-xs tracking-[0.2em] flex items-center justify-center gap-2">
+          <Layers size={16} /> Phân tích Hán Tự
+        </p>
+        <h2 className="text-7xl md:text-8xl font-black text-slate-800 dark:text-white tracking-tighter">
+          {word.word}
+        </h2>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6">
+        {kanjiList.map((k, i) => (
+          <motion.div 
+            key={i}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className="flex items-center gap-6 p-6 bg-white dark:bg-slate-800 rounded-3xl border-4 border-slate-50 dark:border-slate-700 shadow-sm"
+          >
+            <div className="w-20 h-20 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center justify-center text-5xl font-black text-slate-800 dark:text-white border-2 border-slate-100 dark:border-slate-700">
+              {k.char}
+            </div>
+            <div className="text-left">
+              <p className="text-2xl font-black text-amber-500 uppercase tracking-[0.2em]">{k.hanViet}</p>
+              <p className="text-slate-400 font-bold text-sm">Chữ này có trong bài học</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {word.mnemonic && (
+        <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-700 rounded-3xl p-6 text-center shadow-sm">
+          <p className="text-xs font-black text-amber-500 uppercase tracking-widest mb-2">💡 Cách nhớ nhanh</p>
+          <p className="text-lg font-bold text-slate-700 dark:text-slate-200">{word.mnemonic}</p>
+        </div>
+      )}
+
+      <Button onClick={goToNext} className="w-full py-6 text-xl font-black uppercase tracking-widest bg-[#58CC02] hover:bg-[#4cad02] text-white shadow-[0_6px_0_0_#4cad02] active:translate-y-1 active:shadow-none transition-all">
+        ĐÃ HIỂU! TIẾP TỤC
+      </Button>
     </motion.div>
   );
 };
@@ -676,6 +932,21 @@ export const LearnPage = () => {
                         </p>
                       </div>
                     )}
+
+                    {/* Phase 5: Inline Kanji Breakdown for Intro */}
+                    {step.word.word.match(/[\u4e00-\u9faf]/) && step.word.hanViet && (
+                      <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+                        {step.word.word.match(/[\u4e00-\u9faf]/g).map((k, i) => {
+                          const meanings = (step.word.hanViet || "").split(/[\/\s・,]+/).filter(Boolean);
+                          return (
+                            <div key={`${k}-${i}`} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center gap-2">
+                              <span className="font-black text-slate-700 dark:text-slate-200">{k}</span>
+                              <span className="text-[10px] font-black text-amber-500 uppercase">{meanings[i] || ""}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                   {step.word.example && (
                     <div
@@ -685,7 +956,7 @@ export const LearnPage = () => {
                       <div className="space-y-6">
                         {parseDialog(step.word.example).map((p, i) => (
                           <div
-                            key={i}
+                            key={`${p.label}-${i}`}
                             className={`space-y-2 relative pl-10 border-l-4 ${p.label?.includes("A") ? "border-blue-400" : p.label?.includes("B") ? "border-indigo-400" : "border-slate-300"}`}
                           >
                             {p.label && (
@@ -711,7 +982,7 @@ export const LearnPage = () => {
                               step.word.example_meaning_vi
                           ).map((m, idx) => (
                             <p
-                              key={idx}
+                              key={`m-${idx}`}
                               className="text-xl text-slate-500 dark:text-slate-400 font-bold leading-relaxed italic"
                             >
                               {m.label && (
@@ -754,6 +1025,33 @@ export const LearnPage = () => {
                 cleanDisplay={cleanDisplay}
               />
             )}
+            {step.type === "cloze" && (
+              <ClozeStep
+                word={step.word}
+                showFeedback={showFeedback}
+                userAnswer={userAnswer}
+                checkAnswer={(val, isSubmit = true) => {
+                   if (isSubmit) checkAnswer(val);
+                   else setUserAnswer(val);
+                }}
+                deckId={deckId}
+              />
+            )}
+            {step.type === "speak" && (
+              <SpeakingStep
+                word={step.word}
+                showFeedback={showFeedback}
+                userAnswer={userAnswer}
+                checkAnswer={checkAnswer}
+                deckId={deckId}
+              />
+            )}
+            {step.type === "kanji_breakdown" && (
+              <KanjiBreakdownStep
+                word={step.word}
+                goToNext={goToNext}
+              />
+            )}
             {step.type === "matching" && (
               <MatchingStep
                 words={step.words}
@@ -775,6 +1073,19 @@ export const LearnPage = () => {
                   </p>
                 </div>
                 <div className="relative max-w-lg mx-auto w-full">
+                  {userAnswer && !showFeedback && (
+                    isTypo(normalize(userAnswer), normalize(step.word.word)) ||
+                    isTypo(normalize(userAnswer), normalize(step.word.reading)) ||
+                    isTypo(normalize(userAnswer), normalize(step.word.romaji))
+                  ) && (
+                    <motion.p 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="absolute -top-10 left-0 right-0 text-amber-500 font-bold text-sm"
+                    >
+                      ⚠️ Hình như bạn gõ nhầm một chút?
+                    </motion.p>
+                  )}
                   <input
                     ref={typingRef}
                     autoFocus
@@ -865,6 +1176,12 @@ export const LearnPage = () => {
                     <p className="text-lg font-bold text-[#A342FF] line-clamp-1">
                       {step.word.meaning}
                     </p>
+                    {step.word.mnemonic && (
+                      <div className="mt-2 p-3 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800/50 rounded-xl">
+                        <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-1">💡 Mẹo nhớ</p>
+                        <p className="text-xs font-bold text-slate-600 dark:text-slate-300 italic">{step.word.mnemonic}</p>
+                      </div>
+                    )}
                   </div>
                   <button
                     onClick={playStepAudio}

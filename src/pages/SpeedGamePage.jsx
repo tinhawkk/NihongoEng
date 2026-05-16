@@ -132,7 +132,7 @@ export const SpeedGamePage = () => {
     streak, multiplier, powerups, removedOptionId,
     comboFx, questionText, questionSub,
     currentWord, options, feedback,
-    startGame, startGameMulti, handleAnswer, handleUsePowerup,
+    startGame, startGameMulti, handleAnswer, handleUsePowerup, buyPowerup,
     ttsEnabled, setTtsEnabled
   } = useSpeedGame();
 
@@ -160,6 +160,10 @@ export const SpeedGamePage = () => {
             }`}>
             {ttsEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
           </button>
+          <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700/50 rounded-xl shadow-sm">
+             <div className="w-5 h-5 bg-amber-400 rounded-full flex items-center justify-center text-[10px] shadow-[0_2px_0_#b45309]">🪙</div>
+             <span className="text-sm font-black text-amber-600 dark:text-amber-500">{account?.coins || 0}</span>
+          </div>
         </div>
         {gameState === "playing" && (
           <div className="flex items-center gap-6 md:gap-10 bg-white/80 dark:bg-slate-800/80 backdrop-blur px-6 py-2 rounded-2xl shadow-sm border border-slate-200/50 dark:border-slate-700/50">
@@ -305,10 +309,16 @@ export const SpeedGamePage = () => {
               <div className="space-y-3">
                 <div className="flex items-center justify-between px-2">
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Lựa chọn</span>
-                  <button onClick={handleUsePowerup} disabled={powerups <= 0}
-                    className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${powerups > 0 ? "bg-amber-400 text-white shadow-md active:scale-95" : "bg-slate-100 dark:bg-slate-800 text-slate-300 cursor-not-allowed"}`}>
-                    ⚡ {powerups}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button onClick={buyPowerup}
+                      className="px-3 py-1 bg-white dark:bg-slate-800 border-2 border-amber-200 dark:border-amber-700 text-amber-500 rounded-lg text-[9px] font-black hover:bg-amber-50 dark:hover:bg-amber-900/30 transition-all flex items-center gap-1 shadow-sm">
+                      MUA ⚡ (-50🪙)
+                    </button>
+                    <button onClick={handleUsePowerup} disabled={powerups <= 0}
+                      className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${powerups > 0 ? "bg-amber-400 text-white shadow-md active:scale-95" : "bg-slate-100 dark:bg-slate-800 text-slate-300 cursor-not-allowed"}`}>
+                      SỬ DỤNG ⚡ ({powerups})
+                    </button>
+                  </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 relative">
                   <div className="absolute -right-24 top-1/2 -translate-y-1/2 hidden lg:block">

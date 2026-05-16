@@ -215,6 +215,7 @@ export function calculateNextSrs(item, rating) {
     stepIndex: nextStepIndex,
     reps,
     lapses,
+    isLeech: lapses >= 5,
     nextReview: nextReview.toISOString(),
     lastReview: now.toISOString(),
     lastRated: rating,

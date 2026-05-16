@@ -271,6 +271,17 @@ export const useSpeedGame = () => {
     playBeep(980, 120);
   };
 
+  const buyPowerup = () => {
+    const coins = useUserStore.getState().account?.coins || 0;
+    if (coins < 50) {
+      alert("Bạn không đủ coins (cần 50)!");
+      return;
+    }
+    useUserStore.getState().addCoins(-50);
+    setPowerups(p => p + 1);
+    sounds.playBeep(1200, 150);
+  };
+
   const handleAnswer = (choiceId: string) => {
     if (feedback) return;
 
@@ -365,6 +376,7 @@ export const useSpeedGame = () => {
     startGameMulti,
     handleAnswer,
     handleUsePowerup,
+    buyPowerup,
     ttsEnabled,
     setTtsEnabled,
   };

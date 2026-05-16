@@ -666,11 +666,18 @@ export const SRSPage = () => {
                                 </span>
                               )}
                             </div>
-                            <div
-                              className={`shrink-0 px-2 py-1 rounded-xl font-black text-[9px] lg:text-[10px] uppercase tracking-wider flex items-center gap-1.5 ${catInfo.bg} ${catInfo.color}`}
-                            >
-                              <span className={`w-1.5 h-1.5 rounded-full ${catInfo.dot}`}></span>
-                              {catInfo.label}
+                            <div className="flex flex-col items-end gap-1 shrink-0">
+                              <div
+                                className={`px-2 py-1 rounded-xl font-black text-[9px] lg:text-[10px] uppercase tracking-wider flex items-center gap-1.5 ${catInfo.bg} ${catInfo.color}`}
+                              >
+                                <span className={`w-1.5 h-1.5 rounded-full ${catInfo.dot}`}></span>
+                                {catInfo.label}
+                              </div>
+                              {item.isLeech && (
+                                <div className="px-2 py-1 rounded-xl font-black text-[9px] lg:text-[10px] uppercase tracking-wider bg-red-100 text-red-600 flex items-center gap-1.5 animate-pulse">
+                                  🚨 TỪ KHÓ (LEECH)
+                                </div>
+                              )}
                             </div>
                           </div>
 

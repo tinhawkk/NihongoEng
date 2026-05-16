@@ -7,6 +7,7 @@ import { tts } from "../../utils/tts";
 import { sounds } from "../../utils/sounds";
 import confetti from "canvas-confetti";
 import { romajiToHiragana } from "../../utils/kana";
+import { isTypo } from "../../utils/textUtils";
 
 const DECK_LABELS: Record<string, string> = {
   n1: "JLPT N1", n2: "JLPT N2", n3: "JLPT N3", n4: "JLPT N4", n5: "JLPT N5",
@@ -39,7 +40,7 @@ export const useTypingGame = (deckId: string | undefined) => {
   const [loading, setLoading] = useState(true);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [input, setInput] = useState("");
-  const [result, setResult] = useState<"correct" | "wrong" | null>(null);
+  const [result, setResult] = useState<"correct" | "wrong" | "typo" | null>(null);
   const [showAnswer, setShowAnswer] = useState(false);
   const [score, setScore] = useState({ correct: 0, wrong: 0 });
   const [isFinished, setIsFinished] = useState(false);
@@ -214,6 +215,20 @@ export const useTypingGame = (deckId: string | undefined) => {
         (userAsHiragana === correctWord && /^[\u3040-\u30FF]+$/.test(correctWord)) ||
         (isWordEnglish && (userInput === correctWord || userInput === normalize(card.meaning)));
     
+    // TYPO DETECTION (Phase 2.2)
+    if (!isCorrect) {
+      const isActuallyTypo = 
+        isTypo(userInput, correctWord) ||
+        isTypo(userAsHiragana, correctWord) ||
+        isTypo(userInput, correctFurigana) ||
+        isTypo(userAsHiragana, correctFurigana);
+      
+      if (isActuallyTypo) {
+        setResult("typo");
+        return;
+      }
+    }
+
     setResult(isCorrect ? "correct" : "wrong");
     setShowAnswer(true);
     

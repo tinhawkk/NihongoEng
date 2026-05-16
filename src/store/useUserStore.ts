@@ -24,6 +24,7 @@ export interface UserState {
   setTheme: (theme: "light" | "dark") => void;
   setVocaSource: (source: "sheet" | "voca") => void;
   updatePomodoroData: (data: any) => void;
+  addCoins: (amount: number) => void;
   logout: () => void;
 }
 
@@ -202,14 +203,6 @@ export const useUserStore = create<UserState>()(
             },
           };
         });
-
-        const state = get();
-        if (state.isAuthenticated && state.account) {
-          const data = collectSyncData(useUserStore, useBookmarkStore);
-          if (data) {
-            saveProgressToNhost(data);
-          }
-        }
       },
 
       getNextInterval: (wordId, rating, wordStr) => {
@@ -248,12 +241,6 @@ export const useUserStore = create<UserState>()(
             },
           };
         });
-
-        const state = get();
-        if (state.isAuthenticated && state.account) {
-          const data = collectSyncData(useUserStore, useBookmarkStore);
-          if (data) saveProgressToNhost(data);
-        }
       },
 
       resetSRS: () => {
@@ -268,12 +255,6 @@ export const useUserStore = create<UserState>()(
             },
           };
         });
-
-        const state = get();
-        if (state.isAuthenticated && state.account) {
-          const data = collectSyncData(useUserStore, useBookmarkStore);
-          if (data) saveProgressToNhost(data);
-        }
       },
 
       theme: "light",
@@ -293,6 +274,17 @@ export const useUserStore = create<UserState>()(
                 ...(state.account.pomodoro || {}),
                 ...data,
               },
+            },
+          };
+        }),
+
+      addCoins: (amount) =>
+        set((state) => {
+          if (!state.account) return state;
+          return {
+            account: {
+              ...state.account,
+              coins: (state.account.coins || 0) + amount,
             },
           };
         }),
@@ -318,6 +310,7 @@ export const useUserStore = create<UserState>()(
               totalQuizzes: state.account.totalQuizzes || 0,
               arenaProgress: state.account.arenaProgress || {},
               pomodoro: state.account.pomodoro || {},
+              coins: state.account.coins || 0,
             }
           : null,
       }),

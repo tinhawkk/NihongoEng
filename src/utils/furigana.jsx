@@ -90,7 +90,7 @@ export function renderFurigana(text) {
   while ((match = regex.exec(text)) !== null) {
     // Add text before the match
     if (match.index > lastIndex) {
-      result.push(text.slice(lastIndex, match.index));
+      result.push(<span key={`txt-${lastIndex}`}>{text.slice(lastIndex, match.index)}</span>);
     }
     
     if (match[3]) {
@@ -109,7 +109,7 @@ export function renderFurigana(text) {
   }
   
   if (lastIndex < text.length) {
-    result.push(text.slice(lastIndex));
+    result.push(<span key={`txt-end-${lastIndex}`}>{text.slice(lastIndex)}</span>);
   }
   return result;
 }
@@ -139,9 +139,9 @@ export function combineFurigana(word, reading) {
     );
   }
 
-  const hasBrackets = /[（\(\[<＜【]/.test(word);
+  const hasBrackets = /[（\(\[［【].*?[）\)\]］】]|[<＜][^>＞]+[>＞]/.test(word);
   if (hasBrackets) {
-    return renderFurigana(word);
+    return <>{renderFurigana(word)}</>;
   }
 
   if (!reading || word === reading) {

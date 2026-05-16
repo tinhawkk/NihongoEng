@@ -7,7 +7,8 @@
 import localforage from "localforage";
 
 let syncTimeout = null;
-const SYNC_DEBOUNCE_MS = 3000;
+let isSyncing = false;
+const SYNC_DEBOUNCE_MS = 5000;
 const OFFLINE_SYNC_QUEUE = "offline_sync_queue";
 
 /**
@@ -84,7 +85,7 @@ async function enqueueFailedSync(data) {
 
 // Helper to process queue
 export async function processOfflineQueue() {
-  if (!navigator.onLine) return;
+  if (!navigator.onLine || isSyncing) return;
 
   try {
     const queue = await localforage.getItem(OFFLINE_SYNC_QUEUE);
@@ -127,11 +128,21 @@ export async function saveProgressToNhost(data) {
     return false;
   }
 
-  const success = await attemptSyncToNhost(data);
-  if (!success) {
-    await enqueueFailedSync(data);
+  if (isSyncing) {
+    console.log("[Sync] Sync already in progress, skipping this update (data will be captured by next sync)");
+    return false;
   }
-  return success;
+
+  isSyncing = true;
+  try {
+    const success = await attemptSyncToNhost(data);
+    if (!success) {
+      await enqueueFailedSync(data);
+    }
+    return success;
+  } finally {
+    isSyncing = false;
+  }
 }
 
 async function attemptSyncToNhost(data) {
@@ -172,19 +183,17 @@ async function attemptSyncToNhost(data) {
 }
 
 /**
- * Debounced sync — waits 3s after last call before actually syncing.
+ * Debounced sync — waits 5s after last call before actually syncing.
  */
 export function debouncedSync(data) {
   if (syncTimeout) clearTimeout(syncTimeout);
   syncTimeout = setTimeout(() => {
-    saveProgressToNhost(data);
+    saveProgressToNhost(data).catch(() => {});
   }, SYNC_DEBOUNCE_MS);
 }
 
 /**
  * Immediate sync on page close
- * Note: standard fetch might be cancelled on unload, but we'll try it anyway.
- * For true reliability on unload, we'd need a simpler endpoint compatible with sendBeacon.
  */
 export function immediateSync(data) {
   if (!data?.username) return false;
@@ -193,10 +202,9 @@ export function immediateSync(data) {
     syncTimeout = null;
   }
 
-  // Fallback: Since Nhost GraphQL uses POST with custom headers,
-  // it doesn't work with navigator.sendBeacon (which only supports simple POST).
-  // We'll use a normal fetch and hope the browser keeps the connection open long enough.
-  saveProgressToNhost(data);
+  // On unload, we bypass isSyncing guard but only if data is not already being synced
+  // However, keep it simple for now as unload fetch is risky anyway.
+  saveProgressToNhost(data).catch(() => {});
   console.log("[Sync] Immediate sync (Nhost) triggered on unload");
 }
 

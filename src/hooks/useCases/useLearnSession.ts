@@ -4,6 +4,7 @@ import { useUserStore } from "../../store/useUserStore";
 import { examGeneratorService } from "../../services/examGeneratorService";
 import { shuffleArray } from "../../utils/helpers";
 import { romajiToHiragana } from "../../utils/kana";
+import { isTypo } from "../../utils/textUtils";
 import { DECK_LABELS } from "../../utils/constants";
 import { nhostService } from "../../services/nhostService"; // Temporary for deck title, should be in repo later
 
@@ -29,6 +30,21 @@ function generateLessonSteps(words: any[]) {
     if (batch.length >= 3) {
       steps.push({ type: "matching", words: batch });
     }
+    // New: Cloze Deletion step for words with examples
+    batch.forEach(w => {
+      if (w.example && w.example.includes(w.word)) {
+        steps.push({ type: "cloze", word: w });
+      }
+      
+      // Phase 4: Speaking step
+      steps.push({ type: "speak", word: w });
+
+      // Phase 5: Kanji breakdown if word contains Kanji
+      const hasKanji = /[\u4e00-\u9faf]/.test(w.word);
+      if (hasKanji) {
+        steps.push({ type: "kanji_breakdown", word: w });
+      }
+    });
   }
   return steps;
 }
@@ -56,7 +72,7 @@ export const useLearnSession = (deckId: string, filterType: string) => {
 
         if (isUUID) {
           try {
-            const q = `query GetDeckTitle($id: uuid!) { decks_by_pk(id: $id) { title } }`;
+            const q = `query GetDeckTitle($id: String!) { decks_by_pk(id: $id) { title } }`;
             const res = await nhostService.fetchGraphQL(q, "GetDeckTitle", { id: deckId });
             if (res.data?.decks_by_pk?.title) {
               setDeckTitle(res.data.decks_by_pk.title);
@@ -154,14 +170,24 @@ export const useLearnSession = (deckId: string, filterType: string) => {
       if (success && step) {
         updateSrsItem(step.word.id || step.word.word, step.word, 2, {
           source: "learn",
+          deckId: deckId,
           deckName: deckTitle,
         });
       } else if (step) {
         // Handle incorrect by pushing to end of steps array
-        setSteps(prev => [...prev, step]);
+        // ADAPTIVE SCAFFOLDING: Insert an extra listen step if failed on choice
+        if (step.type === "choice" || step.type === "choice_kanji") {
+          setSteps(prev => {
+            const newSteps = [...prev];
+            newSteps.splice(currentIdx + 1, 0, { type: "listen", word: step.word });
+            return [...newSteps, step];
+          });
+        } else {
+          setSteps(prev => [...prev, step]);
+        }
       }
     },
-    [step, deckTitle, updateSrsItem]
+    [step, currentIdx, deckId, deckTitle, updateSrsItem]
   );
 
   const checkAnswer = useCallback(
@@ -196,6 +222,14 @@ export const useLearnSession = (deckId: string, filterType: string) => {
       ) {
         handleResult(true);
       } else {
+        // TYPO DETECTION (Phase 2.2)
+        if (
+          isTypo(given, targetKanji) ||
+          isTypo(given, targetKana) ||
+          (targetRomaji && isTypo(given, targetRomaji))
+        ) {
+          return;
+        }
         handleResult(false);
       }
     },
