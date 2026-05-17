@@ -344,7 +344,12 @@ const SpeakingStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId, goT
 
     return () => {
       if (skipTimeout) clearTimeout(skipTimeout);
-      recognitionRef.current?.stop();
+      if (recognitionRef.current) {
+        recognitionRef.current.onError = null;
+        recognitionRef.current.onEnd = null;
+        recognitionRef.current.onResult = null;
+        recognitionRef.current.stop();
+      }
     };
   }, [word, targetLang, disableSpeaking, goToNext, checkAnswer]);
 
