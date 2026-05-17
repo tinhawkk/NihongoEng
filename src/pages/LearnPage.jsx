@@ -313,10 +313,24 @@ const SpeakingStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId, goT
     return isEnglish ? "en-US" : "ja-JP";
   }, [deckId, word]);
 
-  useEffect(() => {
-    let skipTimeout;
-    recognitionRef.current = createRecognition(targetLang);
-    recognitionRef.current.onResult = (text, isFinal) => {
+  const skipTimeoutRef = useRef(null);
+
+  const startListening = useCallback(() => {
+    if (recognitionRef.current) {
+      recognitionRef.current.onError = null;
+      recognitionRef.current.onEnd = null;
+      recognitionRef.current.onResult = null;
+      recognitionRef.current.stop();
+    }
+
+    setTranscript("");
+    setError(null);
+    setIsListening(true);
+
+    const recognition = createRecognition(targetLang);
+    recognitionRef.current = recognition;
+
+    recognition.onResult = (text, isFinal) => {
       setTranscript(text);
       if (isFinal) {
         setIsListening(false);
@@ -328,22 +342,33 @@ const SpeakingStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId, goT
         }
       }
     };
-    recognitionRef.current.onError = (err) => {
+
+    recognition.onError = (err) => {
       setError(err);
       setIsListening(false);
       
       if (err === "network" || err === "not-allowed") {
         if (disableSpeaking) disableSpeaking();
-        // Auto skip the current speaking step after showing the error for 3 seconds
-        skipTimeout = setTimeout(() => {
+        skipTimeoutRef.current = setTimeout(() => {
           goToNext();
         }, 3000);
       }
     };
-    recognitionRef.current.onEnd = () => setIsListening(false);
 
+    recognition.onEnd = () => setIsListening(false);
+    recognition.start();
+  }, [targetLang, word, checkAnswer, disableSpeaking, goToNext]);
+
+  const stopListening = useCallback(() => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
+    setIsListening(false);
+  }, []);
+
+  useEffect(() => {
     return () => {
-      if (skipTimeout) clearTimeout(skipTimeout);
+      if (skipTimeoutRef.current) clearTimeout(skipTimeoutRef.current);
       if (recognitionRef.current) {
         recognitionRef.current.onError = null;
         recognitionRef.current.onEnd = null;
@@ -351,16 +376,13 @@ const SpeakingStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId, goT
         recognitionRef.current.stop();
       }
     };
-  }, [word, targetLang, disableSpeaking, goToNext, checkAnswer]);
+  }, []);
 
   const toggleListening = () => {
     if (isListening) {
-      recognitionRef.current.stop();
+      stopListening();
     } else {
-      setTranscript("");
-      setError(null);
-      recognitionRef.current.start();
-      setIsListening(true);
+      startListening();
     }
   };
 
