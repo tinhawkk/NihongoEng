@@ -135,7 +135,7 @@ export async function saveProgressToNhost(data) {
 
   isSyncing = true;
   try {
-    const success = await attemptSyncToNhost(data);
+    const success = await attemptSyncToNhost(data, false);
     if (!success) {
       await enqueueFailedSync(data);
     }
@@ -145,7 +145,7 @@ export async function saveProgressToNhost(data) {
   }
 }
 
-async function attemptSyncToNhost(data) {
+async function attemptSyncToNhost(data, isKeepAlive = false) {
   try {
     const payload = buildNhostMutation(data);
     const response = await fetch(import.meta.env.VITE_NHOST_GRAPHQL_URL, {
@@ -155,7 +155,7 @@ async function attemptSyncToNhost(data) {
         "x-hasura-admin-secret": import.meta.env.VITE_HASURA_ADMIN_SECRET,
       },
       body: JSON.stringify(payload),
-      keepalive: true,
+      ...(isKeepAlive ? { keepalive: true } : {}),
     });
 
     if (!response.ok) {
@@ -204,7 +204,8 @@ export function immediateSync(data) {
 
   // On unload, we bypass isSyncing guard but only if data is not already being synced
   // However, keep it simple for now as unload fetch is risky anyway.
-  saveProgressToNhost(data).catch(() => {});
+  // On unload, use keepalive so the request isn't cancelled
+  attemptSyncToNhost(data, true).catch(() => {});
   console.log("[Sync] Immediate sync (Nhost) triggered on unload");
 }
 
