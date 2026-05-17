@@ -445,6 +445,7 @@ export const HomePage = () => {
             ...item,
             id: item.id || generateUUID(),
             level: finalLevel,
+            deck_id: deck_id,
           }));
           const { data, errors } = await nhostService.bulkInsertMyVoca(bulkObjects);
           if (errors?.length) throw new Error(errors[0].message);
@@ -462,6 +463,7 @@ export const HomePage = () => {
           ...vocabData,
           id: generateUUID(),
           level: finalLevel,
+          deck_id: deck_id,
           type: vocabData.onyomi || vocabData.kunyomi || vocabData.related_voca ? "kanji" : "voca",
         });
         alert("Đã thêm từ vựng thành công!");

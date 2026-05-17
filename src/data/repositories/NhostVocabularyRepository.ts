@@ -225,13 +225,14 @@ const loadDeckInternal = async (
           }`;
           const folderRes = await fetchFromNhost(qFolder, { id: deck.community_folder_id });
           const folder = folderRes.data?.folders_by_pk;
-          if (folder?.title) uuidLevelHints.push(folder.title, folder.title.toUpperCase());
+          // Removed semantic label injection from folder title to prevent global cross-contamination.
+          // UUID decks must strictly use their deck_id.
         }
 
         const queryData = async (dId: string, title?: string, levelHints: string[] = []) => {
           const possibleIds = [dId, dId.toUpperCase(), dId.toLowerCase()];
           const legacyLevels: string[] = [...levelHints];
-          if (title) {
+          if (title && !isActuallyUUID) {
             possibleIds.push(title, title.toUpperCase(), title.toLowerCase());
             legacyLevels.push(title, title.toUpperCase(), title.toLowerCase());
           }

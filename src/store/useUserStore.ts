@@ -19,6 +19,7 @@ export interface UserState {
   getNextInterval: (wordId: string, rating: number, wordStr?: string) => string | null;
   syncBookmarksToAccount: (bookmarks: any[]) => void;
   removeSrsItem: (wordId: string) => void;
+  removeSrsByDeck: (deckId: string) => void;
   resetSRS: () => void;
   toggleTheme: () => void;
   setTheme: (theme: "light" | "dark") => void;
@@ -234,6 +235,27 @@ export const useUserStore = create<UserState>()(
           if (!state.account?.srsData) return state;
           const newSrsData = { ...state.account.srsData };
           delete newSrsData[wordId];
+          return {
+            account: {
+              ...state.account,
+              srsData: newSrsData,
+            },
+          };
+        });
+      },
+
+      removeSrsByDeck: (deckId) => {
+        set((state) => {
+          if (!state.account?.srsData) return state;
+          const newSrsData = { ...state.account.srsData };
+          let changed = false;
+          Object.keys(newSrsData).forEach(key => {
+            if (newSrsData[key].deck === deckId || newSrsData[key].deckName === deckId) {
+              delete newSrsData[key];
+              changed = true;
+            }
+          });
+          if (!changed) return state;
           return {
             account: {
               ...state.account,

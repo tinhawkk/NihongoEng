@@ -236,6 +236,7 @@ export const useHomeData = () => {
   const handleDeleteDeck = async (deck: any) => {
     if (!confirm(`Xóa bài học "${deck.title}"?`)) return;
     await nhostService.deleteDeck(deck.id);
+    useUserStore.getState().removeSrsByDeck(deck.id);
     await fetchCommunityData();
   };
 
@@ -261,6 +262,7 @@ export const useHomeData = () => {
           ...item,
           id: generateUUID(),
           level: finalLevel,
+          deck_id: deck_id,
         }));
         const { data, errors } = await nhostService.bulkInsertMyVoca(bulkObjects);
         if (errors?.length) throw new Error(errors[0].message);
@@ -272,6 +274,7 @@ export const useHomeData = () => {
         ...vocabDataToInsert,
         id: generateUUID(),
         level: finalLevel,
+        deck_id: deck_id,
       });
       if (errors?.length) throw new Error(errors[0].message);
       return { message: "Đã thêm 1 từ vựng mới!" };

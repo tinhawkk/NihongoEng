@@ -100,13 +100,14 @@ export const ExampleSpeakPage = () => {
   // Helper to get tokens consistently (Bunsetsu style)
   const getTokens = useCallback(() => {
     if (!targetText) return [];
-    // 1. Ruby tokens: Kanji(Reading)
-    // 2. English words
-    // 3. Kanji sequences
-    // 4. Hiragana/Katakana chunks ending with complex particles (から, まで...)
-    // 5. Hiragana/Katakana chunks ending with simple particles (は, を, に, が, も, と, で, へ...)
-    // 6. Remaining particles/words
-    const tokens = targetText.match(/([\u4e00-\u9faf]+[（(][^）)]+[）)]|[A-Za-z0-9']+|[\u4e00-\u9faf]+|[\u3040-\u30ff]+(?:から|まで|より|という|だけ|ばかり|ほど|ので|のに|ても|でも|たが|だか|は|を|に|が|も|と|で|へ|な|ね|よ)|[\u3040-\u30ff]+|[^\w\s\u3040-\u30ff\u4e00-\u9faf]+|\s+)/g) || [];
+    // 1. Markdown Furigana: [Kanji](reading)
+    // 2. Legacy Ruby tokens: Kanji(Reading)
+    // 3. English words
+    // 4. Kanji sequences
+    // 5. Hiragana/Katakana chunks ending with complex particles
+    // 6. Hiragana/Katakana chunks ending with simple particles
+    // 7. Remaining particles/words
+    const tokens = targetText.match(/(\[[^\]]+\]\([^)]+\)|[\u4e00-\u9faf]+[（(][^）)]+[）)]|[A-Za-z0-9']+|[\u4e00-\u9faf]+|[\u3040-\u30ff]+(?:から|まで|より|という|だけ|ばかり|ほど|ので|のに|ても|でも|たが|だか|は|を|に|が|も|と|で|へ|な|ね|よ)|[\u3040-\u30ff]+|[^\w\s\u3040-\u30ff\u4e00-\u9faf]+|\s+)/g) || [];
     return tokens;
   }, [targetText]);
 
@@ -124,9 +125,9 @@ export const ExampleSpeakPage = () => {
       const isPunctuation = /^[^\w\s\u3040-\u30ff\u4e00-\u9faf]+$/.test(token);
       if (isWhitespace || isPunctuation) return;
       
-      const rubyMatch = token.match(/^(.+)[（(](.+)[）)]$|^(.+)$/);
-      const baseWord = rubyMatch[1] || rubyMatch[3] || token;
-      const reading = rubyMatch[2] || "";
+      const rubyMatch = token.match(/^\[(.+)\]\((.+)\)$|^(.+)[（(](.+)[）)]$|^(.+)$/);
+      const baseWord = rubyMatch[1] || rubyMatch[3] || rubyMatch[5] || token;
+      const reading = rubyMatch[2] || rubyMatch[4] || "";
       const cleanToken = baseWord.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()！？。、]/g, "").toLowerCase();
       
       if (!cleanToken) return;
@@ -222,8 +223,15 @@ export const ExampleSpeakPage = () => {
     const rec = recognitionRef.current;
     
     rec.onResult = (text) => {
-      // Append current session text to history
-      const cumulativeText = fullTranscriptRef.current + " " + text;
+      // Fix for Samsung Internet / old Chrome models that don't clear buffer on restart:
+      const savedHistory = fullTranscriptRef.current.trim();
+      let cumulativeText = "";
+      if (savedHistory && text.startsWith(savedHistory)) {
+        cumulativeText = text; // Buffer wasn't cleared, don't double-append
+      } else {
+        cumulativeText = savedHistory ? savedHistory + " " + text : text;
+      }
+      
       setTranscript(cumulativeText);
       checkSpeechRef.current(cumulativeText);
     };
@@ -243,7 +251,7 @@ export const ExampleSpeakPage = () => {
     };
 
     return () => {};
-  }, [targetText, deckId, feedback, isListening, transcript]);
+  }, [targetText, targetLang]);
 
   const toggleListening = () => {
     if (isListening) {
