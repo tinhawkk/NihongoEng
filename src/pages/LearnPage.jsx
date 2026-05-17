@@ -393,7 +393,14 @@ const SpeakingStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId, goT
            ) : (
              <p className="text-slate-300 font-bold uppercase tracking-widest text-xs">Phát âm ngay để tiếp tục</p>
            )}
-           {error && <p className="text-xs text-red-500 font-bold mt-2">Lỗi: {error}</p>}
+           {error && (
+             <p className="text-xs text-red-500 font-bold mt-2">
+               {error === "network" ? "Lỗi: Không có kết nối mạng để nhận diện giọng nói." 
+               : error === "not-allowed" ? "Lỗi: Bạn chưa cấp quyền Microphone."
+               : error === "no-speech" ? "Lỗi: Không nghe thấy âm thanh."
+               : `Lỗi: ${error}`}
+             </p>
+           )}
         </div>
 
         <div className="w-full flex flex-col gap-4">
