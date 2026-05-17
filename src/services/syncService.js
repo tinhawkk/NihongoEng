@@ -177,6 +177,10 @@ async function attemptSyncToNhost(data, isKeepAlive = false) {
     }
     return !!affected;
   } catch (err) {
+    if (isKeepAlive) {
+      console.warn("[Sync] keepalive fetch failed (likely >64KB). Falling back to standard fetch.");
+      return attemptSyncToNhost(data, false);
+    }
     console.warn("[Sync] connection to Nhost failed:", err.message);
     return false;
   }
