@@ -79,7 +79,7 @@ async function enqueueFailedSync(data) {
       `[Sync] Saved progress offline for ${data.username}. Will retry when online.`,
     );
   } catch (err) {
-    console.error("[Sync] Failed to enqueue sync offline:", err);
+    console.warn("[Sync] Failed to enqueue sync offline:", err);
   }
 }
 
@@ -108,7 +108,7 @@ export async function processOfflineQueue() {
       console.log("[Sync] Offline queue processed successfully.");
     }
   } catch (err) {
-    console.error("[Sync] Error processing offline queue:", err);
+    console.warn("[Sync] Error processing offline queue:", err);
   }
 }
 
@@ -159,13 +159,13 @@ async function attemptSyncToNhost(data) {
     });
 
     if (!response.ok) {
-      console.error("[Sync] Nhost Server Error:", response.status);
+      console.warn("[Sync] Nhost Server Error:", response.status);
       return false;
     }
 
     const result = await response.json();
     if (result.errors) {
-      console.error("[Sync] Nhost GraphQL Error:", result.errors);
+      console.warn("[Sync] Nhost GraphQL Error:", result.errors);
       return false;
     }
 
@@ -177,7 +177,7 @@ async function attemptSyncToNhost(data) {
     }
     return !!affected;
   } catch (err) {
-    console.error("[Sync] connection to Nhost failed:", err.message);
+    console.warn("[Sync] connection to Nhost failed:", err.message);
     return false;
   }
 }
