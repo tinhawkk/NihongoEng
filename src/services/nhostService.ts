@@ -778,21 +778,30 @@ export const nhostService = {
             count
           }
         }
+        japience_vocas_aggregate {
+          aggregate {
+            count
+          }
+        }
       }
     }`;
     const { data, errors } = await fetchGraphQL(q, "GetVocabCounts", {});
     
     // Nếu bị lỗi (do Hasura chưa setup Relationship), dùng Fallback
     if (errors) {
-      console.warn("[Nhost] my_vocabularies_aggregate missing. Falling back to manual count.");
+      console.warn("[Nhost] Relationship missing. Falling back to manual count for both tables.");
       const fallbackQuery = `query GetAllDeckIds {
         my_vocabulary { deck_id }
+        japience_voca { deck_id }
       }`;
       const fallbackRes = await fetchGraphQL(fallbackQuery, "GetAllDeckIds", {});
       if (fallbackRes.errors) return [];
       
       const counts = {};
       (fallbackRes.data?.my_vocabulary || []).forEach((v: any) => {
+        if (v.deck_id) counts[v.deck_id] = (counts[v.deck_id] || 0) + 1;
+      });
+      (fallbackRes.data?.japience_voca || []).forEach((v: any) => {
         if (v.deck_id) counts[v.deck_id] = (counts[v.deck_id] || 0) + 1;
       });
       
@@ -802,10 +811,14 @@ export const nhostService = {
       }));
     }
 
-    return (data?.decks || []).map((d: any) => ({
-      deck_id: d.id,
-      count: d.my_vocabularies_aggregate?.aggregate?.count || 0
-    }));
+    return (data?.decks || []).map((d: any) => {
+      const myCount = d.my_vocabularies_aggregate?.aggregate?.count || 0;
+      const japCount = d.japience_vocas_aggregate?.aggregate?.count || 0;
+      return {
+        deck_id: d.id,
+        count: myCount + japCount
+      };
+    });
   },
 
   async getContentCategories() {
