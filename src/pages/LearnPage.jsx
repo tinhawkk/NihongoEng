@@ -309,9 +309,9 @@ const SpeakingStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId }) =
   const recognitionRef = useRef(null);
 
   const targetLang = useMemo(() => {
-    const isEnglish = deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng');
+    const isEnglish = deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng') || (word?.word && !/[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(word.word));
     return isEnglish ? "en-US" : "ja-JP";
-  }, [deckId]);
+  }, [deckId, word]);
 
   useEffect(() => {
     recognitionRef.current = createRecognition(targetLang);

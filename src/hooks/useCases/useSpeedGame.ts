@@ -3,6 +3,7 @@ import confetti from "canvas-confetti";
 import { useUserStore } from "../../store/useUserStore";
 import { vocabularyRepository } from "../../data/repositories/NhostVocabularyRepository";
 import { sounds } from "../../utils/sounds";
+import { detectDeckLanguage } from "../../utils/helpers";
 
 function shuffle(arr: any[]) {
   const a = [...arr];
@@ -15,6 +16,7 @@ function shuffle(arr: any[]) {
 
 export const useSpeedGame = () => {
   const [gameState, setGameState] = useState<"level_select" | "loading" | "countdown" | "playing" | "finished">("level_select");
+  const [gameMode, setGameMode] = useState<"quiz" | "match">("quiz");
   const [selectedLevel, setSelectedLevel] = useState("n5");
   const [words, setWords] = useState<any[]>([]);
   const [currentWord, setCurrentWord] = useState<any>(null);
@@ -26,14 +28,23 @@ export const useSpeedGame = () => {
   const [countdown, setCountdown] = useState<number | null>(null);
   const [streak, setStreak] = useState(0);
   const [multiplier, setMultiplier] = useState(1);
-  const [wrongStreak, setWrongStreak] = useState(0);
-  const [powerups, setPowerups] = useState(0);
-  const [removedOptionId, setRemovedOptionId] = useState<string | null>(null);
-  const [comboFx, setComboFx] = useState<string | null>(null);
-
-  const [questionMode, setQuestionMode] = useState("JP_TO_VI");
+  
+  const [deckLang, setDeckLang] = useState<"japanese" | "english">("japanese");
+  
   const [questionText, setQuestionText] = useState("");
   const [questionSub, setQuestionSub] = useState("");
+  
+  const [leftItems, setLeftItems] = useState<any[]>([]); 
+  const [rightItems, setRightItems] = useState<any[]>([]);
+  
+  const [selectedItem, setSelectedItem] = useState<any | null>(null);
+  const [mismatchIds, setMismatchIds] = useState<string[]>([]);
+  const [round, setRound] = useState(1);
+  const [allWordsCount, setAllWordsCount] = useState(0);
+  const [matchedCount, setMatchedCount] = useState(0);
+  const poolRef = useRef<any[]>([]);
+  const roundPoolRef = useRef<any[]>([]);
+
   const [ttsEnabled, setTtsEnabled] = useState(true);
 
   const account = useUserStore(s => s.account);
@@ -51,67 +62,71 @@ export const useSpeedGame = () => {
     sounds.playBeep(freq, duration);
   }
 
-  // Helper to get a voice matching the language code
-  function getVoice(lang: string) {
-    if (typeof window === "undefined" || !window.speechSynthesis) return null;
-    const voices = window.speechSynthesis.getVoices();
-    // Try exact match first
-    let voice = voices.find(v => v.lang === lang);
-    if (!voice) {
-      // Try prefix match (e.g. 'ja' for 'ja-JP')
-      voice = voices.find(v => v.lang.startsWith(lang.split('-')[0]));
-    }
-    // Prefer Google voices if multiple available
-    if (voice && voices.find(v => v.lang.startsWith(lang.split('-')[0]) && v.name.includes("Google"))) {
-      voice = voices.find(v => v.lang.startsWith(lang.split('-')[0]) && v.name.includes("Google"));
-    }
-    return voice || null;
-  }
-
-  // TTS: speak the correct word aloud
-  function speakWord(word: any) {
-    if (!ttsEnabled || !word || typeof window === "undefined" || !window.speechSynthesis) return;
-    const text = word.reading || word.word || "";
-    if (!text) return;
+  // TTS helper
+  const speakWord = useCallback((text: string) => {
+    if (!ttsEnabled || !text || typeof window === "undefined" || !window.speechSynthesis) return;
     
-    // Cancel any ongoing speech
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     
-    // Detect language: if text contains CJK characters → Japanese, else English
+    // Detection logic
     const isJapanese = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(text);
-    const lang = isJapanese ? "ja-JP" : "en-US";
-    utterance.lang = lang;
-    
-    const voice = getVoice(lang);
-    if (voice) utterance.voice = voice;
-    
-    utterance.rate = isJapanese ? 0.85 : 1.0;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-    
-    // Small delay to let the beep sound play first
-    setTimeout(() => window.speechSynthesis.speak(utterance), 100);
-  }
+    // Simple ASCII check for English (excluding specific Jp characters already checked)
+    const isEnglish = /^[a-zA-Z0-9\s.,!?'"-]+$/.test(text);
 
-  const startGame = async (lv: string, sourceOverride?: string) => {
+    if (isJapanese) {
+      utterance.lang = "ja-JP";
+    } else if (isEnglish) {
+      utterance.lang = "en-US";
+    } else {
+      // Don't speak Vietnamese or other languages as per user request
+      return;
+    }
+    
+    const voices = window.speechSynthesis.getVoices();
+    // Prioritize natural sounding Google/Enhanced voices
+    const voice = voices.find(v => v.lang.startsWith(utterance.lang.split('-')[0]) && (v.name.includes("Google") || v.localService)) 
+               || voices.find(v => v.lang.startsWith(utterance.lang.split('-')[0]));
+    
+    if (voice) utterance.voice = voice;
+    utterance.rate = isJapanese ? 0.9 : 1.0;
+    
+    setTimeout(() => window.speechSynthesis.speak(utterance), 50);
+  }, [ttsEnabled]);
+
+  const startGame = async (lv: string, mode: string = "quiz", sourceOverride?: string) => {
     setSelectedLevel(lv);
+    setGameMode(mode as "quiz" | "match");
     setGameState("loading");
     setScore(0);
     setTimeLeft(60);
     setStreak(0);
     setMultiplier(1);
+    setRound(1);
+    setMatchedCount(0);
     savedResultRef.current = false;
 
     try {
       let deckId = lv;
       let source = sourceOverride || "voca";
-      if (["n1", "n2", "n3", "n4", "n5"].includes(lv)) {
+      if (!sourceOverride && ["n1", "n2", "n3", "n4", "n5"].includes(lv)) {
         deckId = `JLPT ${lv.toUpperCase()}`;
       }
       const data = await vocabularyRepository.loadDeck(deckId, source as "sheet" | "voca");
       if (!data || data.length < 4) throw new Error("Not enough data");
-      setWords(shuffle(data));
+      
+      const lang = detectDeckLanguage(deckId, lv);
+      setDeckLang(lang as "japanese" | "english");
+
+      const shuffled = shuffle(data);
+      setWords(shuffled);
+      setAllWordsCount(data.length);
+      
+      if (mode === "match") {
+        poolRef.current = [...shuffled];
+        roundPoolRef.current = [...shuffled];
+        prepareMatchBatch(lang);
+      }
       
       setCountdown(3);
       setGameState("countdown");
@@ -123,14 +138,53 @@ export const useSpeedGame = () => {
       }, 2400);
     } catch (err) {
       console.error(err);
-      alert("Không đủ dữ liệu cho cấp độ này, vui lòng thử cấp độ khác!");
+      alert("Không đủ dữ liệu cho đề mục này!");
       setGameState("level_select");
     }
   };
 
-  // Load ALL decks from a category at once
+  const prepareMatchBatch = (lang: string) => {
+      const batch = roundPoolRef.current.splice(0, 5);
+      const left: any[] = [];
+      const right: any[] = [];
+      
+      batch.forEach(w => {
+          // Store both word and reading for speech
+          left.push({ 
+            id: `${w.id}_l`, 
+            type: 'left', 
+            content: w.word, 
+            speechText: w.reading || w.word,
+            wordId: w.id 
+          });
+          
+          let rightContent = w.meaning;
+          let subLabel = "MEANING";
+          let speechText = w.meaning; // Default meaning
+          
+          if (lang === "japanese" && w.reading && w.reading !== w.word && Math.random() > 0.5) {
+              rightContent = w.reading;
+              subLabel = "READING";
+              speechText = w.reading;
+          }
+          
+          right.push({ 
+            id: `${w.id}_r`, 
+            type: 'right', 
+            content: rightContent, 
+            subLabel, 
+            speechText,
+            wordId: w.id 
+          });
+      });
+      
+      setLeftItems(shuffle(left));
+      setRightItems(shuffle(right));
+  };
+
   const startGameMulti = async (label: string, deckIds: string[], sourceOverride?: string) => {
     setSelectedLevel(label);
+    setGameMode("quiz");
     setGameState("loading");
     setScore(0);
     setTimeLeft(60);
@@ -143,12 +197,12 @@ export const useSpeedGame = () => {
       const results = await Promise.allSettled(
         deckIds.map(id => vocabularyRepository.loadDeck(id, source as "sheet" | "voca"))
       );
-      const allWords: any[] = [];
+      const all: any[] = [];
       results.forEach(r => {
-        if (r.status === "fulfilled" && r.value) allWords.push(...r.value);
+        if (r.status === "fulfilled" && r.value) all.push(...r.value);
       });
-      if (allWords.length < 4) throw new Error("Not enough data");
-      setWords(shuffle(allWords));
+      if (all.length < 4) throw new Error("Not enough data");
+      setWords(shuffle(all));
 
       setCountdown(3);
       setGameState("countdown");
@@ -160,56 +214,138 @@ export const useSpeedGame = () => {
       }, 2400);
     } catch (err) {
       console.error(err);
-      alert("Không đủ dữ liệu cho đề mục này, vui lòng thử đề mục khác!");
+      alert("Lỗi dữ liệu!");
       setGameState("level_select");
     }
   };
 
-  const nextRound = useCallback(() => {
+  // ── Quiz Logic ──
+  const nextQuizRound = useCallback(() => {
     if (words.length === 0) return;
     const correct = words[Math.floor(Math.random() * words.length)];
-
-    const possibleModes = ["JP_TO_VI", "VI_TO_JP"];
-    if (correct.reading && correct.reading !== correct.word) possibleModes.push("VI_TO_READING");
-    if (correct.hanViet) possibleModes.push("HAN_TO_JP");
-    if (correct.meaningEn || correct.meaning_en) possibleModes.push("EN_TO_JP");
-
-    const mode = possibleModes[Math.floor(Math.random() * possibleModes.length)];
-    setQuestionMode(mode);
-
-    if (mode === "JP_TO_VI") {
-      setQuestionText(correct.word);
-      setQuestionSub(correct.reading || "");
-    } else if (mode === "VI_TO_JP") {
-      setQuestionText(correct.meaning);
-      setQuestionSub("Chọn từ vựng đúng");
-    } else if (mode === "VI_TO_READING") {
-      setQuestionText(correct.meaning);
-      setQuestionSub("Chọn cách đọc đúng");
-    } else if (mode === "HAN_TO_JP") {
-      setQuestionText(correct.hanViet);
-      setQuestionSub("Hán Việt -> Kanji");
-    } else if (mode === "EN_TO_JP") {
-      setQuestionText(correct.meaningEn || correct.meaning_en);
-      setQuestionSub("English -> Kanji");
-    }
-
     const others = shuffle(words.filter(w => w.id !== correct.id)).slice(0, 3);
-    const choices = shuffle([correct, ...others]).map(w => {
-      let display = w.meaning;
-      if (mode === "VI_TO_JP" || mode === "HAN_TO_JP" || mode === "EN_TO_JP") display = w.word;
-      if (mode === "VI_TO_READING") display = w.reading || w.word;
-      return { ...w, display };
-    });
-
+    const choices = shuffle([correct, ...others]).map(w => ({ ...w, display: w.meaning }));
+    
+    setQuestionText(correct.word);
+    setQuestionSub(correct.reading || "");
     setCurrentWord(correct);
     setOptions(choices);
     setFeedback(null);
   }, [words]);
 
+  const handleQuizAnswer = (choiceId: string) => {
+    if (feedback) return;
+    if (choiceId === currentWord?.id) {
+      setScore(s => s + 10 * multiplier);
+      setStreak(s => s + 1);
+      setMultiplier(m => Math.floor(streak / 5) + 1);
+      setFeedback("correct");
+      playBeep(880, 100);
+      // Speak phonetic reading if available
+      speakWord(currentWord.reading || currentWord.word);
+      setTimeout(nextQuizRound, 600);
+    } else {
+      setFeedback("wrong");
+      setStreak(0);
+      setMultiplier(1);
+      playBeep(220, 200);
+      setTimeout(nextQuizRound, 1000);
+    }
+  };
+
+  // ── Match Logic ──
+  const handleSelectItem = (item: any) => {
+    if (mismatchIds.length > 0) return;
+    
+    // Only speak the "left" side (target language) or "reading" on the right
+    if (item.type === 'left' || item.subLabel === "READING") {
+        speakWord(item.speechText || item.content);
+    }
+
+    if (selectedItem?.id === item.id) {
+        setSelectedItem(null);
+        return;
+    }
+
+    if (!selectedItem) {
+      setSelectedItem(item);
+      playBeep(440, 50);
+      return;
+    }
+
+    // Check match
+    if (selectedItem.wordId === item.wordId && selectedItem.type !== item.type) {
+      // Match!
+      playBeep(880, 80);
+      
+      // Speak the target language word
+      if (item.type === 'left') speakWord(item.speechText || item.content);
+      else if (selectedItem.type === 'left') speakWord(selectedItem.speechText || selectedItem.content);
+
+      setMatchedCount(prev => prev + 1);
+      setScore(s => s + 20);
+      
+      setLeftItems(prev => prev.filter(p => p.wordId !== item.wordId));
+      setRightItems(prev => prev.filter(p => p.wordId !== item.wordId));
+      setSelectedItem(null);
+
+      if (roundPoolRef.current.length > 0) {
+          const next = roundPoolRef.current.shift();
+          if (next) {
+              setLeftItems(prev => shuffle([...prev, { 
+                id: `${next.id}_l`, 
+                type: 'left', 
+                content: next.word, 
+                speechText: next.reading || next.word,
+                wordId: next.id 
+              }]));
+              
+              let rightContent = next.meaning;
+              let subLabel = "MEANING";
+              let speechText = next.meaning;
+              if (deckLang === "japanese" && next.reading && next.reading !== next.word && Math.random() > 0.5) {
+                rightContent = next.reading;
+                subLabel = "READING";
+                speechText = next.reading;
+              }
+              setRightItems(prev => shuffle([...prev, { 
+                id: `${next.id}_r`, 
+                type: 'right', 
+                content: rightContent, 
+                subLabel, 
+                speechText,
+                wordId: next.id 
+              }]));
+          }
+      } else {
+          const currentCount = leftItems.length - 1;
+          if (currentCount === 0) {
+            if (round < 2) {
+              setRound(2);
+              setMatchedCount(0);
+              roundPoolRef.current = [...poolRef.current];
+              setTimeout(() => prepareMatchBatch(deckLang), 500);
+              confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            } else {
+              setGameState("finished");
+              confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
+            }
+          }
+      }
+    } else {
+      // Mismatch
+      playBeep(220, 150);
+      setMismatchIds([selectedItem.id, item.id]);
+      setTimeout(() => {
+        setMismatchIds([]);
+        setSelectedItem(null);
+      }, 500);
+    }
+  };
+
   useEffect(() => {
     if (gameState === "playing") {
-      nextRound();
+      if (gameMode === "quiz") nextQuizRound();
       const timer = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 1) {
@@ -222,163 +358,32 @@ export const useSpeedGame = () => {
       }, 1000);
       return () => clearInterval(timer);
     }
-  }, [gameState, nextRound]);
+  }, [gameState, gameMode, nextQuizRound]);
 
   useEffect(() => {
-    if (gameState === "finished") {
-      const currentServerBest = account?.arenaProgress?.levelScores?.[selectedLevel]?.bestScore || 0;
-      if (score > currentServerBest) {
-        setHighScore(score);
-        confetti({ particleCount: 200, spread: 90, origin: { y: 0.7 } });
-        playBeep(880, 300);
-      }
-      
-      if (!savedResultRef.current) {
-        savedResultRef.current = true;
-        try {
-          addArenaResult({ level: selectedLevel, score, duration: 60, streak });
-          
-          const currentLevelScores = account?.arenaProgress?.levelScores || {};
-          const levelBest = Math.max(score, currentLevelScores[selectedLevel]?.bestScore || 0);
-          const levelBestStreak = Math.max(streak, currentLevelScores[selectedLevel]?.bestStreak || 0);
-
+    if (gameState === "finished" && !savedResultRef.current) {
+      savedResultRef.current = true;
+      if (score > highScore) {
+          setHighScore(score);
           updateArenaProgress({
             bestScore: Math.max(score, account?.arenaProgress?.bestScore || 0),
             levelScores: {
-              ...currentLevelScores,
+              ...(account?.arenaProgress?.levelScores || {}),
               [selectedLevel]: {
-                bestScore: levelBest,
-                bestStreak: levelBestStreak
+                bestScore: score,
+                bestStreak: streak
               }
             }
           });
-        } catch (e) {
-          console.error("Failed to save arena result", e);
-        }
       }
     }
-  }, [gameState, score, selectedLevel, account?.arenaProgress, addArenaResult, updateArenaProgress, streak]);
-
-  const handleUsePowerup = () => {
-    if (powerups <= 0 || !options || options.length <= 2) return;
-    setPowerups(p => p - 1);
-    const wrongs = options.filter(o => o.id !== currentWord.id);
-    if (wrongs.length === 0) return;
-    const pick = wrongs[Math.floor(Math.random() * wrongs.length)];
-    setRemovedOptionId(pick.id);
-    setTimeLeft(t => Math.min(120, t + 3));
-    confetti({ particleCount: 20, spread: 40, origin: { y: 0.7 } });
-    playBeep(980, 120);
-  };
-
-  const buyPowerup = () => {
-    const coins = useUserStore.getState().account?.coins || 0;
-    if (coins < 50) {
-      alert("Bạn không đủ coins (cần 50)!");
-      return;
-    }
-    useUserStore.getState().addCoins(-50);
-    setPowerups(p => p + 1);
-    sounds.playBeep(1200, 150);
-  };
-
-  const handleAnswer = (choiceId: string) => {
-    if (feedback) return;
-
-    if (choiceId === currentWord.id) {
-      const newStreak = streak + 1;
-      const newMultiplier = Math.max(1, Math.floor(newStreak / 3) + 1);
-      
-      setStreak(newStreak);
-      setWrongStreak(0);
-      setMultiplier(newMultiplier);
-      setScore(s => s + 10 * newMultiplier);
-      setFeedback("correct");
-      speakWord(currentWord);
-      
-      confetti({ particleCount: 30, spread: 45, origin: { y: 0.6 } });
-      playBeep(880, 120);
-      
-      setComboFx(`+${newStreak} COMBO!`);
-      setTimeout(() => setComboFx(null), 900);
-      
-      if (newStreak === 5) {
-        setTimeLeft(t => Math.min(120, t + 5));
-        setPowerups(p => p + 1);
-      }
-      if (newStreak === 10) {
-        confetti({ particleCount: 80, spread: 120, origin: { y: 0.6 } });
-        setTimeLeft(t => Math.min(120, t + 10));
-        setPowerups(p => p + 2);
-        playBeep(1200, 250);
-      }
-      setTimeout(() => {
-        setRemovedOptionId(null);
-        nextRound();
-      }, 600);
-    } else {
-      setScore(s => Math.max(0, s - 5));
-      setFeedback("wrong");
-      speakWord(currentWord);
-      setStreak(0);
-      setMultiplier(1);
-      setWrongStreak(w => w + 1);
-      playBeep(220, 200);
-      
-      setTimeout(() => {
-        if (wrongStreak + 1 >= 3) {
-          setPowerups(p => p + 1);
-          confetti({ particleCount: 20, spread: 30, origin: { y: 0.7 } });
-        }
-        setRemovedOptionId(null);
-        nextRound();
-      }, 1000);
-    }
-  };
-
-  useEffect(() => {
-    if (gameState === "playing") {
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (feedback) return;
-        if (e.key === "1") handleAnswer(options[0]?.id);
-        if (e.key === "2") handleAnswer(options[1]?.id);
-        if (e.key === "3") handleAnswer(options[2]?.id);
-        if (e.key === "4") handleAnswer(options[3]?.id);
-        if (e.key === " ") {
-          e.preventDefault();
-          handleUsePowerup();
-        }
-      };
-      window.addEventListener("keydown", handleKeyDown);
-      return () => window.removeEventListener("keydown", handleKeyDown);
-    }
-  }, [gameState, options, feedback, powerups]);
+  }, [gameState, score, highScore, selectedLevel, account?.arenaProgress, updateArenaProgress]);
 
   return {
-    gameState,
-    setGameState,
-    selectedLevel,
-    score,
-    timeLeft,
-    highScore,
-    countdown,
-    streak,
-    multiplier,
-    powerups,
-    removedOptionId,
-    comboFx,
-    questionText,
-    questionSub,
-    currentWord,
-    options,
-    feedback,
-    startGame,
-    startGameMulti,
-    handleAnswer,
-    handleUsePowerup,
-    buyPowerup,
-    ttsEnabled,
-    setTtsEnabled,
+    gameState, setGameState, gameMode, selectedLevel, score, timeLeft, highScore,
+    countdown, streak, multiplier,
+    currentWord, options, feedback, handleQuizAnswer,
+    leftItems, rightItems, selectedItem, mismatchIds, round, allWordsCount, matchedCount, handleSelectItem,
+    startGame, startGameMulti, ttsEnabled, setTtsEnabled, questionText, questionSub
   };
 };
-

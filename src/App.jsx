@@ -11,6 +11,7 @@ import { BookmarkPage } from "./pages/BookmarkPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { PomodoroPage } from "./pages/PomodoroPage";
 import { SpeedGamePage } from "./pages/SpeedGamePage";
+import { ExampleSpeakPage } from "./pages/ExampleSpeakPage";
 import { GrammarPage } from "./pages/GrammarPage";
 import { ReadingPage } from "./pages/ReadingPage";
 import { KanjiExplorerPage } from "./pages/KanjiExplorerPage";
@@ -88,6 +89,7 @@ function App() {
                         element={<Navigate to="/game/speed-60s" replace />}
                       />
                       <Route path="/game/speed-60s" element={<SpeedGamePage />} />
+                      <Route path="/game/speak/:deckId" element={<ExampleSpeakPage />} />
                       <Route path="/kanji-explorer" element={<KanjiExplorerPage />} />
                       <Route path="/reading" element={<ReadingPage />} />
                       <Route path="/jlpt-exams" element={<JLPTExamsListPage />} />

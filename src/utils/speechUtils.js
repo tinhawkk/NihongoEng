@@ -10,9 +10,10 @@ export class SpeechRecognitionManager {
     }
     this.supported = true;
     this.recognition = new SpeechRecognition();
-    this.recognition.continuous = false;
+    this.recognition.continuous = true;
     this.recognition.interimResults = true;
     this.recognition.lang = lang;
+    this.lang = lang; // Store the original exact string to avoid browser lowercase normalization issues
     
     this.transcript = "";
     this.isListening = false;
@@ -21,44 +22,37 @@ export class SpeechRecognitionManager {
     this.onEnd = null;
 
     this.recognition.onresult = (event) => {
-      let interimTranscript = "";
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          this.transcript = event.results[i][0].transcript;
-        } else {
-          interimTranscript += event.results[i][0].transcript;
-        }
+      let fullTranscript = "";
+      for (let i = 0; i < event.results.length; ++i) {
+        fullTranscript += event.results[i][0].transcript;
       }
+      this.transcript = fullTranscript;
       if (this.onResult) {
-        this.onResult(this.transcript || interimTranscript, event.results[event.results.length - 1].isFinal);
+        this.onResult(fullTranscript, event.results[event.results.length - 1].isFinal);
       }
     };
 
     this.recognition.onerror = (event) => {
-      if (event.error === 'no-speech') {
-        console.warn('[Speech] No speech detected.');
-        if (this.onError) this.onError('Không nghe thấy tiếng. Vui lòng thử lại.');
-      } else {
-        console.error("[Speech] Recognition error", event.error);
-        if (this.onError) this.onError(event.error);
-      }
+      console.error("[Speech] Recognition error", event.error);
+      if (this.onError) this.onError(event.error);
       this.isListening = false;
     };
 
     this.recognition.onend = () => {
       this.isListening = false;
-      if (this.onEnd) this.onEnd(this.transcript);
+      if (this.onEnd) this.onEnd();
     };
   }
 
   start() {
     if (!this.supported || this.isListening) return;
-    this.transcript = "";
     this.isListening = true;
     try {
       this.recognition.start();
     } catch (e) {
-      console.error(e);
+      if (!e.message?.includes('already started')) {
+        console.error("[Speech] Start error:", e);
+      }
       this.isListening = false;
     }
   }

@@ -28,6 +28,7 @@ import {
   GraduationCap,
   ClipboardCheck,
   Loader2,
+  Mic,
 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { CrudModal } from "../components/ui/CrudModal";
@@ -690,10 +691,18 @@ export const DeckPage = () => {
 
             <Button
               variant="secondary"
-              onClick={() => navigate(`/game/speed-60s?deckId=${deckId}&source=${source}&title=${encodeURIComponent(deckMetadata?.title || DECK_LABELS[deckId] || deckId)}`)}
+              onClick={() => navigate(`/game/speak/${deckId}`)}
+              className="!h-14 !rounded-2xl !bg-white dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-indigo-400/30 shadow-sm"
+            >
+              <Mic size={20} strokeWidth={2.5} className="text-indigo-500" /> <span className="text-indigo-600 font-black">Luyện nói</span>
+            </Button>
+            
+            <Button
+              variant="secondary"
+              onClick={() => navigate(`/game/speed-60s?deckId=${deckId}&source=${source}&mode=match&title=${encodeURIComponent(deckMetadata?.title || DECK_LABELS[deckId] || deckId)}`)}
               className="!h-14 !rounded-2xl !bg-white dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-rose-400/30 shadow-sm"
             >
-              <Zap size={20} strokeWidth={2.5} className="text-rose-500" /> <span className="text-rose-600 font-black">60s</span>
+              <Zap size={20} strokeWidth={2.5} className="text-rose-500" /> <span className="text-rose-600 font-black">60s Match</span>
             </Button>
 
             {/* Exam Button with Level Picker */}

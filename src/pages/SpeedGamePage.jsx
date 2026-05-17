@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Clock, Zap, Target, Award, ArrowLeft, RotateCcw, Play,
-  CheckCircle2, XCircle, Book, Volume2, VolumeX
+  CheckCircle2, XCircle, Volume2, VolumeX
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useUserStore } from "../store/useUserStore";
@@ -122,19 +122,28 @@ export const SpeedGamePage = () => {
   const [searchParams] = useSearchParams();
   const account = useUserStore(s => s.account);
 
-  const customDeckId = searchParams.get("deckId");
-  const customSource = searchParams.get("source");
-  const customTitle = searchParams.get("title");
+  const deckId = searchParams.get("deckId");
+  const source = searchParams.get("source") || "voca";
+  const title = searchParams.get("title");
+  const urlMode = (searchParams.get("mode")) || (deckId ? "match" : "quiz");
 
   const {
-    gameState, setGameState, selectedLevel,
-    score, timeLeft, highScore, countdown,
-    streak, multiplier, powerups, removedOptionId,
-    comboFx, questionText, questionSub,
-    currentWord, options, feedback,
-    startGame, startGameMulti, handleAnswer, handleUsePowerup, buyPowerup,
-    ttsEnabled, setTtsEnabled
+    gameState, setGameState, gameMode, selectedLevel, score, timeLeft, highScore,
+    countdown, streak, multiplier,
+    currentWord, options, feedback, handleQuizAnswer,
+    activePairs, leftItems, rightItems, selectedItem, mismatchIds, round, allWordsCount, matchedCount, handleSelectItem,
+    startGame, ttsEnabled, setTtsEnabled, questionText, questionSub
   } = useSpeedGame();
+
+  useEffect(() => {
+    if (deckId && gameState === "level_select") {
+      startGame(deckId, urlMode, source);
+    }
+  }, [deckId, gameState, source, urlMode]);
+
+  const handleStartLevel = (lv) => {
+    startGame(lv, urlMode);
+  };
 
   return (
     <div className="fixed inset-0 z-[100] bg-gradient-to-br from-slate-50 via-white to-sky-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex flex-col font-sans overflow-hidden">
@@ -206,7 +215,6 @@ export const SpeedGamePage = () => {
             <motion.div key="level_select" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }} className="w-full max-w-3xl pb-10">
 
-              {/* Hero */}
               <div className="text-center mb-6 pt-2">
                 <motion.div
                   animate={{ rotate: [12, -8, 12], scale: [1, 1.05, 1] }}
@@ -216,57 +224,33 @@ export const SpeedGamePage = () => {
                   <Zap size={32} className="text-white fill-white" />
                 </motion.div>
                 <h2 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Đấu Trường 60s</h2>
-                <p className="text-slate-400 font-bold text-xs mt-1">Chọn đề mục · Tất cả từ vựng sẽ được tải để chơi</p>
+                <p className="text-slate-400 font-bold text-xs mt-1">Chọn đề mục · Miễn phí & Cộng đồng</p>
               </div>
 
-              {/* Grid of categories */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-
-                {/* Custom deck from URL */}
-                {customDeckId && (
+                {deckId && (
                   <div className="col-span-full">
                     <CategoryCard icon={<Zap size={20} />} badgeColor="bg-emerald-500"
-                      title={`⚡ THỰC CHIẾN: ${customTitle}`}
-                      subtitle={`Kỷ lục: ${account?.arenaProgress?.levelScores?.[customDeckId]?.bestScore || 0} điểm`}
-                      onClick={() => startGame(customDeckId, customSource)} />
+                      title={`⚡ THỰC CHIẾN: ${title}`}
+                      subtitle={`Kỷ lục: ${highScore} điểm`}
+                      onClick={() => startGame(deckId, urlMode, source)} />
                   </div>
                 )}
 
-                {/* ── Mimikara ── */}
-                <SectionDivider icon="📘" title="Mimikara Oboeru" />
+                <SectionDivider icon="📘" title="JLPT Mimikara" />
                 {[
-                  { id: "n5", label: "N5", t: "1000 Từ vựng JLPT N5", c: "bg-[#58CC02]" },
-                  { id: "n4", label: "N4", t: "1500 Từ vựng JLPT N4", c: "bg-[#FF9600]" },
-                  { id: "n3", label: "N3", t: "2000 Từ vựng JLPT N3", c: "bg-[#FF4B4B]" },
-                  { id: "n2", label: "N2", t: "2500 Từ vựng JLPT N2", c: "bg-[#A342FF]" },
-                  { id: "n1", label: "N1", t: "3000 Từ vựng JLPT N1", c: "bg-[#37464F]" },
-                  { id: "eng", label: "ENG", t: "600 TOEIC PLUS+", c: "bg-[#CE82FF]" },
+                  { id: "n5", label: "N5", t: "JLPT N5 Premium", c: "bg-[#58CC02]" },
+                  { id: "n4", label: "N4", t: "JLPT N4 Premium", c: "bg-[#FF9600]" },
+                  { id: "n3", label: "N3", t: "JLPT N3 Premium", c: "bg-[#FF4B4B]" },
+                  { id: "n2", label: "N2", t: "JLPT N2 Premium", c: "bg-[#A342FF]" },
+                  { id: "n1", label: "N1", t: "JLPT N1 Premium", c: "bg-[#37464F]" },
                 ].map(lv => (
                   <CategoryCard key={lv.id} icon={lv.label} badgeColor={lv.c} title={lv.t}
                     subtitle="Giáo trình tiêu chuẩn"
-                    onClick={() => startGame(lv.id, lv.id === "eng" ? "sheet" : undefined)} />
+                    onClick={() => handleStartLevel(lv.id)} />
                 ))}
 
-                {/* ── Cloud Premium ── */}
-                <SectionDivider icon="☁️" title="Cloud Premium" />
-                <CategoryCard icon="☁️" badgeColor="bg-sky-500"
-                  title="Toàn bộ Cloud Premium" subtitle={`${premiumDecks.length} đề mục · N1→N5`}
-                  onClick={() => startGameMulti("Cloud Premium", premiumDecks.map(d => d.id), "voca")} />
-
-                {/* ── Japanience ── */}
-                <SectionDivider icon="🏯" title="Japanience Original" />
-                <CategoryCard icon="🏯" badgeColor="bg-slate-700"
-                  title="Toàn bộ Japanience" subtitle={`${japienceDecks.length} đề mục · N1→N5`}
-                  onClick={() => startGameMulti("Japanience", japienceDecks.map(d => d.id), "japience")} />
-
-                {/* ── Dũng Mori ── */}
-                <SectionDivider icon="🎌" title="Dũng Mori" />
-                <CategoryCard icon="🎌" badgeColor="bg-orange-500"
-                  title="Toàn bộ Dũng Mori" subtitle={`${dungMoriDecks.length} lộ trình · N1→N5`}
-                  onClick={() => startGameMulti("Dũng Mori", dungMoriDecks.map(d => d.id), "mori")} />
-
-                {/* ── Community ── */}
-                <NhostCommunityCategories startGameMulti={startGameMulti} />
+                <NhostCommunityCategories startGameMulti={(t, ids) => startGame(ids[0], urlMode)} />
               </div>
             </motion.div>
           )}
@@ -279,81 +263,133 @@ export const SpeedGamePage = () => {
                 <div className="absolute top-0 left-0 w-20 h-20 border-[6px] border-emerald-500 border-t-transparent rounded-full animate-spin" />
               </div>
               <p className="text-slate-400 font-black uppercase tracking-widest text-sm">
-                Đang tải {selectedLevel}...
+                Đang chuẩn bị...
               </p>
             </div>
           )}
 
           {/* ══ PLAYING ══ */}
-          {gameState === "playing" && currentWord && (
+          {gameState === "playing" && (
             <motion.div key="playing" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-              className="w-full max-w-2xl space-y-8 mt-4">
-              <div className={`relative bg-white dark:bg-slate-900 rounded-[40px] p-12 md:p-16 text-center shadow-2xl transition-all duration-300 border-4 ${
-                feedback === "correct" ? "border-emerald-500 shadow-emerald-500/20"
-                  : feedback === "wrong" ? "border-red-500 shadow-red-500/20"
-                    : "border-white dark:border-slate-800 shadow-slate-200/50 dark:shadow-none"
-              }`}>
-                <AnimatePresence>
-                  {feedback === "correct" && (
-                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1.2 }} exit={{ scale: 0 }}
-                      className="absolute -top-5 left-1/2 -translate-x-1/2 bg-emerald-500 text-white p-2.5 rounded-full shadow-lg"><CheckCircle2 size={28} /></motion.div>
-                  )}
-                  {feedback === "wrong" && (
-                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1.2 }} exit={{ scale: 0 }}
-                      className="absolute -top-5 left-1/2 -translate-x-1/2 bg-red-500 text-white p-2.5 rounded-full shadow-lg"><XCircle size={28} /></motion.div>
-                  )}
-                </AnimatePresence>
-                <h1 className={`${questionText?.length > 10 ? "text-3xl md:text-5xl" : "text-6xl md:text-8xl"} font-black text-slate-800 dark:text-white mb-4 tracking-tighter`}>{questionText}</h1>
-                <p className="text-xl md:text-2xl text-slate-400 font-bold tracking-widest uppercase">{questionSub}</p>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between px-2">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Lựa chọn</span>
-                  <div className="flex items-center gap-2">
-                    <button onClick={buyPowerup}
-                      className="px-3 py-1 bg-white dark:bg-slate-800 border-2 border-amber-200 dark:border-amber-700 text-amber-500 rounded-lg text-[9px] font-black hover:bg-amber-50 dark:hover:bg-amber-900/30 transition-all flex items-center gap-1 shadow-sm">
-                      MUA ⚡ (-50🪙)
-                    </button>
-                    <button onClick={handleUsePowerup} disabled={powerups <= 0}
-                      className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${powerups > 0 ? "bg-amber-400 text-white shadow-md active:scale-95" : "bg-slate-100 dark:bg-slate-800 text-slate-300 cursor-not-allowed"}`}>
-                      SỬ DỤNG ⚡ ({powerups})
-                    </button>
+              className="w-full max-w-4xl space-y-6 mt-4 flex flex-col items-center">
+              
+              {gameMode === "match" ? (
+                <>
+                  <div className="w-full flex items-center justify-between px-4 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm p-3 rounded-2xl border border-white/50 dark:border-slate-700/30">
+                    <div className="flex items-center gap-3">
+                      <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${round === 1 ? "bg-blue-500 text-white" : "bg-emerald-500 text-white"}`}>
+                        Round {round}/2
+                      </div>
+                      <p className="text-xs font-black text-slate-500 dark:text-slate-400">
+                        MATCHED: <span className="text-slate-800 dark:text-white">{matchedCount}/{allWordsCount}</span>
+                      </p>
+                    </div>
+                    <div className="w-1/3 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                      <motion.div initial={{ width: 0 }} animate={{ width: `${(matchedCount / allWordsCount) * 100}%` }}
+                        className={`h-full ${round === 1 ? "bg-blue-400" : "bg-emerald-400"}`} />
+                    </div>
                   </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 relative">
-                  <div className="absolute -right-24 top-1/2 -translate-y-1/2 hidden lg:block">
+
+                  <div className="flex gap-4 md:gap-8 w-full max-w-5xl h-[65vh] md:h-[75vh] overflow-hidden">
+                    {/* Left Column: Words */}
+                    <div className="flex-1 space-y-3 md:space-y-4 overflow-hidden">
+                      <AnimatePresence mode="popLayout">
+                        {leftItems.map((item) => {
+                          const isSelected = selectedItem?.id === item.id;
+                          const isMismatch = mismatchIds.includes(item.id);
+                          return (
+                            <motion.button key={item.id} layout initial={{ scale: 0.8, opacity: 0 }} 
+                              animate={{ scale: isMismatch ? [1, 1.05, 0.95, 1] : 1, opacity: 1, x: isMismatch ? [0, -5, 5, -5, 0] : 0 }} 
+                              exit={{ scale: 0, opacity: 0 }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }}
+                              onClick={() => handleSelectItem(item)}
+                              className={`w-full h-[calc(20%-0.6rem)] md:h-[calc(20%-1rem)] p-4 rounded-2xl md:rounded-3xl border-4 text-center flex flex-col items-center justify-center transition-all shadow-sm ${
+                                isSelected ? "bg-blue-500 border-blue-400 text-white shadow-lg shadow-blue-500/30" : isMismatch ? "bg-red-50 dark:bg-red-950/30 border-red-500 text-red-600 dark:text-red-400" : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 hover:border-blue-400 text-slate-800 dark:text-slate-200"
+                              }`}>
+                              <span className={`text-[9px] font-black uppercase tracking-widest mb-1 px-2 py-0.5 rounded-full ${isSelected ? "bg-white/20 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-400"}`}>
+                                WORD
+                              </span>
+                              <p className={`font-black tracking-tight leading-tight ${item.content.length > 15 ? "text-sm md:text-base" : "text-lg md:text-2xl"}`}>
+                                {item.content}
+                              </p>
+                            </motion.button>
+                          );
+                        })}
+                      </AnimatePresence>
+                    </div>
+
+                    {/* Right Column: Meanings/Readings */}
+                    <div className="flex-1 space-y-3 md:space-y-4 overflow-hidden">
+                      <AnimatePresence mode="popLayout">
+                        {rightItems.map((item) => {
+                          const isSelected = selectedItem?.id === item.id;
+                          const isMismatch = mismatchIds.includes(item.id);
+                          return (
+                            <motion.button key={item.id} layout initial={{ scale: 0.8, opacity: 0 }} 
+                              animate={{ scale: isMismatch ? [1, 1.05, 0.95, 1] : 1, opacity: 1, x: isMismatch ? [0, -5, 5, -5, 0] : 0 }} 
+                              exit={{ scale: 0, opacity: 0 }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }}
+                              onClick={() => handleSelectItem(item)}
+                              className={`w-full h-[calc(20%-0.6rem)] md:h-[calc(20%-1rem)] p-4 rounded-2xl md:rounded-3xl border-4 text-center flex flex-col items-center justify-center transition-all shadow-sm ${
+                                isSelected ? "bg-indigo-500 border-indigo-400 text-white shadow-lg shadow-indigo-500/30" : isMismatch ? "bg-red-50 dark:bg-red-950/30 border-red-500 text-red-600 dark:text-red-400" : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 hover:border-indigo-400 text-slate-700 dark:text-slate-200"
+                              }`}>
+                              <span className={`text-[9px] font-black uppercase tracking-widest mb-1 px-2 py-0.5 rounded-full ${isSelected ? "bg-white/20 text-white" : "bg-slate-100 dark:bg-slate-800 text-indigo-400"}`}>
+                                {item.subLabel || "MEANING"}
+                              </span>
+                              <p className={`font-bold tracking-tight leading-tight ${item.content.length > 30 ? "text-xs md:text-sm" : "text-sm md:text-lg"}`}>
+                                {item.content}
+                              </p>
+                            </motion.button>
+                          );
+                        })}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className={`relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[40px] p-12 md:p-16 text-center shadow-2xl transition-all border-4 ${
+                    feedback === "correct" ? "border-emerald-500 shadow-emerald-500/20" : feedback === "wrong" ? "border-red-500 shadow-red-500/20" : "border-white dark:border-slate-800 shadow-slate-200/50 dark:shadow-none"
+                  }`}>
                     <AnimatePresence>
-                      {comboFx && (
-                        <motion.div initial={{ x: -20, opacity: 0, scale: 0.8 }} animate={{ x: 0, opacity: 1, scale: 1.1 }} exit={{ opacity: 0, scale: 0.5, x: 20 }}
-                          className="bg-amber-500 text-white font-black px-5 py-2.5 rounded-2xl shadow-2xl shadow-amber-500/30 whitespace-nowrap rotate-12 border-4 border-white dark:border-slate-900 text-sm">{comboFx}</motion.div>
+                      {feedback === "correct" && (
+                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1.2 }} exit={{ scale: 0 }} className="absolute -top-5 left-1/2 -translate-x-1/2 bg-emerald-500 text-white p-2.5 rounded-full shadow-lg"><CheckCircle2 size={28} /></motion.div>
+                      )}
+                      {feedback === "wrong" && (
+                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1.2 }} exit={{ scale: 0 }} className="absolute -top-5 left-1/2 -translate-x-1/2 bg-red-500 text-white p-2.5 rounded-full shadow-lg"><XCircle size={28} /></motion.div>
                       )}
                     </AnimatePresence>
+                    <h1 className={`${questionText?.length > 10 ? "text-3xl md:text-5xl" : "text-6xl md:text-8xl"} font-black text-slate-800 dark:text-white leading-tight tracking-tighter`}>
+                      {questionText}
+                    </h1>
+                    {questionSub && (
+                      <p className="mt-4 text-xl font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
+                        {questionSub}
+                      </p>
+                    )}
                   </div>
-                  {options.map((opt, idx) => {
-                    const isRemoved = opt.id === removedOptionId;
-                    return (
-                      <button key={opt.id} disabled={!!feedback || isRemoved} onClick={() => handleAnswer(opt.id)}
+
+                  <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-3 mt-8">
+                    {options.map((opt, idx) => (
+                      <button key={opt.id} disabled={!!feedback} onClick={() => handleQuizAnswer(opt.id)}
                         className={`group relative overflow-hidden p-5 rounded-2xl border-2 text-lg font-black transition-all text-left flex items-center gap-4 shadow-sm active:scale-[0.97] ${
-                          isRemoved ? "opacity-0 pointer-events-none"
-                            : feedback === "correct" && opt.id === currentWord.id ? "bg-emerald-500 border-emerald-500 text-white shadow-emerald-500/30"
-                              : feedback === "wrong" && opt.id === currentWord.id ? "bg-emerald-100 dark:bg-emerald-900/30 border-emerald-400 text-emerald-700 dark:text-emerald-300"
-                                : feedback ? "opacity-50 border-slate-100 dark:border-slate-800 text-slate-300"
-                                  : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 hover:border-emerald-400 text-slate-700 dark:text-slate-200"
+                          feedback === "correct" && opt.id === currentWord.id ? "bg-emerald-500 border-emerald-500 text-white shadow-emerald-500/30" : feedback === "wrong" && opt.id === currentWord.id ? "bg-emerald-100 dark:bg-emerald-900/30 border-emerald-400 text-emerald-700 dark:text-emerald-300" : feedback ? "opacity-50 border-slate-100 dark:border-slate-800 text-slate-300" : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 hover:border-blue-400 text-slate-700 dark:text-slate-200"
                         }`}>
-                        {!isRemoved && (
-                          <>
-                            <span className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black shrink-0 ${
-                              feedback === "correct" && opt.id === currentWord.id ? "bg-white/20 text-white"
-                                : feedback === "wrong" && opt.id === currentWord.id ? "bg-emerald-200 dark:bg-emerald-800 text-emerald-700"
-                                  : "bg-slate-50 dark:bg-slate-800 text-slate-400"
-                            }`}>{idx + 1}</span>
-                            <span className="flex-1 line-clamp-2">{opt.display}</span>
-                          </>
-                        )}
+                        <span className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black shrink-0 ${ feedback === "correct" && opt.id === currentWord.id ? "bg-white/20 text-white" : "bg-slate-50 dark:bg-slate-800 text-slate-400" }`}>{idx + 1}</span>
+                        <span className="flex-1 line-clamp-2">{opt.display}</span>
                       </button>
-                    );
-                  })}
-                </div>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              <div className="pointer-events-none fixed inset-0 flex items-center justify-center z-50">
+                <AnimatePresence>
+                  {streak >= 5 && (
+                    <motion.div key={streak} initial={{ scale: 0.5, opacity: 0, y: 50 }} animate={{ scale: 1.2, opacity: 1, y: 0 }} exit={{ scale: 1.5, opacity: 0 }}
+                      className="bg-amber-500 text-white font-black px-8 py-4 rounded-3xl shadow-2xl shadow-amber-500/50 text-3xl md:text-5xl border-8 border-white dark:border-slate-800 -rotate-6">
+                      {streak} COMBO!
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </motion.div>
           )}
@@ -380,7 +416,7 @@ export const SpeedGamePage = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-3">
-                <button onClick={() => startGame(selectedLevel)}
+                <button onClick={() => startGame(selectedLevel, gameMode)}
                   className="w-full bg-[#1CB0F6] hover:bg-[#189ddb] text-white font-black py-4 rounded-2xl text-base shadow-[0_5px_0_0_#189ddb] active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2">
                   <RotateCcw size={18} /> CHƠI LẠI
                 </button>
