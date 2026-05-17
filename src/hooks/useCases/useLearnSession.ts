@@ -248,6 +248,14 @@ export const useLearnSession = (deckId: string, filterType: string) => {
     }
   }, [currentIdx, steps.length]);
 
+  const disableSpeaking = useCallback(() => {
+    setSteps(prev => {
+      const pastAndCurrent = prev.slice(0, currentIdx + 1);
+      const future = prev.slice(currentIdx + 1).filter(s => s.type !== "speak");
+      return [...pastAndCurrent, ...future];
+    });
+  }, [currentIdx]);
+
   return {
     loading,
     allWords,
@@ -266,6 +274,7 @@ export const useLearnSession = (deckId: string, filterType: string) => {
     setShowFeedback,
     setIsCorrect,
     setUserAnswer,
+    disableSpeaking,
   };
 };
 

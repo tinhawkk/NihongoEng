@@ -302,7 +302,7 @@ const ClozeStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId }) => {
   );
 };
 
-const SpeakingStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId, goToNext }) => {
+const SpeakingStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId, goToNext, disableSpeaking }) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [error, setError] = useState(null);
@@ -314,6 +314,7 @@ const SpeakingStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId, goT
   }, [deckId, word]);
 
   useEffect(() => {
+    let skipTimeout;
     recognitionRef.current = createRecognition(targetLang);
     recognitionRef.current.onResult = (text, isFinal) => {
       setTranscript(text);
@@ -330,11 +331,22 @@ const SpeakingStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId, goT
     recognitionRef.current.onError = (err) => {
       setError(err);
       setIsListening(false);
+      
+      if (err === "network" || err === "not-allowed") {
+        if (disableSpeaking) disableSpeaking();
+        // Auto skip the current speaking step after showing the error for 3 seconds
+        skipTimeout = setTimeout(() => {
+          goToNext();
+        }, 3000);
+      }
     };
     recognitionRef.current.onEnd = () => setIsListening(false);
 
-    return () => recognitionRef.current?.stop();
-  }, [word, targetLang]);
+    return () => {
+      if (skipTimeout) clearTimeout(skipTimeout);
+      recognitionRef.current?.stop();
+    };
+  }, [word, targetLang, disableSpeaking, goToNext, checkAnswer]);
 
   const toggleListening = () => {
     if (isListening) {
@@ -677,6 +689,7 @@ export const LearnPage = () => {
     setShowFeedback,
     setIsCorrect,
     setUserAnswer,
+    disableSpeaking,
   } = useLearnSession(deckId, filterFilter);
 
   const playStepAudio = useCallback(() => {
@@ -1052,6 +1065,7 @@ export const LearnPage = () => {
                 checkAnswer={checkAnswer}
                 deckId={deckId}
                 goToNext={goToNext}
+                disableSpeaking={disableSpeaking}
               />
             )}
             {step.type === "kanji_breakdown" && (
