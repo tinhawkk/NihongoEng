@@ -8,7 +8,7 @@ import localforage from "localforage";
 
 let syncTimeout = null;
 let isSyncing = false;
-const SYNC_DEBOUNCE_MS = 5000;
+const SYNC_DEBOUNCE_MS = 20000;
 const OFFLINE_SYNC_QUEUE = "offline_sync_queue";
 
 /**
