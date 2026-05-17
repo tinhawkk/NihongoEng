@@ -41,7 +41,7 @@ export class SpeechRecognitionManager {
     this.recognition.onerror = (event) => {
       // Ignore non-fatal 'no-speech' warnings to keep engine alive
       if (event.error !== 'no-speech') {
-         console.error("[Speech] Recognition error", event.error);
+         console.warn(`[Speech] Recognition warning: ${event.error}. STT engine will stop safely.`);
       }
       if (this.onError) this.onError(event.error);
     };
