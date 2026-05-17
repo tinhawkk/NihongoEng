@@ -781,8 +781,28 @@ export const nhostService = {
       }
     }`;
     const { data, errors } = await fetchGraphQL(q, "GetVocabCounts", {});
-    if (errors) return [];
-    return (data?.decks || []).map(d => ({
+    
+    // Nếu bị lỗi (do Hasura chưa setup Relationship), dùng Fallback
+    if (errors) {
+      console.warn("[Nhost] my_vocabularies_aggregate missing. Falling back to manual count.");
+      const fallbackQuery = `query GetAllDeckIds {
+        my_vocabulary { deck_id }
+      }`;
+      const fallbackRes = await fetchGraphQL(fallbackQuery, "GetAllDeckIds", {});
+      if (fallbackRes.errors) return [];
+      
+      const counts = {};
+      (fallbackRes.data?.my_vocabulary || []).forEach((v: any) => {
+        if (v.deck_id) counts[v.deck_id] = (counts[v.deck_id] || 0) + 1;
+      });
+      
+      return Object.keys(counts).map(deck_id => ({
+        deck_id,
+        count: counts[deck_id]
+      }));
+    }
+
+    return (data?.decks || []).map((d: any) => ({
       deck_id: d.id,
       count: d.my_vocabularies_aggregate?.aggregate?.count || 0
     }));
