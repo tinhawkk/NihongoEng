@@ -773,7 +773,7 @@ export const nhostService = {
     const q = `query GetVocabCounts {
       decks {
         id
-        my_vocabulary_aggregate {
+        my_vocabularies_aggregate {
           aggregate {
             count
           }
@@ -784,7 +784,7 @@ export const nhostService = {
     if (errors) return [];
     return (data?.decks || []).map(d => ({
       deck_id: d.id,
-      count: d.my_vocabulary_aggregate?.aggregate?.count || 0
+      count: d.my_vocabularies_aggregate?.aggregate?.count || 0
     }));
   },
 
