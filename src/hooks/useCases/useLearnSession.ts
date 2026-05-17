@@ -237,16 +237,19 @@ export const useLearnSession = (deckId: string, filterType: string) => {
   );
 
   const goToNext = useCallback(() => {
-    if (currentIdx < steps.length - 1) {
-      setCurrentIdx(i => i + 1);
-      setUserAnswer(null);
-      setIsCorrect(null);
-      setShowFeedback(false);
-    } else {
-      useUserStore.getState().updateStreak();
-      setIsFinished(true);
-    }
-  }, [currentIdx, steps.length]);
+    setCurrentIdx(i => {
+      if (i < steps.length - 1) {
+        return i + 1;
+      } else {
+        useUserStore.getState().updateStreak();
+        setIsFinished(true);
+        return i;
+      }
+    });
+    setUserAnswer(null);
+    setIsCorrect(null);
+    setShowFeedback(false);
+  }, [steps.length]);
 
   const disableSpeaking = useCallback(() => {
     setSteps(prev => {

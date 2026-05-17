@@ -899,7 +899,7 @@ export const LearnPage = () => {
             transition={{ duration: 0.3 }}
             className="w-full max-w-2xl"
           >
-            {step.type === "intro" && (
+            {step && step.type === "intro" && (
               <div className="space-y-12 flex flex-col items-center w-full max-w-full overflow-hidden">
                 <div className="text-center space-y-6 group w-full">
                   <div className="relative inline-block w-full text-center">
@@ -1051,7 +1051,7 @@ export const LearnPage = () => {
                 </div>
               </div>
             )}
-            {(step.type === "choice" || step.type === "choice_kanji") && (
+            {step && (step.type === "choice" || step.type === "choice_kanji") && (
               <ChoiceStep
                 word={step.word}
                 allWords={allWords}
@@ -1062,7 +1062,7 @@ export const LearnPage = () => {
                 deckId={deckId}
               />
             )}
-            {step.type === "listen" && (
+            {step && step.type === "listen" && (
               <ListenStep
                 word={step.word}
                 allWords={allWords}
@@ -1072,7 +1072,7 @@ export const LearnPage = () => {
                 cleanDisplay={cleanDisplay}
               />
             )}
-            {step.type === "cloze" && (
+            {step && step.type === "cloze" && (
               <ClozeStep
                 word={step.word}
                 showFeedback={showFeedback}
@@ -1084,7 +1084,7 @@ export const LearnPage = () => {
                 deckId={deckId}
               />
             )}
-            {step.type === "speak" && (
+            {step && step.type === "speak" && (
               <SpeakingStep
                 word={step.word}
                 showFeedback={showFeedback}
@@ -1095,20 +1095,20 @@ export const LearnPage = () => {
                 disableSpeaking={disableSpeaking}
               />
             )}
-            {step.type === "kanji_breakdown" && (
+            {step && step.type === "kanji_breakdown" && (
               <KanjiBreakdownStep
                 word={step.word}
                 goToNext={goToNext}
               />
             )}
-            {step.type === "matching" && (
+            {step && step.type === "matching" && (
               <MatchingStep
                 words={step.words}
                 onComplete={goToNext}
                 deckId={deckId}
               />
             )}
-            {step.type === "typing" && (
+            {step && step.type === "typing" && (
               <div className="space-y-12 text-center">
                 <div className="space-y-6">
                   <p className="text-slate-400 font-black uppercase text-xs tracking-[0.2em] flex items-center justify-center gap-2">
