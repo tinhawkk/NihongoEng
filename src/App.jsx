@@ -1,26 +1,11 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import React, { Suspense } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { Layout } from "./components/layout/Layout";
-import { DictionaryScreen } from "./pages/DictionaryScreen";
-import { DeckPage } from "./pages/DeckPage";
-import { QuizPage } from "./pages/QuizPage";
-import { FlashcardPage } from "./pages/FlashcardPage";
-import { BookmarkPage } from "./pages/BookmarkPage";
-import { SettingsPage } from "./pages/SettingsPage";
-import { PomodoroPage } from "./pages/PomodoroPage";
-import { SpeedGamePage } from "./pages/SpeedGamePage";
-import { ExampleSpeakPage } from "./pages/ExampleSpeakPage";
-import { GrammarPage } from "./pages/GrammarPage";
-import { ReadingPage } from "./pages/ReadingPage";
-import { KanjiExplorerPage } from "./pages/KanjiExplorerPage";
-import { RadicalsPage } from "./pages/RadicalsPage";
-import { SRSPage } from "./pages/SRSPage";
-import { TypingPage } from "./pages/TypingPage";
-import { LearnPage } from "./pages/LearnPage";
-import { JLPTExamsListPage } from "./pages/JLPTExamsListPage";
-import { JLPTExamDetailPage } from "./pages/JLPTExamDetailPage";
+
+// Tools and Providers
 import { useUserStore } from "./store/useUserStore";
 import { SyncProvider } from "./components/SyncProvider";
 import { WaterReminderProvider } from "./components/WaterReminderProvider";
@@ -29,11 +14,92 @@ import { useDevtoolsDetector } from "./hooks/useDevtoolsDetector";
 import { PomodoroMini } from "./components/PomodoroMini";
 import { ScrollManager } from "./components/ScrollManager";
 import { ToastProvider } from "./components/ui/Toast";
+import { GlobalLoader } from "./components/ui/GlobalLoader";
 import "./App.css";
+
+// Lazy-loaded routes for massive performance boost
+const DictionaryScreen = React.lazy(() => import("./pages/DictionaryScreen").then(m => ({ default: m.DictionaryScreen })));
+const DeckPage = React.lazy(() => import("./pages/DeckPage").then(m => ({ default: m.DeckPage })));
+const QuizPage = React.lazy(() => import("./pages/QuizPage").then(m => ({ default: m.QuizPage })));
+const FlashcardPage = React.lazy(() => import("./pages/FlashcardPage").then(m => ({ default: m.FlashcardPage })));
+const BookmarkPage = React.lazy(() => import("./pages/BookmarkPage").then(m => ({ default: m.BookmarkPage })));
+const SettingsPage = React.lazy(() => import("./pages/SettingsPage").then(m => ({ default: m.SettingsPage })));
+const PomodoroPage = React.lazy(() => import("./pages/PomodoroPage").then(m => ({ default: m.PomodoroPage })));
+const SpeedGamePage = React.lazy(() => import("./pages/SpeedGamePage").then(m => ({ default: m.SpeedGamePage })));
+const ExampleSpeakPage = React.lazy(() => import("./pages/ExampleSpeakPage").then(m => ({ default: m.ExampleSpeakPage })));
+const GrammarPage = React.lazy(() => import("./pages/GrammarPage").then(m => ({ default: m.GrammarPage })));
+const ReadingPage = React.lazy(() => import("./pages/ReadingPage").then(m => ({ default: m.ReadingPage })));
+const KanjiExplorerPage = React.lazy(() => import("./pages/KanjiExplorerPage").then(m => ({ default: m.KanjiExplorerPage })));
+const RadicalsPage = React.lazy(() => import("./pages/RadicalsPage").then(m => ({ default: m.RadicalsPage })));
+const SRSPage = React.lazy(() => import("./pages/SRSPage").then(m => ({ default: m.SRSPage })));
+const TypingPage = React.lazy(() => import("./pages/TypingPage").then(m => ({ default: m.TypingPage })));
+const LearnPage = React.lazy(() => import("./pages/LearnPage").then(m => ({ default: m.LearnPage })));
+const JLPTExamsListPage = React.lazy(() => import("./pages/JLPTExamsListPage").then(m => ({ default: m.JLPTExamsListPage })));
+const JLPTExamDetailPage = React.lazy(() => import("./pages/JLPTExamDetailPage").then(m => ({ default: m.JLPTExamDetailPage })));
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useUserStore(state => state.isAuthenticated);
   return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
+
+const PageTransition = ({ children }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -15 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      className="w-full h-full"
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+        <Route path="/dictionary" element={<PageTransition><DictionaryScreen /></PageTransition>} />
+        <Route path="/grammar" element={<PageTransition><GrammarPage /></PageTransition>} />
+        <Route path="/grammar/:view/:id" element={<PageTransition><GrammarPage /></PageTransition>} />
+        <Route path="/kanji" element={<PageTransition><KanjiExplorerPage /></PageTransition>} />
+        <Route path="/radicals" element={<PageTransition><RadicalsPage /></PageTransition>} />
+        <Route path="/deck/:deckId" element={<PageTransition><DeckPage /></PageTransition>} />
+        <Route path="/learn/:deckId" element={<PageTransition><LearnPage /></PageTransition>} />
+        <Route path="/quiz/:deckId" element={<PageTransition><QuizPage /></PageTransition>} />
+        <Route path="/flashcards/:deckId" element={<PageTransition><FlashcardPage /></PageTransition>} />
+        <Route path="/bookmarks" element={<PageTransition><BookmarkPage /></PageTransition>} />
+        <Route
+          path="/leaderboard"
+          element={
+            <PageTransition>
+              <div className="p-8 text-center bg-white dark:bg-slate-800 rounded-3xl border-2 border-slate-200 dark:border-slate-700 text-slate-400">
+                Bảng xếp hạng sẽ có ở phiên bản tới! 🏆
+              </div>
+            </PageTransition>
+          }
+        />
+        <Route path="/pomodoro" element={<PageTransition><PomodoroPage /></PageTransition>} />
+        <Route
+          path="/speed-game"
+          element={<Navigate to="/game/speed-60s" replace />}
+        />
+        <Route path="/game/speed-60s" element={<PageTransition><SpeedGamePage /></PageTransition>} />
+        <Route path="/game/speak/:deckId" element={<PageTransition><ExampleSpeakPage /></PageTransition>} />
+        <Route path="/kanji-explorer" element={<PageTransition><KanjiExplorerPage /></PageTransition>} />
+        <Route path="/reading" element={<PageTransition><ReadingPage /></PageTransition>} />
+        <Route path="/jlpt-exams" element={<PageTransition><JLPTExamsListPage /></PageTransition>} />
+        <Route path="/jlpt-exams/:examId" element={<PageTransition><JLPTExamDetailPage /></PageTransition>} />
+        <Route path="/typing/:deckId" element={<PageTransition><TypingPage /></PageTransition>} />
+        <Route path="/srs" element={<PageTransition><SRSPage /></PageTransition>} />
+        <Route path="/settings" element={<PageTransition><SettingsPage /></PageTransition>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AnimatePresence>
+  );
 };
 
 function App() {
@@ -63,42 +129,9 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Layout>
-                    <Routes>
-                      <Route path="/" element={<HomePage />} />
-                      <Route path="/dictionary" element={<DictionaryScreen />} />
-                      <Route path="/grammar" element={<GrammarPage />} />
-                      <Route path="/grammar/:view/:id" element={<GrammarPage />} />
-                      <Route path="/kanji" element={<KanjiExplorerPage />} />
-                      <Route path="/radicals" element={<RadicalsPage />} />
-                      <Route path="/deck/:deckId" element={<DeckPage />} />
-                      <Route path="/learn/:deckId" element={<LearnPage />} />
-                      <Route path="/quiz/:deckId" element={<QuizPage />} />
-                      <Route path="/flashcards/:deckId" element={<FlashcardPage />} />
-                      <Route path="/bookmarks" element={<BookmarkPage />} />
-                      <Route
-                        path="/leaderboard"
-                        element={
-                          <div className="p-8 text-center bg-white dark:bg-slate-800 rounded-3xl border-2 border-slate-200 dark:border-slate-700 text-slate-400">
-                            Bảng xếp hạng sẽ có ở phiên bản tới! 🏆
-                          </div>
-                        }
-                      />
-                      <Route path="/pomodoro" element={<PomodoroPage />} />
-                      <Route
-                        path="/speed-game"
-                        element={<Navigate to="/game/speed-60s" replace />}
-                      />
-                      <Route path="/game/speed-60s" element={<SpeedGamePage />} />
-                      <Route path="/game/speak/:deckId" element={<ExampleSpeakPage />} />
-                      <Route path="/kanji-explorer" element={<KanjiExplorerPage />} />
-                      <Route path="/reading" element={<ReadingPage />} />
-                      <Route path="/jlpt-exams" element={<JLPTExamsListPage />} />
-                      <Route path="/jlpt-exams/:examId" element={<JLPTExamDetailPage />} />
-                      <Route path="/typing/:deckId" element={<TypingPage />} />
-                      <Route path="/srs" element={<SRSPage />} />
-                      <Route path="/settings" element={<SettingsPage />} />
-                      <Route path="*" element={<Navigate to="/" replace />} />
-                    </Routes>
+                    <Suspense fallback={<GlobalLoader />}>
+                      <AnimatedRoutes />
+                    </Suspense>
                   </Layout>
                 </ProtectedRoute>
               }

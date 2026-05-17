@@ -302,7 +302,7 @@ const ClozeStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId }) => {
   );
 };
 
-const SpeakingStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId }) => {
+const SpeakingStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId, goToNext }) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [error, setError] = useState(null);
@@ -1044,6 +1044,7 @@ export const LearnPage = () => {
                 userAnswer={userAnswer}
                 checkAnswer={checkAnswer}
                 deckId={deckId}
+                goToNext={goToNext}
               />
             )}
             {step.type === "kanji_breakdown" && (

@@ -156,13 +156,13 @@ export const Layout = ({ children }) => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.5, y: 20 }}
             onClick={scrollToTop}
-            className="fixed bottom-24 lg:bottom-10 right-6 z-50 w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden shadow-2xl hover:scale-110 active:scale-95 transition-all group border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-900"
+            className="fixed bottom-24 lg:bottom-10 right-6 z-50 w-16 h-16 lg:w-20 lg:h-20 hover:scale-110 active:scale-95 transition-all group focus:outline-none"
             title="Cuộn lên đầu trang"
           >
             <img 
               src="/f_img.png" 
               alt="Scroll to top" 
-              className="w-full h-full object-contain p-1"
+              className="w-full h-full object-contain drop-shadow-2xl"
             />
           </motion.button>
         )}
