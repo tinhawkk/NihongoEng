@@ -65,7 +65,7 @@ const renderRubyBlock = (base, rt, keyPrefix) => {
   }
 
   return (
-    <span className="inline-flex items-baseline whitespace-nowrap">
+    <span key={`${keyPrefix}-wrap`} className="inline-flex items-baseline whitespace-nowrap">
       {pieces}
     </span>
   );
