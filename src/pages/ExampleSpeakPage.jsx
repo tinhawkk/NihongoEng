@@ -39,6 +39,7 @@ export const ExampleSpeakPage = () => {
     return () => {
       if (recognitionRef.current) recognitionRef.current.stop();
       if (timerRef.current) clearTimeout(timerRef.current);
+      if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
     };
   }, []);
 
@@ -77,6 +78,7 @@ export const ExampleSpeakPage = () => {
 
   const nextWord = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
+    if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
     setCountdown(null);
     if (currentIndex < words.length - 1) {
       setCurrentIndex(currentIndex + 1);
@@ -87,8 +89,9 @@ export const ExampleSpeakPage = () => {
 
   const resetState = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
+    if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
     setTranscript("");
-    setFeedback(null);
+    setFeedback('idle');
     setSimilarity(0);
     setMatchedIndices(new Set());
     setCountdown(null);
@@ -228,28 +231,14 @@ export const ExampleSpeakPage = () => {
     rec.onError = (err) => {
       console.error("Recognition error:", err);
       lastErrorRef.current = err;
-      if (err === 'not-allowed') {
+      if (err === 'not-allowed' || err === 'network') {
          setIsListening(false);
-         setFeedback('network-error'); // Lock UI only if unpermitted
+         setFeedback('network-error'); // Explicitly show the user why the mic dropped
       }
-      // For network, no-speech, or aborted, we let onEnd handle the shutdown or recovery.
     };
 
     rec.onEnd = () => {
-      if (!manualStopRef.current && feedback !== 'success' && feedback !== 'network-error' && isListening) {
-         if (lastErrorRef.current === 'network') {
-            // Chrome network drops are frequent. Safely restart after small delay to avoid InvalidStateError.
-            fullTranscriptRef.current = transcript;
-            setTimeout(() => {
-               try { rec.start(); } catch(e) { setIsListening(false); }
-            }, 300);
-         } else {
-            // For no-speech (1-3s silence), aborted, or normal end -> turn off automatically
-            setIsListening(false);
-         }
-      } else {
-         setIsListening(false);
-      }
+      setIsListening(false);
       lastErrorRef.current = null;
     };
 
@@ -263,7 +252,16 @@ export const ExampleSpeakPage = () => {
       setIsListening(false);
     } else {
       manualStopRef.current = false;
-      fullTranscriptRef.current = ""; // Reset history
+      
+      // If we are retrying after a successful match, wipe the board clean.
+      // Otherwise (resuming from pause, idle, or network error), stitch and keep history!
+      if (feedback === 'success') {
+        fullTranscriptRef.current = ""; 
+        resetState();
+      } else {
+        fullTranscriptRef.current = transcript;
+        setFeedback('idle');
+      }
       
       // Stop completely any countdowns or auto-next that might be queued!
       if (timerRef.current) clearTimeout(timerRef.current);
@@ -271,7 +269,6 @@ export const ExampleSpeakPage = () => {
       timerRef.current = null;
       countdownIntervalRef.current = null;
       
-      resetState();
       recognitionRef.current.start();
       setIsListening(true);
     }
@@ -397,16 +394,20 @@ export const ExampleSpeakPage = () => {
                </p>
              )}
 
-             {/* Diagnostic Transcript Display while listening */}
-             {isListening && (
+             {/* Diagnostic Transcript Display while listening or paused */}
+             {(isListening || transcript) && feedback === 'idle' && (
                <motion.div 
                  initial={{ opacity: 0 }}
                  animate={{ opacity: 1 }}
                  className="mt-4 p-3 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-800"
                >
-                 <p className="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-1 flex items-center justify-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-                    Máy đang nghe: {targetLang}
+                 <p className="text-[10px] font-black uppercase tracking-widest mb-1 flex items-center justify-center gap-2 text-slate-400">
+                    {isListening ? (
+                      <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                    ) : (
+                      <span className="w-2 h-2 rounded-full bg-slate-300"></span>
+                    )}
+                    {isListening ? `Máy đang nghe: ${targetLang}` : "Đang tạm dừng"}
                  </p>
                  <p className="text-sm font-medium text-slate-500 line-clamp-2 italic min-h-[1.5rem]">
                     {transcript ? `"${transcript}"` : "..."}

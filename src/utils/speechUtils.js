@@ -10,10 +10,12 @@ export class SpeechRecognitionManager {
     }
     this.supported = true;
     this.recognition = new SpeechRecognition();
+    
     this.recognition.continuous = true;
     this.recognition.interimResults = true;
+    this.recognition.maxAlternatives = 1;
     this.recognition.lang = lang;
-    this.lang = lang; // Store the original exact string to avoid browser lowercase normalization issues
+    this.lang = lang; 
     
     this.transcript = "";
     this.isListening = false;
@@ -23,19 +25,25 @@ export class SpeechRecognitionManager {
 
     this.recognition.onresult = (event) => {
       let fullTranscript = "";
+      let isFinal = false;
+      
       for (let i = 0; i < event.results.length; ++i) {
         fullTranscript += event.results[i][0].transcript;
+        if (event.results[i].isFinal) isFinal = true;
       }
+      
       this.transcript = fullTranscript;
       if (this.onResult) {
-        this.onResult(fullTranscript, event.results[event.results.length - 1].isFinal);
+        this.onResult(fullTranscript, isFinal);
       }
     };
 
     this.recognition.onerror = (event) => {
-      console.error("[Speech] Recognition error", event.error);
+      // Ignore non-fatal 'no-speech' warnings to keep engine alive
+      if (event.error !== 'no-speech') {
+         console.error("[Speech] Recognition error", event.error);
+      }
       if (this.onError) this.onError(event.error);
-      this.isListening = false;
     };
 
     this.recognition.onend = () => {
@@ -59,7 +67,9 @@ export class SpeechRecognitionManager {
 
   stop() {
     if (!this.supported || !this.isListening) return;
-    this.recognition.stop();
+    try {
+      this.recognition.stop();
+    } catch (e) {}
     this.isListening = false;
   }
 }

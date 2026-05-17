@@ -16,6 +16,19 @@ class TTSProvider {
       this.synth.onvoiceschanged = () => this.loadVoices();
     }
     this.loadVoices();
+
+    // Safari & Samsung Internet Fallback Voice Loader (they often fail to trigger onvoiceschanged)
+    if (this.synth.getVoices().length === 0) {
+      let attempts = 0;
+      const voiceInterval = setInterval(() => {
+        const voices = this.synth.getVoices();
+        if (voices.length > 0 || attempts > 20) {
+          this.loadVoices();
+          clearInterval(voiceInterval);
+        }
+        attempts++;
+      }, 250);
+    }
   }
 
   detectLang(text) {
@@ -31,22 +44,30 @@ class TTSProvider {
 
   loadVoices() {
     const voices = this.synth.getVoices();
-    // Japanese
-    this.jaVoice = voices.find(v => v.lang.startsWith('ja') && (v.name.includes('Natural') || v.name.includes('Neural'))) 
-                 || voices.find(v => v.lang.startsWith('ja') && v.name.includes('Google'))
-                 || voices.find(v => v.lang.startsWith('ja')) 
+    if (!voices || voices.length === 0) return;
+
+    const isJa = (v) => v.lang.toLowerCase().startsWith('ja');
+    const isEn = (v) => v.lang.toLowerCase().startsWith('en');
+
+    // Japanese: Prioritize Premium native voices (Apple Siri, Microsoft Neural, Google Cloud locally cached)
+    this.jaVoice = voices.find(v => isJa(v) && (v.name.includes('Premium') || v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Siri'))) 
+                 || voices.find(v => isJa(v) && v.name.includes('Google'))
+                 || voices.find(v => isJa(v)) 
                  || voices[0];
     
-    // English
-    this.enVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Neural')))
-                 || voices.find(v => v.lang.startsWith('en') && v.name.includes('Google'))
-                 || voices.find(v => v.lang.startsWith('en-US'))
-                 || voices.find(v => v.lang.startsWith('en'));
+    // English: Prioritize clear, natural voices
+    this.enVoice = voices.find(v => isEn(v) && (v.name.includes('Premium') || v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Siri') || v.name.includes('Samantha')))
+                 || voices.find(v => isEn(v) && v.name.includes('Google'))
+                 || voices.find(v => isEn(v) && v.lang === 'en-US')
+                 || voices.find(v => isEn(v));
   }
 
   stop() {
     this.playbackId++; 
-    this.synth.cancel();
+    
+    if (this.synth.speaking || this.synth.pending) {
+      this.synth.cancel();
+    }
     
     if (this.currentAudio) {
       this.currentAudio.onplay = null;
@@ -111,20 +132,29 @@ class TTSProvider {
     const { lang = 'ja-JP', rate = 1.0, pitch = 1.0, voice = null } = options;
     const cleanText = text.replace(/[\[\(\{（].*?[\]\)\}）]/g, '').trim();
     
-    // Brief cancel to ensure priority
-    this.synth.cancel();
+    // Avoid canceling blindly in Safari, it bugs the engine
+    if (this.synth.speaking || this.synth.pending) {
+      this.synth.cancel();
+    }
     
     const utterance = new SpeechSynthesisUtterance(cleanText);
+    
+    // **Safari iOS Garbage Collection Bug Fix**
+    // Safari will stop speaking randomly if the utterance is not stored globally.
+    window.currentSpokenUtterance = utterance; 
+    
     const selectedVoice = voice || (lang.startsWith('ja') ? this.jaVoice : this.enVoice);
     
     if (selectedVoice) {
       utterance.voice = selectedVoice;
     }
     utterance.lang = lang;
-    utterance.rate = rate;
+    
+    // Edge & Samsung browsers fail if rate is out of specific bounds or not explicitly set smoothly
+    utterance.rate = Math.max(0.1, Math.min(rate, 2.0));
     utterance.pitch = pitch;
     
-    // Small timeout to allow synth to recover (chrome fix)
+    // iOS Safari requires a slight delay after a potential cancel call
     setTimeout(() => {
         this.synth.speak(utterance);
     }, 10);

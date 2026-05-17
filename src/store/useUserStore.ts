@@ -290,7 +290,7 @@ export const useUserStore = create<UserState>()(
         }),
 
       logout: () => {
-        localStorage.removeItem("pomodoro-timer-state");
+        localStorage.removeItem("pomodoro_persistent_state");
         import("./useBookmarkStore").then((m) => m.useBookmarkStore.getState().clearBookmarks());
         set({ account: null, isAuthenticated: false });
       },
