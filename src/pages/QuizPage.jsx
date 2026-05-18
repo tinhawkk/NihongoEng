@@ -249,7 +249,7 @@ const QuestionScreen = ({
               whileTap={!answered ? { scale: 0.98 } : undefined}
               disabled={answered}
               onClick={() => onAnswer(i, opt)}
-              className={`w-full h-full p-4 sm:p-5 rounded-2xl font-black text-left transition-all flex items-center justify-start gap-4 text-base sm:text-lg md:text-xl ${style}`}
+              className={`w-full h-full p-5 sm:p-6 rounded-2xl font-black text-left transition-all flex items-center justify-start gap-4 text-xl sm:text-2xl md:text-3xl leading-snug ${style}`}
             >
               <span
                 className={`w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-base md:text-lg font-black shrink-0 ${
