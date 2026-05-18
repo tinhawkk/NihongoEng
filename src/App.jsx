@@ -117,7 +117,7 @@ function App() {
   return (
     <SyncProvider>
       <WaterReminderProvider>
-        {/* {devtoolsOpen && <DevtoolsBlockScreen />} */}
+        {devtoolsOpen && <DevtoolsBlockScreen />}
         <Router>
           <ScrollManager />
           <PomodoroMini />
