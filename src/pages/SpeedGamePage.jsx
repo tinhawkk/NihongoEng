@@ -158,7 +158,7 @@ export const SpeedGamePage = () => {
       <div className="relative z-10 flex items-center justify-between p-4 md:p-5 shrink-0">
         <div className="flex items-center gap-2">
           <button onClick={() => navigate("/")}
-            className="flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-xl shadow-sm text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors font-black text-xs uppercase tracking-widest border border-slate-200/50 dark:border-slate-700/50">
+            className="flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-xl shadow-sm text-slate-500 hover:text-slate-800 dark:text-white dark:hover:text-white transition-colors font-black text-xs uppercase tracking-widest border border-slate-200/50 dark:border-slate-700/50">
             <ArrowLeft size={14} /> Thoát
           </button>
           <button onClick={() => setTtsEnabled(!ttsEnabled)}

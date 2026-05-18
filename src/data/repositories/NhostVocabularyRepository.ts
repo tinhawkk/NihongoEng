@@ -71,7 +71,7 @@ const loadDeckInternal = async (
           jap_kanji: japience_kanji(where: {level: {_in: $kanjiLevels}}, order_by: [{deck_id: asc}, {kanji: asc}]) {
             id kanji han_viet onyomi kunyomi meaning mnemonic deck_id level
           }
-          userVoca: my_vocabulary(where: {_or: [{level: {_in: $levels}}, {deck_id: {_in: $levels}}]}, order_by: {word: asc}) {
+          userVoca: my_vocabulary(where: {_or: [{level: {_in: $levels}}, {deck_id: {_in: $levels}}]}, order_by: {created_at: asc}) {
             id word furigana meaning han_viet example_jp example_vi romaji level mnemonic type onyomi kunyomi deck_id definition_en definition_vi synonyms
           }
         }`;
@@ -246,7 +246,7 @@ const loadDeckInternal = async (
             vocaByDeck: japience_voca(where: {deck_id: {_in: $ids}}, order_by: {word: asc}) { id word reading meaning example example_meaning mnemonic level deck_id }
             kanjiByDeck: japience_kanji(where: {deck_id: {_in: $ids}}, order_by: {kanji: asc}) { id kanji han_viet onyomi kunyomi meaning mnemonic level deck_id }
             ${grammarSelection}
-            userVocaByLevel: my_vocabulary(where: {_or: [{level: {_in: $legacyLevels}}, {deck_id: {_in: $ids}}]}, order_by: {word: asc}) { id word furigana meaning han_viet example_jp example_vi romaji level mnemonic type onyomi kunyomi deck_id definition_en definition_vi synonyms }
+            userVocaByLevel: my_vocabulary(where: {_or: [{level: {_in: $legacyLevels}}, {deck_id: {_in: $ids}}]}, order_by: {created_at: asc}) { id word furigana meaning han_viet example_jp example_vi romaji level mnemonic type onyomi kunyomi deck_id definition_en definition_vi synonyms }
           }`;
 
           const { data } = await fetchFromNhost(qCombined, {
@@ -337,7 +337,7 @@ const loadDeckInternal = async (
       // Merge with user edits from Nhost for this deck
       try {
         const qUser = `query GetUserVocaByDeck($deckId: String!) {
-          my_vocabulary(where: {deck_id: {_eq: $deckId}}) {
+          my_vocabulary(where: {deck_id: {_eq: $deckId}}, order_by: {created_at: asc}) {
             id word furigana meaning han_viet example_jp example_vi romaji level mnemonic type onyomi kunyomi deck_id definition_en definition_vi synonyms
           }
         }`;

@@ -1228,7 +1228,7 @@ export const LearnPage = () => {
             >
               <div className="flex items-center justify-center gap-4">
                 {step.type === "intro" ? "TIẾP TỤC" : "KIỂM TRA"}
-                <kbd className="hidden md:inline-flex h-5 items-center gap-1 rounded border bg-white/20 px-1.5 font-mono text-[10px] font-black text-white opacity-80 backdrop-blur-sm">
+                <kbd className="hidden md:inline-flex h-5 items-center gap-1 rounded border bg-white dark:bg-slate-800/20 px-1.5 font-mono text-[10px] font-black text-white opacity-80 backdrop-blur-sm">
                   ENTER
                 </kbd>
               </div>
@@ -1308,7 +1308,7 @@ export const LearnPage = () => {
                   className={`px-10 py-3.5 rounded-2xl font-black text-lg shadow-xl active:scale-95 transition-all flex items-center gap-3 uppercase tracking-widest shrink-0 ${isCorrect ? "bg-green-500 text-white hover:bg-green-600" : "bg-red-500 text-white hover:bg-red-600"}`}
                 >
                   TIẾP TỤC
-                  <kbd className="hidden md:inline-flex h-5 items-center gap-1 rounded border bg-white/20 px-1.5 font-mono text-[10px] font-black text-white opacity-80 backdrop-blur-sm">
+                  <kbd className="hidden md:inline-flex h-5 items-center gap-1 rounded border bg-white dark:bg-slate-800/20 px-1.5 font-mono text-[10px] font-black text-white opacity-80 backdrop-blur-sm">
                     ENTER
                   </kbd>
                 </button>

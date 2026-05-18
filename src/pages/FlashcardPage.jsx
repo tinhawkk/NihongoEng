@@ -325,7 +325,7 @@ export const FlashcardPage = () => {
           <div className="w-24 h-24 bg-[#1CB0F6] rounded-[32px] flex items-center justify-center mx-auto shadow-xl">
             <Sparkles size={48} className="text-white" />
           </div>
-          <h2 className="text-3xl font-black text-slate-800">Flashcards</h2>
+          <h2 className="text-3xl font-black text-slate-800 dark:text-white">Flashcards</h2>
           <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">
             {DECK_LABELS[deckId] || deckId.toUpperCase()} • {allWords.length} TỪ VỰNG
           </p>
@@ -344,7 +344,7 @@ export const FlashcardPage = () => {
 
           <button
             onClick={() => handleStart(allWords.length, false)}
-            className="w-full py-5 bg-white border-2 border-slate-200 text-slate-600 rounded-3xl font-black text-lg hover:border-[#1CB0F6] hover:text-[#1CB0F6] transition-all flex items-center justify-center gap-3"
+            className="w-full py-5 bg-white dark:bg-slate-800 border-2 border-slate-200 text-slate-600 rounded-3xl font-black text-lg hover:border-[#1CB0F6] hover:text-[#1CB0F6] transition-all flex items-center justify-center gap-3"
           >
             <RotateCcw size={24} />
             HỌC TẤT CẢ ({allWords.length})
@@ -357,7 +357,7 @@ export const FlashcardPage = () => {
                 <button
                   key={c}
                   onClick={() => handleStart(c, false)}
-                  className="py-4 bg-slate-50 border-2 border-slate-100 text-slate-400 rounded-2xl font-black text-sm hover:bg-white hover:border-slate-200 transition-all"
+                  className="py-4 bg-slate-50 border-2 border-slate-100 text-slate-400 rounded-2xl font-black text-sm hover:bg-white dark:bg-slate-800 hover:border-slate-200 transition-all"
                 >
                   Học {c} từ
                 </button>
@@ -387,7 +387,7 @@ export const FlashcardPage = () => {
           <Trophy size={64} className="text-white" />
         </motion.div>
         <div className="space-y-2">
-          <h2 className="text-4xl font-black text-slate-800">Tuyệt vời!</h2>
+          <h2 className="text-4xl font-black text-slate-800 dark:text-white">Tuyệt vời!</h2>
           <p className="text-slate-400 font-bold">Bạn đã hoàn thành bộ Flashcard này.</p>
         </div>
 
@@ -400,7 +400,7 @@ export const FlashcardPage = () => {
           </button>
           <button
             onClick={() => navigate(`/deck/${deckId}`)}
-            className="w-full py-5 bg-white border-2 border-slate-200 text-slate-500 rounded-3xl font-black text-lg hover:bg-slate-50 transition-all"
+            className="w-full py-5 bg-white dark:bg-slate-800 border-2 border-slate-200 text-slate-500 rounded-3xl font-black text-lg hover:bg-slate-50 transition-all"
           >
             QUAY LẠI BỘ SƯU TẬP
           </button>
@@ -417,7 +417,7 @@ export const FlashcardPage = () => {
       <div className="flex items-center justify-between bg-white dark:bg-slate-800 p-3 lg:p-4 rounded-2xl lg:rounded-3xl border-2 border-slate-100 dark:border-slate-800 shadow-sm">
         <button
           onClick={() => navigate(`/deck/${deckId}`)}
-          className="flex items-center gap-1.5 lg:gap-2 text-slate-500 font-black hover:text-slate-800 transition-all hover:-translate-x-1"
+          className="flex items-center gap-1.5 lg:gap-2 text-slate-500 font-black hover:text-slate-800 dark:text-white transition-all hover:-translate-x-1"
         >
           <ArrowLeft size={20} className="lg:w-6 lg:h-6" strokeWidth={3} />{" "}
           <span className="text-xs lg:text-base truncate max-w-[120px] lg:max-w-none">

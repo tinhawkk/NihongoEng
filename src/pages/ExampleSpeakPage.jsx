@@ -319,7 +319,7 @@ export const ExampleSpeakPage = () => {
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-indigo-50 via-white to-sky-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex flex-col overflow-hidden">
       <div className="p-4 flex items-center justify-between z-10">
-        <button onClick={() => navigate(-1)} className="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-xl transition-all">
+        <button onClick={() => navigate(-1)} className="p-2 hover:bg-white dark:bg-slate-800 dark:hover:bg-slate-800 rounded-xl transition-all">
           <ArrowLeft size={24} className="text-slate-500" />
         </button>
         <div className="flex-1 max-w-md mx-6 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">

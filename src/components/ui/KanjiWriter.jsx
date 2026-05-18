@@ -110,16 +110,16 @@ export const KanjiWriter = ({ kanji, size = 300, simple = false }) => {
   if (simple) {
     return (
       <div className="flex flex-col gap-2 relative">
-        <div className="absolute top-2 right-2 flex bg-white/50 backdrop-blur-md rounded-xl p-1 z-20 border border-slate-200 shadow-sm opacity-0 hover:opacity-100 transition-opacity">
+        <div className="absolute top-2 right-2 flex bg-white dark:bg-slate-800/50 backdrop-blur-md rounded-xl p-1 z-20 border border-slate-200 shadow-sm opacity-0 hover:opacity-100 transition-opacity">
           <button 
             onClick={() => setMode("writer")} 
-            className={`p-1.5 rounded-lg transition-all ${mode === "writer" ? "bg-white shadow text-sky-500" : "text-slate-400 hover:text-slate-600"}`}
+            className={`p-1.5 rounded-lg transition-all ${mode === "writer" ? "bg-white dark:bg-slate-800 shadow text-sky-500" : "text-slate-400 hover:text-slate-600"}`}
           >
             <Brush size={14} />
           </button>
           <button 
             onClick={() => setMode("stroke")} 
-            className={`p-1.5 rounded-lg transition-all ${mode === "stroke" ? "bg-white shadow text-indigo-500" : "text-slate-400 hover:text-slate-600"}`}
+            className={`p-1.5 rounded-lg transition-all ${mode === "stroke" ? "bg-white dark:bg-slate-800 shadow text-indigo-500" : "text-slate-400 hover:text-slate-600"}`}
           >
             <ListOrdered size={14} />
           </button>

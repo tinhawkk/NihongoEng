@@ -26,23 +26,23 @@ export const KanjiWriterModal = ({ open, onClose, kanji, meaning }) => {
             <div className="bg-gradient-to-r from-[#1CB0F6] to-[#A342FF] p-6 text-white text-center relative overflow-hidden">
                {/* Decorative elements */}
                <div className="absolute top-0 left-0 w-full h-full opacity-10">
-                 <div className="absolute top-[-20px] left-[-20px] w-40 h-40 rounded-full bg-white blur-3xl" />
-                 <div className="absolute bottom-[-20px] right-[-20px] w-40 h-40 rounded-full bg-white blur-3xl" />
+                 <div className="absolute top-[-20px] left-[-20px] w-40 h-40 rounded-full bg-white dark:bg-slate-800 blur-3xl" />
+                 <div className="absolute bottom-[-20px] right-[-20px] w-40 h-40 rounded-full bg-white dark:bg-slate-800 blur-3xl" />
                </div>
 
               <button
                 onClick={onClose}
-                className="absolute right-4 top-4 p-2.5 rounded-2xl bg-white/20 hover:bg-white/30 text-white transition-all active:scale-90"
+                className="absolute right-4 top-4 p-2.5 rounded-2xl bg-white dark:bg-slate-800/20 hover:bg-white dark:bg-slate-800/30 text-white transition-all active:scale-90"
               >
                 <X size={20} strokeWidth={3} />
               </button>
               
               <div className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-1">
+                <div className="w-12 h-12 bg-white dark:bg-slate-800/20 rounded-2xl flex items-center justify-center mb-1">
                   <Sparkles size={24} className="text-white" />
                 </div>
                 <h3 className="text-xl font-black tracking-tight">Luyện Viết Hán Tự</h3>
-                <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 text-xs font-black uppercase tracking-widest">
+                <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white dark:bg-slate-800/20 text-xs font-black uppercase tracking-widest">
                    {kanji} <span className="opacity-60">|</span> {meaning}
                 </div>
               </div>

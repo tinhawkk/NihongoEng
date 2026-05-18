@@ -320,6 +320,7 @@ export const useUserStore = create<UserState>()(
     {
       name: "user-auth",
       partialize: state => ({
+        theme: state.theme,
         isAuthenticated: state.isAuthenticated,
         account: state.account
           ? {

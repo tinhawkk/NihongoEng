@@ -398,7 +398,7 @@ export const TypingPage = () => {
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
                    <button 
                     onClick={() => setAutoConvert(!autoConvert)}
-                    className={`text-[9px] font-black px-2 py-1 rounded-md border transition-all ${autoConvert ? "bg-[#A342FF] text-white border-[#A342FF]" : "bg-white text-slate-300 border-slate-200"}`}
+                    className={`text-[9px] font-black px-2 py-1 rounded-md border transition-all ${autoConvert ? "bg-[#A342FF] text-white border-[#A342FF]" : "bg-white dark:bg-slate-800 text-slate-300 border-slate-200"}`}
                    >
                      {autoConvert ? "Tự động" : "Tắt"}
                    </button>

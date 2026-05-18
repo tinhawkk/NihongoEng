@@ -108,7 +108,7 @@ export const JLPTExamDetailPage = () => {
                         setEditValue(mondai.instruction_text || "");
                       }
                     }}
-                    className={`p-2 rounded-full shadow-sm border transition-all ${editingId === mondai.id ? "bg-green-500 text-white border-green-600" : "bg-white text-blue-500 hover:bg-blue-50 border-slate-200"}`}
+                    className={`p-2 rounded-full shadow-sm border transition-all ${editingId === mondai.id ? "bg-green-500 text-white border-green-600" : "bg-white dark:bg-slate-800 text-blue-500 hover:bg-blue-50 border-slate-200"}`}
                     title={editingId === mondai.id ? "Lưu thay đổi" : "Chỉnh sửa phần này"}
                   >
                     {editingId === mondai.id ? <Save size={16} /> : <Edit3 size={16} />}
@@ -135,7 +135,7 @@ export const JLPTExamDetailPage = () => {
                     <textarea
                       value={editValue}
                       onChange={(e) => setEditValue(e.target.value)}
-                      className="w-full min-h-[120px] p-4 rounded-xl border-2 border-blue-200 focus:border-blue-500 outline-none text-slate-800 font-medium"
+                      className="w-full min-h-[120px] p-4 rounded-xl border-2 border-blue-200 focus:border-blue-500 outline-none text-slate-800 dark:text-white font-medium"
                       placeholder="Nhập nội dung hướng dẫn (Markdown)..."
                     />
                     <div className="flex justify-end gap-2">
@@ -189,7 +189,7 @@ export const JLPTExamDetailPage = () => {
                                 setEditValue(q.question_text || "");
                               }
                             }}
-                            className={`p-1.5 rounded-full shadow-sm border transition-all ${editingId === q.id ? "bg-green-500 text-white border-green-600" : "bg-white text-blue-500 hover:bg-blue-50 border-slate-100"}`}
+                            className={`p-1.5 rounded-full shadow-sm border transition-all ${editingId === q.id ? "bg-green-500 text-white border-green-600" : "bg-white dark:bg-slate-800 text-blue-500 hover:bg-blue-50 border-slate-100"}`}
                           >
                             {editingId === q.id ? <Save size={14} /> : <Edit3 size={14} />}
                           </button>
@@ -202,7 +202,7 @@ export const JLPTExamDetailPage = () => {
                                 <textarea
                                   value={editValue}
                                   onChange={(e) => setEditValue(e.target.value)}
-                                  className="w-full min-h-[100px] p-3 rounded-xl border-2 border-blue-200 focus:border-blue-500 outline-none text-slate-800 text-sm font-medium"
+                                  className="w-full min-h-[100px] p-3 rounded-xl border-2 border-blue-200 focus:border-blue-500 outline-none text-slate-800 dark:text-white text-sm font-medium"
                                 />
                                 <div className="flex justify-end">
                                   <button onClick={() => setEditingId(null)} className="text-[10px] font-bold text-slate-400">HỦY</button>
@@ -233,7 +233,7 @@ export const JLPTExamDetailPage = () => {
                                 <>
                                   <div dangerouslySetInnerHTML={{ __html: parseContent(cleanHtml) }} className={`text-[17px] text-slate-800 dark:text-slate-200 leading-[1.6] prose dark:prose-invert max-w-none ${cleanClasses}`} />
                                   {(audioUrl || hasAudioOriginal) && (
-                                    <audio controls className="my-4 w-full max-w-2xl rounded-lg shadow-sm border border-slate-200 bg-white" style={{ display: 'block !important', minHeight: '50px' }}>
+                                    <audio controls className="my-4 w-full max-w-2xl rounded-lg shadow-sm border border-slate-200 bg-white dark:bg-slate-800" style={{ display: 'block !important', minHeight: '50px' }}>
                                       {embeddedAudioUrlFull && <source src={embeddedAudioUrlFull} type="audio/mpeg" />}
                                       {audioUrl && <source src={audioUrl} type="audio/mpeg" />}
                                       {fallbackUrl && <source src={fallbackUrl} />}
@@ -243,7 +243,7 @@ export const JLPTExamDetailPage = () => {
                                 </>
                               );
                             })()}
-                            {q.image_url && <img src={q.image_url} alt="Question" className="mt-3 max-h-[512px] w-auto object-contain rounded-xl border border-slate-100 bg-white p-1 shadow-xl shadow-slate-200/40 dark:shadow-none" />}
+                            {q.image_url && <img src={q.image_url} alt="Question" className="mt-3 max-h-[512px] w-auto object-contain rounded-xl border border-slate-100 bg-white dark:bg-slate-800 p-1 shadow-xl shadow-slate-200/40 dark:shadow-none" />}
                             
                             {(() => {
                               const maxLen = Math.max(...(q.options?.map(o => String(o).length) || [0]));

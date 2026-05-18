@@ -86,7 +86,7 @@ export const LoginPage = () => {
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md bg-white border-2 border-slate-200 rounded-3xl p-8 shadow-xl"
+        className="w-full max-w-md bg-white dark:bg-slate-800 border-2 border-slate-200 rounded-3xl p-8 shadow-xl"
       >
         <div className="text-center mb-8">
           <h1 className="text-4xl font-black text-[#58CC02] mb-2">NIHONGO-ENG</h1>

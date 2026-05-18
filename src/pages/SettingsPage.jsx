@@ -61,7 +61,7 @@ export const SettingsPage = () => {
                 className={`w-12 h-6 rounded-full transition-all relative ${theme === "dark" ? "bg-[#58CC02]" : "bg-slate-200"}`}
               >
                 <div
-                  className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow-sm ${theme === "dark" ? "left-7" : "left-1"}`}
+                  className={`absolute top-1 w-4 h-4 rounded-full bg-white dark:bg-slate-800 transition-all shadow-sm ${theme === "dark" ? "left-7" : "left-1"}`}
                 />
               </div>
             </button>

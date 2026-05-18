@@ -1478,10 +1478,10 @@ export const HomePage = () => {
             onClick={() => navigate("/quiz/srs")}
             className="relative rounded-[32px] md:rounded-[40px] p-6 md:p-10 bg-gradient-to-br from-indigo-600 to-indigo-500 text-white shadow-2xl shadow-indigo-200/20 cursor-pointer group"
           >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl pointer-events-none" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white dark:bg-slate-800/10 rounded-full -mr-10 -mt-10 blur-2xl pointer-events-none" />
             <div className="relative z-10 flex items-center justify-between">
               <div className="space-y-1">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-[8px] font-black uppercase tracking-widest">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white dark:bg-slate-800/20 backdrop-blur-md text-[8px] font-black uppercase tracking-widest">
                   <Brain size={12} />
                   Cần ôn tập
                 </div>
@@ -1502,7 +1502,7 @@ export const HomePage = () => {
               style={{ backgroundColor: event.color }}
             >
               <div className="relative z-10 space-y-2">
-                <span className="bg-white/20 backdrop-blur-md text-white text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
+                <span className="bg-white dark:bg-slate-800/20 backdrop-blur-md text-white text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
                   {event.decoration} {event.name}
                 </span>
                 <h2 className="text-xl md:text-4xl font-black leading-tight max-w-sm">
@@ -1647,7 +1647,7 @@ export const HomePage = () => {
                 ĐẤU TRƯỜNG <br /> TỐC ĐỘ 60S
               </h3>
               <div className="flex items-center gap-2">
-                <div className="bg-white/10 px-3 py-2 rounded-xl backdrop-blur-sm">
+                <div className="bg-white dark:bg-slate-800/10 px-3 py-2 rounded-xl backdrop-blur-sm">
                   <span className="text-sm font-black text-amber-300">
                     {account?.arenaProgress?.totalCoins || 0} 🪙
                   </span>
@@ -1995,7 +1995,7 @@ export const HomePage = () => {
                 <img
                   src="https://dungmori.com/assets/img/logo-mori.png"
                   alt="Mori"
-                  className="w-10 h-10 rounded-full object-contain bg-white shadow-sm p-1"
+                  className="w-10 h-10 rounded-full object-contain bg-white dark:bg-slate-800 shadow-sm p-1"
                 />
                 <h2 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">
                   Lộ trình giáo trình Dũng Mori
@@ -2096,7 +2096,7 @@ export const HomePage = () => {
                               {isExpanded && activeMoriStage === i && (
                                 <motion.div
                                   layoutId="stage-active-indicator"
-                                  className="absolute -bottom-1 w-4 h-1 bg-white rounded-full shadow-sm"
+                                  className="absolute -bottom-1 w-4 h-1 bg-white dark:bg-slate-800 rounded-full shadow-sm"
                                 />
                               )}
                             </div>

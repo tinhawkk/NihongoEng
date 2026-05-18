@@ -36,7 +36,7 @@ const SetupScreen = ({ deckId, wordCount, onStart }) => {
         <div className="w-20 h-20 bg-[#58CC02] rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-lg">
           <Zap size={40} className="text-white" />
         </div>
-        <h2 className="text-3xl font-black text-slate-800">
+        <h2 className="text-3xl font-black text-slate-800 dark:text-white">
           Quiz {new URLSearchParams(window.location.search).get("filter") === "kanji" ? "Hán tự" : ""} {(deckId?.toUpperCase() === 'ENG' || deckId?.includes('ENG')) ? "English" : DECK_LABELS[deckId] || deckId.toUpperCase()}
         </h2>
         <p className="text-slate-400 font-bold">{wordCount} từ vựng</p>
@@ -372,7 +372,7 @@ const ResultScreen = ({ correct, total, onRetry, onHome }) => {
       </motion.div>
 
       <div className="space-y-2">
-        <h2 className="text-3xl font-black text-slate-800">{msg}</h2>
+        <h2 className="text-3xl font-black text-slate-800 dark:text-white">{msg}</h2>
         <p className="text-slate-400 font-bold">Bạn đã trả lời đúng</p>
       </div>
 

@@ -673,7 +673,7 @@ export const DeckPage = () => {
             <Button
               variant="secondary"
               onClick={() => navigate(`/flashcards/${deckId}${filterType !== "all" ? "?filter=" + filterType : ""}`)}
-              className="!h-14 !rounded-2xl relative overflow-hidden group !bg-white dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-[#1CB0F6]/30 shadow-sm"
+              className="!h-14 !rounded-2xl relative overflow-hidden group !bg-white dark:bg-slate-800 dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-[#1CB0F6]/30 shadow-sm"
             >
               <div className="relative z-10 flex items-center gap-2 text-[#1CB0F6] font-black">
                 <BookOpen size={20} strokeWidth={2.5} /> Flashcard
@@ -689,7 +689,7 @@ export const DeckPage = () => {
             <Button
               variant="secondary"
               onClick={() => navigate(`/quiz/${deckId}${filterType !== "all" ? "?filter=" + filterType : ""}`)}
-              className="!h-14 !rounded-2xl !bg-white dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-amber-400/30 shadow-sm"
+              className="!h-14 !rounded-2xl !bg-white dark:bg-slate-800 dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-amber-400/30 shadow-sm"
             >
               <Zap size={20} strokeWidth={2.5} className="text-amber-500" /> <span className="text-amber-600 font-black">Quiz</span>
             </Button>
@@ -697,7 +697,7 @@ export const DeckPage = () => {
             <Button
               variant="secondary"
               onClick={() => navigate(`/typing/${deckId}${filterType !== "all" ? "?filter=" + filterType : ""}`)}
-              className="!h-14 !rounded-2xl !bg-white dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-purple-400/30 shadow-sm"
+              className="!h-14 !rounded-2xl !bg-white dark:bg-slate-800 dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-purple-400/30 shadow-sm"
             >
               <Keyboard size={20} strokeWidth={2.5} className="text-purple-500" /> <span className="text-purple-600 font-black">Gõ</span>
             </Button>
@@ -705,7 +705,7 @@ export const DeckPage = () => {
             <Button
               variant="secondary"
               onClick={() => navigate(`/game/speak/${deckId}`)}
-              className="!h-14 !rounded-2xl !bg-white dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-indigo-400/30 shadow-sm"
+              className="!h-14 !rounded-2xl !bg-white dark:bg-slate-800 dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-indigo-400/30 shadow-sm"
             >
               <Mic size={20} strokeWidth={2.5} className="text-indigo-500" /> <span className="text-indigo-600 font-black">Luyện nói</span>
             </Button>
@@ -713,7 +713,7 @@ export const DeckPage = () => {
             <Button
               variant="secondary"
               onClick={() => navigate(`/game/speed-60s?deckId=${deckId}&source=${source}&mode=match&title=${encodeURIComponent(deckMetadata?.title || DECK_LABELS[deckId] || deckId)}`)}
-              className="!h-14 !rounded-2xl !bg-white dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-rose-400/30 shadow-sm"
+              className="!h-14 !rounded-2xl !bg-white dark:bg-slate-800 dark:!bg-slate-800 !border-2 !border-slate-100 dark:!border-slate-700 hover:!border-rose-400/30 shadow-sm"
             >
               <Zap size={20} strokeWidth={2.5} className="text-rose-500" /> <span className="text-rose-600 font-black">60s Match</span>
             </Button>
@@ -848,7 +848,7 @@ export const DeckPage = () => {
             placeholder="Tìm từ vựng, hán tự..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-11 pr-4 py-3.5 bg-white border-2 border-slate-100 rounded-[22px] outline-none focus:border-[#1CB0F6] focus:ring-4 focus:ring-[#1CB0F6]/5 transition-all font-medium text-sm shadow-sm"
+            className="w-full pl-11 pr-4 py-3.5 bg-white dark:bg-slate-800 border-2 border-slate-100 rounded-[22px] outline-none focus:border-[#1CB0F6] focus:ring-4 focus:ring-[#1CB0F6]/5 transition-all font-medium text-sm shadow-sm"
           />
         </div>
 
@@ -1027,14 +1027,14 @@ export const DeckPage = () => {
                             <span className="text-slate-400 font-bold text-xs uppercase">
                               Nghĩa
                             </span>
-                            <p className="font-bold text-slate-700">{word.meaning}</p>
+                            <p className="font-bold text-slate-700 dark:text-slate-200">{word.meaning}</p>
                           </div>
                           {word.hanViet && (
                             <div>
                               <span className="text-slate-400 font-bold text-xs uppercase">
                                 Hán Việt
                               </span>
-                              <p className="font-bold text-slate-700">{word.hanViet}</p>
+                              <p className="font-bold text-slate-700 dark:text-slate-200">{word.hanViet}</p>
                             </div>
                           )}
                           {word.partOfSpeech && (

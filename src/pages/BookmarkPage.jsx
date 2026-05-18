@@ -126,7 +126,7 @@ export const BookmarkPage = () => {
     return (
       <div className="text-center py-20 space-y-4">
         <div className="text-6xl">📑</div>
-        <h2 className="text-2xl font-black text-slate-800">Chưa có từ nào được lưu</h2>
+        <h2 className="text-2xl font-black text-slate-800 dark:text-white">Chưa có từ nào được lưu</h2>
         <p className="text-slate-400 font-medium">
           Vào deck hoặc từ điển, nhấn ⭐ để bookmark từ vựng bạn muốn ôn tập.
         </p>
@@ -180,7 +180,7 @@ export const BookmarkPage = () => {
             >
               {/* Front */}
               <div
-                className={`absolute inset-0 flex flex-col items-center justify-center p-8 rounded-3xl bg-white transition-opacity duration-300 ${flipped ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+                className={`absolute inset-0 flex flex-col items-center justify-center p-8 rounded-3xl bg-white dark:bg-slate-800 transition-opacity duration-300 ${flipped ? "opacity-0 pointer-events-none" : "opacity-100"}`}
               >
                 <div className="absolute top-4 right-4">
                   <button
@@ -194,7 +194,7 @@ export const BookmarkPage = () => {
                     <Volume2 size={24} />
                   </button>
                 </div>
-                <p className="text-5xl font-black text-slate-800 mb-3 text-center">{card.word}</p>
+                <p className="text-5xl font-black text-slate-800 dark:text-white mb-3 text-center">{card.word}</p>
                 {card.reading && (
                   <p className="text-xl text-slate-400 font-medium">{card.reading}</p>
                 )}
@@ -216,7 +216,7 @@ export const BookmarkPage = () => {
                   <p className="text-sm text-slate-400 font-bold">{card.partOfSpeech}</p>
                 )}
                 {card.example && (
-                  <div className="mt-4 bg-white/80 rounded-xl p-3 w-full max-w-xs">
+                  <div className="mt-4 bg-white dark:bg-slate-800/80 rounded-xl p-3 w-full max-w-xs">
                     <p className="text-sm text-slate-500 font-medium text-center">{card.example}</p>
                   </div>
                 )}
@@ -287,7 +287,7 @@ export const BookmarkPage = () => {
             <ArrowLeft className="w-6 h-6 text-slate-400" />
           </button>
           <div>
-            <h2 className="text-2xl font-black text-slate-800">Từ đã lưu ⭐</h2>
+            <h2 className="text-2xl font-black text-slate-800 dark:text-white">Từ đã lưu ⭐</h2>
             <p className="text-sm text-slate-400 font-bold">{bookmarks.length} từ vựng</p>
           </div>
         </div>
@@ -317,13 +317,13 @@ export const BookmarkPage = () => {
               placeholder="Tìm kiếm từ đã lưu..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 bg-white border-2 border-slate-100 rounded-2xl outline-none focus:border-[#1CB0F6] transition-all font-medium text-sm shadow-sm"
+              className="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 border-2 border-slate-100 rounded-2xl outline-none focus:border-[#1CB0F6] transition-all font-medium text-sm shadow-sm"
             />
           </div>
           <select
             value={filterDeck}
             onChange={e => setFilterDeck(e.target.value)}
-            className="w-full px-4 py-3 bg-white border-2 border-slate-100 rounded-2xl outline-none focus:border-[#1CB0F6] transition-all font-bold text-sm shadow-sm appearance-none text-slate-600"
+            className="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-slate-100 rounded-2xl outline-none focus:border-[#1CB0F6] transition-all font-bold text-sm shadow-sm appearance-none text-slate-600"
           >
             <option value="all">Tất cả bộ bài</option>
             {uniqueDecks.filter(d => d !== "all").map(d => (
@@ -373,11 +373,11 @@ export const BookmarkPage = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: Math.min(i * 0.03, 0.3) }}
-            className="bg-white border-2 border-slate-200 rounded-2xl p-4 flex items-center justify-between hover:border-slate-300 transition-colors"
+            className="bg-white dark:bg-slate-800 border-2 border-slate-200 rounded-2xl p-4 flex items-center justify-between hover:border-slate-300 transition-colors"
           >
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <p className="font-bold text-slate-800 text-lg">{word.word}</p>
+                <p className="font-bold text-slate-800 dark:text-white text-lg">{word.word}</p>
                 {word.reading && <span className="text-sm text-slate-400">({word.reading})</span>}
                 <span
                   className="text-[10px] font-black text-white px-2 py-0.5 rounded-full uppercase"

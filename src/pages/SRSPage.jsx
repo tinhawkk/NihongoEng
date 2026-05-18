@@ -68,7 +68,7 @@ const SrsDistributionBar = ({ items }) => {
 
   return (
     <div className="space-y-2">
-      <div className="h-3 rounded-full overflow-hidden flex gap-0.5 bg-white/5">
+      <div className="h-3 rounded-full overflow-hidden flex gap-0.5 bg-white dark:bg-slate-800/5">
         {counts.newCount > 0 && (
           <div
             className="bg-blue-400 transition-all duration-700"
@@ -308,7 +308,7 @@ export const SRSPage = () => {
                   <button
                     onClick={forceRefresh}
                     disabled={syncing}
-                    className={`p-2 rounded-xl bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 transition-all ${syncing ? "animate-spin text-blue-400" : ""}`}
+                    className={`p-2 rounded-xl bg-white dark:bg-slate-800/5 border border-white/10 text-white/50 hover:text-white hover:bg-white dark:bg-slate-800/10 transition-all ${syncing ? "animate-spin text-blue-400" : ""}`}
                     title="Đồng bộ với đám mây"
                   >
                     <RefreshCw size={16} />
@@ -322,7 +322,7 @@ export const SRSPage = () => {
 
             <div className="flex flex-wrap items-center gap-2 lg:gap-3">
               {/* Stats Widgets */}
-              <div className="flex items-center gap-2.5 bg-white/5 px-3 py-2 lg:px-4 lg:py-3 rounded-xl lg:rounded-2xl border border-white/10 group hover:bg-white/10 transition-all">
+              <div className="flex items-center gap-2.5 bg-white dark:bg-slate-800/5 px-3 py-2 lg:px-4 lg:py-3 rounded-xl lg:rounded-2xl border border-white/10 group hover:bg-white dark:bg-slate-800/10 transition-all">
                 <Flame size={16} className="lg:w-5 lg:h-5 text-orange-400" fill="currentColor" />
                 <div className="flex flex-col">
                   <span className="text-sm lg:text-xl font-black text-white leading-none">
@@ -334,7 +334,7 @@ export const SRSPage = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 bg-white/5 px-3 py-2 lg:px-4 lg:py-3 rounded-xl lg:rounded-2xl border border-white/10 group hover:bg-white/10 transition-all">
+              <div className="flex items-center gap-2.5 bg-white dark:bg-slate-800/5 px-3 py-2 lg:px-4 lg:py-3 rounded-xl lg:rounded-2xl border border-white/10 group hover:bg-white dark:bg-slate-800/10 transition-all">
                 <Layers size={14} className="lg:w-[18px] lg:h-[18px] text-blue-400" />
                 <div className="flex flex-col">
                   <span className="text-sm lg:text-xl font-black text-white leading-none">
@@ -346,7 +346,7 @@ export const SRSPage = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 bg-white/5 px-3 py-2 lg:px-4 lg:py-3 rounded-xl lg:rounded-2xl border border-white/10 group hover:bg-white/10 transition-all">
+              <div className="flex items-center gap-2.5 bg-white dark:bg-slate-800/5 px-3 py-2 lg:px-4 lg:py-3 rounded-xl lg:rounded-2xl border border-white/10 group hover:bg-white dark:bg-slate-800/10 transition-all">
                 <Target size={14} className="lg:w-[18px] lg:h-[18px] text-emerald-400" />
                 <div className="flex flex-col">
                   <span className="text-sm lg:text-xl font-black text-white leading-none">
@@ -359,7 +359,7 @@ export const SRSPage = () => {
               </div>
 
               {/* Heatmap Section */}
-              <div className="hidden lg:block ml-4 bg-white/5 p-3 rounded-2xl border border-white/10">
+              <div className="hidden lg:block ml-4 bg-white dark:bg-slate-800/5 p-3 rounded-2xl border border-white/10">
                 <StudyHeatmap streak={streak} />
               </div>
             </div>
@@ -640,7 +640,7 @@ export const SRSPage = () => {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: Math.min(idx * 0.02, 0.4) }}
                         key={item.id || item.word}
-                        className={`group p-3 lg:p-5 rounded-2xl lg:rounded-[1.75rem] border-2 transition-all hover:bg-white dark:hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-none relative
+                        className={`group p-3 lg:p-5 rounded-2xl lg:rounded-[1.75rem] border-2 transition-all hover:bg-white dark:bg-slate-800 dark:hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-none relative
                           ${
                             isDue && !isNew
                               ? "border-orange-200 dark:border-orange-800/50 bg-orange-50/20 dark:bg-orange-500/5"

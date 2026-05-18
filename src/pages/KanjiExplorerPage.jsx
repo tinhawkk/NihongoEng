@@ -235,9 +235,9 @@ export const KanjiExplorerPage = () => {
            variants={itemVars}
            className="lg:col-span-3 bg-indigo-600 rounded-[48px] p-8 md:p-12 text-white relative overflow-hidden group shadow-xl shadow-indigo-200/50 flex flex-col md:flex-row items-center justify-between"
         >
-           <div className="absolute top-0 right-0 w-60 h-60 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none" />
+           <div className="absolute top-0 right-0 w-60 h-60 bg-white dark:bg-slate-800/10 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none" />
            <div className="relative z-10 flex flex-col md:w-2/3 space-y-6">
-              <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center">
+              <div className="w-14 h-14 bg-white dark:bg-slate-800/20 rounded-2xl flex items-center justify-center">
                  <PenTool size={28} strokeWidth={2.5} />
               </div>
               <div className="space-y-3">
@@ -247,7 +247,7 @@ export const KanjiExplorerPage = () => {
                  </p>
               </div>
               <div>
-                 <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest bg-white text-indigo-600 px-6 py-3 rounded-2xl shadow-lg cursor-pointer hover:bg-indigo-50 transition-all active:scale-95">
+                 <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest bg-white dark:bg-slate-800 text-indigo-600 px-6 py-3 rounded-2xl shadow-lg cursor-pointer hover:bg-indigo-50 transition-all active:scale-95">
                     <Sparkles size={14} /> Trải nghiệm ngay
                  </div>
               </div>

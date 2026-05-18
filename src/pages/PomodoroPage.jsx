@@ -1258,7 +1258,7 @@ export const PomodoroPage = () => {
                         {[0.5, 0.6, 0.4].map((d, i) => (
                           <motion.div
                             key={i}
-                            className="w-1 bg-white rounded-sm"
+                            className="w-1 bg-white dark:bg-slate-800 rounded-sm"
                             animate={{ height: [5, 14, 5] }}
                             transition={{ duration: d, repeat: Infinity, delay: i * 0.15 }}
                           />
