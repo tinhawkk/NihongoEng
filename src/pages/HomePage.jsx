@@ -557,10 +557,7 @@ export const HomePage = () => {
   const fetchCommunityData = async () => {
     setLoading(true);
     try {
-      const [folders, decks] = await Promise.all([
-        nhostService.getCommunityFolders(),
-        nhostService.getCommunityDecks(),
-      ]);
+      const { folders, decks } = await nhostService.getCommunityTreeData();
 
       // 1. Map folders by ID for easy access
       const folderMap = {};
@@ -568,17 +565,16 @@ export const HomePage = () => {
         folderMap[f.id] = { ...f, subfolders: [], decks: [] };
       });
 
-      // 2. Map decks to folders and fetch counts
-      const counts = await nhostService.getVocabCountsPerDeck();
+      // 2. Build countMap and set voca counts state
       const countMap = {};
-      counts.forEach(c => {
-        countMap[c.deck_id] = c.count;
+      decks.forEach(d => {
+        countMap[d.id] = d.count;
       });
       setVocaCounts(countMap);
 
       const standardKeywords = ["JLPT", "N1", "N2", "N3", "N4", "N5", "TOEIC", "MORI", "JAPANIENCE", "ORIGINAL", "8000 TỪ VỰNG"];
       decks.forEach(d => {
-        const deckObj = { ...d, count: countMap[d.id] || 0 };
+        const deckObj = { ...d, count: d.count };
         if (d.community_folder_id && folderMap[d.community_folder_id]) {
           folderMap[d.community_folder_id].decks.push(deckObj);
         } else {
@@ -2164,9 +2160,35 @@ export const HomePage = () => {
 
           {/* ─── Community Tree Header & List ──── */}
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-20 space-y-4">
-              <div className="w-12 h-12 border-4 border-slate-100 border-t-indigo-500 rounded-full animate-spin" />
-              <p className="text-slate-400 font-bold">Đồng bộ danh mục cộng đồng...</p>
+            <div className="pt-8 border-t-2 border-slate-100 dark:border-slate-800 space-y-6">
+              <header className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <h2 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">
+                    Danh mục chi tiết
+                  </h2>
+                  <p className="text-xs font-bold text-[#1CB0F6] uppercase tracking-widest animate-pulse">
+                    Đang đồng bộ thư viện cộng đồng...
+                  </p>
+                </div>
+              </header>
+
+              <div className="space-y-4">
+                {[1, 2, 3].map(idx => (
+                  <div
+                    key={idx}
+                    className="bg-white dark:bg-slate-800 rounded-[32px] border-2 border-slate-100 dark:border-slate-800 p-6 flex items-center justify-between shadow-sm animate-pulse"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-700 animate-pulse" />
+                      <div className="space-y-2">
+                        <div className="h-4 w-40 bg-slate-100 dark:bg-slate-700 rounded animate-pulse" />
+                        <div className="h-3 w-64 bg-slate-100 dark:bg-slate-700 rounded animate-pulse" />
+                      </div>
+                    </div>
+                    <div className="w-10 h-10 rounded-2xl bg-slate-50 dark:bg-slate-700 animate-pulse" />
+                  </div>
+                ))}
+              </div>
             </div>
           ) : (
             <div className="pt-8 border-t-2 border-slate-100 dark:border-slate-800 space-y-8">

@@ -207,6 +207,26 @@ const QUERIES = {
       }
     }
   `,
+  GET_COMMUNITY_TREE_DATA: `
+    query GetCommunityTreeData {
+      folders(order_by: {created_at: desc}) {
+        id title description parent_id
+      }
+      decks(order_by: {created_at: asc}) {
+        id title description community_folder_id
+        my_vocabularies_aggregate {
+          aggregate {
+            count
+          }
+        }
+        japience_vocas_aggregate {
+          aggregate {
+            count
+          }
+        }
+      }
+    }
+  `,
 };
 
 // Utility: remove diacritics and normalize for comparisons
@@ -767,6 +787,35 @@ export const nhostService = {
       return [];
     }
     return data?.decks || [];
+  },
+
+  async getCommunityTreeData() {
+    const { data, errors } = await fetchGraphQL(
+      QUERIES.GET_COMMUNITY_TREE_DATA,
+      "GetCommunityTreeData",
+      {}
+    );
+    if (errors) {
+      console.error("[Nhost] getCommunityTreeData error:", errors);
+      return { folders: [], decks: [] };
+    }
+
+    const parsedDecks = (data?.decks || []).map((d: any) => {
+      const myCount = d.my_vocabularies_aggregate?.aggregate?.count || 0;
+      const japCount = d.japience_vocas_aggregate?.aggregate?.count || 0;
+      return {
+        id: d.id,
+        title: d.title,
+        description: d.description,
+        community_folder_id: d.community_folder_id,
+        count: myCount + japCount
+      };
+    });
+
+    return {
+      folders: data?.folders || [],
+      decks: parsedDecks
+    };
   },
 
   async getVocabCountsPerDeck() {

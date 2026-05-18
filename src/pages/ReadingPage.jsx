@@ -17,6 +17,7 @@ import {
   Layers,
   RotateCcw,
   UploadCloud,
+  Settings,
 } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { readingListeningService } from "../services/readingListeningService";
@@ -26,6 +27,95 @@ import { tts } from "../utils/tts";
 import { PedagogicalText } from "../components/ui/GrammarFormItem";
 import { Headphones as HeadphonesIcon, Volume2 } from "lucide-react";
 
+const JSON_TEMPLATE = {
+  title: "Bài đọc thực chiến N3 #1",
+  level: "N3",
+  type: "reading",
+  image_url: "",
+  audio_url: "",
+  reading_points: "Ghi chú nhanh cho bài học này...",
+  sections: [
+    {
+      title: "Mondai 1",
+      audio_url: "",
+      content: "店(みせ)で買い物(かいもの)uをすると、何をいくらで買ったか書いてある紙、つまりレシートをもらう。",
+      translation: "Khi mua sắm ở cửa hàng, bạn sẽ nhận được một tờ giấy ghi rõ mua cái gì với giá bao nhiêu, tức là hóa đơn.",
+      vocabulary: [
+        { word: "店", furigana: "みせ", meaning: "cửa hàng, tiệm" },
+        { word: "買い物", furigana: "かいもの", meaning: "mua sắm" }
+      ],
+      questions: [
+        {
+          question_text: "Câu hỏi số 1",
+          image_url: "",
+          options: ["Đáp án 1", "Đáp án 2", "Đáp án 3", "Đáp án 4"],
+          correct_index: 0,
+          explanation: "Giải thích chi tiết..."
+        }
+      ]
+    }
+  ]
+};
+
+const compileSectionContent = (passage, vocabulary, translation) => {
+  let html = passage || "";
+  
+  if (vocabulary && vocabulary.length > 0) {
+    let vocabHtml = `<!-- VOCABULARY_START --><div class="vocab-section mt-8 p-6 bg-slate-50 dark:bg-slate-900/40 rounded-3xl border-2 border-slate-100 dark:border-slate-800/80"><h5 class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">📖 Từ vựng tham khảo</h5><div class="grid grid-cols-1 sm:grid-cols-2 gap-3">`;
+    
+    vocabulary.forEach(v => {
+      const word = v.word || "";
+      const furigana = v.furigana ? `(${v.furigana})` : "";
+      const meaning = v.meaning || "";
+      
+      vocabHtml += `<div class="vocab-item flex items-center justify-between p-3.5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm" data-word="${v.word || ""}" data-furigana="${v.furigana || ""}" data-meaning="${v.meaning || ""}"><div class="flex items-baseline gap-1.5"><span class="font-bold text-slate-800 dark:text-white">${word}</span>${v.furigana ? `<span class="text-xs font-semibold text-slate-400">${furigana}</span>` : ""}</div><span class="text-xs font-black text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-700/50 px-2.5 py-1 rounded-lg">${meaning}</span></div>`;
+    });
+    
+    vocabHtml += `</div></div><!-- VOCABULARY_END -->`;
+    html += vocabHtml;
+  }
+  
+  if (translation) {
+    const cleanTrans = translation.replace(/\n/g, "<br/>");
+    const transHtml = `<!-- TRANSLATION_START --><div class="translation-section mt-6 p-6 bg-slate-50 dark:bg-slate-900/40 rounded-3xl border-2 border-slate-100 dark:border-slate-800/80"><h5 class="text-xs font-black text-[#1CB0F6] uppercase tracking-wider mb-3 flex items-center gap-2">🇻🇳 Bản dịch tiếng Việt</h5><p class="translation-text text-sm md:text-base text-slate-600 dark:text-slate-300 font-medium italic leading-relaxed">${cleanTrans}</p></div><!-- TRANSLATION_END -->`;
+    html += transHtml;
+  }
+  
+  return html;
+};
+
+const parseSectionContent = (htmlContent) => {
+  if (!htmlContent) return { mainContent: "", vocabHtml: "", translationHtml: "" };
+  
+  let mainContent = htmlContent;
+  let vocabHtml = "";
+  let translationHtml = "";
+
+  // Extract Vocabulary Block
+  const vocabStartIdx = htmlContent.indexOf("<!-- VOCABULARY_START -->");
+  const vocabEndIdx = htmlContent.indexOf("<!-- VOCABULARY_END -->");
+  if (vocabStartIdx !== -1 && vocabEndIdx !== -1) {
+    vocabHtml = htmlContent.substring(vocabStartIdx + "<!-- VOCABULARY_START -->".length, vocabEndIdx);
+    // Remove vocabulary block from main text
+    mainContent = mainContent.substring(0, vocabStartIdx) + mainContent.substring(vocabEndIdx + "<!-- VOCABULARY_END -->".length);
+  }
+
+  // Extract Translation Block
+  const transStartIdx = mainContent.indexOf("<!-- TRANSLATION_START -->");
+  const transEndIdx = mainContent.indexOf("<!-- TRANSLATION_END -->");
+  if (transStartIdx !== -1 && transEndIdx !== -1) {
+    translationHtml = mainContent.substring(transStartIdx + "<!-- TRANSLATION_START -->".length, transEndIdx);
+    // Remove translation block from main text
+    mainContent = mainContent.substring(0, transStartIdx) + mainContent.substring(transEndIdx + "<!-- TRANSLATION_END -->".length);
+  }
+
+  return {
+    mainContent: mainContent.trim(),
+    vocabHtml: vocabHtml.trim(),
+    translationHtml: translationHtml.trim()
+  };
+};
+
 const LEVELS = ["N5", "N4", "N3", "N2", "N1"];
 
 export const ReadingPage = () => {
@@ -34,11 +124,14 @@ export const ReadingPage = () => {
   const lessonIdFromUrl = searchParams.get("lessonId");
 
   const [lessons, setLessons] = useState([]);
+  const [lessonsLoading, setLessonsLoading] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [loading, setLoading] = useState(false);
   const [userAnswers, setUserAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
   const [isImportMode, setIsImportMode] = useState(false);
+  const [activeDrawerSection, setActiveDrawerSection] = useState(null);
+  const [drawerTab, setDrawerTab] = useState("vocab");
 
   const setLevel = (val) => {
     const next = new URLSearchParams(searchParams);
@@ -84,8 +177,8 @@ export const ReadingPage = () => {
   }, [lessonIdFromUrl]);
 
   const loadLessons = async () => {
-    if (loading) return;
-    setLoading(true);
+    if (lessonsLoading) return;
+    setLessonsLoading(true);
     try {
       const data = await readingListeningService.fetchLessons(level);
       setLessons(Array.isArray(data) ? data : []);
@@ -93,7 +186,7 @@ export const ReadingPage = () => {
       console.error("[ReadingPage] loadLessons failed:", err);
       setLessons([]);
     } finally {
-      setLoading(false);
+      setLessonsLoading(false);
     }
   };
 
@@ -130,10 +223,29 @@ export const ReadingPage = () => {
       
       const { sections, ...lessonData } = jsonData;
       if (!lessonData.title) throw new Error("File JSON thiếu trường title");
-      
       if (!lessonData.level) lessonData.level = level;
-      
-      await readingListeningService.importLesson(lessonData, sections || []);
+
+      const processedSections = (sections || []).map(sec => {
+        let content = compileSectionContent(sec.content, sec.vocabulary, sec.translation);
+        if (sec.audio_url) {
+          content = `[audio: ${sec.audio_url}]\n${content}`;
+        }
+        const { id, audio_url, vocabulary, translation, ...rest } = sec;
+        if (rest.questions) {
+          rest.questions = rest.questions.map(q => {
+            const { id: qId, ...qRest } = q;
+            let qText = qRest.question_text || "";
+            if (qRest.image_url) {
+              qText = `<img src="${qRest.image_url}" class="max-w-full rounded-2xl border-2 border-slate-100 dark:border-slate-800 shadow-sm mb-4" />\n${qText}`;
+            }
+            const { image_url, ...qFinal } = qRest;
+            return { ...qFinal, question_text: qText };
+          });
+        }
+        return { ...rest, content };
+      });
+
+      await readingListeningService.importLesson(lessonData, processedSections);
       
       addToast(`Đã thêm thành công: ${lessonData.title}!`, "success");
       loadLessons();
@@ -147,72 +259,59 @@ export const ReadingPage = () => {
   };
 
   // --- Import Logic ---
-  const [newLesson, setNewLesson] = useState({
-    title: "",
-    reading_points: "",
-    type: "reading",
-    level: "N5",
-    image_url: "",
-    audio_url: "",
+  const [jsonInput, setJsonInput] = useState("");
+  const [showCloudinaryModal, setShowCloudinaryModal] = useState(false);
+  const [uploadingAudio, setUploadingAudio] = useState(false);
+  const [cloudinaryConfig, setCloudinaryConfig] = useState(() => {
+    return {
+      cloudName: localStorage.getItem("cloudinary_cloud_name") || import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "",
+      uploadPreset: localStorage.getItem("cloudinary_upload_preset") || import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || "",
+    };
   });
 
-  // Now sections (Mondais)
-  const [sections, setSections] = useState([
-    {
-      title: "Mondai 1",
-      content: "",
-      questions: [
-        { question_text: "", options: ["", "", "", ""], correct_index: 0, explanation: "" },
-      ],
-    },
-  ]);
+  const handleCloudinaryUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  const handleAddSection = () => {
-    setSections([
-      ...sections,
-      {
-        title: `Mondai ${sections.length + 1}`,
-        content: "",
-        questions: [
-          { question_text: "", options: ["", "", "", ""], correct_index: 0, explanation: "" },
-        ],
-      },
-    ]);
-  };
+    const { cloudName, uploadPreset } = cloudinaryConfig;
+    if (!cloudName || !uploadPreset) {
+      addToast("Vui lòng cấu hình Cloudinary trước!", "warning");
+      setShowCloudinaryModal(true);
+      return;
+    }
 
-  const handleRemoveSection = idx => {
-    if (sections.length > 1) {
-      setSections(sections.filter((_, i) => i !== idx));
+    setUploadingAudio(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+      formData.append("resource_type", "video");
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/video/upload`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error?.message || "Tải lên thất bại");
+      }
+
+      const data = await res.json();
+      navigator.clipboard.writeText(data.secure_url);
+      addToast("Tải audio thành công! Đã copy link vào clipboard.", "success");
+    } catch (err) {
+      console.error(err);
+      addToast("Lỗi tải lên: " + err.message, "error");
+    } finally {
+      setUploadingAudio(false);
+      e.target.value = "";
     }
   };
 
-  const handleSectionChange = (idx, field, value) => {
-    const updated = [...sections];
-    updated[idx][field] = value;
-    setSections(updated);
-  };
-
-  const handleAddQuestion = sIdx => {
-    const updated = [...sections];
-    updated[sIdx].questions.push({
-      question_text: "",
-      options: ["", "", "", ""],
-      correct_index: 0,
-      explanation: "",
-    });
-    setSections(updated);
-  };
-
-  const handleQuestionChange = (sIdx, qIdx, field, value) => {
-    const updated = [...sections];
-    updated[sIdx].questions[qIdx][field] = value;
-    setSections(updated);
-  };
-
-  const handleOptionChange = (sIdx, qIdx, oIdx, value) => {
-    const updated = [...sections];
-    updated[sIdx].questions[qIdx].options[oIdx] = value;
-    setSections(updated);
+  const copyTemplate = () => {
+    navigator.clipboard.writeText(JSON.stringify(JSON_TEMPLATE, null, 2));
+    addToast("Đã copy JSON mẫu vào clipboard!", "success");
   };
 
   // Simple Markdown-like formatter with Furigana Support
@@ -245,49 +344,51 @@ export const ReadingPage = () => {
   };
 
   const handleImport = async () => {
-    if (!newLesson.title) {
-      addToast("Vui lòng nhập tiêu đề bài học!", "warning");
+    if (!jsonInput.trim()) {
+      addToast("Vui lòng dán JSON bài học!", "warning");
       return;
     }
-
-    // Capture level before reset
-    const targetLevel = newLesson.level;
-
     try {
       setLoading(true);
-      await readingListeningService.importLesson(newLesson, sections);
+      const jsonData = JSON.parse(jsonInput);
+      const { sections, ...lessonData } = jsonData;
+      if (!lessonData.title) throw new Error("File JSON thiếu trường title");
+      if (!lessonData.level) lessonData.level = level;
 
-      // Reset form immediately
-      setNewLesson({
-        title: "",
-        reading_points: "",
-        type: "reading",
-        level: "N5",
-        image_url: "",
-        audio_url: "",
+      const processedSections = (sections || []).map(sec => {
+        let content = compileSectionContent(sec.content, sec.vocabulary, sec.translation);
+        if (sec.audio_url) {
+          content = `[audio: ${sec.audio_url}]\n${content}`;
+        }
+        const { id, audio_url, vocabulary, translation, ...rest } = sec;
+        if (rest.questions) {
+          rest.questions = rest.questions.map(q => {
+            const { id: qId, ...qRest } = q;
+            let qText = qRest.question_text || "";
+            if (qRest.image_url) {
+              qText = `<img src="${qRest.image_url}" class="max-w-full rounded-2xl border-2 border-slate-100 dark:border-slate-800 shadow-sm mb-4" />\n${qText}`;
+            }
+            const { image_url, ...qFinal } = qRest;
+            return { ...qFinal, question_text: qText };
+          });
+        }
+        return { ...rest, content };
       });
-      setSections([
-        {
-          title: "Mondai 1",
-          content: "",
-          questions: [
-            { question_text: "", options: ["", "", "", ""], correct_index: 0, explanation: "" },
-          ],
-        },
-      ]);
 
-      addToast(`Import thành công vào cấp độ ${targetLevel}!`, "success");
+      await readingListeningService.importLesson(lessonData, processedSections);
+      
+      addToast(`Import thành công vào cấp độ ${lessonData.level}!`, "success");
+      setJsonInput("");
       setIsImportMode(false);
-
-      // Update the main tab level to match imported lesson
-      if (targetLevel !== level) {
-        setLevel(targetLevel); // useEffect will trigger loadLessons
+      
+      if (lessonData.level !== level) {
+        setLevel(lessonData.level);
       } else {
-        loadLessons(); // Same level, refresh manually
+        loadLessons();
       }
     } catch (err) {
       console.error("Import Error:", err);
-      addToast("Lỗi import: " + err.message, "error");
+      addToast("Lỗi import JSON: " + err.message, "error");
     } finally {
       setLoading(false);
     }
@@ -333,6 +434,24 @@ export const ReadingPage = () => {
           line-height: 2.2 !important;
           word-break: break-word;
         }
+        .vocab-accordion-content .vocab-section {
+          margin-top: 0 !important;
+          padding: 0 !important;
+          background: transparent !important;
+          border: none !important;
+        }
+        .vocab-accordion-content .vocab-section h5 {
+          display: none !important;
+        }
+        .translation-accordion-content .translation-section {
+          margin-top: 0 !important;
+          padding: 0 !important;
+          background: transparent !important;
+          border: none !important;
+        }
+        .translation-accordion-content .translation-section h5 {
+          display: none !important;
+        }
       `}</style>
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -367,15 +486,59 @@ export const ReadingPage = () => {
           {selectedLesson && (
             <button
               onClick={() => {
-                setNewLesson({
-                  title: selectedLesson.title,
-                  level: selectedLesson.level,
-                  type: selectedLesson.type,
-                  image_url: selectedLesson.image_url || "",
-                  reading_points: selectedLesson.reading_points || "",
-                  audio_url: selectedLesson.audio_url || "",
-                });
-                setSections(selectedLesson.sections || []);
+                const { id, created_at, ...lessonData } = selectedLesson;
+                const cleanLessonData = JSON.parse(JSON.stringify(lessonData));
+                
+                if (cleanLessonData.sections) {
+                  cleanLessonData.sections = cleanLessonData.sections.map(sec => {
+                    const { id: sId, ...secCopy } = sec;
+                    
+                    const audioMatch = secCopy.content?.match(/\[audio:\s*([^\]]+)\]/);
+                    if (audioMatch) {
+                      secCopy.audio_url = audioMatch[1].trim();
+                      secCopy.content = secCopy.content.replace(/\[audio:\s*([^\]]+)\]\n?/, "");
+                    }
+                    
+                    // Extract vocabulary
+                    const vocabMatches = [...(secCopy.content || "").matchAll(/data-word="([^"]*)" data-furigana="([^"]*)" data-meaning="([^"]*)"/g)];
+                    if (vocabMatches.length > 0) {
+                      secCopy.vocabulary = vocabMatches.map(m => ({
+                        word: m[1],
+                        furigana: m[2],
+                        meaning: m[3]
+                      }));
+                    }
+                    
+                    // Extract translation
+                    const transMatch = secCopy.content?.match(/<!-- TRANSLATION_START -->[\s\S]*?<p class="translation-text[^>]*>([\s\S]*?)<\/p>[\s\S]*?<!-- TRANSLATION_END -->/);
+                    if (transMatch) {
+                      secCopy.translation = transMatch[1].replace(/<br\s*\/?>/gi, "\n");
+                    }
+                    
+                    // Clean up compiled HTML from content
+                    if (secCopy.content) {
+                      secCopy.content = secCopy.content
+                        .replace(/<!-- VOCABULARY_START -->[\s\S]*?<!-- VOCABULARY_END -->/g, "")
+                        .replace(/<!-- TRANSLATION_START -->[\s\S]*?<!-- TRANSLATION_END -->/g, "")
+                        .trim();
+                    }
+                    
+                    if (secCopy.questions) {
+                      secCopy.questions = secCopy.questions.map(q => {
+                        const { id: qId, ...qCopy } = q;
+                        const imgMatch = qCopy.question_text?.match(/<img src="([^"]+)"[^>]*\/>\n?/);
+                        if (imgMatch) {
+                          qCopy.image_url = imgMatch[1];
+                          qCopy.question_text = qCopy.question_text.replace(/<img src="([^"]+)"[^>]*\/>\n?/, "");
+                        }
+                        return qCopy;
+                      });
+                    }
+                    return secCopy;
+                  });
+                }
+                
+                setJsonInput(JSON.stringify(cleanLessonData, null, 2));
                 setIsImportMode(true);
                 setSelectedLessonId(null);
               }}
@@ -387,30 +550,12 @@ export const ReadingPage = () => {
 
           <button
             onClick={() => {
-              if (isImportMode) {
-                // Reset form when canceling
-                setNewLesson({
-                  title: "",
-                  level: level,
-                  type: "reading",
-                  image_url: "",
-                  reading_points: "",
-                  audio_url: "",
-                });
-                setSections([
-                  {
-                    title: "",
-                    content: "",
-                    questions: [
-                      {
-                        question_text: "",
-                        options: ["", "", "", ""],
-                        correct_index: 0,
-                        explanation: "",
-                      },
-                    ],
-                  },
-                ]);
+              if (!isImportMode) {
+                if (!jsonInput.trim()) {
+                  setJsonInput(JSON.stringify(JSON_TEMPLATE, null, 2));
+                }
+              } else {
+                setJsonInput("");
               }
               setIsImportMode(!isImportMode);
             }}
@@ -441,6 +586,8 @@ export const ReadingPage = () => {
       {!selectedLesson && !isImportMode && (
         <motion.div
           variants={itemVars}
+          initial="hidden"
+          animate="show"
           className="flex bg-slate-100 dark:bg-slate-800/50 p-1.5 rounded-2xl border border-slate-200/50 dark:border-slate-800 overflow-x-auto scrollbar-hide"
         >
           {LEVELS.map(l => (
@@ -467,280 +614,80 @@ export const ReadingPage = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="space-y-10"
+            className="space-y-6"
           >
-            {/* Base Lesson Info */}
-            <div className="bg-white dark:bg-slate-800 rounded-[40px] border-2 border-slate-100 dark:border-slate-800 p-8 shadow-xl space-y-8">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl flex items-center justify-center">
-                  <Sparkles size={24} className="text-indigo-500" />
+            <div className="bg-white dark:bg-slate-800 rounded-[40px] border-2 border-slate-100 dark:border-slate-800 p-8 shadow-xl space-y-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl flex items-center justify-center">
+                    <Save size={24} className="text-indigo-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-black text-slate-800 dark:text-white">
+                      Nhập liệu bài học (JSON)
+                    </h3>
+                    <p className="text-sm font-bold text-slate-400">
+                      Dán nội dung JSON vào bên dưới để thêm bài đọc/nghe mới
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-black text-slate-800 dark:text-white">
-                  Thông tin tổng quát
-                </h3>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase ml-2">
-                    Tiêu đề bài học
-                  </label>
+                <div className="flex items-center gap-3">
                   <input
-                    type="text"
-                    value={newLesson.title}
-                    onChange={e => setNewLesson({ ...newLesson, title: e.target.value })}
-                    className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-transparent focus:border-[#1CB0F6] transition-all outline-none font-bold"
-                    placeholder="Ví dụ: Bài 1: Đọc hiểu tổng hợp"
+                    type="file"
+                    id="cloudinary-audio-upload"
+                    accept="audio/*"
+                    onChange={handleCloudinaryUpload}
+                    className="hidden"
                   />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase ml-2">
-                    Level bài học
-                  </label>
-                  <select
-                    value={newLesson.level}
-                    onChange={e => setNewLesson({ ...newLesson, level: e.target.value })}
-                    className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-transparent focus:border-[#1CB0F6] outline-none font-bold"
+                  <button
+                    onClick={() => {
+                      if (!cloudinaryConfig.cloudName || !cloudinaryConfig.uploadPreset) {
+                        setShowCloudinaryModal(true);
+                      } else {
+                        document.getElementById("cloudinary-audio-upload").click();
+                      }
+                    }}
+                    disabled={uploadingAudio}
+                    className="px-4 py-3 bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400 rounded-2xl font-black text-xs uppercase hover:bg-sky-200 transition-colors flex items-center gap-2 disabled:opacity-50"
                   >
-                    {LEVELS.map(l => (
-                      <option key={l} value={l}>
-                        JLPT {l}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase ml-2">
-                    Loại bài học
-                  </label>
-                  <select
-                    value={newLesson.type}
-                    onChange={e => setNewLesson({ ...newLesson, type: e.target.value })}
-                    className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-transparent focus:border-[#1CB0F6] outline-none font-bold appearance-none"
+                    <UploadCloud size={16} className={uploadingAudio ? "animate-bounce" : ""} />
+                    {uploadingAudio ? "ĐANG TẢI LÊN..." : "TẢI AUDIO LÊN"}
+                  </button>
+                  <button
+                    onClick={() => setShowCloudinaryModal(true)}
+                    title="Cấu hình Cloudinary"
+                    className="p-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 rounded-2xl transition-colors shadow-sm flex items-center justify-center border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
                   >
-                    <option value="reading">📖 Bài Đọc (Reading)</option>
-                    <option value="listening">🎧 Bài Nghe (Listening)</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase ml-2">
-                    Ảnh minh họa bài học
-                  </label>
-                  <input
-                    placeholder="https://..."
-                    value={newLesson.image_url}
-                    onChange={e => setNewLesson({ ...newLesson, image_url: e.target.value })}
-                    className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-transparent focus:border-[#1CB0F6] outline-none text-xs font-bold"
-                  />
+                    <Settings size={16} />
+                  </button>
+                  <button
+                    onClick={copyTemplate}
+                    className="px-4 py-3 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded-2xl font-black text-xs uppercase hover:bg-amber-200 transition-colors flex items-center gap-2"
+                  >
+                    <FileText size={16} /> Copy JSON Mẫu
+                  </button>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase ml-2">
-                  Điểm học tập (Reading Points / Hỗ trợ Markdown)
-                </label>
                 <textarea
-                  value={newLesson.reading_points}
-                  onChange={e => setNewLesson({ ...newLesson, reading_points: e.target.value })}
-                  className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-transparent focus:border-[#1CB0F6] outline-none font-medium h-24"
-                  placeholder="Dùng **đậm**, *nghiêng*, [link](url)..."
+                  value={jsonInput}
+                  onChange={e => setJsonInput(e.target.value)}
+                  placeholder="Dán JSON vào đây..."
+                  className="w-full px-5 py-4 rounded-3xl bg-slate-50 dark:bg-slate-900/50 border-2 border-transparent focus:border-[#1CB0F6] outline-none font-mono text-sm h-[500px] resize-y"
+                  spellCheck={false}
                 />
-                {newLesson.reading_points && (
-                  <div className="mt-2 p-4 bg-amber-50/30 dark:bg-amber-900/10 rounded-xl border border-dashed border-amber-200 text-xs">
-                    <span className="text-[9px] font-black text-amber-500 uppercase block mb-1">
-                      Xem trước ghi chú:
-                    </span>
-                    <div
-                      dangerouslySetInnerHTML={{ __html: renderContent(newLesson.reading_points) }}
-                    />
-                  </div>
-                )}
               </div>
 
-              {newLesson.type === "listening" && (
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase ml-2 flex items-center gap-1.5">
-                    <Headphones size={14} /> Audio URL
-                  </label>
-                  <input
-                    placeholder="https://..."
-                    value={newLesson.audio_url}
-                    onChange={e => setNewLesson({ ...newLesson, audio_url: e.target.value })}
-                    className="w-full px-5 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border-2 border-transparent focus:border-[#1CB0F6] outline-none text-xs font-bold"
-                  />
-                </div>
-              )}
+              <button
+                onClick={handleImport}
+                disabled={loading}
+                className="w-full py-5 bg-[#58CC02] text-white rounded-[2rem] font-black text-xl shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+              >
+                <Save size={24} />
+                {loading ? "Đang lưu hệ thống..." : "Lưu Bài Học"}
+              </button>
             </div>
-
-            {/* Sections (Mondais) */}
-            <div className="space-y-8">
-              <div className="flex items-center justify-between px-4">
-                <h4 className="text-xl font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                  <Layers size={18} /> Danh sách Mondai ({sections.length})
-                </h4>
-                <button
-                  onClick={handleAddSection}
-                  className="px-4 py-2 bg-[#58CC02] text-white rounded-xl font-black text-[10px] uppercase shadow-lg shadow-[#58CC02]/20"
-                >
-                  + Thêm Mondai
-                </button>
-              </div>
-
-              {sections.map((sec, sIdx) => (
-                <div
-                  key={sIdx}
-                  className="bg-white dark:bg-slate-800 rounded-[40px] border-2 border-slate-100 dark:border-slate-800 p-8 shadow-lg space-y-6 relative"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-2xl bg-[#1CB0F6] text-white flex items-center justify-center font-black text-sm">
-                        #{sIdx + 1}
-                      </span>
-                      <input
-                        value={sec.title}
-                        onChange={e => handleSectionChange(sIdx, "title", e.target.value)}
-                        className="bg-transparent border-b-2 border-transparent focus:border-[#1CB0F6] outline-none font-black text-xl text-slate-700 dark:text-white"
-                        placeholder="Tên Mondai..."
-                      />
-                    </div>
-                    {sections.length > 1 && (
-                      <button
-                        onClick={() => handleRemoveSection(sIdx)}
-                        className="text-slate-300 hover:text-red-500 transition-colors"
-                      >
-                        <Trash2 size={20} />
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase ml-2">
-                      Nội dung bài đọc (Hỗ trợ Markdown)
-                    </label>
-                    <textarea
-                      value={sec.content}
-                      onChange={e => handleSectionChange(sIdx, "content", e.target.value)}
-                      className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-transparent focus:border-[#1CB0F6] outline-none font-medium h-32 leading-relaxed"
-                      placeholder="Nội dung bài đọc của riêng Mondai này..."
-                    />
-                    {sec.content && (
-                      <div className="mt-2 p-5 bg-slate-50/50 dark:bg-slate-900/20 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700 text-sm">
-                        <span className="text-[9px] font-black text-slate-400 uppercase block mb-2">
-                          Xem trước nội dung:
-                        </span>
-                        <div
-                          className="leading-relaxed"
-                          dangerouslySetInnerHTML={{ __html: renderContent(sec.content) }}
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Questions for this section */}
-                  <div className="space-y-4 pt-4">
-                    <div className="flex items-center justify-between">
-                      <h5 className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
-                        Câu hỏi ({sec.questions.length})
-                      </h5>
-                      <button
-                        onClick={() => handleAddQuestion(sIdx)}
-                        className="text-[11px] font-black text-[#58CC02] uppercase hover:underline"
-                      >
-                        + Thêm câu
-                      </button>
-                    </div>
-
-                    <div className="space-y-6">
-                      {sec.questions.map((q, qIdx) => (
-                        <div
-                          key={qIdx}
-                          className="p-6 rounded-3xl bg-slate-50 dark:bg-slate-900/30 border-2 border-slate-100 dark:border-slate-800 space-y-4"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-black text-slate-300">
-                              CÂU {qIdx + 1}
-                            </span>
-                            {sec.questions.length > 1 && (
-                              <button
-                                onClick={() => {
-                                  const updated = [...sections];
-                                  updated[sIdx].questions = sec.questions.filter(
-                                    (_, i) => i !== qIdx
-                                  );
-                                  setSections(updated);
-                                }}
-                                className="text-slate-200 hover:text-red-400"
-                              >
-                                <XCircle size={14} />
-                              </button>
-                            )}
-                          </div>
-                          <input
-                            placeholder="Câu hỏi..."
-                            value={q.question_text}
-                            onChange={e =>
-                              handleQuestionChange(sIdx, qIdx, "question_text", e.target.value)
-                            }
-                            className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-800 border-2 border-transparent focus:border-[#1CB0F6] outline-none font-bold text-sm"
-                          />
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {q.options.map((opt, oIdx) => (
-                              <input
-                                key={oIdx}
-                                placeholder={`Đáp án ${oIdx + 1}`}
-                                value={opt}
-                                onChange={e => handleOptionChange(sIdx, qIdx, oIdx, e.target.value)}
-                                className="px-3 py-2 rounded-lg bg-white dark:bg-slate-800 border-2 border-transparent focus:border-[#1CB0F6] outline-none text-xs"
-                              />
-                            ))}
-                          </div>
-                          <div className="flex items-center gap-4">
-                            <select
-                              value={q.correct_index}
-                              onChange={e =>
-                                handleQuestionChange(
-                                  sIdx,
-                                  qIdx,
-                                  "correct_index",
-                                  parseInt(e.target.value)
-                                )
-                              }
-                              className="px-4 py-2 rounded-xl bg-white dark:bg-slate-800 text-[10px] font-black"
-                            >
-                              {q.options.map((_, i) => (
-                                <option key={i} value={i}>
-                                  Đúng: Đáp án {i + 1}
-                                </option>
-                              ))}
-                            </select>
-                            <input
-                              placeholder="Giải thích..."
-                              value={q.explanation}
-                              onChange={e =>
-                                handleQuestionChange(sIdx, qIdx, "explanation", e.target.value)
-                              }
-                              className="flex-1 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 outline-none text-[10px]"
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button
-              onClick={handleImport}
-              disabled={loading}
-              className="w-full py-5 bg-[#58CC02] text-white rounded-[2rem] font-black text-xl shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
-            >
-              <Save size={24} />
-              {loading ? "Đang lưu hệ thống..." : "Lưu Toàn Bộ Mondai"}
-            </button>
           </motion.div>
         ) : selectedLesson ? (
           <motion.div
@@ -803,38 +750,87 @@ export const ReadingPage = () => {
               </div>
             </div>
 
-            {/* Sections Content */}
-            {selectedLesson.sections?.map((sec, sIdx) => (
-              <div
-                key={sec.id}
-                className="bg-white dark:bg-slate-800 rounded-[40px] border-2 border-slate-100 dark:border-slate-800 p-8 md:p-12 shadow-xl space-y-10"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-2xl bg-[#58CC02] text-white flex items-center justify-center font-black text-sm shadow-lg shadow-[#58CC02]/20">
-                    #{sIdx + 1}
-                  </div>
-                  <div className="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <h4 className="text-2xl font-black text-slate-800 dark:text-white">
-                      {sec.title}
-                    </h4>
-                    {sec.content && (
-                      <button 
-                         onClick={() => tts.speak(cleanTextForTTS(renderContent(sec.content)))}
-                      onMouseEnter={() => tts.speak(cleanTextForTTS(renderContent(sec.content)))}
-                         className="self-start md:self-auto flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-[#58CC02]/10 hover:text-[#58CC02] transition-all font-black text-[10px] uppercase text-slate-500"
-                      >
-                         <Volume2 size={14} /> Nghe nội dung
-                      </button>
-                    )}
-                  </div>
-                </div>
+            {selectedLesson.sections?.map((sec, sIdx) => {
+              const audioMatch = sec.content?.match(/\[audio:\s*([^\]]+)\]/);
+              const sectionAudioUrl = audioMatch ? audioMatch[1].trim() : null;
+              const cleanContent = sec.content 
+                ? sec.content.replace(/\[audio:\s*([^\]]+)\]\n?/, "")
+                : "";
 
-                {sec.content && (
-                  <div
-                    className="text-lg md:text-xl font-medium tracking-wide text-slate-800 dark:text-slate-100 reading-text-container"
-                    dangerouslySetInnerHTML={{ __html: renderContent(sec.content) }}
-                  />
-                )}
+              const { mainContent, vocabHtml, translationHtml } = parseSectionContent(cleanContent);
+
+              return (
+                <div
+                  key={sec.id}
+                  className="bg-white dark:bg-slate-800 rounded-[40px] border-2 border-slate-100 dark:border-slate-800 p-8 md:p-12 shadow-xl space-y-10"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-2xl bg-[#58CC02] text-white flex items-center justify-center font-black text-sm shadow-lg shadow-[#58CC02]/20">
+                      #{sIdx + 1}
+                    </div>
+                    <div className="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <h4 className="text-2xl font-black text-slate-800 dark:text-white">
+                        {sec.title}
+                      </h4>
+                      {mainContent && (
+                        <button 
+                           onClick={() => tts.speak(cleanTextForTTS(renderContent(mainContent)))}
+                           onMouseEnter={() => tts.speak(cleanTextForTTS(renderContent(mainContent)))}
+                           className="self-start md:self-auto flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-[#58CC02]/10 hover:text-[#58CC02] transition-all font-black text-[10px] uppercase text-slate-500"
+                        >
+                           <Volume2 size={14} /> Nghe nội dung
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {selectedLesson.type === "listening" && sectionAudioUrl && (
+                    <div className="bg-slate-50 dark:bg-slate-900/40 p-4 rounded-3xl border-2 border-slate-100 dark:border-slate-800 flex items-center gap-4 w-full animate-fadeIn">
+                      <div className="w-10 h-10 rounded-2xl bg-orange-100 dark:bg-orange-900/30 text-orange-500 flex items-center justify-center font-bold shrink-0">
+                        <Headphones size={20} />
+                      </div>
+                      <audio 
+                        controls 
+                        src={sectionAudioUrl} 
+                        className="h-10 flex-1" 
+                      />
+                    </div>
+                  )}
+
+                  {mainContent && (
+                    <div
+                      className="text-lg md:text-xl font-medium tracking-wide text-slate-800 dark:text-slate-100 reading-text-container leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: renderContent(mainContent) }}
+                    />
+                  )}
+
+                  {/* Drawer triggers */}
+                  {(vocabHtml || translationHtml) && (
+                    <div className="flex flex-wrap gap-3 mt-6">
+                      {vocabHtml && (
+                        <button
+                          onClick={() => {
+                            setActiveDrawerSection({ ...sec, vocabHtml, translationHtml });
+                            setDrawerTab("vocab");
+                          }}
+                          className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 hover:border-[#1CB0F6]/30 text-slate-600 dark:text-slate-300 font-black text-xs uppercase transition-all shadow-sm hover:shadow"
+                        >
+                          <span>📖</span> Từ vựng tham khảo
+                        </button>
+                      )}
+                      {translationHtml && (
+                        <button
+                          onClick={() => {
+                            setActiveDrawerSection({ ...sec, vocabHtml, translationHtml });
+                            setDrawerTab("translation");
+                          }}
+                          className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 hover:border-[#1CB0F6]/30 text-slate-600 dark:text-slate-300 font-black text-xs uppercase transition-all shadow-sm hover:shadow"
+                        >
+                          <span>🇻🇳</span> Bản dịch tiếng Việt
+                        </button>
+                      )}
+                    </div>
+                  )}
 
                 <div className="space-y-10">
                   {sec.questions?.map((q, idx) => (
@@ -900,7 +896,8 @@ export const ReadingPage = () => {
                   ))}
                 </div>
               </div>
-            ))}
+            );
+          })}
 
             {/* Fallback Questions (Old simple format or combined questions) */}
             {selectedLesson.questions?.length > 0 && (
@@ -1040,9 +1037,35 @@ export const ReadingPage = () => {
             )}
           </motion.div>
         ) : (
-          /* Lesson List */
-          <motion.div key="list" variants={containerVars} className="w-full">
-            {lessons.length > 0 ? (
+          <motion.div
+            key="list"
+            variants={containerVars}
+            initial="hidden"
+            animate="show"
+            exit="hidden"
+            className="w-full"
+          >
+            {lessonsLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[1, 2, 3, 4].map(idx => (
+                  <div
+                    key={idx}
+                    className="bg-white dark:bg-slate-800 rounded-[40px] border-2 border-slate-100 dark:border-slate-800 p-8 space-y-4 shadow-sm animate-pulse"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-700 animate-pulse" />
+                      <div className="h-3 w-16 bg-slate-100 dark:bg-slate-700 rounded animate-pulse" />
+                    </div>
+                    <div className="h-6 w-2/3 bg-slate-100 dark:bg-slate-700 rounded-lg animate-pulse" />
+                    <div className="flex items-center gap-3 pt-2">
+                      <div className="h-4 w-20 bg-slate-100 dark:bg-slate-700 rounded animate-pulse" />
+                      <div className="h-1 w-1 rounded-full bg-slate-200" />
+                      <div className="h-4 w-24 bg-slate-100 dark:bg-slate-700 rounded animate-pulse" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : lessons.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {lessons.map(lesson => (
                   <motion.div
@@ -1099,14 +1122,16 @@ export const ReadingPage = () => {
                        >
                          Thử tải lại danh sách
                        </button>
-                       <button
-                         onClick={() => {
-                            setNewLesson({ ...newLesson, level: level, title: `Bài đọc thực chiến ${level} #1`, reading_points: "Ghi chú nhanh cho bài học này..." });
-                            setIsImportMode(true);
-                         }}
+                        <button
+                          onClick={() => {
+                             if (!jsonInput.trim()) {
+                               setJsonInput(JSON.stringify(JSON_TEMPLATE, null, 2));
+                             }
+                             setIsImportMode(true);
+                          }}
                          className="px-10 py-5 bg-[#1CB0F6] text-white rounded-3xl font-black text-sm shadow-2xl shadow-sky-200/50 hover:scale-105 active:scale-95 transition-all"
                        >
-                         Mở trình soạn thảo bài đọc
+                         Mở trình nhập liệu JSON
                        </button>
                     </div>
                   </div>
@@ -1115,9 +1140,163 @@ export const ReadingPage = () => {
         )}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {activeDrawerSection && (
+          <>
+            {/* Backdrop overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setActiveDrawerSection(null)}
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 animate-fadeIn"
+            />
+
+            {/* Slide drawer from right */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "tween", duration: 0.3 }}
+              className="fixed top-0 right-0 h-screen w-full max-w-md bg-white dark:bg-slate-900 border-l border-slate-100 dark:border-slate-800 shadow-2xl z-50 flex flex-col"
+            >
+              {/* Drawer Header */}
+              <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-black text-[#1CB0F6] uppercase tracking-widest">
+                    Tài liệu tham khảo
+                  </span>
+                  <h4 className="text-xl font-black text-slate-800 dark:text-white">
+                    {activeDrawerSection.title}
+                  </h4>
+                </div>
+                <button
+                  onClick={() => setActiveDrawerSection(null)}
+                  className="w-10 h-10 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-all"
+                >
+                  <XCircle size={22} />
+                </button>
+              </div>
+
+              {/* Drawer Tab Selectors */}
+              <div className="px-6 py-4 bg-slate-50/50 dark:bg-slate-800/20 border-b border-slate-100 dark:border-slate-800 flex gap-2">
+                {activeDrawerSection.vocabHtml && (
+                  <button
+                    onClick={() => setDrawerTab("vocab")}
+                    className={`flex-1 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-wider transition-all ${
+                      drawerTab === "vocab"
+                        ? "bg-[#1CB0F6] text-white shadow-lg shadow-[#1CB0F6]/20"
+                        : "bg-white dark:bg-slate-800 text-slate-500 border border-slate-100 dark:border-slate-700 hover:border-slate-200"
+                    }`}
+                  >
+                    📖 Từ vựng
+                  </button>
+                )}
+                {activeDrawerSection.translationHtml && (
+                  <button
+                    onClick={() => setDrawerTab("translation")}
+                    className={`flex-1 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-wider transition-all ${
+                      drawerTab === "translation"
+                        ? "bg-[#1CB0F6] text-white shadow-lg shadow-[#1CB0F6]/20"
+                        : "bg-white dark:bg-slate-800 text-slate-500 border border-slate-100 dark:border-slate-700 hover:border-slate-200"
+                    }`}
+                  >
+                    🇻🇳 Bản dịch
+                  </button>
+                )}
+              </div>
+
+              {/* Drawer Scrollable Content */}
+              <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
+                {drawerTab === "vocab" && activeDrawerSection.vocabHtml && (
+                  <div 
+                    className="vocab-accordion-content animate-fadeIn"
+                    dangerouslySetInnerHTML={{ __html: renderContent(activeDrawerSection.vocabHtml) }}
+                  />
+                )}
+                {drawerTab === "translation" && activeDrawerSection.translationHtml && (
+                  <div 
+                    className="translation-accordion-content animate-fadeIn"
+                    dangerouslySetInnerHTML={{ __html: renderContent(activeDrawerSection.translationHtml) }}
+                  />
+                )}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       {loading && (
         <div className="fixed inset-0 z-50 bg-white/40 dark:bg-slate-900/40 backdrop-blur-sm flex items-center justify-center">
           <div className="w-12 h-12 border-4 border-[#1CB0F6] border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+      {/* Cloudinary Settings Modal */}
+      {showCloudinaryModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white dark:bg-slate-800 rounded-[32px] border-2 border-slate-100 dark:border-slate-800 p-8 max-w-md w-full shadow-2xl space-y-6 text-slate-800 dark:text-white"
+          >
+            <div className="space-y-2">
+              <h3 className="text-2xl font-black flex items-center gap-2">
+                ☁️ Cấu hình Cloudinary
+              </h3>
+              <p className="text-xs font-bold text-slate-400 leading-relaxed">
+                Để tải file âm thanh trực tiếp lên Cloudinary, bạn cần cấu hình tài khoản (miễn phí) của mình dưới đây.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-[10px] font-black text-slate-400 uppercase ml-1">
+                  Cloud Name (Tên Cloud)
+                </label>
+                <input
+                  type="text"
+                  value={cloudinaryConfig.cloudName}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setCloudinaryConfig(prev => ({ ...prev, cloudName: val }));
+                    localStorage.setItem("cloudinary_cloud_name", val);
+                  }}
+                  className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 focus:border-[#1CB0F6] outline-none text-sm font-bold text-slate-800 dark:text-white"
+                  placeholder="Ví dụ: dnh90sjsa"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-black text-slate-400 uppercase ml-1">
+                  Upload Preset (Không ký danh - Unsigned)
+                </label>
+                <input
+                  type="text"
+                  value={cloudinaryConfig.uploadPreset}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setCloudinaryConfig(prev => ({ ...prev, uploadPreset: val }));
+                    localStorage.setItem("cloudinary_upload_preset", val);
+                  }}
+                  className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 focus:border-[#1CB0F6] outline-none text-sm font-bold text-slate-800 dark:text-white"
+                  placeholder="Ví dụ: ml_default hoặc preset_cua_ban"
+                />
+              </div>
+
+              <div className="p-3 bg-amber-50 dark:bg-amber-900/10 rounded-xl border border-dashed border-amber-200 dark:border-amber-800 text-[10px] text-amber-600 dark:text-amber-400 font-bold leading-relaxed">
+                ⚠️ Lưu ý: Upload preset bắt buộc phải là loại <strong>Unsigned</strong> (Không yêu cầu chữ ký) được bật trong mục Settings ➡️ Upload của Cloudinary.
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowCloudinaryModal(false)}
+                className="flex-1 py-3.5 rounded-2xl border-2 border-slate-100 dark:border-slate-700 font-black text-slate-400 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all text-xs uppercase"
+              >
+                Đóng
+              </button>
+            </div>
+          </motion.div>
         </div>
       )}
     </motion.div>

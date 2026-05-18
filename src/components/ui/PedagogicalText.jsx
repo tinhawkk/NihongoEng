@@ -10,6 +10,29 @@ import { GrammarFormItem, GRAMMAR_FORMS } from "./GrammarFormItem";
  * 4. Pedagogical Coloring (Teal for forms, Orange for connectors)
  * 5. Numbered List Support (①, ②, 1., etc.)
  */
+const renderRichText = (str) => {
+  if (!str) return "";
+  return str
+    // Furigana: 漢字(かんじ) -> ruby
+    .replace(
+      /([\u4E00-\u9FFF\u3005\u4E00-\u9FA5]+)\(([\u3040-\u309F\u30A0-\u30FF]+)\)/g,
+      "<ruby>$1<rt>$2</rt></ruby>"
+    )
+    // Bold: **text** -> strong
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    // Italic: *text* -> em
+    .replace(/\*(.*?)\*/g, "<em>$1</em>")
+    // Code block/inline code: `code` -> code
+    .replace(/`(.*?)`/g, "<code class='bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-[#1CB0F6] font-mono text-xs'>$1</code>")
+    // Markdown link: [text](url) -> anchor
+    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-[#1CB0F6] hover:underline" target="_blank">$1</a>')
+    // Bullet list items: - item / * item -> list items
+    .replace(/^-\s+(.*?)$/gm, '<li class="ml-4 list-disc">$1</li>')
+    .replace(/^\*\s+(.*?)$/gm, '<li class="ml-4 list-disc">$1</li>')
+    // Newlines
+    .replace(/\n/g, "<br/>");
+};
+
 export const PedagogicalText = ({ text, mode = "formula" }) => {
   if (!text) return null;
 
@@ -30,7 +53,10 @@ export const PedagogicalText = ({ text, mode = "formula" }) => {
         {listSegments.map((m, mi) => (
           <div key={mi} className="flex gap-2.5 items-start">
             {m.num && <span className="text-[#58CC02] shrink-0 font-black">{m.num}</span>}
-            <span className="flex-1 leading-relaxed">{m.text.trim()}</span>
+            <span 
+              className="flex-1 leading-relaxed markdown-content"
+              dangerouslySetInnerHTML={{ __html: renderRichText(m.text || m.num || "") }}
+            />
           </div>
         ))}
       </div>
