@@ -409,7 +409,7 @@ export const DeckPage = () => {
           id: item.id || generateUUID(),
           level: finalLevel,
           deck_id: deckId,
-          type: item.onyomi || item.kunyomi ? "kanji" : "voca",
+          type: item.type || (item.onyomi || item.kunyomi ? "kanji" : "voca"),
         };
       });
 
@@ -529,7 +529,8 @@ export const DeckPage = () => {
     // 1. Filter by Type
     if (filterType !== "all") {
       result = result.filter(w => {
-        if (filterType === "voca") return w.type === "voca" || !w.type;
+        if (filterType === "voca") return (w.type === "voca" || !w.type) && w.type?.toUpperCase() !== "GRAMMAR";
+        if (filterType === "grammar") return w.type?.toUpperCase() === "GRAMMAR";
         return w.type === "kanji";
       });
     }
@@ -568,13 +569,15 @@ export const DeckPage = () => {
       setCurrentPage(totalPages);
     }
   }, [totalPages, currentPage]);
-  const { totalCount, vocaCount, kanjiCount } = useMemo(() => {
-    const vocaCount = words.filter(w => w.type === "voca" || !w.type).length;
+  const { totalCount, vocaCount, kanjiCount, grammarCount } = useMemo(() => {
+    const grammarCount = words.filter(w => w.type?.toUpperCase() === "GRAMMAR").length;
+    const vocaCount = words.filter(w => (w.type === "voca" || !w.type) && w.type?.toUpperCase() !== "GRAMMAR").length;
     const kanjiCount = words.filter(w => w.type === "kanji").length;
     return {
       totalCount: words.length,
       vocaCount,
       kanjiCount,
+      grammarCount,
     };
   }, [words]);
 
@@ -612,11 +615,21 @@ export const DeckPage = () => {
           <div className="flex flex-wrap items-center gap-3 mt-1">
             <div className="flex items-center gap-2">
               <p className="text-sm text-slate-400 font-bold">
-                {kanjiCount > 0 ? (
+                {(kanjiCount > 0 || grammarCount > 0) ? (
                   <>
                     <span className="text-slate-600">{vocaCount}</span> từ vựng
-                    <span className="mx-1.5 text-slate-300">|</span>
-                    <span className="text-slate-600">{kanjiCount}</span> hán tự
+                    {kanjiCount > 0 && (
+                      <>
+                        <span className="mx-1.5 text-slate-300">|</span>
+                        <span className="text-slate-600">{kanjiCount}</span> hán tự
+                      </>
+                    )}
+                    {grammarCount > 0 && (
+                      <>
+                        <span className="mx-1.5 text-slate-300">|</span>
+                        <span className="text-amber-600">{grammarCount}</span> ngữ pháp
+                      </>
+                    )}
                   </>
                 ) : (
                   `${totalCount} từ vựng`
@@ -839,29 +852,28 @@ export const DeckPage = () => {
           />
         </div>
 
-        <div className="flex bg-slate-100/50 p-1 rounded-[18px] w-fit">
+        <div className="flex bg-slate-100/50 p-1 rounded-[18px] w-fit flex-wrap">
           {[
             { id: "all", label: "Tất cả", count: totalCount },
-            {
-              id: "voca",
-              label: "Từ vựng",
-              count: vocaCount,
-            },
+            { id: "voca", label: "Từ vựng", count: vocaCount },
             { id: "kanji", label: "Hán tự", count: kanjiCount },
+            { id: "grammar", label: "📖 Ngữ pháp", count: grammarCount },
           ].map(btn => (
             <button
               key={btn.id}
               onClick={() => setFilterType(btn.id)}
               className={`px-4 py-2 rounded-[14px] text-xs font-black transition-all flex items-center gap-2 ${
                 filterType === btn.id
-                  ? "bg-white text-[#1CB0F6] shadow-sm"
+                  ? btn.id === "grammar" ? "bg-white text-amber-600 shadow-sm" : "bg-white text-[#1CB0F6] shadow-sm"
                   : "text-slate-400 hover:text-slate-600"
               }`}
             >
               {btn.label}
               <span
                 className={`px-1.5 py-0.5 rounded-md text-[10px] ${
-                  filterType === btn.id ? "bg-[#1CB0F6]/10" : "bg-slate-200/50"
+                  filterType === btn.id
+                    ? btn.id === "grammar" ? "bg-amber-500/10" : "bg-[#1CB0F6]/10"
+                    : "bg-slate-200/50"
                 }`}
               >
                 {btn.count}
@@ -937,16 +949,21 @@ export const DeckPage = () => {
               >
                 <div className="flex items-center gap-4 min-w-0">
                   <span
-                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-black shrink-0 shadow-sm"
-                    style={{ backgroundColor: color }}
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-black shrink-0 shadow-sm ${word.type?.toUpperCase() === "GRAMMAR" ? "!bg-amber-500" : ""}`}
+                    style={{ backgroundColor: word.type?.toUpperCase() === "GRAMMAR" ? undefined : color }}
                   >
-                    {i + 1}
+                    {word.type?.toUpperCase() === "GRAMMAR" ? "文" : i + 1}
                   </span>
                   <div className="min-w-0 flex flex-col justify-center">
                     <div className="flex items-center gap-3">
-                      <p className="text-lg font-bold text-slate-800 leading-tight group-hover:text-[#1CB0F6] transition-colors">
+                      <p className={`text-lg font-bold leading-tight transition-colors ${word.type?.toUpperCase() === "GRAMMAR" ? "text-amber-700 dark:text-amber-400 group-hover:text-amber-500" : "text-slate-800 group-hover:text-[#1CB0F6]"}`}>
                         {word.word}
                       </p>
+                      {word.type?.toUpperCase() === "GRAMMAR" && (
+                        <span className="px-1.5 py-0.5 rounded-md text-[9px] font-black bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 uppercase tracking-wider shrink-0">
+                          文法
+                        </span>
+                      )}
                       <button
                         onClick={e => {
                           e.stopPropagation();
@@ -1023,9 +1040,9 @@ export const DeckPage = () => {
                           {word.partOfSpeech && (
                             <div>
                               <span className="text-slate-400 font-bold text-xs uppercase">
-                                Loại từ
+                                {word.type?.toUpperCase() === "GRAMMAR" ? "Dạng kết hợp" : "Loại từ"}
                               </span>
-                              <p className="font-medium text-slate-600">{word.partOfSpeech}</p>
+                              <p className={`font-medium ${word.type?.toUpperCase() === "GRAMMAR" ? "text-amber-600 dark:text-amber-400 font-bold" : "text-slate-600"}`}>{word.partOfSpeech}</p>
                             </div>
                           )}
                           {word.onyomi && (
@@ -1136,9 +1153,9 @@ export const DeckPage = () => {
                         </div>
                       )}
                       {word.synonyms && (
-                        <div className="bg-purple-50 dark:bg-purple-500/10 border-l-4 border-purple-400 rounded-r-xl p-3">
-                          <p className="text-xs font-black text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-1">
-                            Từ đồng nghĩa
+                        <div className={`${word.type?.toUpperCase() === "GRAMMAR" ? "bg-amber-50 dark:bg-amber-500/10 border-l-4 border-amber-400" : "bg-purple-50 dark:bg-purple-500/10 border-l-4 border-purple-400"} rounded-r-xl p-3`}>
+                          <p className={`text-xs font-black uppercase tracking-widest mb-1 ${word.type?.toUpperCase() === "GRAMMAR" ? "text-amber-600 dark:text-amber-400" : "text-purple-600 dark:text-purple-400"}`}>
+                            {word.type?.toUpperCase() === "GRAMMAR" ? "Ngữ pháp tương đương" : "Từ đồng nghĩa"}
                           </p>
                           <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
                             {word.synonyms}
@@ -1414,59 +1431,99 @@ export const DeckPage = () => {
 
               {/* Body */}
               <div className="p-5 space-y-4 overflow-y-auto flex-1">
-                {/* Template */}
+                {/* Template Tabs: Từ vựng / Ngữ pháp */}
                 <div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-4 border-2 border-dashed border-slate-200 dark:border-slate-700">
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center justify-between mb-3">
                     <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">
                       📋 Mẫu JSON
                     </span>
-                    <button
-                      onClick={() => {
-                        const template = JSON.stringify(
-                          [
-                            {
-                              word: "食べる",
-                              furigana: "たべる",
-                              meaning: "Ăn",
-                              han_viet: "Thực",
-                              example_jp: "毎日ご飯を食べます。",
-                              example_vi: "Mỗi ngày ăn cơm.",
-                              mnemonic: "Thực phẩm = Ăn",
-                            },
-                            {
-                              word: "飲む",
-                              furigana: "のむ",
-                              meaning: "Uống",
-                              han_viet: "Ẩm",
-                              example_jp: "水を飲む。",
-                              example_vi: "Uống nước.",
-                              mnemonic: "Ẩm thực = Uống",
-                            },
-                            {
-                              word: "abandon",
-                              furigana: "əˈbæn.dən",
-                              meaning: "từ bỏ",
-                              example_jp: "He abandoned the plan.",
-                              example_vi: "Anh ấy từ bỏ kế hoạch.",
-                              definition_en: "To leave a place, thing, or person, usually for ever",
-                              definition_vi: "Rời khỏi hoặc bỏ lại ai đó/vật gì đó, thường là mãi mãi",
-                              synonyms: "leave, quit",
-                              mnemonic: "a + bandon -> bỏ đi",
-                            },
-                          ],
-                          null,
-                          2
-                        );
-                        setJsonText(template);
-                        handleJsonTextChange(template);
-                      }}
-                      className="flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black hover:bg-emerald-200 transition-colors"
-                    >
-                      <Copy size={12} /> Dán mẫu
-                    </button>
+                    {/* Tab switcher */}
+                    <div className="flex bg-slate-200/60 dark:bg-slate-700/60 p-0.5 rounded-lg">
+                      <button
+                        onClick={() => {
+                          const el = document.getElementById('json-template-voca');
+                          const el2 = document.getElementById('json-template-grammar');
+                          if (el) el.style.display = 'block';
+                          if (el2) el2.style.display = 'none';
+                          document.getElementById('tab-voca')?.classList.add('bg-white', 'dark:bg-slate-600', 'text-emerald-600', 'shadow-sm');
+                          document.getElementById('tab-voca')?.classList.remove('text-slate-400');
+                          document.getElementById('tab-grammar')?.classList.remove('bg-white', 'dark:bg-slate-600', 'text-amber-600', 'shadow-sm');
+                          document.getElementById('tab-grammar')?.classList.add('text-slate-400');
+                        }}
+                        id="tab-voca"
+                        className="px-2.5 py-1 rounded-md text-[10px] font-black transition-all bg-white dark:bg-slate-600 text-emerald-600 shadow-sm"
+                      >
+                        📝 Từ vựng
+                      </button>
+                      <button
+                        onClick={() => {
+                          const el = document.getElementById('json-template-voca');
+                          const el2 = document.getElementById('json-template-grammar');
+                          if (el) el.style.display = 'none';
+                          if (el2) el2.style.display = 'block';
+                          document.getElementById('tab-grammar')?.classList.add('bg-white', 'dark:bg-slate-600', 'text-amber-600', 'shadow-sm');
+                          document.getElementById('tab-grammar')?.classList.remove('text-slate-400');
+                          document.getElementById('tab-voca')?.classList.remove('bg-white', 'dark:bg-slate-600', 'text-emerald-600', 'shadow-sm');
+                          document.getElementById('tab-voca')?.classList.add('text-slate-400');
+                        }}
+                        id="tab-grammar"
+                        className="px-2.5 py-1 rounded-md text-[10px] font-black transition-all text-slate-400"
+                      >
+                        📖 Ngữ pháp
+                      </button>
+                    </div>
                   </div>
-                  <pre className="text-[11px] font-mono text-slate-500 dark:text-slate-400 whitespace-pre-wrap leading-relaxed">
-                    {`[{
+
+                  {/* === Vocabulary Template === */}
+                  <div id="json-template-voca">
+                    <div className="flex justify-end mb-2">
+                      <button
+                        onClick={() => {
+                          const template = JSON.stringify(
+                            [
+                              {
+                                word: "食べる",
+                                furigana: "たべる",
+                                meaning: "Ăn",
+                                han_viet: "Thực",
+                                example_jp: "毎日ご飯を食べます。",
+                                example_vi: "Mỗi ngày ăn cơm.",
+                                mnemonic: "Thực phẩm = Ăn",
+                              },
+                              {
+                                word: "飲む",
+                                furigana: "のむ",
+                                meaning: "Uống",
+                                han_viet: "Ẩm",
+                                example_jp: "水を飲む。",
+                                example_vi: "Uống nước.",
+                                mnemonic: "Ẩm thực = Uống",
+                              },
+                              {
+                                word: "abandon",
+                                furigana: "əˈbæn.dən",
+                                meaning: "từ bỏ",
+                                example_jp: "He abandoned the plan.",
+                                example_vi: "Anh ấy từ bỏ kế hoạch.",
+                                definition_en: "To leave a place, thing, or person, usually for ever",
+                                definition_vi: "Rời khỏi hoặc bỏ lại ai đó/vật gì đó, thường là mãi mãi",
+                                synonyms: "leave, quit",
+                                mnemonic: "a + bandon -> bỏ đi",
+                              },
+                            ],
+                            null,
+                            2
+                          );
+                          setJsonText(template);
+                          handleJsonTextChange(template);
+                        }}
+                        className="flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black hover:bg-emerald-200 transition-colors"
+                      >
+                        <Copy size={12} /> Dán mẫu Từ vựng
+                      </button>
+                    </div>
+                    <pre className="text-[11px] font-mono text-slate-500 dark:text-slate-400 whitespace-pre-wrap leading-relaxed">
+                      {`[{
   "word": "漢字",
   "furigana": "かんじ",
   "meaning": "Chữ Hán",
@@ -1484,23 +1541,105 @@ export const DeckPage = () => {
   "definition_vi": "rời khỏi hoặc bỏ lại ai đó/vật gì đó",
   "synonyms": "leave, quit"
 }]`}
-                  </pre>
-                  <p className="text-[10px] text-slate-400 mt-2 font-bold">
-                    Các trường hỗ trợ: <code className="text-emerald-500">word</code>,{" "}
-                    <code className="text-emerald-500">furigana</code>,{" "}
-                    <code className="text-emerald-500">meaning</code>,{" "}
-                    <code className="text-emerald-500">han_viet</code>,{" "}
-                    <code className="text-emerald-500">onyomi</code>,{" "}
-                    <code className="text-emerald-500">kunyomi</code>,{" "}
-                    <code className="text-emerald-500">example_jp</code>,{" "}
-                    <code className="text-emerald-500">example_vi</code>,{" "}
-                    <code className="text-emerald-500">definition_en</code>,{" "}
-                    <code className="text-emerald-500">definition_vi</code>,{" "}
-                    <code className="text-emerald-500">synonyms</code>,{" "}
-                    <code className="text-emerald-500">mnemonic</code>,{" "}
-                    <code className="text-emerald-500">radical_analysis</code>. Với tiếng Anh, dùng{" "}
-                    <code className="text-emerald-500">furigana</code> cho phiên âm.
-                  </p>
+                    </pre>
+                    <p className="text-[10px] text-slate-400 mt-2 font-bold">
+                      Các trường hỗ trợ: <code className="text-emerald-500">word</code>,{" "}
+                      <code className="text-emerald-500">furigana</code>,{" "}
+                      <code className="text-emerald-500">meaning</code>,{" "}
+                      <code className="text-emerald-500">han_viet</code>,{" "}
+                      <code className="text-emerald-500">onyomi</code>,{" "}
+                      <code className="text-emerald-500">kunyomi</code>,{" "}
+                      <code className="text-emerald-500">example_jp</code>,{" "}
+                      <code className="text-emerald-500">example_vi</code>,{" "}
+                      <code className="text-emerald-500">definition_en</code>,{" "}
+                      <code className="text-emerald-500">definition_vi</code>,{" "}
+                      <code className="text-emerald-500">synonyms</code>,{" "}
+                      <code className="text-emerald-500">mnemonic</code>,{" "}
+                      <code className="text-emerald-500">radical_analysis</code>. Với tiếng Anh, dùng{" "}
+                      <code className="text-emerald-500">furigana</code> cho phiên âm.
+                    </p>
+                  </div>
+
+                  {/* === Grammar Template === */}
+                  <div id="json-template-grammar" style={{ display: 'none' }}>
+                    <div className="flex justify-end mb-2">
+                      <button
+                        onClick={() => {
+                          const template = JSON.stringify(
+                            [
+                              {
+                                word: "～てしまう",
+                                furigana: "～ちゃう (khẩu ngữ)",
+                                meaning: "Diễn tả hành động đã hoàn thành / đáng tiếc đã xảy ra",
+                                example_jp: "宿題を忘れてしまいました。",
+                                example_vi: "Tôi đã quên mất bài tập về nhà rồi.",
+                                synonyms: "～ちゃう、～ちゃった",
+                                mnemonic: "Shimau = 仕舞う (cất đi) → hành động đã 'cất xong' rồi, không lấy lại được",
+                                type: "GRAMMAR",
+                              },
+                              {
+                                word: "～ことがある",
+                                furigana: "～ことがある",
+                                meaning: "Đã từng (kinh nghiệm quá khứ)",
+                                example_jp: "日本に行ったことがあります。",
+                                example_vi: "Tôi đã từng đi Nhật.",
+                                synonyms: "～た経験がある",
+                                type: "GRAMMAR",
+                              },
+                              {
+                                word: "～なければならない",
+                                furigana: "～なきゃ (khẩu ngữ)",
+                                meaning: "Phải làm gì đó (nghĩa vụ / bắt buộc)",
+                                example_jp: "毎日勉強しなければならない。",
+                                example_vi: "Mỗi ngày phải học bài.",
+                                synonyms: "～ないといけない、～なきゃ",
+                                mnemonic: "なければ (nếu không) + ならない (không được) = Phải làm!",
+                                type: "GRAMMAR",
+                              },
+                            ],
+                            null,
+                            2
+                          );
+                          setJsonText(template);
+                          handleJsonTextChange(template);
+                        }}
+                        className="flex items-center gap-1 px-2 py-1 rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 text-[10px] font-black hover:bg-amber-200 transition-colors"
+                      >
+                        <Copy size={12} /> Dán mẫu Ngữ pháp
+                      </button>
+                    </div>
+                    <pre className="text-[11px] font-mono text-slate-500 dark:text-slate-400 whitespace-pre-wrap leading-relaxed">
+                      {`[{
+  "word": "～てしまう",
+  "furigana": "～ちゃう (khẩu ngữ)",
+  "meaning": "Diễn tả hành động đã hoàn thành / đáng tiếc",
+  "example_jp": "宿題を忘れてしまいました。",
+  "example_vi": "Tôi đã quên mất bài tập rồi.",
+  "synonyms": "～ちゃう、～ちゃった",
+  "mnemonic": "Shimau = cất đi → đã xong rồi",
+  "type": "GRAMMAR"
+}, {
+  "word": "～ことがある",
+  "furigana": "～ことがある",
+  "meaning": "Đã từng (kinh nghiệm quá khứ)",
+  "example_jp": "日本に行ったことがあります。",
+  "example_vi": "Tôi đã từng đi Nhật.",
+  "synonyms": "～た経験がある",
+  "type": "GRAMMAR"
+}]`}
+                    </pre>
+                    <p className="text-[10px] text-slate-400 mt-2 font-bold">
+                      <span className="text-amber-500 font-black">💡 Ánh xạ cho Ngữ pháp:</span>{" "}
+                      <code className="text-amber-500">word</code> = Cấu trúc,{" "}
+                      <code className="text-amber-500">furigana</code> = Cách đọc/viết tắt,{" "}
+                      <code className="text-amber-500">meaning</code> = Ý nghĩa,{" "}
+                      <code className="text-amber-500">example_jp</code> = Câu ví dụ,{" "}
+                      <code className="text-amber-500">example_vi</code> = Dịch ví dụ,{" "}
+                      <code className="text-amber-500">synonyms</code> = Ngữ pháp tương đương,{" "}
+                      <code className="text-amber-500">mnemonic</code> = Mẹo nhớ,{" "}
+                      <code className="text-amber-500">type</code> = <code className="text-red-500 font-black">"GRAMMAR"</code> (bắt buộc!).
+                    </p>
+                  </div>
                 </div>
 
                 {/* Textarea */}

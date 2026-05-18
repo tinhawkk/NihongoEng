@@ -78,7 +78,7 @@ export const PomodoroMini = () => {
     const lastMiniTickRef = useRef(Date.now());
     useEffect(() => {
         let interval = null;
-        if (isActive && timeLeft > 0) {
+        if (isActive && timeLeft > 0 && !isPomodoroPage) {
             lastMiniTickRef.current = Date.now();
             interval = setInterval(() => {
                 const now = Date.now();
@@ -92,10 +92,10 @@ export const PomodoroMini = () => {
             }, 1000);
         }
         return () => clearInterval(interval);
-    }, [isActive, timeLeft]);
+    }, [isActive, timeLeft, isPomodoroPage]);
 
     useEffect(() => {
-        if (!isActive || timeLeft !== 0 || completionGuardRef.current) return;
+        if (!isActive || timeLeft !== 0 || completionGuardRef.current || isPomodoroPage) return;
         completionGuardRef.current = true;
 
         sounds.playNotification();
@@ -114,14 +114,18 @@ export const PomodoroMini = () => {
 
         if (currentMode === "focus") {
             const currentSessions = Number(p.totalSessions ?? 0) || 0;
+            const currentTodaySessions = Number(p.todaySessions ?? 0) || 0;
             const currentTotal = Number(p.totalFocusMinutes ?? 0) || 0;
+            const currentLifetime = Number(p.lifetimeMinutes ?? 0) || 0;
             const currentFood = Number(p.foodStock ?? 0) || 0;
             const baseHappiness = typeof p.happiness === "number" ? p.happiness : 80;
             const nextHappiness = Math.min(100, baseHappiness + 10);
 
             const commonUpdate = {
                 totalSessions: currentSessions + 1,
+                todaySessions: currentTodaySessions + 1,
                 totalFocusMinutes: currentTotal + finishedMinutes,
+                lifetimeMinutes: currentLifetime + finishedMinutes,
                 foodStock: currentFood + 1,
                 happiness: nextHappiness,
                 lastSessionDate: new Date().toISOString(),
@@ -180,10 +184,12 @@ export const PomodoroMini = () => {
         
         // Cập nhật Store định kỳ để các trang khác (PomodoroPage) thấy được
         const throttledUpdate = setTimeout(() => {
-            updatePomodoroData({ timeLeft, isActive, mode });
+            if (!isPomodoroPage) {
+                updatePomodoroData({ timeLeft, isActive, mode });
+            }
         }, 100);
         return () => clearTimeout(throttledUpdate);
-    }, [timeLeft, isActive, mode, updatePomodoroData]);
+    }, [timeLeft, isActive, mode, updatePomodoroData, isPomodoroPage]);
 
     // 4. CLOUD SYNC (Nhost): Định kỳ mỗi 60s lưu lên server để đồng bộ đa thiết bị
     const lastSyncTimeRef = useRef(Date.now());

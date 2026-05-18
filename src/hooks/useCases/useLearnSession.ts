@@ -87,8 +87,9 @@ export const useLearnSession = (deckId: string, filterType: string) => {
           isUUID ? "voca" : filterType === "sheet" ? "sheet" : "voca"
         );
         let list = Array.isArray(data) ? data : (data as any).vocabulary || [];
-        if (filterType === "voca") list = list.filter(w => !w.isKanji);
+        if (filterType === "voca") list = list.filter(w => !w.isKanji && w.type?.toUpperCase() !== "GRAMMAR");
         if (filterType === "kanji") list = list.filter(w => w.isKanji);
+        if (filterType === "grammar") list = list.filter(w => w.type?.toUpperCase() === "GRAMMAR");
 
         const srsData = useUserStore.getState().account?.srsData || {};
         const getScore = (w: any) => {
@@ -193,7 +194,8 @@ export const useLearnSession = (deckId: string, filterType: string) => {
   const checkAnswer = useCallback(
     (answer: any) => {
       if (!step) return;
-      const finalAnswer = typeof answer === "string" ? romajiToHiragana(answer) : answer;
+      const isWordEnglish = deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng') || (step.word?.word && !/[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(step.word.word));
+      const finalAnswer = (typeof answer === "string" && !isWordEnglish) ? romajiToHiragana(answer) : answer;
       setUserAnswer(finalAnswer);
       if (step.type === "choice" || step.type === "choice_kanji" || step.type === "listen") {
         handleResult(finalAnswer.word === step.word.word);
@@ -206,6 +208,7 @@ export const useLearnSession = (deckId: string, filterType: string) => {
         return t
           .replace(/\(.*?\)|（.*?）|\[.*?\]|［.*?］|<.*?>|＜.*?＞|【.*?】/g, "")
           .replace(/[〜\s・]/g, "")
+          .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()！？。、]/g, "")
           .toLowerCase()
           .trim();
       };
@@ -213,12 +216,17 @@ export const useLearnSession = (deckId: string, filterType: string) => {
       const targetKana = cleanTarget(step.word.reading || "");
       const targetKanji = cleanTarget(step.word.word || "");
       const targetRomaji = cleanTarget(step.word.romaji || "");
+      const targetMeaning = cleanTarget(step.word.meaning || "");
       const given = cleanTarget(finalAnswer);
+
+      // For speaking/typing steps in English mode, also accept meaning matches
+      const isSpeakOrType = step.type === "typing" || step.type === "speak" || step.type === "cloze";
 
       if (
         given === targetKana ||
         given === targetKanji ||
-        (targetRomaji && given === targetRomaji)
+        (targetRomaji && given === targetRomaji) ||
+        (isSpeakOrType && targetMeaning && given === targetMeaning)
       ) {
         handleResult(true);
       } else {
@@ -226,7 +234,8 @@ export const useLearnSession = (deckId: string, filterType: string) => {
         if (
           isTypo(given, targetKanji) ||
           isTypo(given, targetKana) ||
-          (targetRomaji && isTypo(given, targetRomaji))
+          (targetRomaji && isTypo(given, targetRomaji)) ||
+          (isSpeakOrType && targetMeaning && isTypo(given, targetMeaning))
         ) {
           return;
         }

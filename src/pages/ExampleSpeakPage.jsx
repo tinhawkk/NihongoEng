@@ -26,6 +26,7 @@ export const ExampleSpeakPage = () => {
   const [similarity, setSimilarity] = useState(0);
   const [matchedIndices, setMatchedIndices] = useState(new Set());
   const [countdown, setCountdown] = useState(null);
+  const [isDebouncing, setIsDebouncing] = useState(false);
   
   const recognitionRef = useRef(null);
   const timerRef = useRef(null);
@@ -254,6 +255,10 @@ export const ExampleSpeakPage = () => {
   }, [targetText, targetLang]);
 
   const toggleListening = () => {
+    if (isDebouncing) return;
+    setIsDebouncing(true);
+    setTimeout(() => setIsDebouncing(false), 600); // 600ms cooldown to let Google Server close the socket cleanly
+
     if (isListening) {
       manualStopRef.current = true;
       recognitionRef.current.stop();
@@ -450,7 +455,7 @@ export const ExampleSpeakPage = () => {
                  )}
                  
                  <div className="flex items-center justify-center gap-3 pt-1">
-                   <button onClick={toggleListening} className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-400 rounded-xl font-black text-sm transition-all">
+                   <button onClick={toggleListening} disabled={isDebouncing} className={`flex items-center gap-2 px-5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-400 rounded-xl font-black text-sm transition-all ${isDebouncing ? "opacity-50 cursor-not-allowed" : ""}`}>
                      <RotateCcw size={16} /> THỬ LẠI
                    </button>
                    {feedback === 'success' && (
@@ -486,7 +491,8 @@ export const ExampleSpeakPage = () => {
                  )}
                  <button
                    onClick={toggleListening}
-                   className={`w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center transition-all duration-300 shadow-xl relative z-10 ${isListening ? "bg-red-500 scale-110" : "bg-blue-600 hover:scale-105 active:scale-95"}`}
+                   disabled={isDebouncing}
+                   className={`w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center transition-all duration-300 shadow-xl relative z-10 ${isListening ? "bg-red-500 scale-110" : "bg-blue-600 hover:scale-105 active:scale-95"} ${isDebouncing ? "opacity-50 cursor-not-allowed" : ""}`}
                  >
                    {isListening ? (
                      <MicOff size={32} className="text-white" />

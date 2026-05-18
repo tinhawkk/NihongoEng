@@ -22,6 +22,7 @@ import { useUserStore } from "../store/useUserStore";
 import { calculateCurrentStreak } from "../utils/streakUtils";
 import { tts } from "../utils/tts";
 import { renderFurigana, removeFurigana, combineFurigana } from "../utils/furigana";
+import { sounds } from "../utils/sounds";
 import { Button } from "../components/ui/Button";
 import confetti from "canvas-confetti";
 import { shuffleArray, getRandomItems } from "../utils/helpers";
@@ -132,7 +133,7 @@ const ChoiceStep = ({ word, allWords, showFeedback, userAnswer, checkAnswer, typ
     >
       <div className="text-center space-y-4">
         <p className="text-slate-400 font-black uppercase text-xs tracking-[0.2em] flex items-center justify-center gap-2">
-          <Target size={16} /> {word.type === "kanji" || (!word.type && !isEnglish) ? "Chọn Kanji đúng" : "Chọn từ đúng"}
+          <Target size={16} /> {word.type?.toUpperCase() === "GRAMMAR" ? "Chọn ngữ pháp đúng" : word.type === "kanji" || (!word.type && !isEnglish) ? "Chọn Kanji đúng" : "Chọn từ đúng"}
         </p>
         {type === "choice" ? (
           <h2 className="text-6xl md:text-7xl font-black text-slate-800 dark:text-white tracking-tight whitespace-nowrap flex justify-center">
@@ -334,12 +335,27 @@ const SpeakingStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId, goT
       setTranscript(text);
       if (isFinal) {
         setIsListening(false);
-        // Manual trigger if it looks correct
-        const dist = getLevenshteinDistance(normalize(text), normalize(word.word));
-        const distReading = getLevenshteinDistance(normalize(text), normalize(word.reading));
-        if (dist <= 1 || distReading <= 1) {
-           checkAnswer(text);
+        // Clean punctuation that Speech API might add (e.g. trailing periods)
+        const cleanText = text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()！？。、]/g, "");
+        const normalizedClean = normalize(cleanText);
+        const normalizedWord = normalize(word.word);
+        const normalizedReading = normalize(word.reading);
+        const normalizedMeaning = normalize(word.meaning);
+        
+        const distWord = getLevenshteinDistance(normalizedClean, normalizedWord);
+        const distReading = getLevenshteinDistance(normalizedClean, normalizedReading);
+        // For English decks, also accept if they spoke the meaning
+        const distMeaning = getLevenshteinDistance(normalizedClean, normalizedMeaning);
+        
+        // Auto-submit if close enough (distance <= 2 for words > 3 chars, or exact for short words)
+        const minDist = Math.min(distWord, distReading, distMeaning);
+        const targetLen = Math.max(normalizedWord.length, normalizedReading.length, 1);
+        const threshold = targetLen > 6 ? 2 : targetLen > 3 ? 1 : 0;
+        
+        if (minDist <= threshold) {
+          checkAnswer(cleanText);
         }
+        // If not auto-submitted, transcript is displayed and user can press "XÁC NHẬN" manually
       }
     };
 
@@ -444,7 +460,7 @@ const SpeakingStep = ({ word, showFeedback, userAnswer, checkAnswer, deckId, goT
 
         <div className="w-full flex flex-col gap-4">
           {transcript && !showFeedback ? (
-            <Button onClick={() => checkAnswer(transcript)} className="w-full py-4 text-sm font-black uppercase">
+            <Button onClick={() => checkAnswer(transcript.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()！？。、]/g, ""))} className="w-full py-4 text-sm font-black uppercase">
               XÁC NHẬN
             </Button>
           ) : (
@@ -559,6 +575,7 @@ const MatchingStep = ({ words, onComplete, deckId }) => {
   const tryMatch = useCallback((left, right) => {
     if (!left || !right) return;
     if (left.id === right.id) {
+      sounds.playSuccess();
       setMatchedIds(prev => {
         const next = new Set(prev);
         next.add(left.id);
@@ -567,6 +584,7 @@ const MatchingStep = ({ words, onComplete, deckId }) => {
       setSelectedLeft(null);
       setSelectedRight(null);
     } else {
+      sounds.playError();
       setMismatch({ leftId: left.id, rightId: right.id });
       setTimeout(() => setMismatch(null), 500);
       setTimeout(() => {
@@ -584,7 +602,13 @@ const MatchingStep = ({ words, onComplete, deckId }) => {
 
   useEffect(() => {
     if (matchedIds.size === pairs.length && pairs.length > 0) {
-      const timer = setTimeout(onComplete, 400);
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ["#10b981", "#3b82f6", "#f59e0b"]
+      });
+      const timer = setTimeout(onComplete, 800);
       return () => clearTimeout(timer);
     }
   }, [matchedIds, pairs.length, onComplete]);
@@ -602,9 +626,9 @@ const MatchingStep = ({ words, onComplete, deckId }) => {
       ((side === "left" && mismatch.leftId === item.id) ||
         (side === "right" && mismatch.rightId === item.id));
     const palette = isMatched
-      ? "bg-emerald-50 border-emerald-400 text-emerald-700 opacity-60"
+      ? "bg-emerald-50 border-emerald-400 text-emerald-700 opacity-0 scale-95 pointer-events-none"
       : isSelected
-        ? "bg-blue-50 border-blue-400 text-blue-700 scale-[1.02] shadow-xl"
+        ? "bg-blue-50 border-blue-400 text-blue-700 scale-[1.02] shadow-[0_0_20px_rgba(59,130,246,0.3)] z-10"
         : isMismatch
           ? "bg-red-50 border-red-400 text-red-700 animate-shake"
           : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-blue-400 hover:shadow-md";
@@ -933,6 +957,13 @@ export const LearnPage = () => {
                       {step.word.hanViet}
                     </p>
                   )}
+                  {step.word.type?.toUpperCase() === "GRAMMAR" && (
+                    <div className="flex justify-center">
+                      <span className="px-3 py-1.5 rounded-xl text-xs font-black bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 uppercase tracking-wider shadow-sm">
+                        📖 文法 Grammar Pattern
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <div className="w-full space-y-4">
                   <div className="text-center space-y-4 w-full">
@@ -960,9 +991,9 @@ export const LearnPage = () => {
                       </div>
                     )}
                     {step.word.synonyms && (
-                      <div className="bg-purple-50 dark:bg-purple-900/20 text-left border-l-4 border-purple-400 rounded-r-2xl p-4 mt-4 max-w-lg mx-auto shadow-sm">
-                        <p className="text-xs font-black text-purple-500 uppercase tracking-widest mb-1 flex items-center gap-1">
-                          Từ đồng nghĩa
+                      <div className={`${step.word.type?.toUpperCase() === "GRAMMAR" ? "bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-400" : "bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-400"} text-left rounded-r-2xl p-4 mt-4 max-w-lg mx-auto shadow-sm`}>
+                        <p className={`text-xs font-black uppercase tracking-widest mb-1 flex items-center gap-1 ${step.word.type?.toUpperCase() === "GRAMMAR" ? "text-amber-500" : "text-purple-500"}`}>
+                          {step.word.type?.toUpperCase() === "GRAMMAR" ? "Ngữ pháp tương đương" : "Từ đồng nghĩa"}
                         </p>
                         <p className="text-sm font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
                           {step.word.synonyms}
@@ -1112,13 +1143,13 @@ export const LearnPage = () => {
               <div className="space-y-12 text-center">
                 <div className="space-y-6">
                   <p className="text-slate-400 font-black uppercase text-xs tracking-[0.2em] flex items-center justify-center gap-2">
-                    <Keyboard size={16} /> Nhập cách đọc
+                    <Keyboard size={16} /> {(deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng') || (step.word?.word && !/[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(step.word.word))) ? "Nhập từ vựng" : "Nhập cách đọc"}
                   </p>
                   <h2 className="text-4xl md:text-6xl font-black text-slate-800 dark:text-white tracking-tighter flex justify-center break-words whitespace-normal px-4">
-                    {cleanDisplay(step.word.word)}
+                    {(deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng') || (step.word?.word && !/[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(step.word.word))) ? step.word.meaning : cleanDisplay(step.word.word)}
                   </h2>
                   <p className="text-2xl font-bold text-blue-500 bg-blue-50 dark:bg-blue-900/40 py-3 px-8 rounded-3xl inline-block shadow-sm">
-                    {step.word.meaning}
+                    {(deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng') || (step.word?.word && !/[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(step.word.word))) ? "Hãy gõ từ tiếng Anh tương ứng" : step.word.meaning}
                   </p>
                 </div>
                 <div className="relative max-w-lg mx-auto w-full">
@@ -1141,7 +1172,7 @@ export const LearnPage = () => {
                     disabled={showFeedback}
                     value={typeof userAnswer === "string" ? userAnswer : ""}
                     onChange={e => {
-                      const isEnglishMode = deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng');
+                      const isEnglishMode = deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng') || (step.word?.word && !/[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(step.word.word));
                       setUserAnswer(isEnglishMode ? e.target.value : romajiToHiragana(e.target.value));
                     }}
                     onKeyDown={e => {
@@ -1151,8 +1182,8 @@ export const LearnPage = () => {
                         checkAnswer(userAnswer);
                       }
                     }}
-                    placeholder="Gõ romaji hoặc hiragana..."
-                    className={`w-full p-8 pr-20 bg-slate-50 dark:bg-slate-800 border-4 rounded-[2.5rem] text-center text-3xl font-black outline-none transition-all shadow-inner ${showFeedback ? (isCorrect ? "border-green-500 bg-green-50 text-green-700" : "border-red-500 bg-red-50 text-red-700") : "border-slate-100 focus:border-blue-400 focus:bg-white"}`}
+                    placeholder={(deckId?.toUpperCase() === 'ENG' || deckId?.toLowerCase().includes('eng') || (step.word?.word && !/[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(step.word.word))) ? "Gõ tiếng Anh..." : "Gõ romaji hoặc hiragana..."}
+                    className={`w-full p-8 pr-20 bg-slate-50 dark:bg-slate-800 border-4 rounded-[2.5rem] text-center text-3xl font-black outline-none transition-all shadow-inner ${showFeedback ? (isCorrect ? "border-green-500 bg-green-50 text-green-700" : "border-red-500 bg-red-50 text-red-700") : "border-slate-100 dark:border-slate-700 focus:border-blue-400 focus:bg-white"}`}
                   />
                   {!showFeedback && (
                     <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-2">

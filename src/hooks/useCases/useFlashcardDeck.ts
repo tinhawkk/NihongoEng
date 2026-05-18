@@ -56,7 +56,9 @@ export const useFlashcardDeck = (deckId: string, source: string, color: string) 
       if (filter === "kanji") {
         filtered = data.filter(w => w.type === "kanji");
       } else if (filter === "voca") {
-        filtered = data.filter(w => w.type === "voca" || !w.type);
+        filtered = data.filter(w => (w.type === "voca" || !w.type) && w.type?.toUpperCase() !== "GRAMMAR");
+      } else if (filter === "grammar") {
+        filtered = data.filter(w => w.type?.toUpperCase() === "GRAMMAR");
       }
       setAllWords(filtered);
 

@@ -381,12 +381,17 @@ export const PomodoroPage = () => {
     if (foodStock <= 0 || isFeeding) return;
     setFoodStock(s => s - 1);
     setIsFeeding(true);
-    const newHappiness = Math.min(100, happiness + 15);
+    
+    // Read fresh values from store to avoid stale closure
+    const storeP = useUserStore.getState().account?.pomodoro || {};
+    const freshFood = Number(storeP.foodStock ?? foodStock);
+    const freshHappiness = Number(storeP.happiness ?? happiness);
+    const newHappiness = Math.min(100, freshHappiness + 15);
     setHappiness(newHappiness);
 
     // Save state
     updatePomodoroData({
-      foodStock: foodStock - 1,
+      foodStock: Math.max(0, freshFood - 1),
       happiness: newHappiness,
     });
 
@@ -504,7 +509,10 @@ export const PomodoroPage = () => {
   }, [audioEnabled]);
 
   // UI Sync with Global Timer (PomodoroMini/Store)
+  // IMPORTANT: Skip sync when completion guard is active to prevent
+  // stale store values from overwriting freshly-set completion state
   useEffect(() => {
+    if (pageCompletionGuardRef.current) return;
     if (account?.pomodoro) {
         const p = account.pomodoro;
         // Only update local state if drift is significant (>2s) or state changed
@@ -535,11 +543,25 @@ export const PomodoroPage = () => {
   }, [isActive]);
 
   // Trigger turn completion when time hits 0
+  const pageCompletionGuardRef = useRef(false);
   useEffect(() => {
     if (isActive && turns.length > 0 && turnTimeLeft === 0) {
+      // Guard: prevent double-fire from batched React state updates
+      if (pageCompletionGuardRef.current) return;
+      pageCompletionGuardRef.current = true;
+
       sounds.playSuccess();
 
       setTimeout(() => {
+        // Read ALL values fresh from store to avoid stale closure bugs
+        const storePomodoro = useUserStore.getState().account?.pomodoro || {};
+        const currentTotal = Number(storePomodoro.totalFocusMinutes ?? 0);
+        const currentSessions = Number(storePomodoro.totalSessions ?? 0);
+        const currentTodaySessions = Number(storePomodoro.todaySessions ?? 0);
+        const currentLifetime = Number(storePomodoro.lifetimeMinutes ?? 0);
+        const currentFood = Number(storePomodoro.foodStock ?? 0);
+        const currentHappiness = Number(storePomodoro.happiness ?? 80);
+
         // 1. If it was FOCUS mode, increment sessions and minutes
         if (mode === "focus") {
           const finishedDuration = turns[currentTurnIdx]?.duration || 0;
@@ -554,26 +576,20 @@ export const PomodoroPage = () => {
           setShowConfetti(true);
           addCoins(10); // Phase 3.1: Reward 10 coins
 
-          // Use latest store data to avoid stale initialPomodoro bug
-          const currentTotal = useUserStore.getState().account?.pomodoro?.totalFocusMinutes || 0;
-          const currentSessions = useUserStore.getState().account?.pomodoro?.totalSessions || 0;
-          const currentTodaySessions = useUserStore.getState().account?.pomodoro?.todaySessions || 0;
-          const currentLifetime = useUserStore.getState().account?.pomodoro?.lifetimeMinutes || 0;
-
           updatePomodoroData({
             totalSessions: currentSessions + 1,
             todaySessions: currentTodaySessions + 1,
             lastSessionDate: new Date().toISOString(),
             totalFocusMinutes: currentTotal + finishedMinutes,
             lifetimeMinutes: currentLifetime + finishedMinutes,
-            foodStock: foodStock + 1,
-            happiness: Math.min(100, happiness + 10),
+            foodStock: currentFood + 1,
+            happiness: Math.min(100, currentHappiness + 10),
           });
 
           // Transition logic
           if (autoCycle) {
-            // After focus -> Break
-            const isLongBreak = (sessions + 1) % 4 === 0;
+            // After focus -> Break (use store sessions for accurate long break calc)
+            const isLongBreak = (currentSessions + 1) % 4 === 0;
             const nextMode = isLongBreak ? "longBreak" : "shortBreak";
             const newDuration = getSmartDuration(nextMode);
             setMode(nextMode);
@@ -613,8 +629,8 @@ export const PomodoroPage = () => {
               setFoodStock(s => s + 1);
               setHappiness(h => Math.min(100, h + 10));
               updatePomodoroData({
-                foodStock: foodStock + 1,
-                happiness: Math.min(100, happiness + 10),
+                foodStock: currentFood + 1,
+                happiness: Math.min(100, currentHappiness + 10),
               });
             }
           }
@@ -623,6 +639,9 @@ export const PomodoroPage = () => {
         // Global Sync
         const syncData = collectSyncData(useUserStore, useBookmarkStore);
         if (syncData) debouncedSync(syncData);
+
+        // Release guard after microtask completes
+        setTimeout(() => { pageCompletionGuardRef.current = false; }, 0);
       }, 0);
       
       // Removed ytPlayerRef.current.pauseVideo() so music continues seamlessly 

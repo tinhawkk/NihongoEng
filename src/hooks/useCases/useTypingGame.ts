@@ -29,8 +29,8 @@ function normalize(str: string) {
     .replace(/[\s\u3000]+/g, "")
     // Remove content inside brackets: (), [], <>, {}, （）, ［］, 【】, ＜＞, 〈〉
     .replace(/\(.*?\)|\[.*?\]|<.*?>|{.*?}|（.*?）|［.*?］|【.*?】|＜.*?＞|〈.*?〉/g, "")
-    // Remove remaining symbols
-    .replace(/[<>()\[\]{}（）［］【】＜＞〈〉〜~.．…・]/g, "")
+    // Remove remaining symbols and punctuation
+    .replace(/[<>()\[\]{}（）［］【】＜＞〈〉〜~.．…・.,\/#!$%\^&\*;:{}=\-_`~()！？。、]/g, "")
     .replace(/ー/g, "");
 }
 
@@ -155,6 +155,10 @@ export const useTypingGame = (deckId: string | undefined) => {
           if (isEnglishDeck && !w.furigana?.trim()) {
             return { ...w, furigana: w.word };
           }
+          // For grammar items without furigana, use the word itself as the typing target
+          if (w.type?.toUpperCase() === "GRAMMAR" && !w.furigana?.trim()) {
+            return { ...w, furigana: w.word };
+          }
           return w;
         }).filter(w => isEnglishDeck || w.furigana?.trim());
         const shuffled = shuffleArray(withReading);
@@ -213,7 +217,7 @@ export const useTypingGame = (deckId: string | undefined) => {
         userAsHiragana === correctFurigana ||
         (userInput === correctWord && /^[\u3040-\u30FF]+$/.test(correctWord)) ||
         (userAsHiragana === correctWord && /^[\u3040-\u30FF]+$/.test(correctWord)) ||
-        (isWordEnglish && (userInput === correctWord || userInput === normalize(card.meaning)));
+        (isWordEnglish && userInput === normalize(card.meaning));
     
     // TYPO DETECTION (Phase 2.2)
     if (!isCorrect) {
@@ -221,7 +225,8 @@ export const useTypingGame = (deckId: string | undefined) => {
         isTypo(userInput, correctWord) ||
         isTypo(userAsHiragana, correctWord) ||
         isTypo(userInput, correctFurigana) ||
-        isTypo(userAsHiragana, correctFurigana);
+        isTypo(userAsHiragana, correctFurigana) ||
+        (isWordEnglish && isTypo(userInput, normalize(card.meaning)));
       
       if (isActuallyTypo) {
         setResult("typo");

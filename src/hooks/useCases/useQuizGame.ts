@@ -49,9 +49,10 @@ function generateQuestions(words: any[], count = 10, globalDistractorPool: any[]
     const exampleMeaning = word.exampleMeaning || word.example_vi || word.example_meaning_vi || word.example_meaning || word.vietnamese || word.meaning_vi || "";
     
     const isWordEnglish = isEnglish || (word.word && !/[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(word.word));
+    const isGrammar = word.type?.toUpperCase() === "GRAMMAR";
     
     const types = ['meaning', 'reverse'];
-    if (reading && reading !== word.word && !isWordEnglish) types.push('reading');
+    if (reading && reading !== word.word && !isWordEnglish && !isGrammar) types.push('reading');
     if (example && example.includes(word.word)) types.push('context');
     
     const qType = types[Math.floor(Math.random() * types.length)];
@@ -59,18 +60,18 @@ function generateQuestions(words: any[], count = 10, globalDistractorPool: any[]
     let questionText = word.word;
     let correctAnswer = word.meaning;
     let distractorKey = 'meaning';
-    let prompt = "Nghĩa của từ này là gì?";
+    let prompt = isGrammar ? "Nghĩa của ngữ pháp này là gì?" : "Nghĩa của từ này là gì?";
 
     if (qType === 'meaning') {
       questionText = word.word;
       correctAnswer = word.meaning;
       distractorKey = 'meaning';
-      prompt = "Nghĩa của từ này là gì?";
+      prompt = isGrammar ? "Nghĩa của ngữ pháp này là gì?" : "Nghĩa của từ này là gì?";
     } else if (qType === 'reverse') {
       questionText = word.meaning;
       correctAnswer = word.word;
       distractorKey = 'word';
-      prompt = isWordEnglish ? "Chọn từ tiếng Anh tương ứng:" : "Chọn từ tiếng Nhật tương ứng:";
+      prompt = isGrammar ? "Chọn cấu trúc ngữ pháp tương ứng:" : isWordEnglish ? "Chọn từ tiếng Anh tương ứng:" : "Chọn từ tiếng Nhật tương ứng:";
     } else if (qType === 'reading') {
       questionText = word.word;
       correctAnswer = reading;
@@ -211,8 +212,11 @@ export const useQuizGame = (deckId: string | undefined) => {
           filtered = filtered.filter(w => w.type === "kanji");
           currentDistractorPool = currentDistractorPool.filter(w => w.type === "kanji");
         } else if (filter === "voca") {
-          filtered = filtered.filter(w => w.type === "voca" || !w.type);
-          currentDistractorPool = currentDistractorPool.filter(w => w.type === "voca" || !w.type);
+          filtered = filtered.filter(w => (w.type === "voca" || !w.type) && w.type?.toUpperCase() !== "GRAMMAR");
+          currentDistractorPool = currentDistractorPool.filter(w => (w.type === "voca" || !w.type) && w.type?.toUpperCase() !== "GRAMMAR");
+        } else if (filter === "grammar") {
+          filtered = filtered.filter(w => w.type?.toUpperCase() === "GRAMMAR");
+          currentDistractorPool = currentDistractorPool.filter(w => w.type?.toUpperCase() === "GRAMMAR");
         }
 
         setWords(filtered);

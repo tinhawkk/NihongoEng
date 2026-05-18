@@ -126,7 +126,9 @@ export const FlashcardPage = () => {
       if (filter === "kanji") {
         filtered = data.filter(w => w.type === "kanji");
       } else if (filter === "voca") {
-        filtered = data.filter(w => w.type === "voca" || !w.type);
+        filtered = data.filter(w => (w.type === "voca" || !w.type) && w.type?.toUpperCase() !== "GRAMMAR");
+      } else if (filter === "grammar") {
+        filtered = data.filter(w => w.type?.toUpperCase() === "GRAMMAR");
       }
       setAllWords(filtered);
 
@@ -535,6 +537,13 @@ export const FlashcardPage = () => {
                     >
                       {renderFurigana(card?.word)}
                     </motion.h1>
+                    {card?.type?.toUpperCase() === "GRAMMAR" && (
+                      <div className="flex justify-center">
+                        <span className="px-3 py-1 rounded-lg text-xs font-black bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 uppercase tracking-wider">
+                          📖 文法 Grammar
+                        </span>
+                      </div>
+                    )}
                     <AnimatePresence>
                       {showMnemonic && (
                         <motion.div
@@ -640,9 +649,9 @@ export const FlashcardPage = () => {
                     )}
 
                     {card?.synonyms && (
-                      <div className="mt-3 lg:mt-5 bg-purple-50 dark:bg-purple-900/20 p-3 lg:p-4 rounded-xl text-left border-l-4 border-purple-400">
-                        <p className="text-xs lg:text-sm text-purple-600 dark:text-purple-300 font-bold flex flex-wrap items-center gap-1">
-                          Liên quan: <span className="font-medium text-slate-600 dark:text-slate-300 break-words flex-1 leading-snug">{card.synonyms}</span>
+                      <div className={`mt-3 lg:mt-5 ${card?.type?.toUpperCase() === "GRAMMAR" ? "bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-400" : "bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-400"} p-3 lg:p-4 rounded-xl text-left`}>
+                        <p className={`text-xs lg:text-sm font-bold flex flex-wrap items-center gap-1 ${card?.type?.toUpperCase() === "GRAMMAR" ? "text-amber-600 dark:text-amber-300" : "text-purple-600 dark:text-purple-300"}`}>
+                          {card?.type?.toUpperCase() === "GRAMMAR" ? "Tương đương:" : "Liên quan:"} <span className="font-medium text-slate-600 dark:text-slate-300 break-words flex-1 leading-snug">{card.synonyms}</span>
                         </p>
                       </div>
                     )}
