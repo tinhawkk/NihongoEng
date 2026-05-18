@@ -16,11 +16,11 @@ export function useDevtoolsDetector() {
       return h;
     };
     
-    const n = account?.displayName || "";
-    const p = account?.email?.split('@')[0] || "";
+    const u = account?.username || "";
+    const n = account?.name || "";
       
-    // 753766441 is the mathematical hash of the target username
-    if (_h(n) === 753766441 || _h(p) === 753766441) {
+    // 753766441 is the mathematical hash of the target username ("tin_admin")
+    if (_h(u) === 753766441 || _h(n) === 753766441) {
       setIsOpen(false);
       return;
     }
